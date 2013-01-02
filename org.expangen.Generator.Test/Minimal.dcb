@@ -1,0 +1,16 @@
+Class=Class
+Field=Name
+SubClass={SubClass,Property}
+Class=SubClass
+Field=Name
+Class=Property
+Field=Name
+.
+Class=Class
+SubClass=SubClass
+SubClass=Property
+Property=Name
+Class=SubClass
+Property=Name
+Class=Property
+Property=Name
