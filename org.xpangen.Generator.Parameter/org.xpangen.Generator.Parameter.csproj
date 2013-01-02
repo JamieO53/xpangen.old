@@ -40,15 +40,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\org.expangen.Generator.Data\org.xpangen.Generator.Data.csproj">
+    <ProjectReference Include="..\org.xpangen.Generator.Data\org.xpangen.Generator.Data.csproj">
       <Project>{879183A8-0A57-494A-B645-27366F1D912E}</Project>
       <Name>org.xpangen.Generator.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\org.expangen.Generator.Profile\org.xpangen.Generator.Profile.csproj">
+    <ProjectReference Include="..\org.xpangen.Generator.Profile\org.xpangen.Generator.Profile.csproj">
       <Project>{BC2435D5-863A-4EC4-AB98-6DD124A04179}</Project>
       <Name>org.xpangen.Generator.Profile</Name>
     </ProjectReference>
-    <ProjectReference Include="..\org.expangen.Generator.Scanner\org.xpangen.Generator.Scanner.csproj">
+    <ProjectReference Include="..\org.xpangen.Generator.Scanner\org.xpangen.Generator.Scanner.csproj">
       <Project>{116BF740-18A1-4612-8CB0-8C2127821F6F}</Project>
       <Name>org.xpangen.Generator.Scanner</Name>
     </ProjectReference>

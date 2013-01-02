@@ -62,7 +62,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\org.expangen.Generator.Data\org.xpangen.Generator.Data.csproj">
+    <ProjectReference Include="..\org.xpangen.Generator.Data\org.xpangen.Generator.Data.csproj">
       <Project>{879183A8-0A57-494A-B645-27366F1D912E}</Project>
       <Name>org.xpangen.Generator.Data</Name>
     </ProjectReference>
