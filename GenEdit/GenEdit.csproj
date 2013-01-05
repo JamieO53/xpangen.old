@@ -85,6 +85,12 @@
     <EmbeddedResource Include="View\GenProfileEditor.resx">
       <DependentUpon>GenProfileEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Data\Basic.dcb" />
+    <None Include="Data\Definition.dcb" />
+    <None Include="Data\GeneratorDefinitionModel.dcb" />
+    <None Include="Data\GenProfileModel.prf" />
+    <None Include="Data\Minimal.dcb" />
+    <None Include="Data\ProgramDefinition.dcb" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -193,6 +199,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\list-add-4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utilities\" />
+    <Folder Include="ViewModel\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
