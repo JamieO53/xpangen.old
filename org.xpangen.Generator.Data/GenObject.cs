@@ -30,12 +30,12 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        public TextList Attributes { get; set; }
+        public TextList Attributes { get; private set; }
 
-        public GenObjectList ParentSubClass { get; set; }
-        public int ClassId { get; set; }
+        public GenObjectList ParentSubClass { get; private set; }
+        public int ClassId { get; private set; }
 
-        public GenObject Parent { get; set; }
-        public List<GenObjectList> SubClass { get; set; }
+        public GenObject Parent { get; private set; }
+        public List<GenObjectList> SubClass { get; private set; }
     }
 }

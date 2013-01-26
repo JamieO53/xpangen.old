@@ -35,10 +35,10 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BindableObject.cs" />
     <Compile Include="GenAttributes.cs" />
     <Compile Include="GenContext.cs" />
     <Compile Include="GenData.cs" />
-    <Compile Include="GenDataChangedEventArgs.cs" />
     <Compile Include="GenDataDef.cs" />
     <Compile Include="GenDataId.cs" />
     <Compile Include="GenDataToDef.cs" />

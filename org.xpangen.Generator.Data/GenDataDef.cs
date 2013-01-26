@@ -7,9 +7,9 @@ namespace org.xpangen.Generator.Data
     public class GenDataDef
     {
         public NameList Classes { get; private set; }
-        public List<NameList> Properties { get; set; }
-        public List<IndexList> SubClasses { get; set; }
-        public IndexList Parents { get; set; }
+        public List<NameList> Properties { get; private set; }
+        public List<IndexList> SubClasses { get; private set; }
+        public IndexList Parents { get; private set; }
         public int CurrentClassId { get; set; }
 
         public GenDataDef()
@@ -113,7 +113,10 @@ namespace org.xpangen.Generator.Data
 
                     var j = 0;
                     if (String.Compare(Properties[classId][0], "Name", StringComparison.OrdinalIgnoreCase) == 0)
+                    {
                         profile.Append("=`" + Classes[classId] + "Name`");
+                        j = 1;
+                    }
                     if (Properties[classId].Count > j)
                     {
                         profile.Append("[");

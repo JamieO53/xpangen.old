@@ -1,41 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenData
+    public class GenData: BindableObject
     {
-        public delegate void GenDataChangedEventHandler(Object caller, GenDataChangedEventArgs args);
-
-        private GenDataChangedEventHandler _dataChanged;
-
-        public event GenDataChangedEventHandler DataChanged
-        {
-            add
-            {
-                var changedEventHandler = _dataChanged;
-                GenDataChangedEventHandler comparand;
-                do
-                {
-                    comparand = changedEventHandler;
-                    changedEventHandler = Interlocked.CompareExchange(ref _dataChanged, comparand + value, comparand);
-                }
-                while (changedEventHandler != comparand);
-            }
-            remove
-            {
-                var changedEventHandler = _dataChanged;
-                GenDataChangedEventHandler comparand;
-                do
-                {
-                    comparand = changedEventHandler;
-                    changedEventHandler = Interlocked.CompareExchange(ref _dataChanged, comparand - value, comparand);
-                }
-                while (changedEventHandler != comparand);
-            }
-        }
-        
         public GenDataDef GenDataDef { get; private set; }
         public List<GenObjectList> Context { get; private set; }
 
@@ -68,11 +37,9 @@ namespace org.xpangen.Generator.Data
             return o;
         }
 
-        public void RaiseDataChanged(string className, string propertyName, string oldValue, string newValue)
+        public void RaiseDataChanged(string className, string propertyName)
         {
-            var changedEventHandler = _dataChanged;
-            if (changedEventHandler == null) return;
-            changedEventHandler(this, new GenDataChangedEventArgs(className, propertyName, oldValue, newValue));
+            RaisePropertyChanged(className + '.' + propertyName);
         }
         
         public void EstablishContext(GenObject genObject)
