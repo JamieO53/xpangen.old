@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Globalization;
 
 namespace org.xpangen.Generator.Data
 {
     public class GenAttributes
     {
         private GenObject _genObject;
-        public NameList Fields { get; set; }
-        public TextList Values { get; set; }
-        public GenData GenData { get; set; }
+        private NameList Fields { get; set; }
+        private TextList Values { get; set; }
         public virtual GenObject GenObject
         {
             get { return _genObject; }
@@ -19,10 +19,7 @@ namespace org.xpangen.Generator.Data
                 {
                     ClassId = value.ClassId;
                     GenDataDef = value.GenData.GenDataDef;
-                    GenData = value.GenData;
                 }
-                else
-                    GenData = null;
 
                 GetFields();
             }
@@ -49,13 +46,15 @@ namespace org.xpangen.Generator.Data
                 }
                 catch (Exception)
                 {
+                    foreach (var field in Fields)
+                        SetString(field, "");
                 }
             }
         }
 
-        public GenDataDef GenDataDef { get; set; }
+        protected GenDataDef GenDataDef { get; private set; }
 
-        protected int ClassId { get; set; }
+        protected int ClassId { get; private set; }
 
         public GenAttributes(GenDataDef genDataDef)
         {
@@ -72,7 +71,7 @@ namespace org.xpangen.Generator.Data
 
         public void SetNumber(string name, int value)
         {
-            SetString(name, value.ToString());
+            SetString(name, value.ToString(CultureInfo.InvariantCulture));
         }
 
         public void SetString(string name, string value)
@@ -106,7 +105,7 @@ namespace org.xpangen.Generator.Data
                 if (oldValue != newValue)
                 {
                     changed = true;
-                    GenObject.GenData.RaiseDataChanged(className, propertyName, oldValue, newValue);
+                    GenObject.GenData.RaiseDataChanged(className, propertyName);
                 }
             }
 

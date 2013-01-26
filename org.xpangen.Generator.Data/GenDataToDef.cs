@@ -8,8 +8,8 @@
         private readonly int _nClass;
         private readonly int _nSubClass;
         private readonly int _nProperty;
-        private int _xSubClass;
-        private int _xProperty;
+        private readonly int _xSubClass;
+        private readonly int _xProperty;
 
         private GenData GenData { get; set; }
         private GenDataDef GenDataDef { get; set; }
