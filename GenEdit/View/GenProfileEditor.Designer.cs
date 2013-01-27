@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GenProfileEditor));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
@@ -44,17 +46,15 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.ProfileNavigatorImageList = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
@@ -244,6 +244,20 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "Generated profile text";
             // 
+            // ProfileNavigatorImageList
+            // 
+            this.ProfileNavigatorImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ProfileNavigatorImageList.ImageStream")));
+            this.ProfileNavigatorImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.ProfileNavigatorImageList.Images.SetKeyName(0, "DataBrowserSelection.png");
+            this.ProfileNavigatorImageList.Images.SetKeyName(1, "ProfileBrowserText.png");
+            this.ProfileNavigatorImageList.Images.SetKeyName(2, "ProfileBrowserPlaceholder.png");
+            this.ProfileNavigatorImageList.Images.SetKeyName(3, "ProfileBrowserSegment.png");
+            this.ProfileNavigatorImageList.Images.SetKeyName(4, "ProfileBrowserSegment.png");
+            this.ProfileNavigatorImageList.Images.SetKeyName(5, "ProfileBrowserSegment.png");
+            this.ProfileNavigatorImageList.Images.SetKeyName(6, "ProfileBrowserLookup.png");
+            this.ProfileNavigatorImageList.Images.SetKeyName(7, "ProfileBrowserCondition.png");
+            this.ProfileNavigatorImageList.Images.SetKeyName(8, "ProfileBrowserFunction.png");
+            // 
             // GenProfileEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -253,11 +267,9 @@
             this.Size = new System.Drawing.Size(670, 339);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -267,7 +279,6 @@
             this.splitContainer3.Panel1.PerformLayout();
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
@@ -295,6 +306,7 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ImageList ProfileNavigatorImageList;
 
     }
 }
