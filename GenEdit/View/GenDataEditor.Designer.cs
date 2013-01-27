@@ -29,34 +29,34 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.treeView1 = new System.Windows.Forms.TreeView();
-            this.GenDataDataGrid = new System.Windows.Forms.DataGridView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.DataEditorStatusLabel = new System.Windows.Forms.ToolStripLabel();
             this.MoveToTopButton = new System.Windows.Forms.ToolStripButton();
             this.MoveUpButton = new System.Windows.Forms.ToolStripButton();
             this.MoveDownButton = new System.Windows.Forms.ToolStripButton();
             this.MoveToBottomButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.AddItemButton = new System.Windows.Forms.ToolStripButton();
             this.RemoveItemButton = new System.Windows.Forms.ToolStripButton();
+            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.SaveItemChangesButton = new System.Windows.Forms.ToolStripButton();
             this.CancelItemChangesButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.DataEditorStatusLabel = new System.Windows.Forms.ToolStripLabel();
+            this.GenDataDataGrid = new System.Windows.Forms.DataGridView();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.GenDataDataGrid)).BeginInit();
             this.toolStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GenDataDataGrid)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -80,65 +80,6 @@
             this.splitContainer1.SplitterDistance = 204;
             this.splitContainer1.TabIndex = 0;
             // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(204, 20);
-            this.panel1.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(101, 17);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Data navigator";
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(406, 20);
-            this.panel2.TabIndex = 1;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(0, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(78, 17);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Data editor";
-            // 
-            // treeView1
-            // 
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 20);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(204, 263);
-            this.treeView1.TabIndex = 2;
-            // 
-            // GenDataDataGrid
-            // 
-            this.GenDataDataGrid.AllowUserToAddRows = false;
-            this.GenDataDataGrid.AllowUserToDeleteRows = false;
-            this.GenDataDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.GenDataDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GenDataDataGrid.Location = new System.Drawing.Point(0, 20);
-            this.GenDataDataGrid.Name = "GenDataDataGrid";
-            this.GenDataDataGrid.Size = new System.Drawing.Size(406, 263);
-            this.GenDataDataGrid.TabIndex = 2;
-            // 
             // toolStrip1
             // 
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -155,35 +96,6 @@
             this.toolStrip1.Size = new System.Drawing.Size(204, 25);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStrip2
-            // 
-            this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.SaveItemChangesButton,
-            this.CancelItemChangesButton,
-            this.toolStripSeparator2,
-            this.DataEditorStatusLabel});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 258);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(406, 25);
-            this.toolStrip2.TabIndex = 3;
-            this.toolStrip2.Text = "toolStrip2";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // DataEditorStatusLabel
-            // 
-            this.DataEditorStatusLabel.Name = "DataEditorStatusLabel";
-            this.DataEditorStatusLabel.Size = new System.Drawing.Size(0, 22);
             // 
             // MoveToTopButton
             // 
@@ -225,6 +137,11 @@
             this.MoveToBottomButton.Text = "Move to bottom";
             this.MoveToBottomButton.ToolTipText = "Move the item to the bottom of its list";
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
             // AddItemButton
             // 
             this.AddItemButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -244,6 +161,48 @@
             this.RemoveItemButton.Size = new System.Drawing.Size(23, 22);
             this.RemoveItemButton.Text = "Remove item";
             this.RemoveItemButton.ToolTipText = "Remove the selected item from its list";
+            // 
+            // treeView1
+            // 
+            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView1.Location = new System.Drawing.Point(0, 20);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(204, 263);
+            this.treeView1.TabIndex = 2;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(204, 20);
+            this.panel1.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(101, 17);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Data navigator";
+            // 
+            // toolStrip2
+            // 
+            this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SaveItemChangesButton,
+            this.CancelItemChangesButton,
+            this.toolStripSeparator2,
+            this.DataEditorStatusLabel});
+            this.toolStrip2.Location = new System.Drawing.Point(0, 258);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.Size = new System.Drawing.Size(406, 25);
+            this.toolStrip2.TabIndex = 3;
+            this.toolStrip2.Text = "toolStrip2";
             // 
             // SaveItemChangesButton
             // 
@@ -265,6 +224,47 @@
             this.CancelItemChangesButton.Text = "Cancel changes";
             this.CancelItemChangesButton.ToolTipText = "Cancel any changes made to the selected item";
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // DataEditorStatusLabel
+            // 
+            this.DataEditorStatusLabel.Name = "DataEditorStatusLabel";
+            this.DataEditorStatusLabel.Size = new System.Drawing.Size(0, 22);
+            // 
+            // GenDataDataGrid
+            // 
+            this.GenDataDataGrid.AllowUserToAddRows = false;
+            this.GenDataDataGrid.AllowUserToDeleteRows = false;
+            this.GenDataDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.GenDataDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GenDataDataGrid.Location = new System.Drawing.Point(0, 20);
+            this.GenDataDataGrid.Name = "GenDataDataGrid";
+            this.GenDataDataGrid.Size = new System.Drawing.Size(406, 263);
+            this.GenDataDataGrid.TabIndex = 2;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.label2);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(406, 20);
+            this.panel2.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(0, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(78, 17);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Data editor";
+            // 
             // GenDataEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -278,15 +278,15 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.GenDataDataGrid)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GenDataDataGrid)).EndInit();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
