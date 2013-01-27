@@ -31,7 +31,6 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.genDataEditor1 = new GenEdit.View.GenDataEditor();
             this.genProfileEditor1 = new GenEdit.View.GenProfileEditor();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -58,6 +57,7 @@
             // genDataEditor1
             // 
             this.genDataEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.genDataEditor1.GenDataEditorViewModel = null;
             this.genDataEditor1.Location = new System.Drawing.Point(0, 0);
             this.genDataEditor1.Name = "genDataEditor1";
             this.genDataEditor1.Size = new System.Drawing.Size(617, 205);
@@ -66,6 +66,7 @@
             // genProfileEditor1
             // 
             this.genProfileEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.genProfileEditor1.GenDataEditorViewModel = null;
             this.genProfileEditor1.Location = new System.Drawing.Point(0, 0);
             this.genProfileEditor1.Name = "genProfileEditor1";
             this.genProfileEditor1.Size = new System.Drawing.Size(617, 294);
@@ -79,10 +80,8 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "GenEditMainForm";
             this.Text = "Generator editor";
-            this.Load += new System.EventHandler(this.GenEditMainForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 

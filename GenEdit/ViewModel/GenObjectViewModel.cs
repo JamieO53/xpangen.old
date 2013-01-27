@@ -68,4 +68,8 @@ namespace GenEdit.ViewModel
             GenAttributes.GenData.EstablishContext(GenAttributes.GenObject);
         }
     }
+
+    public class ObservableCollection<T>: Collection<T>
+    {
+    }
 }

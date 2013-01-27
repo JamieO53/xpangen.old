@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GenDataEditor));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.MoveToTopButton = new System.Windows.Forms.ToolStripButton();
@@ -37,7 +39,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.AddItemButton = new System.Windows.Forms.ToolStripButton();
             this.RemoveItemButton = new System.Windows.Forms.ToolStripButton();
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.DataNavigatorTreeView = new System.Windows.Forms.TreeView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -48,7 +50,7 @@
             this.GenDataDataGrid = new System.Windows.Forms.DataGridView();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.DataNavigatorImageList = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -68,7 +70,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip1);
-            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
+            this.splitContainer1.Panel1.Controls.Add(this.DataNavigatorTreeView);
             this.splitContainer1.Panel1.Controls.Add(this.panel1);
             // 
             // splitContainer1.Panel2
@@ -162,13 +164,16 @@
             this.RemoveItemButton.Text = "Remove item";
             this.RemoveItemButton.ToolTipText = "Remove the selected item from its list";
             // 
-            // treeView1
+            // DataNavigatorTreeView
             // 
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 20);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(204, 263);
-            this.treeView1.TabIndex = 2;
+            this.DataNavigatorTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DataNavigatorTreeView.ImageIndex = 0;
+            this.DataNavigatorTreeView.ImageList = this.DataNavigatorImageList;
+            this.DataNavigatorTreeView.Location = new System.Drawing.Point(0, 20);
+            this.DataNavigatorTreeView.Name = "DataNavigatorTreeView";
+            this.DataNavigatorTreeView.SelectedImageIndex = 0;
+            this.DataNavigatorTreeView.Size = new System.Drawing.Size(204, 263);
+            this.DataNavigatorTreeView.TabIndex = 2;
             // 
             // panel1
             // 
@@ -265,6 +270,14 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Data editor";
             // 
+            // DataNavigatorImageList
+            // 
+            this.DataNavigatorImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("DataNavigatorImageList.ImageStream")));
+            this.DataNavigatorImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.DataNavigatorImageList.Images.SetKeyName(0, "DataBrowserSelection.png");
+            this.DataNavigatorImageList.Images.SetKeyName(1, "DataBrowserClass.png");
+            this.DataNavigatorImageList.Images.SetKeyName(2, "DataBrowserSubClass.png");
+            // 
             // GenDataEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -276,7 +289,6 @@
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -298,7 +310,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView DataNavigatorTreeView;
         private System.Windows.Forms.DataGridView GenDataDataGrid;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton MoveToTopButton;
@@ -313,6 +325,7 @@
         private System.Windows.Forms.ToolStripButton CancelItemChangesButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripLabel DataEditorStatusLabel;
+        private System.Windows.Forms.ImageList DataNavigatorImageList;
 
     }
 }
