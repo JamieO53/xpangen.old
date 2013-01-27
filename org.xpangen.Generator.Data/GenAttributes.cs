@@ -19,6 +19,7 @@ namespace org.xpangen.Generator.Data
                 {
                     ClassId = value.ClassId;
                     GenDataDef = value.GenData.GenDataDef;
+                    GenData = value.GenData;
                 }
 
                 GetFields();
@@ -52,9 +53,11 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        protected GenDataDef GenDataDef { get; private set; }
+        public GenDataDef GenDataDef { get; private set; }
 
         protected int ClassId { get; private set; }
+
+        public GenData GenData { get; private set; }
 
         public GenAttributes(GenDataDef genDataDef)
         {

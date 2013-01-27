@@ -79,6 +79,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "GenEditMainForm";
             this.Text = "Generator editor";
+            this.Load += new System.EventHandler(this.GenEditMainForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
