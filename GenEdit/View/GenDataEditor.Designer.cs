@@ -40,6 +40,7 @@
             this.AddItemButton = new System.Windows.Forms.ToolStripButton();
             this.RemoveItemButton = new System.Windows.Forms.ToolStripButton();
             this.DataNavigatorTreeView = new System.Windows.Forms.TreeView();
+            this.DataNavigatorImageList = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -50,7 +51,6 @@
             this.GenDataDataGrid = new System.Windows.Forms.DataGridView();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
-            this.DataNavigatorImageList = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -174,6 +174,15 @@
             this.DataNavigatorTreeView.SelectedImageIndex = 0;
             this.DataNavigatorTreeView.Size = new System.Drawing.Size(204, 263);
             this.DataNavigatorTreeView.TabIndex = 2;
+            this.DataNavigatorTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.DataNavigatorTreeView_AfterSelect);
+            // 
+            // DataNavigatorImageList
+            // 
+            this.DataNavigatorImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("DataNavigatorImageList.ImageStream")));
+            this.DataNavigatorImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.DataNavigatorImageList.Images.SetKeyName(0, "DataBrowserSelection.png");
+            this.DataNavigatorImageList.Images.SetKeyName(1, "DataBrowserClass.png");
+            this.DataNavigatorImageList.Images.SetKeyName(2, "DataBrowserSubClass.png");
             // 
             // panel1
             // 
@@ -270,14 +279,6 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Data editor";
             // 
-            // DataNavigatorImageList
-            // 
-            this.DataNavigatorImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("DataNavigatorImageList.ImageStream")));
-            this.DataNavigatorImageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.DataNavigatorImageList.Images.SetKeyName(0, "DataBrowserSelection.png");
-            this.DataNavigatorImageList.Images.SetKeyName(1, "DataBrowserClass.png");
-            this.DataNavigatorImageList.Images.SetKeyName(2, "DataBrowserSubClass.png");
-            // 
             // GenDataEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -285,6 +286,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "GenDataEditor";
             this.Size = new System.Drawing.Size(614, 283);
+            this.Load += new System.EventHandler(this.GenDataEditor_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);

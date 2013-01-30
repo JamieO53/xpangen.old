@@ -18,12 +18,14 @@ namespace GenEdit.ViewModel
         private static GeData GetDefaultGeData()
         {
             var geData = new GeData();
-            if (Process.GetCurrentProcess().ProcessName.StartsWith("devenv", StringComparison.Ordinal))
+            var processName = Process.GetCurrentProcess().ProcessName;
+            if (processName.StartsWith("devenv", StringComparison.OrdinalIgnoreCase) ||
+                processName.EndsWith(".vshost", StringComparison.OrdinalIgnoreCase))
             {
                 geData.Testing = true;
                 geData.GenDataStore.SetBase(@"Data\ProgramDefinition.dcb");
                 geData.GenDataStore.SetData(@"Data\GeneratorDefinitionModel.dcb");
-                geData.Profile = new GenCompactProfileParser(GeData.GenData, @"Data\GenProfileModel.prf", "");
+                geData.Profile = new GenCompactProfileParser(geData.GenData, @"Data\GenProfileModel.prf", "");
             } 
             return geData;
         }
