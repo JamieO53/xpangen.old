@@ -48,6 +48,7 @@
             this.CancelItemChangesButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.DataEditorStatusLabel = new System.Windows.Forms.ToolStripLabel();
+            this.DataEditorHintLabel = new System.Windows.Forms.ToolStripLabel();
             this.GenDataDataGrid = new System.Windows.Forms.DataGridView();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
@@ -108,6 +109,7 @@
             this.MoveToTopButton.Size = new System.Drawing.Size(23, 22);
             this.MoveToTopButton.Text = "To top";
             this.MoveToTopButton.ToolTipText = "Move the item to the top of its list";
+            this.MoveToTopButton.Click += new System.EventHandler(this.MoveToTopButton_Click);
             // 
             // MoveUpButton
             // 
@@ -211,7 +213,8 @@
             this.SaveItemChangesButton,
             this.CancelItemChangesButton,
             this.toolStripSeparator2,
-            this.DataEditorStatusLabel});
+            this.DataEditorStatusLabel,
+            this.DataEditorHintLabel});
             this.toolStrip2.Location = new System.Drawing.Point(0, 258);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(406, 25);
@@ -248,6 +251,11 @@
             this.DataEditorStatusLabel.Name = "DataEditorStatusLabel";
             this.DataEditorStatusLabel.Size = new System.Drawing.Size(0, 22);
             // 
+            // DataEditorHintLabel
+            // 
+            this.DataEditorHintLabel.Name = "DataEditorHintLabel";
+            this.DataEditorHintLabel.Size = new System.Drawing.Size(0, 22);
+            // 
             // GenDataDataGrid
             // 
             this.GenDataDataGrid.AllowUserToAddRows = false;
@@ -258,6 +266,8 @@
             this.GenDataDataGrid.Name = "GenDataDataGrid";
             this.GenDataDataGrid.Size = new System.Drawing.Size(406, 263);
             this.GenDataDataGrid.TabIndex = 2;
+            this.GenDataDataGrid.ColumnAdded += new System.Windows.Forms.DataGridViewColumnEventHandler(this.GenDataDataGrid_ColumnAdded);
+            this.GenDataDataGrid.SelectionChanged += new System.EventHandler(this.GenDataDataGrid_SelectionChanged);
             // 
             // panel2
             // 
@@ -328,6 +338,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripLabel DataEditorStatusLabel;
         private System.Windows.Forms.ImageList DataNavigatorImageList;
+        private System.Windows.Forms.ToolStripLabel DataEditorHintLabel;
 
     }
 }
