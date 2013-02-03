@@ -1,6 +1,5 @@
 ﻿using System.Windows.Forms;
 using GenEdit.ViewModel;
-using org.xpangen.Generator.Editor.Helper;
 
 namespace GenEdit
 {
@@ -11,6 +10,7 @@ namespace GenEdit
             InitializeComponent();
             genDataEditor1.GenDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
             genProfileEditor1.GenDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
+            genDataEditor1.OnDataChanged = genProfileEditor1.RefreshProfile;
         }
 
     }

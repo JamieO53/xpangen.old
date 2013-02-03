@@ -48,7 +48,7 @@ namespace GenEdit.ViewModel
 
         private GenApplicationBase Definition { get; set; }
 
-        private GenAttributes GenAttributes { get; set; }
+        public GenAttributes GenAttributes { get; set; }
 
         /// <summary>
         /// The heading value of the tree node

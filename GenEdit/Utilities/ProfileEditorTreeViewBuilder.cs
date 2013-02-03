@@ -12,7 +12,7 @@ namespace GenEdit.Utilities
         {
         }
 
-        private void CreateBodyChildTrees(TreeNodeCollection items, GenContainerFragmentBase container)
+        public void CreateBodyChildTrees(TreeNodeCollection items, GenContainerFragmentBase container)
         {
             var i = 0;
             while (i < container.Body.Count)

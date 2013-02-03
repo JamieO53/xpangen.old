@@ -50,8 +50,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.genProfileEditor1);
-            this.splitContainer1.Size = new System.Drawing.Size(617, 503);
-            this.splitContainer1.SplitterDistance = 205;
+            this.splitContainer1.Size = new System.Drawing.Size(617, 614);
+            this.splitContainer1.SplitterDistance = 156;
             this.splitContainer1.TabIndex = 0;
             // 
             // genDataEditor1
@@ -60,7 +60,7 @@
             this.genDataEditor1.GenDataEditorViewModel = null;
             this.genDataEditor1.Location = new System.Drawing.Point(0, 0);
             this.genDataEditor1.Name = "genDataEditor1";
-            this.genDataEditor1.Size = new System.Drawing.Size(617, 205);
+            this.genDataEditor1.Size = new System.Drawing.Size(617, 156);
             this.genDataEditor1.TabIndex = 0;
             // 
             // genProfileEditor1
@@ -69,14 +69,14 @@
             this.genProfileEditor1.GenDataEditorViewModel = null;
             this.genProfileEditor1.Location = new System.Drawing.Point(0, 0);
             this.genProfileEditor1.Name = "genProfileEditor1";
-            this.genProfileEditor1.Size = new System.Drawing.Size(617, 294);
+            this.genProfileEditor1.Size = new System.Drawing.Size(617, 454);
             this.genProfileEditor1.TabIndex = 0;
             // 
             // GenEditMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(617, 503);
+            this.ClientSize = new System.Drawing.Size(617, 614);
             this.Controls.Add(this.splitContainer1);
             this.Name = "GenEditMainForm";
             this.Text = "Generator editor";
