@@ -166,6 +166,7 @@ namespace org.xpangen.Generator.Data
             var genObject = this[itemIndex];
             RemoveAt(itemIndex);
             Insert(0, genObject);
+            Index = 0;
             GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId], "");
             GenData.Changed = true;
         }
@@ -176,6 +177,7 @@ namespace org.xpangen.Generator.Data
             var genObject = this[itemIndex];
             this[itemIndex] = this[itemIndex - 1];
             this[itemIndex - 1] = genObject;
+            Index = itemIndex - 1;
             GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId], "");
             GenData.Changed = true;
         }
@@ -186,6 +188,7 @@ namespace org.xpangen.Generator.Data
             var genObject = this[itemIndex];
             this[itemIndex] = this[itemIndex + 1];
             this[itemIndex + 1] = genObject;
+            Index = itemIndex + 1;
             GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId], "");
             GenData.Changed = true;
         }
@@ -196,6 +199,7 @@ namespace org.xpangen.Generator.Data
             var genObject = this[itemIndex];
             RemoveAt(itemIndex);
             Add(genObject);
+            Index = Count - 1;
             GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId], "");
             GenData.Changed = true;
         }

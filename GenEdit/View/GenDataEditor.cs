@@ -82,6 +82,21 @@ namespace GenEdit.View
             MoveItem(ListMove.ToTop);
         }
 
+        private void MoveUpButton_Click(object sender, System.EventArgs e)
+        {
+            MoveItem(ListMove.Up);
+        }
+
+        private void MoveDownButton_Click(object sender, System.EventArgs e)
+        {
+            MoveItem(ListMove.Down);
+        }
+
+        private void MoveToBottomButton_Click(object sender, System.EventArgs e)
+        {
+            MoveItem(ListMove.ToBottom);
+        }
+
         private void MoveItem(ListMove move)
         {
             var myNode = DataNavigatorTreeView.SelectedNode;
@@ -115,36 +130,56 @@ namespace GenEdit.View
         {
             var nodes = myNode.Parent.Nodes;
             if (index <= 0 || index >= nodes.Count) return;
+            DataNavigatorTreeView.BeginUpdate();
             var node = nodes[index];
             nodes.RemoveAt(index);
             nodes.Insert(0, node);
+            DataNavigatorTreeView.SelectedNode = node;
+            DataNavigatorTreeView.EndUpdate();
+            RaiseDataChanged();
         }
 
         private void MoveUp(int index, TreeNode myNode)
         {
             var nodes = myNode.Parent.Nodes;
             if (index <= 0 || index >= nodes.Count) return;
+            DataNavigatorTreeView.BeginUpdate();
             var node = nodes[index];
-            nodes[index] = nodes[index - 1];
-            nodes[index - 1] = node;
+            nodes.RemoveAt(index);
+            nodes.Insert(index - 1, node);
+            //nodes[index] = nodes[index - 1];
+            //nodes[index - 1] = node;
+            DataNavigatorTreeView.SelectedNode = node;
+            DataNavigatorTreeView.EndUpdate();
+            RaiseDataChanged();
         }
 
         private void MoveDown(int index, TreeNode myNode)
         {
             var nodes = myNode.Parent.Nodes;
             if (index < 0 || index >= nodes.Count - 1) return;
-            var genObject = nodes[index];
-            nodes[index] = nodes[index + 1];
-            nodes[index + 1] = genObject;
+            DataNavigatorTreeView.BeginUpdate();
+            var node = nodes[index];
+            nodes.RemoveAt(index);
+            nodes.Insert(index + 1, node);
+            //nodes[index] = nodes[index + 1];
+            //nodes[index + 1] = node;
+            DataNavigatorTreeView.SelectedNode = node;
+            DataNavigatorTreeView.EndUpdate();
+            RaiseDataChanged();
         }
 
         private void MoveToBottom(int index, TreeNode myNode)
         {
             var nodes = myNode.Parent.Nodes;
             if (index < 0 || index >= nodes.Count - 1) return;
-            var genObject = nodes[index];
+            DataNavigatorTreeView.BeginUpdate();
+            var node = nodes[index];
             nodes.RemoveAt(index);
-            nodes.Add(genObject);
+            nodes.Add(node);
+            DataNavigatorTreeView.SelectedNode = node;
+            DataNavigatorTreeView.EndUpdate();
+            RaiseDataChanged();
         }
     }
 }

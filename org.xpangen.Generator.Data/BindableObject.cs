@@ -21,7 +21,8 @@ namespace org.xpangen.Generator.Data
 		#region Data
 
 		private static readonly Dictionary<string, PropertyChangedEventArgs> EventArgCache;
-		private const string ErrorMsg = "{0} is not a public property of {1}";
+	    private bool _ignorePropertyValidation = false;
+	    private const string ErrorMsg = "{0} is not a public property of {1}";
 
 		#endregion // Data
 
@@ -129,26 +130,32 @@ namespace org.xpangen.Generator.Data
 		[Conditional("DEBUG")]
 		private void VerifyProperty(string propertyName)
 		{
-			Type type = GetType();
+		    if (IgnorePropertyValidation) return;
+            var type = GetType();
 
 			// Look for a public property with the specified name.
 			var propInfo = type.GetProperty(propertyName);
 
-			if (propInfo == null)
-			{
-				// The property could not be found,
-				// so alert the developer of the problem.
+		    if (propInfo != null) return;
+		    
+            // The property could not be found,
+		    // so alert the developer of the problem.
 
-				string msg = string.Format(
-					ErrorMsg, 
-					propertyName, 
-					type.FullName);
+		    var msg = string.Format(
+		        ErrorMsg, 
+		        propertyName, 
+		        type.FullName);
 
-				Debug.Fail(msg);
-			}
+		    Debug.Fail(msg);
 		}
 
-		#endregion // Private Helpers
+	    protected bool IgnorePropertyValidation
+	    {
+	        get { return _ignorePropertyValidation; }
+	        set { _ignorePropertyValidation = value; }
+	    }
+
+	    #endregion // Private Helpers
 	}
 
 }
