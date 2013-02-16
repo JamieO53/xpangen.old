@@ -14,6 +14,7 @@ namespace org.xpangen.Generator.Data
 
         public GenData(GenDataDef genDataDef)
         {
+            IgnorePropertyValidation = true;
             GenDataDef = genDataDef;
             Context = new List<GenObjectList>();
             for (var i = 0; i < genDataDef.Classes.Count; i++)

@@ -155,32 +155,34 @@ namespace org.xpangen.Generator.Test
             CreateNamedClass(d, "Class", "SubClass", "SubClass2");
             CreateNamedClass(d, "Class", "SubClass", "SubClass3");
             
-            // Verify initial subclass order
-            CheckOrder(d, "123", "Verify initial subclass order");
+            // Verify initial subclass order - Index is last added item
+            CheckOrder(d, 2, "123", "Verify initial subclass order");
             // Make and verify moves
-            MoveItem(d, ListMove.Up, 2, "132", "Move last subclass up one place");
-            MoveItem(d, ListMove.ToTop, 2, "213", "Move last subclass to top");
-            MoveItem(d, ListMove.ToTop, 1, "123", "Move second subclass to top");
-            MoveItem(d, ListMove.ToBottom, 0, "231", "Move first subclass to bottom");
-            MoveItem(d, ListMove.ToTop, 0, "231", "Move first subclass to top (should have no effect)");
-            MoveItem(d, ListMove.ToBottom, 2, "231", "Move last subclass to bottom (should have no effect)");
-            MoveItem(d, ListMove.Up, 0, "231", "Move first subclass up (should have no effect)");
-            MoveItem(d, ListMove.Down, 2, "231", "Move last subclass down (should have no effect)");
-            MoveItem(d, ListMove.Down, 0, "321", "Move first subclass down");
-            MoveItem(d, ListMove.Down, 1, "312", "Move second subclass down");
-            MoveItem(d, ListMove.Up, 1, "132", "Move second subclass up");
-            MoveItem(d, ListMove.ToBottom, 1, "123", "Move second subclass to bottom");
+            MoveItem(d, ListMove.Up, 2, 1, "132", "Move last subclass up one place");
+            MoveItem(d, ListMove.ToTop, 2, 0, "213", "Move last subclass to top");
+            MoveItem(d, ListMove.ToTop, 1, 0, "123", "Move second subclass to top");
+            MoveItem(d, ListMove.ToBottom, 0, 2, "231", "Move first subclass to bottom");
+            MoveItem(d, ListMove.ToTop, 0, 0, "231", "Move first subclass to top (should have no effect)");
+            MoveItem(d, ListMove.ToBottom, 2, 2, "231", "Move last subclass to bottom (should have no effect)");
+            MoveItem(d, ListMove.Up, 0, 0, "231", "Move first subclass up (should have no effect)");
+            MoveItem(d, ListMove.Down, 2, 2, "231", "Move last subclass down (should have no effect)");
+            MoveItem(d, ListMove.Down, 0, 1, "321", "Move first subclass down");
+            MoveItem(d, ListMove.Down, 1, 2, "312", "Move second subclass down");
+            MoveItem(d, ListMove.Up, 1, 0, "132", "Move second subclass up");
+            MoveItem(d, ListMove.ToBottom, 1, 2, "123", "Move second subclass to bottom");
         }
 
-        private static void MoveItem(GenData d, ListMove move, int itemIndex, string order, string action)
+        private static void MoveItem(GenData d, ListMove move, int itemIndex, int newItemIndex, string order, string action)
         {
+            d.Context[SubClassClassId].Index = itemIndex;
             d.Context[SubClassClassId].MoveItem(move, itemIndex);
-            CheckOrder(d, order, action);
+            CheckOrder(d, newItemIndex, order, action);
         }
 
-        private static void CheckOrder(GenData d, string order, string action)
+        private static void CheckOrder(GenData d, int itemIndex, string order, string action)
         {
             var id = d.GenDataDef.GetId("SubClass.Name");
+            Assert.AreEqual(itemIndex, d.Context[id.ClassId].Index, "Expected index value");
             d.First(ClassClassId);
             d.First(SubClassClassId);
             Assert.AreEqual("SubClass" + order[0], d.GetValue(id), action + " first item");

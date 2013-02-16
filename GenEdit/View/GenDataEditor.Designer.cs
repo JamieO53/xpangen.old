@@ -120,6 +120,7 @@
             this.MoveUpButton.Size = new System.Drawing.Size(23, 22);
             this.MoveUpButton.Text = "Move up";
             this.MoveUpButton.ToolTipText = "Move the item up one place in its list";
+            this.MoveUpButton.Click += new System.EventHandler(this.MoveUpButton_Click);
             // 
             // MoveDownButton
             // 
@@ -130,6 +131,7 @@
             this.MoveDownButton.Size = new System.Drawing.Size(23, 22);
             this.MoveDownButton.Text = "Move down";
             this.MoveDownButton.ToolTipText = "Move the item down one place in its list";
+            this.MoveDownButton.Click += new System.EventHandler(this.MoveDownButton_Click);
             // 
             // MoveToBottomButton
             // 
@@ -140,6 +142,7 @@
             this.MoveToBottomButton.Size = new System.Drawing.Size(23, 22);
             this.MoveToBottomButton.Text = "Move to bottom";
             this.MoveToBottomButton.ToolTipText = "Move the item to the bottom of its list";
+            this.MoveToBottomButton.Click += new System.EventHandler(this.MoveToBottomButton_Click);
             // 
             // toolStripSeparator1
             // 
