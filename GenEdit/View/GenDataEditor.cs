@@ -20,6 +20,30 @@ namespace GenEdit.View
             InitializeComponent();
         }
 
+        private void DataNavigatorTreeView_BeforeSelect(object sender, TreeViewCancelEventArgs e)
+        {
+            var data = GenDataEditorViewModel;
+            var node = data.SelectedNode;
+            if (node == null || !node.Changed) return;
+
+            var mr = MessageBox.Show("Data editor - data changed", "Do you wish to save the changes?",
+                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
+                         MessageBoxDefaultButton.Button1);
+            switch (mr)
+            {
+                case DialogResult.Yes:
+                    node.Save();
+                    break;
+                case DialogResult.No:
+                    node.Cancel();
+                    break;
+                default:
+                    e.Cancel = true;
+                    break;
+            }
+
+        }
+
         private void DataNavigatorTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             var data = GenDataEditorViewModel;
@@ -147,8 +171,6 @@ namespace GenEdit.View
             var node = nodes[index];
             nodes.RemoveAt(index);
             nodes.Insert(index - 1, node);
-            //nodes[index] = nodes[index - 1];
-            //nodes[index - 1] = node;
             DataNavigatorTreeView.SelectedNode = node;
             DataNavigatorTreeView.EndUpdate();
             RaiseDataChanged();
@@ -162,8 +184,6 @@ namespace GenEdit.View
             var node = nodes[index];
             nodes.RemoveAt(index);
             nodes.Insert(index + 1, node);
-            //nodes[index] = nodes[index + 1];
-            //nodes[index + 1] = node;
             DataNavigatorTreeView.SelectedNode = node;
             DataNavigatorTreeView.EndUpdate();
             RaiseDataChanged();

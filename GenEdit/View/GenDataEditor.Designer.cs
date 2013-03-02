@@ -179,6 +179,7 @@
             this.DataNavigatorTreeView.SelectedImageIndex = 0;
             this.DataNavigatorTreeView.Size = new System.Drawing.Size(204, 263);
             this.DataNavigatorTreeView.TabIndex = 2;
+            this.DataNavigatorTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.DataNavigatorTreeView_BeforeSelect);
             this.DataNavigatorTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.DataNavigatorTreeView_AfterSelect);
             // 
             // DataNavigatorImageList
