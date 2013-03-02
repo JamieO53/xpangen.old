@@ -64,6 +64,12 @@
     <Compile Include="View\GenDataEditor.Designer.cs">
       <DependentUpon>GenDataEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\GenLibrary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\GenLibrary.Designer.cs">
+      <DependentUpon>GenLibrary.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\GenProfileEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -85,6 +91,9 @@
     </Compile>
     <EmbeddedResource Include="View\GenDataEditor.resx">
       <DependentUpon>GenDataEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\GenLibrary.resx">
+      <DependentUpon>GenLibrary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\GenProfileEditor.resx">
       <DependentUpon>GenProfileEditor.cs</DependentUpon>
