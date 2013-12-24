@@ -140,16 +140,38 @@ namespace org.xpangen.Generator.Scanner
         /// <returns>The contents of the quoted string, with unescaped characters.</returns>
         public string ScanQuotedString()
         {
-            // ToDo: Check for escaped characters and do replacement. Only applicable to Parameter scanner.S
-            var q = Current;
+            var cs = new CharSet(Current + "\\");
+            var c = Current;
             SkipChar();
-            var name = ScanUntilChar(q);
+            var name = ScanUntil(cs);
             SkipChar();
-            while (!Eof && CheckChar(q))
+            while (!Eof)
             {
-                SkipChar();
-                name += q + ScanUntilChar(q);
-                SkipChar();
+                if (Current == c)
+                    SkipChar();
+                else
+                {
+                    switch (Current)
+                    {
+                        case 't':
+                            name += '\t';
+                            break;
+                        case 'n':
+                            name += '\n';
+                            break;
+                        case 'r':
+                            name += '\r';
+                            break;
+                        case '\\':
+                            name += '\\';
+                            break;
+                        default:
+                            name += @"\" + Current.ToString();
+                            break;
+                    }
+                    SkipChar();
+                }
+                name += ScanUntil(cs);
             }
             return name;
         }
