@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
@@ -33,6 +34,50 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("", scan.Attribute("Missing"), "Missing attribute blank by default");
             scan.ScanObject();
             Assert.IsTrue(scan.Eof);
+        }
+
+        private readonly Dictionary<char, string> _escapeChars =
+            new Dictionary<char, string>
+                {
+                    {'\t', @"\t"},
+                    {'\n', @"\n"},
+                    {'\r', @"\r"},
+                    {'\\', @"\\"},
+                    {'\f', @"\f"}
+                };
+        private readonly object[] _escapedChars = new object[]{'\t', '\n', '\r', '\\'};
+
+        /// <summary>
+        /// Tests that quoted strings with escape characters are scanned correctly
+        /// </summary>
+        [Test(Description = "Scanner Quoted String test with escaped characters")]
+        [TestCaseSource("_escapedChars")]
+        public void EscapedQuotedStringTest(char escapedChar)
+        {
+            var escapedString = _escapeChars[escapedChar];
+            var txt = string.Format(@"'start{0}end'", escapedString); // ' is the quote character;
+            var scan = new ParameterScanner(txt);
+            Assert.AreEqual(string.Format("start{0}end", escapedChar), scan.ScanQuotedString());
+        }
+
+        private readonly Dictionary<char, string> _undefinedEscapeChars =
+            new Dictionary<char, string>
+                {
+                    {'\f', @"\f"}
+                };
+        private readonly object[] _undefinedEscapedChars = new object[] { '\f' };
+
+        /// <summary>
+        /// Tests that quoted strings with undefined escape characters are scanned correctly
+        /// </summary>
+        [Test(Description = "Scanner Quoted String test with undefined escaped characters")]
+        [TestCaseSource("_undefinedEscapedChars")]
+        public void UndefinedEscapedQuotedStringTest(char escapedChar)
+        {
+            var escapedString = _undefinedEscapeChars[escapedChar];
+            var txt = @"'start" + escapedString + "end'"; // ' is the quote character;
+            var scan = new ParameterScanner(txt);
+            Assert.AreEqual(string.Format("start\\{0}end", escapedString.Substring(1)), scan.ScanQuotedString());
         }
 
         /// <summary>
