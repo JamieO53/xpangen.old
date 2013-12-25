@@ -69,14 +69,27 @@ namespace org.xpangen.Generator.Profile
         /// <returns>The quoted string.</returns>
         public static string QuoteString(string value)
         {
-            // ToDo: Replace special characters with their escaped equivalents
             var s = new StringBuilder("'");
             foreach (var c in value)
             {
-                if (c == '\'')
-                    s.Append("''");
-                else
-                    s.Append(c);
+                switch (c)
+                {
+                    case '\'':
+                        s.Append("''");
+                        break;
+                    case '\t':
+                        s.Append(@"\t");
+                        break;
+                    case '\r':
+                        s.Append(@"\r");
+                        break;
+                    case '\n':
+                        s.Append(@"\n");
+                        break;
+                    default:
+                        s.Append(c);
+                        break;
+                }
             }
             s.Append("'");
             return s.ToString();
