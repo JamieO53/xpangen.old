@@ -450,6 +450,8 @@ namespace org.xpangen.Generator.Test
         {
             ExecuteFunction(GenData, "QuoteString", "This string has no quotes", "", "'This string has no quotes'");
             ExecuteFunction(GenData, "QuoteString", "This string's quotes", "", "'This string''s quotes'");
+            ExecuteFunction(GenData, "QuoteString", "This\tTabbed string", "", @"'This\tTabbed string'");
+            ExecuteFunction(GenData, "QuoteString", "This\r\nnew line string", "", @"'This\r\nnew line string'");
         }
 
         /// <summary>
