@@ -64,9 +64,6 @@ namespace org.xpangen.Generator.Parameter
 
             ClassProfile(genData.GenDataDef, 0, def, profile, null);
             ((GenTextFragment) profile.Body.Fragment[0]).Text = def + ".\r\n";
-            // ToDo: Use Generate to avoid expanding in memory
-            //File.WriteAllText(fileName, profile.Expand(genData));
-            //var stream = new FileStream(fileName, FileMode.Create);
             using (var writer = new GenWriter(null) {FileName = fileName})
             {
                 profile.Generate(null, genData, writer);

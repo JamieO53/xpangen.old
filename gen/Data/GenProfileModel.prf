@@ -1,0 +1,49 @@
+`[Solution:`[Assembly:`[Class:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Class.Name`.cs`]`]// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using Generator.Application;
+using Generator.Data;
+
+namespace `Assembly.Namespace`
+{
+    /// <summary>
+    /// `Class.Title`
+    /// </summary>
+    public class `Class.Name` : GenApplicationBase
+    {
+        public `Class.Name`(GenDataDef genDataDef) : base(genDataDef)
+        {
+        }
+
+`[Property:        /// <summary>
+        /// `Property.Title`
+        /// </summary>
+        public string `Property.Name`
+        {
+            get { return AsString("`Property.Name`"); }
+            set
+            {
+                if (`Property.Name` == value) return;
+                SetString("`Property.Name`", value);
+                SaveFields();
+            }
+        }
+
+`]`[SubClass:        public GenApplicationList<`SubClass.Name`> `SubClass.Name`List { get; private set; }
+`]`[SubClass':
+        protected override void GenObjectSetNotification(GenObject oldGenObject)
+        {
+`]`@MapSet:'var' 'var '`]`[SubClass:            `SubClass.Name`List = new GenApplicationList<`SubClass.Name`>();
+            `@MapGet:'var'`]`@MapSet:'var' ''`]list = GenObject.SubClass[0];
+            list.First();
+            while (!list.Eol)
+            {
+                `SubClass.Name`List.Add(new `SubClass.Name`(GenDataDef) {GenObject = list.Context});
+                list.Next();
+            }
+
+`]`[SubClass':        }
+`]    }
+}
+`]`]`]

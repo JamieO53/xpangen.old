@@ -1,0 +1,20 @@
+Class=Class
+Field={Name,Title}
+SubClass={SubClass,Property}
+Class=SubClass
+Field=Name
+Class=Property
+Field={Name,Title,DataType,Default}
+.
+Class=Class[Title='Class Definition']
+SubClass=SubClass
+SubClass=Property
+Property=Name[Title='Object name: must be well formed',DataType=String]
+Property=Title[Title='Object description: used as a hint when editing',DataType=String]
+Class=SubClass[Title='Class to SubClass link']
+Property=Name[Title='Subclass name: refers to a class and is used for hierarchical browsing',DataType=String]
+Class=Property[Title='Class Property link']
+Property=Name[Title='Property name: must be well formed',DataType=String]
+Property=Title[Title='Property description: used as a hint when editing',DataType=String]
+Property=DataType[Title='Data type of property (used for editing) - String, integer or boolean',DataType=String,Default=String]
+Property=Default[Title='Default value of the property when a new object is created (used for editing)',DataType=String]

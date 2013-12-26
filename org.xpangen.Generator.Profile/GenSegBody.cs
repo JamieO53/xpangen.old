@@ -59,5 +59,15 @@ namespace org.xpangen.Generator.Profile
         {
             return _fragment.IndexOf(fragment);
         }
+
+        public override bool Generate(GenFragment prefix, GenData genData, GenWriter writer)
+        {
+            var generated = false;
+            foreach (var fragment in Fragment)
+            {
+                generated |= fragment.Generate(prefix, genData, writer);
+            }
+            return generated;
+        }
     }
 }
