@@ -50,7 +50,7 @@ namespace org.xpangen.Generator.Profile
         public override bool Generate(GenFragment prefix, GenData genData, GenWriter writer)
         {
             if (String.Compare(FunctionName, "File", StringComparison.OrdinalIgnoreCase) == 0 &&
-                writer.Stream is FileStream)
+                (writer.Stream == null || writer.Stream is FileStream))
                 return (writer.FileName = Body.Expand(genData)) != "";
             return base.Generate(prefix, genData, writer);
         }
