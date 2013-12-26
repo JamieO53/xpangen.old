@@ -144,11 +144,17 @@ namespace org.xpangen.Generator.Scanner
             var c = Current;
             SkipChar();
             var name = ScanUntil(cs);
+            var currentIsQuote = Current == c;
+            var currentIsEscape = Current == '\\';
             SkipChar();
-            while (!Eof)
+            
+            while (!Eof && (currentIsQuote && Current == c || currentIsEscape))
             {
-                if (Current == c)
+                if (currentIsQuote)
+                {
+                    name += c;
                     SkipChar();
+                }
                 else
                 {
                     switch (Current)
@@ -172,6 +178,9 @@ namespace org.xpangen.Generator.Scanner
                     SkipChar();
                 }
                 name += ScanUntil(cs);
+                currentIsQuote = Current == c;
+                currentIsEscape = Current == '\\';
+                SkipChar();
             }
             return name;
         }

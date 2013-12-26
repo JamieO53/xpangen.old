@@ -166,7 +166,7 @@ namespace org.xpangen.Generator.Data
                 {
                     p = "Unknown property";
                 }
-                return string.Format("<<<< Invalid Value Lookup: {0}.{1}", c, p);
+                return string.Format("<<<< Invalid Value Lookup: {0}.{1} >>>>", c, p);
             }
         }
 

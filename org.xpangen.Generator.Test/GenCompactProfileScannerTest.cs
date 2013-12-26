@@ -4,6 +4,7 @@
 
 using NUnit.Framework;
 using org.xpangen.Generator.Profile.Scanner;
+using org.xpangen.Generator.Scanner;
 
 namespace org.xpangen.Generator.Test
 {
@@ -22,7 +23,7 @@ namespace org.xpangen.Generator.Test
             var scan = new CompactProfileScanner("");
             Assert.IsTrue(scan.Eof);
             scan.SkipChar();
-            Assert.AreEqual(CompactProfileScanner.EofChar, scan.Current, "Scan past EOF");
+            Assert.AreEqual(ScanReader.EofChar, scan.Current, "Scan past EOF");
         }
 
         /// <summary>
