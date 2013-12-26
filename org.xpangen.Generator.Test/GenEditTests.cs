@@ -3,8 +3,11 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.IO;
 using NUnit.Framework;
+using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Editor.Helper;
+using org.xpangen.Generator.Parameter;
 
 namespace org.xpangen.Generator.Test
 {
@@ -12,7 +15,7 @@ namespace org.xpangen.Generator.Test
     /// Tests the processing of generator parameter files
     /// </summary>
 	[TestFixture]
-    public class GenEditTests
+    public class GenEditTests : GenProfileFragmentsTestBase
     {
         public GeData Data { get; set; }
 
@@ -66,23 +69,14 @@ namespace org.xpangen.Generator.Test
         {
             LoadData("Minimal.dcb");
             Assert.AreEqual("Class", Data.GenDataDef.Classes[1], "First data loaded");
-            LoadData("AppGen.dcb");
-            Assert.AreEqual("Program", Data.GenDataDef.Classes[1], "Second data loaded");
-        }
-
-        /// <summary>
-        /// Tests that the base component is bound to the generator data
-        /// </summary>
-        [TestCase(Description="Confirm that the base component is bound to the data")]
-        public void BaseClassTest()
-        {
-            throw new NotImplementedException("BaseClassTest is not implemented");
+            LoadData("GeneratorDefinitionModel.dcb");
+            Assert.AreEqual("Solution", Data.GenDataDef.Classes[1], "Second data loaded");
         }
 
         /// <summary>
         /// Tests that the settings data is handled correctly
         /// </summary>
-        [TestCase(Description="Confirm that the settings data is handled correctly")]
+        [TestCase(Description="Confirm that the settings data is handled correctly", Ignore=true)]
         public void SettingsTest()
         {
             throw new NotImplementedException("SettingsTest is not implemented");
@@ -94,7 +88,19 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Confirm that the generator data is saved correctly")]
         public void GenDataFileSaveTest()
         {
-            throw new NotImplementedException("GenDataFileSaveTest is not implemented");
+            const string fileName = "GenProfileTest.dcb";
+            var f = GenDataDef.CreateMinimal();
+            var d = f.AsGenData();
+
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+
+            GenParameters.SaveToFile(d, fileName);
+            Assert.IsTrue(File.Exists(fileName));
+            var stream = new FileStream(fileName, FileMode.Open);
+            var d1 = new GenParameters(stream);
+
+            VerifyDataCreation(d1);
         }
 
         private void LoadData(string filePath)

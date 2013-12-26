@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
 
@@ -397,6 +398,31 @@ namespace org.xpangen.Generator.Test
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class,SubClass,Property,", profile.Expand(d), "Class list expected");
+        }
+
+        /// <summary>
+        /// Tests that a profile saved to a new directory is saved correctly
+        /// </summary>
+        [TestCase(Description = "New Directory File Stream Profile test")]
+        public void DirectoryFileStreamProfileTest()
+        {
+            const string dir = "TestDir";
+            const string fileName = dir + @"\GenProfileTest.dcb";
+            var f = GenDataDef.CreateMinimal();
+            var d = f.AsGenData();
+
+            if (File.Exists(fileName))
+            File.Delete(fileName);
+            if (Directory.Exists(dir))
+                Directory.Delete(dir);
+
+            GenParameters.SaveToFile(d, fileName);
+            Assert.IsTrue(Directory.Exists(dir), "Output directory is not created.");
+            Assert.IsTrue(File.Exists(fileName));
+            var stream = new FileStream(fileName, FileMode.Open);
+            var d1 = new GenParameters(stream);
+            
+            VerifyDataCreation(d1);
         }
 
         /// <summary>

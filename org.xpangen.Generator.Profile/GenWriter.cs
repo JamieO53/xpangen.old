@@ -2,11 +2,12 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.IO;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class GenWriter
+    public class GenWriter: IDisposable
     {
         private string _fileName;
         public Stream Stream { get; private set; }
@@ -18,20 +19,32 @@ namespace org.xpangen.Generator.Profile
             set
             {
                 if (_fileName == value) return;
-                if (!(Stream is FileStream)) return;
-                
                 _fileName = value;
-                Writer.Dispose();
-                Stream.Dispose();
+                
+                if (Stream != null && !(Stream is FileStream)) return;
+                
+                if (Writer != null) Writer.Dispose();
+                if (Stream != null) Stream.Dispose();
+
+                if (string.IsNullOrEmpty(_fileName)) return;
+                
+                EnsurePathExists(_fileName);
                 Stream = new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite);
                 Writer = new StreamWriter(Stream);
             }
         }
 
+        private static void EnsurePathExists(string fileName)
+        {
+            var directoryName = Path.GetDirectoryName(fileName) ?? "";
+            if (directoryName != "" && !Directory.Exists(directoryName))
+                Directory.CreateDirectory(directoryName);
+        }
+
         public GenWriter(Stream stream)
         {
             Stream = stream;
-            Writer = new StreamWriter(stream);
+            Writer = stream != null ? new StreamWriter(stream) : null;
         }
 
         public void Write(string text)
@@ -43,5 +56,25 @@ namespace org.xpangen.Generator.Profile
         {
             Writer.Flush();
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (Writer != null) Writer.Dispose();
+                if (Stream != null) Stream.Dispose();
+            }
+        }
+        
+        ~GenWriter()
+        {
+            Dispose(false);
+        }
+
     }
 }

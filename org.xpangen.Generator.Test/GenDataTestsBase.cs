@@ -144,6 +144,10 @@ Property=Name
 
         protected static void VerifyDataCreation(GenData d)
         {
+            d.First(1);
+            d.First(2);
+            d.First(3);
+            
             var a = new GenAttributes(d.GenDataDef);
             var id = d.GenDataDef.GetId("Class.Name");
             Assert.AreEqual("Class", d.GetValue(id));
