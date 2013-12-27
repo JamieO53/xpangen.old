@@ -105,12 +105,12 @@ namespace org.xpangen.Generator.Test
 
         private void LoadData(string filePath)
         {
-            Data.GenDataStore.SetData(filePath);
+            Data.GenDataStore.SetData(@"Data\" + filePath);
         }
 
         private void LoadBase(string filePath)
         {
-            Data.GenDataStore.SetBase(filePath);
+            Data.GenDataStore.SetBase(@"Data\" + filePath);
         }
 
         private void VerifyGenDataLoaded()
