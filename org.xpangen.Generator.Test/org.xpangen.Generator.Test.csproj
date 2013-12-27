@@ -97,18 +97,35 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Basic.dcb">
+    <None Include="Data\Basic.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\Definition.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\GeneratorDefinitionModel.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\GenProfileModel.prf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\Minimal.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\ProgramDefinition.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="GeneratorDefinitionModel.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Minimal.dcb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\GenProfile.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,20 +8,30 @@ Class=Class
 Field={Name,Title}
 SubClass={SubClass,Property}
 Class=SubClass
-Field=Name
+Field={Name,Reference}
+SubClass=FieldFilter
 Class=Property
 Field={Name,Title,DataType}
+Class=FieldFilter
+Field={Name,Operand}
 .
 Solution=Generator[]
 Assembly=GeneratorDataModelMinimal[Title='Classes allowing access to generator data for the Minimal definition',Namespace='Generator.Data.Model.Minimal']
-Class=Class[Title='Class Definition']
+
+Class=Class
 SubClass=SubClass
 SubClass=Property
-Property=Name[Title='Object name: must be well formed',DataType=String]
-Class=SubClass[]
-Property=Name[Title='Subclass name: refers to a class and is used for hierarchical browsing',DataType=String]
-Class=Property[]
-Property=Name[Title='Property name: must be well formed',DataType=String]
+Property=Name
+Class=SubClass
+SubClass=FieldFilter
+Property=Name
+Property=Reference
+Class=Property
+Property=Name
+Class=FieldFilter
+Property=Name
+Property=Operand
+
 Assembly=GeneratorDataModelBasic[Title='Classes allowing access to generator data for the Basic definition',Namespace='Generator.Data.Model.Basic']
 Class=Class[Title='Class Definition']
 SubClass=SubClass
@@ -29,10 +39,16 @@ SubClass=Property
 Property=Name[Title='Object name: must be well formed',DataType=String]
 Property=Title[Title='Object description: used as a hint when editing',DataType=String]
 Class=SubClass[]
+SubClass=FieldFilter
 Property=Name[Title='Subclass name: refers to a class and is used for hierarchical browsing',DataType=String]
+Property=Reference[Title='Location of the subclass',DataType=String]
 Class=Property[]
 Property=Name[Title='Property name: must be well formed',DataType=String]
 Property=Title[Title='Property description: used as a hint when editing',DataType=String]
+Class=FieldFilter[Title='Field filter to find the sought subclass record - empty for all records']
+Property=Name[Title='The field being compated',DataType=String]
+Property=Operand[Title='The value being sought',DataType=String]
+
 Assembly=GeneratorDataModelDefinition[Title='Classes allowing access to generator data for the Definition definition',Namespace='Generator.Data.Model.Definition']
 Class=Class[Title='Class Definition']
 SubClass=SubClass
@@ -40,12 +56,18 @@ SubClass=Property
 Property=Name[Title='Object name: must be well formed',DataType=String]
 Property=Title[Title='Object description: used as a hint when editing',DataType=String]
 Class=SubClass[Title='Subclass definition']
+SubClass=FieldFilter
 Property=Name[Title='Subclass name: refers to a class and is used for hierarchical browsing',DataType=String]
+Property=Reference[Title='Location of the subclass',DataType=String]
 Class=Property[Title='Property definition']
 Property=Name[Title='Property name: must be well formed',DataType=String]
 Property=Title[Title='Property description: used as a hint when editing',DataType=String]
 Property=DataType[Title='Data type of property (used for editing) - String, integer or boolean',DataType=String]
 Property=Default[Title='Default value of the property when a new object is created (used for editing)',DataType=String]
+Class=FieldFilter[Title='Field filter to find the sought subclass record - empty for all records']
+Property=Name[Title='The field being compated',DataType=String]
+Property=Operand[Title='The value being sought',DataType=String]
+
 Assembly=GeneratorEditorModel[Title='Classes allowing access to generator data for the editor',Namespace='Generator.Editor.Model']
 Class=GenSettings[Title='Container for generator settings']
 SubClass=FileGroup
