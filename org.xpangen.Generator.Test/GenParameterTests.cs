@@ -96,9 +96,9 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Generator File Parameters Definition extraction test")]
         public void GenFileParameterDefinitionExtractTest()
         {
-            CreateGenDataSaveText();
+            CreateGenDataSaveText("GenFileParameterDefinitionExtractTest.txt");
             GenDataDef f;
-            using (var s = new FileStream("GenDataSaveData.txt", FileMode.Open, FileAccess.ReadWrite))
+            using (var s = new FileStream("GenFileParameterDefinitionExtractTest.txt", FileMode.Open, FileAccess.ReadWrite))
             {
                 f = GenParameters.ExtractDef(s);
                 Assert.AreEqual(0, s.Position);
@@ -112,9 +112,9 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Generator Parameter Scanner Test")]
         public void GenParameterTest()
         {
-            CreateGenDataSaveText();
+            CreateGenDataSaveText("GenParameterTest.txt");
             GenParameters d;
-            using (var s = new FileStream("GenDataSaveData.txt", FileMode.Open, FileAccess.ReadWrite))
+            using (var s = new FileStream("GenParameterTest.txt", FileMode.Open, FileAccess.ReadWrite))
                 d = new GenParameters(s);
             var f = d.AsDef();
             VerifyAsDef(f);
@@ -137,10 +137,10 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Generator Parameter Scanner Test")]
         public void GenDefParameterTest()
         {
-            CreateGenDataSaveText();
+            CreateGenDataSaveText("GenDefParameterTest.txt");
             var f0 = GenDataDef.CreateMinimal();
             GenParameters d;
-            using (var s = new FileStream("GenDataSaveData.txt", FileMode.Open, FileAccess.ReadWrite))
+            using (var s = new FileStream("GenDefParameterTest.txt", FileMode.Open, FileAccess.ReadWrite))
                 d = new GenParameters(f0, s);
             var f = d.AsDef();
             VerifyAsDef(f);
