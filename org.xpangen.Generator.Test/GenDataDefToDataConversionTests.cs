@@ -20,9 +20,9 @@ namespace org.xpangen.Generator.Test
         public void EmptyGenDefExtractTest()
         {
             var f = new GenDataDef();
-            var d = f.AsGenData(); // Creates from a minimal definition, i.e. Root class, Class class, SubClass class and Properties class
+            var d = f.AsGenData(); // Creates from a minimal definition, i.e. Root class, Class class, SubClass class, Properties class and FieldFilter class
             var a = new GenAttributes(f);
-            Assert.AreEqual(4, d.Context.Count);
+            Assert.AreEqual(5, d.Context.Count);
             
             Assert.IsFalse(d.Eol(RootClassId));
             Assert.IsTrue(d.Eol(ClassClassId));
@@ -33,6 +33,7 @@ namespace org.xpangen.Generator.Test
             Assert.IsNull(d.Context[ClassClassId].Context);
             Assert.IsNull(d.Context[SubClassClassId]);
             Assert.IsNull(d.Context[PropertyClassId]);
+            Assert.IsNull(d.Context[FieldFilterClassId]);
 
             Assert.IsTrue(d.Context[RootClassId].IsFirst());
             a.GenObject = d.Context[RootClassId].Context;
@@ -46,7 +47,7 @@ namespace org.xpangen.Generator.Test
         public void EmptyClassGenDefExtractTest()
         {
             var f = new GenDataDef();
-            f.AddClass("Class", "");
+            f.AddClass("", "Class");
             var d = f.AsGenData();
             var a = new GenAttributes(f);
 
@@ -69,8 +70,8 @@ namespace org.xpangen.Generator.Test
         public void ClassWithPropertyGenDefExtractTest()
         {
             var f = new GenDataDef();
-            f.AddClass("Class", "");
-            f.AddClass("Property", "Class");
+            f.AddClass("", "Class");
+            f.AddClass("Class", "Property");
             var d = f.AsGenData();
             var a = new GenAttributes(f);
 

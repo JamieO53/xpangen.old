@@ -89,7 +89,7 @@ namespace org.xpangen.Generator.Test
             //    "      SubId\t`Sub.SubId`\r\n" +
             //    "`]`]";
             var d = new GenDataDef();
-            var i = d.AddClass("Root", "");
+            var i = d.AddClass("", "Root");
             Assert.AreEqual(1, i);
             Assert.AreEqual(i, d.Classes.IndexOf("Root"));
             Assert.AreEqual(0, d.IndexOfSubClass(0, i));
@@ -102,7 +102,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(i, id.ClassId);
             Assert.AreEqual(j, id.PropertyId);
 
-            i = d.AddClass("Sub", "Root");
+            i = d.AddClass("Root", "Sub");
             Assert.AreEqual(2, i);
             Assert.AreEqual(i, d.Classes.IndexOf("Sub"));
             Assert.AreEqual(0, d.IndexOfSubClass(1, i));
@@ -131,13 +131,16 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, f.Classes.IndexOf("Class"));
             Assert.AreEqual(2, f.Classes.IndexOf("SubClass"));
             Assert.AreEqual(3, f.Classes.IndexOf("Property"));
+            Assert.AreEqual(4, f.Classes.IndexOf("FieldFilter"));
             Assert.AreEqual(1, f.SubClasses[0].Count);
             Assert.AreEqual(2, f.SubClasses[1].Count);
-            Assert.AreEqual(0, f.SubClasses[2].Count);
+            Assert.AreEqual(1, f.SubClasses[2].Count);
             Assert.AreEqual(0, f.SubClasses[3].Count);
+            Assert.AreEqual(0, f.SubClasses[4].Count);
             Assert.AreEqual(1, f.SubClasses[0][0]);
             Assert.AreEqual(2, f.SubClasses[1][0]);
             Assert.AreEqual(3, f.SubClasses[1][1]);
+            Assert.AreEqual(4, f.SubClasses[2][0]);
         }
 
         /// <summary>

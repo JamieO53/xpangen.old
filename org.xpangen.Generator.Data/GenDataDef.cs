@@ -25,7 +25,7 @@ namespace org.xpangen.Generator.Data
             AddClass("", "");
         }
 
-        public int AddClass(string name, string parent)
+        public int AddClass(string parent, string name)
         {
             if (Classes.Contains(name))
                 return Classes.IndexOf(name);
@@ -161,15 +161,20 @@ namespace org.xpangen.Generator.Data
         public static GenDataDef CreateMinimal()
         {
             var def = new GenDataDef();
-            def.AddClass("Class", "");
-            def.AddClass("SubClass", "Class");
-            def.AddClass("Property", "Class");
+            def.AddClass("", "Class");
+            def.AddClass("Class", "SubClass");
+            def.AddClass("Class", "Property");
+            def.AddClass("SubClass", "FieldFilter");
             def.Properties[def.Classes.IndexOf("Class")].Add("Name");
             def.Properties[def.Classes.IndexOf("SubClass")].Add("Name");
+            def.Properties[def.Classes.IndexOf("SubClass")].Add("Reference");
             def.Properties[def.Classes.IndexOf("Property")].Add("Name");
-            def.AddSubClass("", "Class");
-            def.AddSubClass("Class", "SubClass");
-            def.AddSubClass("Class", "Property");
+            def.Properties[def.Classes.IndexOf("FieldFilter")].Add("Name");
+            def.Properties[def.Classes.IndexOf("FieldFilter")].Add("Operand");
+            //def.AddSubClass("", "Class");
+            //def.AddSubClass("Class", "SubClass");
+            //def.AddSubClass("Class", "Property");
+            //def.AddSubClass("SubClass", "FieldFilter");
             return def;
         }
 

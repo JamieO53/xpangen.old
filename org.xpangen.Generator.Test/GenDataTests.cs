@@ -34,8 +34,10 @@ namespace org.xpangen.Generator.Test
             id = f.GetId("Class.Name");
             Assert.AreEqual("SubClass", d.GetValue(id));
 
+            CreateProperty(d, "Reference");
+
             id = f.GetId("Property.Name");
-            Assert.AreEqual("Name", d.GetValue(id));
+            Assert.AreEqual("Reference", d.GetValue(id));
 
             CreateClass(d, "Property");
 
@@ -45,7 +47,14 @@ namespace org.xpangen.Generator.Test
             id = f.GetId("Property.Name");
             Assert.AreEqual("Name", d.GetValue(id));
 
-            d.Context[1].First();
+            CreateClass(d, "FieldFilter");
+
+            id = f.GetId("Class.Name");
+            Assert.AreEqual("FieldFilter", d.GetValue(id));
+
+            CreateProperty(d, "Operand");
+
+            d.Context[ClassClassId].First();
             CreateSubClass(d, "SubClass");
 
             id = f.GetId("SubClass.Name");
@@ -55,6 +64,12 @@ namespace org.xpangen.Generator.Test
             
             id = f.GetId("SubClass.Name");
             Assert.AreEqual("Property", d.GetValue(id));
+
+            d.Context[ClassClassId].Next();
+            CreateSubClass(d, "FieldFilter");
+
+            id = f.GetId("FieldFilter.Name");
+            Assert.IsTrue(d.Eol(id.ClassId));
 
             ValidateMinimalData(d);
         }
@@ -92,7 +107,7 @@ namespace org.xpangen.Generator.Test
         public void GenAttributePropertyTests()
         {
             var f = new GenDataDef();
-            var classId = f.AddClass("Class", "");
+            var classId = f.AddClass("", "Class");
             f.Properties[classId].Add("Prop1");
             f.Properties[classId].Add("Prop2");
             var d = new GenData(f);
@@ -137,12 +152,16 @@ namespace org.xpangen.Generator.Test
             var c = new GenContext(d);
 
             SetUpData(d);
-            Assert.AreEqual("Property", d.Context[2].Context.Attributes[0]);
+            d.First(ClassClassId);
+            d.Last(SubClassClassId);
+            //Assert.IsTrue(d.Eol(SubClassClassId));
+            Assert.AreEqual("Property", d.Context[SubClassClassId].Context.Attributes[0]);
             c.SaveContext();
-            d.Context[2].First();
-            Assert.AreEqual("SubClass", d.Context[2].Context.Attributes[0]);
+            d.Context[SubClassClassId].First();
+            Assert.AreEqual("SubClass", d.Context[SubClassClassId].Context.Attributes[0]);
             c.RestoreContext();
-            Assert.AreEqual("Property", d.Context[2].Context.Attributes[0]);
+            //Assert.IsTrue(d.Eol(SubClassClassId));
+            Assert.AreEqual("Property", d.Context[SubClassClassId].Context.Attributes[0]);
         }
 
         /// <summary>
