@@ -222,11 +222,11 @@ Property=Operand
             o.Attributes[0] = name;
         }
 
-        protected static void CreateGenDataSaveText()
+        protected static void CreateGenDataSaveText(string fileName)
         {
-            if (File.Exists("GenDataSaveData.txt"))
-                File.Delete("GenDataSaveData.txt");
-            File.WriteAllText("GenDataSaveData.txt", GenDataSaveText);
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+            File.WriteAllText(fileName, GenDataSaveText);
         }
 
         protected static GenData SetUpLookupContextData()
