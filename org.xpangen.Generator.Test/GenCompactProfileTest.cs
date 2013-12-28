@@ -49,7 +49,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class,SubClass,Property,", profile.Expand(d), "Class list expected");
+            Assert.AreEqual("Class,SubClass,Property,FieldFilter,", profile.Expand(d), "Class list expected");
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Some text Class,SubClass,Property, some more text", profile.Expand(d),
+            Assert.AreEqual("Some text Class,SubClass,Property,FieldFilter, some more text", profile.Expand(d),
                             "Class list in text expected");
         }
 
@@ -90,7 +90,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class,SubClass,Property", profile.Expand(d), "Class list expected");
+            Assert.AreEqual("Class,SubClass,Property,FieldFilter", profile.Expand(d), "Class list expected");
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class{SubClass,Property},SubClass{},Property{}", profile.Expand(d), "Class/Subclass list expected");
+            Assert.AreEqual("Class{SubClass,Property},SubClass{FieldFilter},Property{},FieldFilter{}", profile.Expand(d), "Class/Subclass list expected");
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class{},SubClass{},Property{}", profile.Expand(d), "Class/Subclass list expected");
+            Assert.AreEqual("Class{},SubClass{},Property{},FieldFilter{}", profile.Expand(d), "Class/Subclass list expected");
         }
 
         /// <summary>
@@ -397,7 +397,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class,SubClass,Property,", profile.Expand(d), "Class list expected");
+            Assert.AreEqual("Class,SubClass,Property,FieldFilter,", profile.Expand(d), "Class list expected");
         }
 
         /// <summary>

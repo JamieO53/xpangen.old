@@ -43,40 +43,6 @@ namespace org.xpangen.Generator.Test
             return d;
         }
 
-        protected static GenData SetUpLookupContextData()
-        {
-            var f = new GenDataDef();
-            var parentId = f.AddClass("Parent", "");
-            f.Properties[parentId].Add("Name");
-            var childId = f.AddClass("Child", "Parent");
-            f.Properties[childId].Add("Name");
-            f.Properties[childId].Add("Lookup");
-            var lookupId = f.AddClass("Lookup", "Parent");
-            f.Properties[lookupId].Add("Name");
-
-            var a = new GenAttributes(f);
-            var d = new GenData(f);
-            a.GenObject = d.CreateObject("", "Parent");
-            a.SetString("Name", "Parent");
-            a.SaveFields();
-
-            a.GenObject = d.CreateObject("Parent", "Child");
-            a.SetString("Name", "Child1");
-            a.SetString("Lookup", "Valid");
-            a.SaveFields();
-
-            a.GenObject = d.CreateObject("Parent", "Child");
-            a.SetString("Name", "Child2");
-            a.SetString("Lookup", "Invalid");
-            a.SaveFields();
-
-            a.GenObject = d.CreateObject("Parent", "Lookup");
-            a.SetString("Name", "Valid");
-            a.SaveFields();
-
-            return d;
-        }
-
         protected static GenData SetUpComparisonData()
         {
             var f = GenDataDef.CreateMinimal();
@@ -98,6 +64,7 @@ namespace org.xpangen.Generator.Test
             a.SaveFields();
 
             d.Last(ClassClassId);
+            d.Prior(ClassClassId);
             Assert.AreEqual("Property", d.Context[ClassClassId].Context.Attributes[0]);
             d.First(PropertyClassId);
             a.GenObject = d.Context[PropertyClassId].Context;
