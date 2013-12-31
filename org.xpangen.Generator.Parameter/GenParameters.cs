@@ -59,6 +59,8 @@ namespace org.xpangen.Generator.Parameter
         public static void SaveToFile(GenData genData, string fileName)
         {
             var def = new StringBuilder();
+            def.Append("Definition=");
+            def.AppendLine(genData.GenDataDef.Definition);
             var profile = new GenSegment(genData.GenDataDef, "", GenCardinality.All, null);
             profile.Body.Add(new GenTextFragment(genData.GenDataDef, profile));
 
@@ -206,6 +208,10 @@ namespace org.xpangen.Generator.Parameter
             {
                 switch (token)
                 {
+                    case "Definition":
+                        if (reader.CheckChar('=')) reader.SkipChar();
+                        f.Definition = reader.ScanWhile(ScanReader.QualifiedIdentifier);
+                        break;
                     case "Class":
                         if (reader.CheckChar('=')) reader.SkipChar();
                         className = reader.ScanWhile(ScanReader.AlphaNumeric);

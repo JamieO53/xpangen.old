@@ -1,3 +1,4 @@
+Definition=Definition
 Class=Class
 Field=Name
 SubClass={SubClass,Property}

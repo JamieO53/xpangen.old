@@ -67,6 +67,7 @@ namespace org.xpangen.Generator.Test
         public void GenDataDefTest()
         {
             const string rootProfile =
+                "Definition=Root\r\n" +
                 "Class=Root\r\n" +
                 "Field=Id\r\n" +
                 ".\r\n" +
@@ -89,6 +90,7 @@ namespace org.xpangen.Generator.Test
             //    "      SubId\t`Sub.SubId`\r\n" +
             //    "`]`]";
             var d = new GenDataDef();
+            d.Definition = "Root";
             var i = d.AddClass("", "Root");
             Assert.AreEqual(1, i);
             Assert.AreEqual(i, d.Classes.IndexOf("Root"));

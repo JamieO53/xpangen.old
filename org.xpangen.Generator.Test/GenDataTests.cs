@@ -101,6 +101,18 @@ namespace org.xpangen.Generator.Test
         }
 
         /// <summary>
+        /// Tests the generator data subclass functionality
+        /// </summary>
+        [TestCase(Description = "Generator data subclass for a local reference tests")]
+        public void GenSubClassLocalReferenceTestTests()
+        {
+            var d = SetUpLookupData();
+            var f = d.GenDataDef;
+            f.AddSubClass("SubClass", "SubClassClass", "self:Class.Name=SubClass.Name");
+            // todo: create data anologous to Lookup profile fragment test
+        }
+
+        /// <summary>
         /// Tests the attribute functionality of generator classes
         /// </summary>
         [TestCase(Description = "Generator Attribute Property tests")]
