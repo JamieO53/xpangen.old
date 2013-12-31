@@ -1,3 +1,4 @@
+Definition=Minimal
 Class=Class
 Field=Name
 SubClass={SubClass,Property}

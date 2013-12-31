@@ -15,12 +15,15 @@ namespace org.xpangen.Generator.Data
         public List<IndexList> SubClasses { get; private set; }
         public IndexList Parents { get; private set; }
         public int CurrentClassId { get; set; }
+        public TextList Reference { get; private set; }
+        public string Definition { get; set; }
 
         public GenDataDef()
         {
             Classes = new NameList();
             Properties = new List<NameList>();
             SubClasses = new List<IndexList>();
+            Reference = new TextList();
             Parents = new IndexList();
             AddClass("", "");
         }
@@ -35,6 +38,7 @@ namespace org.xpangen.Generator.Data
             Classes.Add(name);
             Properties.Add(new NameList());
             SubClasses.Add(new IndexList());
+            Reference.Add("");
             if (parentClassId != -1)
                 SubClasses[parentClassId].Add(classId);
             return classId;
@@ -90,6 +94,8 @@ namespace org.xpangen.Generator.Data
         public string CreateProfile()
         {
             var def = new StringBuilder();
+            def.Append("Definition=");
+            def.AppendLine(Definition);
             var profile = new StringBuilder();
 
             ClassProfile(0, def, profile);
@@ -161,6 +167,7 @@ namespace org.xpangen.Generator.Data
         public static GenDataDef CreateMinimal()
         {
             var def = new GenDataDef();
+            def.Definition = "Minimal";
             def.AddClass("", "Class");
             def.AddClass("Class", "SubClass");
             def.AddClass("Class", "Property");
@@ -171,10 +178,6 @@ namespace org.xpangen.Generator.Data
             def.Properties[def.Classes.IndexOf("Property")].Add("Name");
             def.Properties[def.Classes.IndexOf("FieldFilter")].Add("Name");
             def.Properties[def.Classes.IndexOf("FieldFilter")].Add("Operand");
-            //def.AddSubClass("", "Class");
-            //def.AddSubClass("Class", "SubClass");
-            //def.AddSubClass("Class", "Property");
-            //def.AddSubClass("SubClass", "FieldFilter");
             return def;
         }
 
@@ -215,6 +218,15 @@ namespace org.xpangen.Generator.Data
             for (var l = Parents.Count; l <= j; l++)
                 Parents.Add(-1);
             Parents[j] = i;
+        }
+
+
+        public void AddSubClass(string className, string subClassName, string reference)
+        {
+            AddSubClass(className, subClassName);
+            var i = Classes.IndexOf(className);
+            var j = Classes.IndexOf(subClassName);
+            Reference[j] = reference;
         }
 
         public int AddClass(string className)

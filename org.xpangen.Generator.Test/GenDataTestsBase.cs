@@ -19,7 +19,8 @@ namespace org.xpangen.Generator.Test
 
 
         protected const string GenDataSaveText =
-            @"Class=Class
+            @"Definition=Minimal
+Class=Class
 Field={Name,Title}
 SubClass={SubClass,Property}
 Class=SubClass
@@ -48,6 +49,7 @@ Property=Operand
         protected static void ValidateMinimalData(GenData d)
         {
             var a = new GenAttributes(d.GenDataDef);
+            Assert.AreEqual("Minimal", d.GenDataDef.Definition);
             Assert.AreEqual(5, d.Context.Count);
 
             Assert.IsFalse(d.Eol(RootClassId));
@@ -260,6 +262,23 @@ Property=Operand
             a.SetString("Name", "Valid");
             a.SaveFields();
 
+            return d;
+        }
+
+        protected static GenData SetUpLookupData()
+        {
+            var f = GenDataDef.CreateMinimal();
+
+            var d = new GenData(f);
+            d.CreateObject("", "Class").Attributes[0] = "Class";
+            d.CreateObject("Class", "Property").Attributes[0] = "Name";
+            d.CreateObject("", "Class").Attributes[0] = "SubClass";
+            d.CreateObject("Class", "Property").Attributes[0] = "Name";
+            d.CreateObject("", "Class").Attributes[0] = "Property";
+            d.CreateObject("Class", "Property").Attributes[0] = "Name";
+            d.First(1);
+            d.CreateObject("Class", "SubClass").Attributes[0] = "SubClass";
+            d.CreateObject("Class", "SubClass").Attributes[0] = "Property";
             return d;
         }
     }

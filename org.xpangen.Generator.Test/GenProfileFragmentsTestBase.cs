@@ -26,23 +26,6 @@ namespace org.xpangen.Generator.Test
             return d;
         }
 
-        protected static GenData SetUpLookupData()
-        {
-            var f = GenDataDef.CreateMinimal();
-
-            var d = new GenData(f);
-            d.CreateObject("", "Class").Attributes[0] = "Class";
-            d.CreateObject("Class", "Property").Attributes[0] = "Name";
-            d.CreateObject("", "Class").Attributes[0] = "SubClass";
-            d.CreateObject("Class", "Property").Attributes[0] = "Name";
-            d.CreateObject("", "Class").Attributes[0] = "Property";
-            d.CreateObject("Class", "Property").Attributes[0] = "Name";
-            d.First(1);
-            d.CreateObject("Class", "SubClass").Attributes[0] = "SubClass";
-            d.CreateObject("Class", "SubClass").Attributes[0] = "Property";
-            return d;
-        }
-
         protected static GenData SetUpComparisonData()
         {
             var f = GenDataDef.CreateMinimal();

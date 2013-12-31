@@ -45,6 +45,7 @@ namespace org.xpangen.Generator.Scanner
         public static readonly CharSet AlphaNumeric = new CharSet("a-zA-Z0-9");
         public static readonly CharSet Numeric = new CharSet("0-9");
         public static readonly CharSet Identifier = new CharSet("a-zA-Z0-9_");
+        public static readonly CharSet QualifiedIdentifier = new CharSet("a-zA-Z0-9_.");
         public static readonly CharSet WhiteSpace = new CharSet(@" \r\n\t");
         public const char EofChar = (char) 0x1a; // Ctrl-Z
 
