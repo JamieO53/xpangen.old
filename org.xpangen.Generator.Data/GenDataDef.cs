@@ -124,7 +124,7 @@ namespace org.xpangen.Generator.Data
                     var j = 0;
                     if (String.Compare(Properties[classId][0], "Name", StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        profile.Append("=`" + Classes[classId] + "Name`");
+                        profile.Append("=`" + Classes[classId] + ".Name`");
                         j = 1;
                     }
                     if (Properties[classId].Count > j)
@@ -133,9 +133,9 @@ namespace org.xpangen.Generator.Data
                         var sep = "";
                         for (var i = j; i < Properties[classId].Count; i++)
                         {
-                            profile.Append("`?" + Properties[classId][i] + ":" +
+                            profile.Append("`?" + Classes[classId] + "." + Properties[classId][i] + ":" +
                                            sep + Properties[classId][i] +
-                                           "`?" + Properties[classId][i] + "<>'True':" +
+                                           "`?" + Classes[classId] + "." + Properties[classId][i] + "<>True:" +
                                            "=`@StringOrName:`{`" + Classes[classId] +
                                            '.' + Properties[classId][i] +
                                            "``]`]`]`]");

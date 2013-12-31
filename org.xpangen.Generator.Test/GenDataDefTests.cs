@@ -71,7 +71,7 @@ namespace org.xpangen.Generator.Test
                 "Class=Root\r\n" +
                 "Field=Id\r\n" +
                 ".\r\n" +
-                "`[Root:Root[`?Id:Id`?Id<>'True':=`@StringOrName:`{`Root.Id``]`]`]`]]\r\n" +
+                "`[Root:Root[`?Root.Id:Id`?Root.Id<>True:=`@StringOrName:`{`Root.Id``]`]`]`]]\r\n" +
                 "`]";
             //const string subProfile =
             //    "Class=Root\r\n" +
@@ -112,10 +112,6 @@ namespace org.xpangen.Generator.Test
             j = d.Properties[i].Add("SubId");
             Assert.AreEqual(0, j);
             Assert.AreEqual(j, d.Properties[i].IndexOf("SubId"));
-            //s = d.CreateProfile();
-            //Assert.AreEqual(subProfile, s);
-            //s = d.ReportProfile();
-            //Assert.AreEqual(subReportProfile, s);
 
             id = d.GetId("Sub.SubId");
             Assert.AreEqual(i, id.ClassId);

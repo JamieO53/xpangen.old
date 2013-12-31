@@ -58,18 +58,24 @@ namespace org.xpangen.Generator.Parameter
         /// <param name="fileName">The file path to which the data is to be saved.</param>
         public static void SaveToFile(GenData genData, string fileName)
         {
-            var def = new StringBuilder();
-            def.Append("Definition=");
-            def.AppendLine(genData.GenDataDef.Definition);
-            var profile = new GenSegment(genData.GenDataDef, "", GenCardinality.All, null);
-            profile.Body.Add(new GenTextFragment(genData.GenDataDef, profile));
-
-            ClassProfile(genData.GenDataDef, 0, def, profile, null);
-            ((GenTextFragment) profile.Body.Fragment[0]).Text = def + ".\r\n";
+            var profile = CreateProfile(genData.GenDataDef);
             using (var writer = new GenWriter(null) {FileName = fileName})
             {
                 profile.Generate(null, genData, writer);
             }
+        }
+
+        public static GenSegment CreateProfile(GenDataDef genDataDef)
+        {
+            var def = new StringBuilder();
+            def.Append("Definition=");
+            def.AppendLine(genDataDef.Definition);
+            var profile = new GenSegment(genDataDef, "", GenCardinality.All, null);
+            profile.Body.Add(new GenTextFragment(genDataDef, profile));
+
+            ClassProfile(genDataDef, 0, def, profile, null);
+            ((GenTextFragment) profile.Body.Fragment[0]).Text = def + ".\r\n";
+            return profile;
         }
 
         private static void ClassProfile(GenDataDef genDataDef, int classId, StringBuilder def, GenSegment profile, GenContainerFragmentBase parentSegment)
