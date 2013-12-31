@@ -7,6 +7,7 @@ using System.IO;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Parameter;
+using org.xpangen.Generator.Profile;
 
 namespace org.xpangen.Generator.Test
 {
@@ -156,6 +157,17 @@ namespace org.xpangen.Generator.Test
             var d = new GenParameters(f0, GenDataSaveText);
             var f = d.AsDef();
             VerifyAsDef(f);
+        }
+
+        /// <summary>
+        /// Tests that the output profile is created correctly
+        /// </summary>
+        [TestCase(Description = "Generator Output Profile test")]
+        public void OutputProfileTest()
+        {
+            var f0 = GenDataDef.CreateMinimal();
+            var p = GenParameters.CreateProfile(f0);
+            Assert.AreEqual("`[:" + f0.CreateProfile() + "`]", p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary).Replace(">:", ":"));
         }
 
         /// <summary>
