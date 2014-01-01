@@ -68,9 +68,9 @@ namespace org.xpangen.Generator.Test
         public void GenDataFileReopenTest()
         {
             LoadData("Minimal.dcb");
-            Assert.AreEqual("Class", Data.GenDataDef.Classes[1], "First data loaded");
+            Assert.AreEqual("Class", Data.GenDataDef.Classes[1].Name, "First data loaded");
             LoadData("GeneratorDefinitionModel.dcb");
-            Assert.AreEqual("Solution", Data.GenDataDef.Classes[1], "Second data loaded");
+            Assert.AreEqual("Solution", Data.GenDataDef.Classes[1].Name, "Second data loaded");
         }
 
         /// <summary>

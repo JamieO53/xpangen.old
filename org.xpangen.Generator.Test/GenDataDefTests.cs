@@ -53,11 +53,11 @@ namespace org.xpangen.Generator.Test
         {
             var def = new GenDataDef();
             Assert.AreEqual(1, def.Classes.Count, "Classes in a new def");
-            Assert.AreEqual("", def.Classes[0], "Dummy root class name");
+            Assert.AreEqual("", def.Classes[0].Name, "Dummy root class name");
             Assert.AreEqual(0, def.Classes.IndexOf(""), "Index of dummy root");
-            Assert.AreEqual(0, def.SubClasses[0].Count, "Subclasses of dummy root");
-            Assert.AreEqual(-1, def.Parents[0], "Parent of dummy root");
-            Assert.IsEmpty(def.Properties[0], "Dummy root has no properties");
+            Assert.AreEqual(0, def.Classes[0].SubClasses.Count, "Subclasses of dummy root");
+            Assert.IsNull(def.Classes[0].Parent, "Parent of dummy root");
+            Assert.IsEmpty(def.Classes[0].Properties, "Dummy root has no properties");
         }
 
         /// <summary>
@@ -73,30 +73,15 @@ namespace org.xpangen.Generator.Test
                 ".\r\n" +
                 "`[Root:Root[`?Root.Id:Id`?Root.Id<>True:=`@StringOrName:`{`Root.Id``]`]`]`]]\r\n" +
                 "`]";
-            //const string subProfile =
-            //    "Class=Root\r\n" +
-            //    "Field=Id\r\n" +
-            //    "SubClass=Sub\r\n" +
-            //    "Class=Sub\r\n" +
-            //    "Field=SubId\r\n" +
-            //    ".\r\n" +
-            //    "`[Root:Root[`?Id:Id`?Id<>'True':=`@StringOrName:`{`Root.Id``]`]`]`]]\r\n" +
-            //    "`[Sub:Sub[`?SubId:SubId`?SubId<>'True':=`@StringOrName:`{`Sub.SubId``]`]`]`]]\r\n" +
-            //    "`]`]";
-            //const string subReportProfile =
-            //    "`[Root:  Root\r\n" +
-            //    "    Id\t`Root.Id`\r\n" +
-            //    "`[Sub:    Sub\r\n" +
-            //    "      SubId\t`Sub.SubId`\r\n" +
-            //    "`]`]";
+
             var d = new GenDataDef();
             d.Definition = "Root";
             var i = d.AddClass("", "Root");
             Assert.AreEqual(1, i);
             Assert.AreEqual(i, d.Classes.IndexOf("Root"));
             Assert.AreEqual(0, d.IndexOfSubClass(0, i));
-            var j = d.Properties[i].Add("Id");
-            Assert.AreEqual(j, d.Properties[i].IndexOf("Id"));
+            var j = d.Classes[i].Properties.Add("Id");
+            Assert.AreEqual(j, d.Classes[i].Properties.IndexOf("Id"));
             var s = d.CreateProfile();
             Assert.AreEqual(rootProfile, s);
 
@@ -108,10 +93,10 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(2, i);
             Assert.AreEqual(i, d.Classes.IndexOf("Sub"));
             Assert.AreEqual(0, d.IndexOfSubClass(1, i));
-            Assert.AreEqual(1, d.Parents[i]);
-            j = d.Properties[i].Add("SubId");
+            Assert.AreEqual(1, d.Classes[i].Parent.ClassId);
+            j = d.Classes[i].Properties.Add("SubId");
             Assert.AreEqual(0, j);
-            Assert.AreEqual(j, d.Properties[i].IndexOf("SubId"));
+            Assert.AreEqual(j, d.Classes[i].Properties.IndexOf("SubId"));
 
             id = d.GetId("Sub.SubId");
             Assert.AreEqual(i, id.ClassId);
@@ -130,15 +115,15 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(2, f.Classes.IndexOf("SubClass"));
             Assert.AreEqual(3, f.Classes.IndexOf("Property"));
             Assert.AreEqual(4, f.Classes.IndexOf("FieldFilter"));
-            Assert.AreEqual(1, f.SubClasses[0].Count);
-            Assert.AreEqual(2, f.SubClasses[1].Count);
-            Assert.AreEqual(1, f.SubClasses[2].Count);
-            Assert.AreEqual(0, f.SubClasses[3].Count);
-            Assert.AreEqual(0, f.SubClasses[4].Count);
-            Assert.AreEqual(1, f.SubClasses[0][0]);
-            Assert.AreEqual(2, f.SubClasses[1][0]);
-            Assert.AreEqual(3, f.SubClasses[1][1]);
-            Assert.AreEqual(4, f.SubClasses[2][0]);
+            Assert.AreEqual(1, f.Classes[0].SubClasses.Count);
+            Assert.AreEqual(2, f.Classes[1].SubClasses.Count);
+            Assert.AreEqual(1, f.Classes[2].SubClasses.Count);
+            Assert.AreEqual(0, f.Classes[3].SubClasses.Count);
+            Assert.AreEqual(0, f.Classes[4].SubClasses.Count);
+            Assert.AreEqual(1, f.Classes[0].SubClasses[0].SubClass.ClassId);
+            Assert.AreEqual(2, f.Classes[1].SubClasses[0].SubClass.ClassId);
+            Assert.AreEqual(3, f.Classes[1].SubClasses[1].SubClass.ClassId);
+            Assert.AreEqual(4, f.Classes[2].SubClasses[0].SubClass.ClassId);
         }
 
         /// <summary>

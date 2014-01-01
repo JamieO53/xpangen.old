@@ -28,7 +28,7 @@ namespace org.xpangen.Generator.Profile
 
         public override string ProfileLabel()
         {
-            return GenDataDef.Classes[ClassId];
+            return GenDataDef.Classes[ClassId].Name;
         }
 
         public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
@@ -36,7 +36,7 @@ namespace org.xpangen.Generator.Profile
             var format = syntaxDictionary[FragmentType.ToString()].Format;
             return string.Format(format, new object[]
                                              {
-                                                 GenDataDef.Classes[ClassId],
+                                                 GenDataDef.Classes[ClassId].Name,
                                                  Body.ProfileText(syntaxDictionary),
                                                  syntaxDictionary.GenCardinalityText[(int) GenCardinality]
                                              }

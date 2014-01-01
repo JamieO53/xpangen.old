@@ -24,9 +24,9 @@ namespace org.xpangen.Generator.Test
             var f0 = d.AsDef();
             
             Assert.AreEqual(1, f0.Classes.Count); // Root class only
-            Assert.AreEqual("", f0.Classes[0]);
-            Assert.AreEqual(0, f0.Properties[0].Count);
-            Assert.AreEqual(0, f0.SubClasses[0].Count);
+            Assert.AreEqual("", f0.Classes[0].Name);
+            Assert.AreEqual(0, f0.Classes[0].Properties.Count);
+            Assert.AreEqual(0, f0.Classes[0].SubClasses.Count);
         }
 
         /// <summary>
@@ -42,14 +42,14 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(2, f0.Classes.Count);
             
             // Root class
-            Assert.AreEqual("", f0.Classes[0]);
-            Assert.AreEqual(0, f0.Properties[0].Count);
-            Assert.AreEqual(1, f0.SubClasses[0].Count);
+            Assert.AreEqual("", f0.Classes[0].Name);
+            Assert.AreEqual(0, f0.Classes[0].Properties.Count);
+            Assert.AreEqual(1, f0.Classes[0].SubClasses.Count);
 
             // Defined Class
             Assert.AreEqual(0, f.Classes.IndexOf(""));
-            Assert.AreEqual("Class", f.Classes[1]);
-            Assert.AreEqual(1, f0.SubClasses[0][0]);
+            Assert.AreEqual("Class", f.Classes[1].Name);
+            Assert.AreEqual(1, f0.Classes[0].SubClasses[0].SubClass.ClassId);
         }
 
         /// <summary>
