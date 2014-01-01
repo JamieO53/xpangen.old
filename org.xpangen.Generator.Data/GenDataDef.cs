@@ -3,45 +3,29 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace org.xpangen.Generator.Data
 {
     public class GenDataDef
     {
-        public NameList Classes { get; private set; }
-        public List<NameList> Properties { get; private set; }
-        public List<IndexList> SubClasses { get; private set; }
-        public IndexList Parents { get; private set; }
+        public GenDataDefClassList Classes { get; private set; }
         public int CurrentClassId { get; set; }
-        public TextList Reference { get; private set; }
         public string Definition { get; set; }
 
         public GenDataDef()
         {
-            Classes = new NameList();
-            Properties = new List<NameList>();
-            SubClasses = new List<IndexList>();
-            Reference = new TextList();
-            Parents = new IndexList();
-            AddClass("", "");
+            Classes = new GenDataDefClassList();
+            AddClass("");
+            CurrentClassId = -1;
         }
 
         public int AddClass(string parent, string name)
         {
             if (Classes.Contains(name))
                 return Classes.IndexOf(name);
-            var classId = Classes.Count;
-            var parentClassId = Classes.IndexOf(parent);
-            Parents.Add(parentClassId);
-            Classes.Add(name);
-            Properties.Add(new NameList());
-            SubClasses.Add(new IndexList());
-            Reference.Add("");
-            if (parentClassId != -1)
-                SubClasses[parentClassId].Add(classId);
-            return classId;
+            AddSubClass(parent, name);
+            return Classes.IndexOf(name);
         }
 
         public GenDataId GetId(string name)
@@ -60,35 +44,35 @@ namespace org.xpangen.Generator.Data
             {
                 id.ClassId = CurrentClassId;
                 propertyName = sa[0];
-                id.PropertyId = Properties[id.ClassId].IndexOf(propertyName);
             }
             else
             {
                 className = sa[0];
                 id.ClassId = Classes.IndexOf(className);
                 propertyName = sa[1];
-                if (id.ClassId != -1)
-                    id.PropertyId = Properties[id.ClassId].IndexOf(propertyName);
-                else
-                {
-                    if (String.Compare(propertyName, "First", StringComparison.OrdinalIgnoreCase) == 0)
-                        id.PropertyId = Properties[id.ClassId].Add("First");
-                }
             }
+            if (id.ClassId != -1)
+            {
+                var c = Classes[id.ClassId];
+                id.PropertyId = c.Properties.IndexOf(propertyName);
+                if (id.PropertyId == -1)
+                    if (createIfMissing)
+                        id.PropertyId = Classes[id.ClassId].Properties.Add(propertyName);
+                    else if (propertyName.Equals("First", StringComparison.InvariantCultureIgnoreCase))
+                        id.PropertyId = c.Properties.Add("First");
+            }
+
             if (id.ClassId == -1 && id.PropertyId == -1)
                 throw new Exception("<<<<Unknown Class: " + name + ">>>>");
             if (id.PropertyId == -1 && className != "")
-            {
-                if (!createIfMissing)
-                    throw new Exception("<<<<Unknown Class/Property: " + name + ">>>>");
-                id.PropertyId = Properties[id.ClassId].Add(propertyName);
-            }
+                throw new Exception("<<<<Unknown Class/Property: " + name + ">>>>");
+            
             return id;
         }
 
         public int IndexOfSubClass(int classId, int subClassId)
         {
-            return SubClasses[classId].IndexOf(subClassId);
+            return Classes[classId].SubClasses.IndexOf(subClassId);
         }
 
         public string CreateProfile()
@@ -106,38 +90,38 @@ namespace org.xpangen.Generator.Data
         {
             if (classId != 0)
             {
-                def.AppendLine("Class=" + Classes[classId]);
-                profile.Append("`[" + Classes[classId] + ":" + Classes[classId]);
+                def.AppendLine("Class=" + Classes[classId].Name);
+                profile.Append("`[" + Classes[classId].Name + ":" + Classes[classId].Name);
 
-                if (Properties[classId].Count > 0)
+                if (Classes[classId].Properties.Count > 0)
                 {
-                    if (Properties[classId].Count == 1)
-                        def.AppendLine("Field=" + Properties[classId][0]);
+                    if (Classes[classId].Properties.Count == 1)
+                        def.AppendLine("Field=" + Classes[classId].Properties[0]);
                     else
                     {
-                        def.Append("Field={" + Properties[classId][0]);
-                        for (var i = 1; i < Properties[classId].Count; i++)
-                            def.Append("," + Properties[classId][i]);
+                        def.Append("Field={" + Classes[classId].Properties[0]);
+                        for (var i = 1; i < Classes[classId].Properties.Count; i++)
+                            def.Append("," + Classes[classId].Properties[i]);
                         def.AppendLine("}");
                     }
 
                     var j = 0;
-                    if (String.Compare(Properties[classId][0], "Name", StringComparison.OrdinalIgnoreCase) == 0)
+                    if (String.Compare(Classes[classId].Properties[0], "Name", StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        profile.Append("=`" + Classes[classId] + ".Name`");
+                        profile.Append("=`" + Classes[classId].Name + ".Name`");
                         j = 1;
                     }
-                    if (Properties[classId].Count > j)
+                    if (Classes[classId].Properties.Count > j)
                     {
                         profile.Append("[");
                         var sep = "";
-                        for (var i = j; i < Properties[classId].Count; i++)
+                        for (var i = j; i < Classes[classId].Properties.Count; i++)
                         {
-                            profile.Append("`?" + Classes[classId] + "." + Properties[classId][i] + ":" +
-                                           sep + Properties[classId][i] +
-                                           "`?" + Classes[classId] + "." + Properties[classId][i] + "<>True:" +
-                                           "=`@StringOrName:`{`" + Classes[classId] +
-                                           '.' + Properties[classId][i] +
+                            profile.Append("`?" + Classes[classId].Name + "." + Classes[classId].Properties[i] + ":" +
+                                           sep + Classes[classId].Properties[i] +
+                                           "`?" + Classes[classId].Name + "." + Classes[classId].Properties[i] + "<>True:" +
+                                           "=`@StringOrName:`{`" + Classes[classId].Name +
+                                           '.' + Classes[classId].Properties[i] +
                                            "``]`]`]`]");
                             sep = ",";
                         }
@@ -146,19 +130,19 @@ namespace org.xpangen.Generator.Data
                     profile.AppendLine();
                 }
                 
-                if (SubClasses[classId].Count == 1)
-                    def.AppendLine("SubClass=" + Classes[SubClasses[classId][0]]);
-                else if (SubClasses[classId].Count > 1)
+                if (Classes[classId].SubClasses.Count == 1)
+                    def.AppendLine("SubClass=" + Classes[classId].SubClasses[0].SubClass.Name);
+                else if (Classes[classId].SubClasses.Count > 1)
                 {
-                    def.Append("SubClass={" + Classes[SubClasses[classId][0]]);
-                    for (var i = 1; i < SubClasses[classId].Count; i++)
-                        def.Append("," + Classes[SubClasses[classId][i]]);
+                    def.Append("SubClass={" + Classes[classId].SubClasses[0].SubClass.Name);
+                    for (var i = 1; i < Classes[classId].SubClasses.Count; i++)
+                        def.Append("," + Classes[classId].SubClasses[i].SubClass.Name);
                     def.AppendLine("}");
                 }
             }
 
-            for (var i = 0; i < SubClasses[classId].Count; i++)
-                ClassProfile(SubClasses[classId][i], def, profile);
+            for (var i = 0; i < Classes[classId].SubClasses.Count; i++)
+                ClassProfile(Classes[classId].SubClasses[i].SubClass.ClassId, def, profile);
 
             if (classId != 0)
                 profile.Append("`]");
@@ -172,12 +156,12 @@ namespace org.xpangen.Generator.Data
             def.AddClass("Class", "SubClass");
             def.AddClass("Class", "Property");
             def.AddClass("SubClass", "FieldFilter");
-            def.Properties[def.Classes.IndexOf("Class")].Add("Name");
-            def.Properties[def.Classes.IndexOf("SubClass")].Add("Name");
-            def.Properties[def.Classes.IndexOf("SubClass")].Add("Reference");
-            def.Properties[def.Classes.IndexOf("Property")].Add("Name");
-            def.Properties[def.Classes.IndexOf("FieldFilter")].Add("Name");
-            def.Properties[def.Classes.IndexOf("FieldFilter")].Add("Operand");
+            def.Classes[def.Classes.IndexOf("Class")].Properties.Add("Name");
+            def.Classes[def.Classes.IndexOf("SubClass")].Properties.Add("Name");
+            def.Classes[def.Classes.IndexOf("SubClass")].Properties.Add("Reference");
+            def.Classes[def.Classes.IndexOf("Property")].Properties.Add("Name");
+            def.Classes[def.Classes.IndexOf("FieldFilter")].Properties.Add("Name");
+            def.Classes[def.Classes.IndexOf("FieldFilter")].Properties.Add("Operand");
             return def;
         }
 
@@ -189,18 +173,19 @@ namespace org.xpangen.Generator.Data
             for (var i = 1; i < Classes.Count; i++)
             {
                 a.GenObject = d.CreateObject("", "Class");
-                a.SetString("Name", Classes[i]);
+                var c = Classes[i];
+                a.SetString("Name", c.Name);
                 a.SaveFields();
-                for (var j = 0; j < SubClasses[i].Count; j++)
+                for (var j = 0; j < c.SubClasses.Count; j++)
                 {
                     a.GenObject = d.CreateObject("Class", "SubClass");
-                    a.SetString("Name", Classes[SubClasses[i][j]]);
+                    a.SetString("Name", c.SubClasses[j].SubClass.Name);
                     a.SaveFields();
                 }
-                for (var j = 0; j < Properties[i].Count; j++)
+                for (var j = 0; j < c.Properties.Count; j++)
                 {
                     a.GenObject = d.CreateObject("Class", "Property");
-                    a.SetString("Name", Properties[i][j]);
+                    a.SetString("Name", c.Properties[j]);
                     a.SaveFields();
                 }
             }
@@ -211,13 +196,11 @@ namespace org.xpangen.Generator.Data
         {
             var i = AddClass(className);
             var j = AddClass(subClassName);
-            var sc = SubClasses[i];
-            var k = sc.IndexOf(j);
+            var sc = Classes[i].SubClasses;
+            var k = sc.IndexOf(subClassName);
             if (k == -1)
-                sc.Add(j);
-            for (var l = Parents.Count; l <= j; l++)
-                Parents.Add(-1);
-            Parents[j] = i;
+                sc.Add(new GenDataDefSubClass { SubClass = Classes[j], Reference = ""});
+            Classes[j].Parent = Classes[i];
         }
 
 
@@ -225,8 +208,8 @@ namespace org.xpangen.Generator.Data
         {
             AddSubClass(className, subClassName);
             var i = Classes.IndexOf(className);
-            var j = Classes.IndexOf(subClassName);
-            Reference[j] = reference;
+            var j = Classes[i].SubClasses.IndexOf(subClassName);
+            Classes[i].SubClasses[j].Reference= reference;
         }
 
         public int AddClass(string className)
@@ -234,9 +217,8 @@ namespace org.xpangen.Generator.Data
             var i = Classes.IndexOf(className);
             if (i == -1)
             {
-                i = Classes.Add(className);
-                Properties.Add(new NameList());
-                SubClasses.Add(new IndexList());
+                Classes.Add(new GenDataDefClass{Name = className, ClassId = Classes.Count});
+                i = Classes.IndexOf(className);
             }
 
             return i;
@@ -244,9 +226,9 @@ namespace org.xpangen.Generator.Data
 
         public string GetIdentifier(GenDataId genDataId)
         {
-            if (genDataId.ClassId >= Classes.Count || genDataId.PropertyId >= Properties[genDataId.ClassId].Count)
+            if (genDataId.ClassId >= Classes.Count || genDataId.PropertyId >= Classes[genDataId.ClassId].Properties.Count)
                 return "";
-            return Classes[genDataId.ClassId] + "." + Properties[genDataId.ClassId][genDataId.PropertyId];
+            return Classes[genDataId.ClassId].Name + "." + Classes[genDataId.ClassId].Properties[genDataId.PropertyId];
         }
     }
 }

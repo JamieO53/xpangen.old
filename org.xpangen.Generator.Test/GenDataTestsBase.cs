@@ -169,15 +169,15 @@ Property=Operand
             Assert.AreEqual(SubClassClassId, f.Classes.IndexOf("SubClass"));
             Assert.AreEqual(PropertyClassId, f.Classes.IndexOf("Property"));
             Assert.AreEqual(FieldFilterClassId, f.Classes.IndexOf("FieldFilter"));
-            Assert.AreEqual(1, f.SubClasses[0].Count);
-            Assert.AreEqual(2, f.SubClasses[ClassClassId].Count);
-            Assert.AreEqual(1, f.SubClasses[SubClassClassId].Count);
-            Assert.AreEqual(0, f.SubClasses[PropertyClassId].Count);
-            Assert.AreEqual(0, f.SubClasses[FieldFilterClassId].Count);
-            Assert.AreEqual(ClassClassId, f.SubClasses[0][0]);
-            Assert.AreEqual(SubClassClassId, f.SubClasses[ClassClassId][0]);
-            Assert.AreEqual(PropertyClassId, f.SubClasses[ClassClassId][1]);
-            Assert.AreEqual(FieldFilterClassId, f.SubClasses[SubClassClassId][0]);
+            Assert.AreEqual(1, f.Classes[0].SubClasses.Count);
+            Assert.AreEqual(2, f.Classes[ClassClassId].SubClasses.Count);
+            Assert.AreEqual(1, f.Classes[SubClassClassId].SubClasses.Count);
+            Assert.AreEqual(0, f.Classes[PropertyClassId].SubClasses.Count);
+            Assert.AreEqual(0, f.Classes[FieldFilterClassId].SubClasses.Count);
+            Assert.AreEqual(ClassClassId, f.Classes[0].SubClasses[0].SubClass.ClassId);
+            Assert.AreEqual(SubClassClassId, f.Classes[ClassClassId].SubClasses[0].SubClass.ClassId);
+            Assert.AreEqual(PropertyClassId, f.Classes[ClassClassId].SubClasses[1].SubClass.ClassId);
+            Assert.AreEqual(FieldFilterClassId, f.Classes[SubClassClassId].SubClasses[0].SubClass.ClassId);
         }
 
         protected static void VerifyDataCreation(GenData d)
@@ -235,12 +235,12 @@ Property=Operand
         {
             var f = new GenDataDef();
             var parentId = f.AddClass("", "Parent");
-            f.Properties[parentId].Add("Name");
+            f.Classes[parentId].Properties.Add("Name");
             var childId = f.AddClass("Parent", "Child");
-            f.Properties[childId].Add("Name");
-            f.Properties[childId].Add("Lookup");
+            f.Classes[childId].Properties.Add("Name");
+            f.Classes[childId].Properties.Add("Lookup");
             var lookupId = f.AddClass("Parent", "Lookup");
-            f.Properties[lookupId].Add("Name");
+            f.Classes[lookupId].Properties.Add("Name");
 
             var a = new GenAttributes(f);
             var d = new GenData(f);

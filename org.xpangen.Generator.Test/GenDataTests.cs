@@ -108,7 +108,10 @@ namespace org.xpangen.Generator.Test
         {
             var d = SetUpLookupData();
             var f = d.GenDataDef;
-            f.AddSubClass("SubClass", "SubClassClass", "self:Class.Name=SubClass.Name");
+            while (!d.Eol(1) && f.Classes[d.Context[1].ClassId].Name != "SubClass")
+                d.Next(1);
+            CreateSubClass(d, "SubClassClass");
+            //d.Context[1].Context.SubClass[0].Add(new GenObject(d.Context[1].Context, d.Context[1].Context.SubClass[0], 5));
             // todo: create data anologous to Lookup profile fragment test
         }
 
@@ -120,15 +123,15 @@ namespace org.xpangen.Generator.Test
         {
             var f = new GenDataDef();
             var classId = f.AddClass("", "Class");
-            f.Properties[classId].Add("Prop1");
-            f.Properties[classId].Add("Prop2");
+            f.Classes[classId].Properties.Add("Prop1");
+            f.Classes[classId].Properties.Add("Prop2");
             var d = new GenData(f);
             var o = d.CreateObject("", "Class");
             var a = new GenAttributes(f) {GenObject = o};
             a.SetString("Prop1", "Prop1");
             a.SetString("Prop2", "Prop2");
             a.SaveFields();
-            Assert.AreEqual(2, f.Properties[classId].Count);
+            Assert.AreEqual(2, f.Classes[classId].Properties.Count);
         }
 
         /// <summary>

@@ -35,7 +35,7 @@ namespace org.xpangen.Generator.Data
             if (GenObject != null)
             {
                 var classId = GenObject.ClassId;
-                var props = GenObject.GenData.GenDataDef.Properties[classId];
+                var props = GenObject.GenData.GenDataDef.Classes[classId].Properties;
                 for (var i = 0; i < props.Count; i++)
                     SetString(props[i], i < GenObject.Attributes.Count ? GenObject.Attributes[i] : "");
             }
@@ -44,7 +44,7 @@ namespace org.xpangen.Generator.Data
                 var classId = ClassId;
                 try
                 {
-                    var props = GenDataDef.Properties[classId];
+                    var props = GenDataDef.Classes[classId].Properties;
                     if (props != null)
                         foreach (var t in props)
                             SetString(t, "");
@@ -100,8 +100,8 @@ namespace org.xpangen.Generator.Data
         public void SaveFields()
         {
             var classId = GenObject.ClassId;
-            var props = GenObject.GenData.GenDataDef.Properties[classId];
-            var className = GenObject.GenData.GenDataDef.Classes[classId];
+            var props = GenObject.GenData.GenDataDef.Classes[classId].Properties;
+            var className = GenObject.GenData.GenDataDef.Classes[classId].Name;
             var n = props.Count;
             var changed = false;
             for (var i = 0; i < n; i++)

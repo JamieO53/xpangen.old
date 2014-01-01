@@ -60,7 +60,7 @@ namespace GenEdit.ViewModel
             GenAttributes = genAttributes;
             PropertyId = propertyId;
             Property = property;
-            _name = GenAttributes.GenObject.GenData.GenDataDef.Properties[GenAttributes.GenObject.ClassId][propertyId];
+            _name = GenAttributes.GenObject.GenData.GenDataDef.Classes[GenAttributes.GenObject.ClassId].Properties[propertyId];
             Name = _name;
             if (property != null)
             {

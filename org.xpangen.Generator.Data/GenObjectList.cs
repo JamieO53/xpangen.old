@@ -171,7 +171,7 @@ namespace org.xpangen.Generator.Data
             RemoveAt(itemIndex);
             Insert(0, genObject);
             Index = 0;
-            GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId], "");
+            GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId].Name, "");
             GenData.Changed = true;
         }
 
@@ -182,7 +182,7 @@ namespace org.xpangen.Generator.Data
             this[itemIndex] = this[itemIndex - 1];
             this[itemIndex - 1] = genObject;
             Index = itemIndex - 1;
-            GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId], "");
+            GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId].Name, "");
             GenData.Changed = true;
         }
 
@@ -193,7 +193,7 @@ namespace org.xpangen.Generator.Data
             this[itemIndex] = this[itemIndex + 1];
             this[itemIndex + 1] = genObject;
             Index = itemIndex + 1;
-            GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId], "");
+            GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId].Name, "");
             GenData.Changed = true;
         }
 
@@ -204,7 +204,7 @@ namespace org.xpangen.Generator.Data
             RemoveAt(itemIndex);
             Add(genObject);
             Index = Count - 1;
-            GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId], "");
+            GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId].Name, "");
             GenData.Changed = true;
         }
     }

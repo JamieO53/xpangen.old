@@ -180,7 +180,7 @@ namespace org.xpangen.Generator.Test
             const string expected = GenDataSaveText;
 
             var f = GenDataDef.CreateMinimal();
-            f.Properties[ClassClassId].Add("Title");
+            f.Classes[ClassClassId].Properties.Add("Title");
             var a = new GenAttributes(f);
             var d = new GenData(f);
             SetUpData(d);

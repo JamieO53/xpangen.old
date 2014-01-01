@@ -19,9 +19,9 @@ namespace GenEdit.Utilities
 
         public void CreateSubClassTrees(IList parentItems, int parentClassId)
         {
-            for (var i = 0; i < def.SubClasses[parentClassId].Count; i++)
+            for (var i = 0; i < def.Classes[parentClassId].SubClasses.Count; i++)
             {
-                var classId = def.SubClasses[parentClassId][i];
+                var classId = def.Classes[parentClassId].SubClasses[i].SubClass.ClassId;
                 var classSubTree = CreateClassSubTree(classId);
                 parentItems.Add(classSubTree);
             }
@@ -29,7 +29,7 @@ namespace GenEdit.Utilities
 
         private TreeNode CreateClassSubTree(int classId)
         {
-            var className = Data.GenDataDef.Classes[classId];
+            var className = Data.GenDataDef.Classes[classId].Name;
             GenApplicationBase definition = null;
             for (var i = 0; i < Data.ClassList.Count; i++)
             {
@@ -40,7 +40,7 @@ namespace GenEdit.Utilities
                 }
             }
 
-            var classItem = CreateTreeNode(2, def.Classes[classId], def.Classes[classId],
+            var classItem = CreateTreeNode(2, def.Classes[classId].Name, def.Classes[classId].Name,
                                            definition);
 
             var objectList = dat.Context[classId];

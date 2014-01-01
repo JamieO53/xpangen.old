@@ -25,8 +25,8 @@ namespace org.xpangen.Generator.Profile
             var format = syntaxDictionary[FragmentType.ToString()].Format;
             return string.Format(format, new object[]
                                              {
-                                                 GenDataDef.Classes[Id.ClassId],
-                                                 GenDataDef.Properties[Id.ClassId][Id.PropertyId]
+                                                 GenDataDef.Classes[Id.ClassId].Name,
+                                                 GenDataDef.Classes[Id.ClassId].Properties[Id.PropertyId]
                                              }
                 );
         }

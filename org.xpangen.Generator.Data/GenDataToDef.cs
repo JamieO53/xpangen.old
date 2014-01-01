@@ -69,7 +69,7 @@ namespace org.xpangen.Generator.Data
             for (var i = 0; i < classObject.SubClass[_xProperty].Count; i++)
             {
                 attributes.GenObject = classObject.SubClass[_xProperty][i];
-                data.Properties[iClass].Add(attributes.AsString("Name"));
+                data.Classes[iClass].Properties.Add(attributes.AsString("Name"));
             }
             for (var i = 0; i < classObject.SubClass[_xSubClass].Count; i++)
             {

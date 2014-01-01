@@ -29,10 +29,10 @@ namespace org.xpangen.Generator.Test
         protected static GenData SetUpComparisonData()
         {
             var f = GenDataDef.CreateMinimal();
-            f.Properties[PropertyClassId].Add("NameLT");
-            f.Properties[PropertyClassId].Add("NameEQ");
-            f.Properties[PropertyClassId].Add("NameGT");
-            f.Properties[PropertyClassId].Add("NameBlank");
+            f.Classes[PropertyClassId].Properties.Add("NameLT");
+            f.Classes[PropertyClassId].Properties.Add("NameEQ");
+            f.Classes[PropertyClassId].Properties.Add("NameGT");
+            f.Classes[PropertyClassId].Properties.Add("NameBlank");
 
             var d = new GenData(f);
             SetUpData(d);
@@ -63,7 +63,7 @@ namespace org.xpangen.Generator.Test
         protected static GenData SetUpNumericComparisonData()
         {
             var f = GenDataDef.CreateMinimal();
-            f.Properties[PropertyClassId].Add("Number");
+            f.Classes[PropertyClassId].Properties.Add("Number");
 
             var d = new GenData(f);
             var a = new GenAttributes(f);
@@ -184,7 +184,7 @@ namespace org.xpangen.Generator.Test
             var g = new GenSegment(genData.GenDataDef, "Property", cardinality, root);
             root.Body.Add(g);
             Assert.AreEqual(genCardinality, g.GenCardinality);
-            Assert.AreEqual("Property", genData.GenDataDef.Classes[g.ClassId]);
+            Assert.AreEqual("Property", genData.GenDataDef.Classes[g.ClassId].Name);
             Assert.AreSame(root, g.ParentSegement);
             foreach (var t in fa)
                 g.Body.Add(t);

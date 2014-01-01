@@ -24,7 +24,7 @@ namespace GenEdit.ViewModel
                 if (_fields == null)
                 {
                     _fields = new ObservableCollection<GenObjectFieldViewModel>();
-                    var n = GenAttributes.GenDataDef.Properties[classId].Count;
+                    var n = GenAttributes.GenDataDef.Classes[classId].Properties.Count;
                     var @class = Definition as Class;
                     var subClass = Definition as SubClass;
                     var property = Definition as Property;

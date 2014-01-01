@@ -111,9 +111,9 @@ namespace org.xpangen.Generator.Data
 
         private void ResetSubClasses(int classId)
         {
-            for (var i = 0; i < GenDataDef.SubClasses[classId].Count; i++)
+            for (var i = 0; i < GenDataDef.Classes[classId].SubClasses.Count; i++)
             {
-                var subClassId = GenDataDef.SubClasses[classId][i];
+                var subClassId = GenDataDef.Classes[classId].SubClasses[i].SubClass.ClassId;
                 if (Context[subClassId] != null)
                     if (!Eol(subClassId))
                     {
@@ -125,9 +125,9 @@ namespace org.xpangen.Generator.Data
 
         internal void SetSubClasses(int classId)
         {
-            for (var i = 0; i < GenDataDef.SubClasses[classId].Count; i++)
+            for (var i = 0; i < GenDataDef.Classes[classId].SubClasses.Count; i++)
             {
-                var subClassId = GenDataDef.SubClasses[classId][i];
+                var subClassId = GenDataDef.Classes[classId].SubClasses[i].SubClass.ClassId;
                 if (Context[classId].Context == null)
                     First(classId);
                 Context[subClassId] = Context[classId].Context.SubClass[i];
@@ -140,7 +140,7 @@ namespace org.xpangen.Generator.Data
             try
             {
                 if (
-                    String.Compare(GenDataDef.Properties[id.ClassId][id.PropertyId], "First",
+                    String.Compare(GenDataDef.Classes[id.ClassId].Properties[id.PropertyId], "First",
                                    StringComparison.OrdinalIgnoreCase) == 0)
                     return Context[id.ClassId].IsFirst() ? "True" : "";
                 return GetValueForId(id);
@@ -178,12 +178,12 @@ namespace org.xpangen.Generator.Data
 
         private string IdClass(GenDataId id)
         {
-            return GenDataDef.Classes[id.ClassId];
+            return GenDataDef.Classes[id.ClassId].Name;
         }
 
         private string IdProperty(GenDataId id)
         {
-            return GenDataDef.Properties[id.ClassId][id.PropertyId];
+            return GenDataDef.Classes[id.ClassId].Properties[id.PropertyId];
         }
 
         // The result is only defined if the Class, SubClass and Property classes are

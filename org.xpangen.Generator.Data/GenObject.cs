@@ -27,10 +27,10 @@ namespace org.xpangen.Generator.Data
             {
                 if (_genData == value) return;
                 _genData = value;
-                for (var i = 0; i < GenData.GenDataDef.Properties[ClassId].Count; i++)
+                for (var i = 0; i < GenData.GenDataDef.Classes[ClassId].Properties.Count; i++)
                     Attributes.Add("");
-                for (var i = 0; i < GenData.GenDataDef.SubClasses[ClassId].Count; i++)
-                    SubClass.Add(new GenObjectList(GenData, this, GenData.GenDataDef.SubClasses[ClassId][i]));
+                for (var i = 0; i < GenData.GenDataDef.Classes[ClassId].SubClasses.Count; i++)
+                    SubClass.Add(new GenObjectList(GenData, this, GenData.GenDataDef.Classes[ClassId].SubClasses[i].SubClass.ClassId));
             }
         }
 
