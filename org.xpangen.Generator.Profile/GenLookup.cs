@@ -49,42 +49,31 @@ namespace org.xpangen.Generator.Profile
             var result = "";
             if (NoMatch)
             {
-                var context = new GenContext(genData);
+                var contextData = genData.DuplicateContext();
 
                 if (genData.Eol(Var2.ClassId))
                 {
-                    context.SaveContext();
-                    genData.Reset(Var1.ClassId);
-                    result = Body.Expand(genData);
-                    context.RestoreContext();
+                    contextData.Reset(Var1.ClassId);
+                    result = Body.Expand(contextData);
                 }
                 else
                 {
-                    context.SaveContext();
-                    var v = genData.GetValue(Var2);
-                    SearchFor(genData, ClassId, Var1, v);
-                    if (genData.Eol(ClassId))
-                    {
-                        context.RestoreContext();
-                        result = Body.Expand(genData);
-                    }
-                    else
-                        context.RestoreContext();
+                    var v = contextData.GetValue(Var2);
+                    SearchFor(contextData, ClassId, Var1, v);
+                    if (contextData.Eol(ClassId))
+                        result = Body.Expand(contextData);
                 }
             }
             else
             {
                 if (!genData.Eol(Var2.ClassId))
                 {
-                    var context = new GenContext(genData);
-                    context.SaveContext();
+                    var contextData = genData.DuplicateContext();
+                    var v = contextData.GetValue(Var2);
+                    SearchFor(contextData, ClassId, Var1, v);
 
-                    var v = genData.GetValue(Var2);
-                    SearchFor(genData, ClassId, Var1, v);
-
-                    if (!genData.Eol(ClassId))
-                        result = Body.Expand(genData);
-                    context.RestoreContext();
+                    if (!contextData.Eol(ClassId))
+                        result = Body.Expand(contextData);
                 }
             }
             return result;

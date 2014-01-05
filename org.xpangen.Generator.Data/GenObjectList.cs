@@ -6,34 +6,27 @@ using System;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenObjectList// : GenObjectListBase
+    public class GenObjectList
     {
         /// <summary>
         /// Create a new <see cref="GenObjectList"/> list.
         /// </summary>
-        /// <param name="data">The generator data containing the list.</param>
-        /// <param name="parent">The generator object owning the list.</param>
-        /// <param name="classId">The ID of objects in the list.</param>
-        public GenObjectList(GenDataBase data, GenObject parent, int classId)
-            : this(new GenObjectListBase(data, parent, classId))
-        {
-        }
-
+        /// <param name="genObjectListBase"> The underlying generator object list. </param>
         public GenObjectList(GenObjectListBase genObjectListBase)
         {
             GenObjectListBase = genObjectListBase;
         }
 
 
-        public GenObjectListBase GenObjectListBase { get;  private set; }
+        public GenObjectListBase GenObjectListBase { get; set; }
 
         public int ClassId { get { return GenObjectListBase.ClassId; } }
 
-        public GenDataBase GenDataBase { get { return GenObjectListBase.GenDataBase; } }
+        private GenDataBase GenDataBase { get { return GenObjectListBase.GenDataBase; } }
 
         public GenObject this[int index] { get { return GenObjectListBase[index]; } }
         
-/// <summary>
+        /// <summary>
         /// The currently selected item.
         /// </summary>
         public GenObject GenObject

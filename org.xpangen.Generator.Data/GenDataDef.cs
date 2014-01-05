@@ -36,10 +36,10 @@ namespace org.xpangen.Generator.Data
 
         public GenDataId GetId(string name, bool createIfMissing)
         {
-            var id = new GenDataId {ClassId = -1, PropertyId = -1};
+            var id = new GenDataId {ClassId = -1, PropertyId = -1, ClassName = "", PropertyName = ""};
             var sa = name.Split(new[] {'.'}, 2);
-            string className = "";
-            string propertyName;
+            var className = "";
+            var propertyName = "";
             if (sa.GetUpperBound(0) == 0)
             {
                 id.ClassId = CurrentClassId;
@@ -67,6 +67,8 @@ namespace org.xpangen.Generator.Data
             if (id.PropertyId == -1 && className != "")
                 throw new Exception("<<<<Unknown Class/Property: " + name + ">>>>");
             
+            id.ClassName = Classes[id.ClassId].Name;
+            id.PropertyName = Classes[id.ClassId].Properties[id.PropertyId];
             return id;
         }
 
@@ -232,7 +234,7 @@ namespace org.xpangen.Generator.Data
                     var ff = new GenDataDefFieldFilter
                                  {
                                      Target =
-                                         new GenDataDefId
+                                         new GenDataId
                                              {
                                                  ClassId = tid.ClassId,
                                                  PropertyId = tid.PropertyId,
@@ -240,7 +242,7 @@ namespace org.xpangen.Generator.Data
                                                  PropertyName = ta[1]
                                              },
                                      Source =
-                                         new GenDataDefId
+                                         new GenDataId
                                              {
                                                  ClassId = sid.ClassId,
                                                  PropertyId = sid.PropertyId,
@@ -267,9 +269,7 @@ namespace org.xpangen.Generator.Data
 
         public string GetIdentifier(GenDataId genDataId)
         {
-            if (genDataId.ClassId >= Classes.Count || genDataId.PropertyId >= Classes[genDataId.ClassId].Properties.Count)
-                return "";
-            return Classes[genDataId.ClassId].Name + "." + Classes[genDataId.ClassId].Properties[genDataId.PropertyId];
+            return genDataId.Identifier;
         }
     }
 }

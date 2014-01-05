@@ -45,7 +45,8 @@ namespace Generator.Editor.Model
             }
 
             BaseFileList = new GenApplicationList<BaseFile>();
-            list = new GenObjectList(GenObject.SubClass[0]);
+            list.GenObjectListBase = GenObject.SubClass[0];
+
             list.First();
             while (!list.Eol)
             {

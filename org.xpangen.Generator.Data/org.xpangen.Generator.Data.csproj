@@ -40,7 +40,6 @@
     <Compile Include="GenContext.cs" />
     <Compile Include="GenData.cs" />
     <Compile Include="GenDataBase.cs" />
-    <Compile Include="GenDataContext.cs" />
     <Compile Include="GenDataDef.cs" />
     <Compile Include="GenDataDefClass.cs" />
     <Compile Include="GenDataDefClassList.cs" />

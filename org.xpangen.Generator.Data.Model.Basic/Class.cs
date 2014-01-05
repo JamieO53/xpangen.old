@@ -58,7 +58,7 @@ namespace org.xpangen.Generator.Data.Model.Basic
             }
 
             PropertyList = new GenApplicationList<Property>();
-            list = new GenObjectList(GenObject.SubClass[0]);
+            list.GenObjectListBase = GenObject.SubClass[0];
             list.First();
             while (!list.Eol)
             {
