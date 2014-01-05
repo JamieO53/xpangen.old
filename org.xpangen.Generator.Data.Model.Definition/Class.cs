@@ -53,11 +53,11 @@ namespace org.xpangen.Generator.Data.Model.Definition
             var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
             if (classIdx != -1)
             {
-                var list = GenObject.SubClass[classIdx];
+                var list = new GenObjectList(GenObject.SubClass[classIdx]);
                 list.First();
                 while (!list.Eol)
                 {
-                    SubClassList.Add(new SubClass(GenDataDef) {GenObject = list.Context});
+                    SubClassList.Add(new SubClass(GenDataDef) {GenObject = list.GenObject});
                     list.Next();
                 }
             }
@@ -67,11 +67,11 @@ namespace org.xpangen.Generator.Data.Model.Definition
             classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
             if (classIdx != -1)
             {
-                var list = GenObject.SubClass[classIdx];
+                var list = new GenObjectList(GenObject.SubClass[classIdx]);
                 list.First();
                 while (!list.Eol)
                 {
-                    PropertyList.Add(new Property(GenDataDef) {GenObject = list.Context});
+                    PropertyList.Add(new Property(GenDataDef) {GenObject = list.GenObject});
                     list.Next();
                 }
             }

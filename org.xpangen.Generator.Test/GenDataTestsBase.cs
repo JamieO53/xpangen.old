@@ -64,7 +64,7 @@ Property=Operand
 
             Assert.IsTrue(d.Context[RootClassId].IsFirst());
             Assert.IsTrue(d.Context[RootClassId].IsLast());
-            Assert.AreEqual(1, d.Context[RootClassId].Context.SubClass.Count);
+            Assert.AreEqual(1, d.Context[RootClassId].GenObject.SubClass.Count);
 
             // Class class tests
             d.First(ClassClassId);
@@ -77,66 +77,66 @@ Property=Operand
             Assert.IsTrue(d.Context[PropertyClassId].IsFirst());
             Assert.IsNull(d.Context[FieldFilterClassId]);
 
-            a.GenObject = d.Context[ClassClassId].Context;
+            a.GenObject = d.Context[ClassClassId].GenObject;
             Assert.AreEqual("Class", a.AsString("Name"));
-            Assert.AreEqual(2, d.Context[ClassClassId].Context.SubClass.Count);
+            Assert.AreEqual(2, d.Context[ClassClassId].GenObject.SubClass.Count);
             Assert.AreEqual(2, d.Context[SubClassClassId].Count);
             Assert.AreEqual(1, d.Context[PropertyClassId].Count);
-            a.GenObject = d.Context[PropertyClassId].Context;
+            a.GenObject = d.Context[PropertyClassId].GenObject;
             Assert.AreEqual("Name", a.AsString("Name"));
 
             // SubClass class tests - SubClass
             Assert.IsTrue(d.Context[SubClassClassId].IsFirst());
-            a.GenObject = d.Context[SubClassClassId].Context;
+            a.GenObject = d.Context[SubClassClassId].GenObject;
             Assert.AreEqual("SubClass", a.AsString("Name"));
-            Assert.AreEqual(1, d.Context[SubClassClassId].Context.SubClass.Count);
+            Assert.AreEqual(1, d.Context[SubClassClassId].GenObject.SubClass.Count);
 
             // SubClass class tests - Property
             d.Next(SubClassClassId);
             Assert.IsTrue(d.Context[SubClassClassId].IsLast());
-            a.GenObject = d.Context[SubClassClassId].Context;
+            a.GenObject = d.Context[SubClassClassId].GenObject;
             Assert.AreEqual("Property", a.AsString("Name"));
-            Assert.AreEqual(0, d.Context[PropertyClassId].Context.SubClass.Count);
+            Assert.AreEqual(0, d.Context[PropertyClassId].GenObject.SubClass.Count);
 
             // SubClass class tests
             d.Next(ClassClassId);
             Assert.IsFalse(d.Eol(ClassClassId));
-            a.GenObject = d.Context[ClassClassId].Context;
+            a.GenObject = d.Context[ClassClassId].GenObject;
             Assert.AreEqual("SubClass", a.AsString("Name"));
             Assert.AreEqual(1, d.Context[SubClassClassId].Count);
             Assert.AreEqual(2, d.Context[PropertyClassId].Count);
-            a.GenObject = d.Context[PropertyClassId].Context;
+            a.GenObject = d.Context[PropertyClassId].GenObject;
             Assert.AreEqual("Name", a.AsString("Name"));
             d.Next(PropertyClassId);
-            a.GenObject = d.Context[PropertyClassId].Context;
+            a.GenObject = d.Context[PropertyClassId].GenObject;
             Assert.AreEqual("Reference", a.AsString("Name"));
 
             // SubClass class tests - FieldFilter
             Assert.IsTrue(d.Context[SubClassClassId].IsFirst());
-            a.GenObject = d.Context[SubClassClassId].Context;
+            a.GenObject = d.Context[SubClassClassId].GenObject;
             Assert.AreEqual("FieldFilter", a.AsString("Name"));
 
             // Property class tests
             d.Next(ClassClassId);
             Assert.IsFalse(d.Eol(ClassClassId));
-            a.GenObject = d.Context[ClassClassId].Context;
+            a.GenObject = d.Context[ClassClassId].GenObject;
             Assert.AreEqual("Property", a.AsString("Name"));
             Assert.AreEqual(0, d.Context[SubClassClassId].Count);
             Assert.AreEqual(1, d.Context[PropertyClassId].Count);
-            a.GenObject = d.Context[PropertyClassId].Context;
+            a.GenObject = d.Context[PropertyClassId].GenObject;
             Assert.AreEqual("Name", a.AsString("Name"));
 
             // FieldFilter class tests
             d.Next(ClassClassId);
             Assert.IsFalse(d.Eol(ClassClassId));
-            a.GenObject = d.Context[ClassClassId].Context;
+            a.GenObject = d.Context[ClassClassId].GenObject;
             Assert.AreEqual("FieldFilter", a.AsString("Name"));
             Assert.AreEqual(0, d.Context[SubClassClassId].Count);
             Assert.AreEqual(2, d.Context[PropertyClassId].Count);
-            a.GenObject = d.Context[PropertyClassId].Context;
+            a.GenObject = d.Context[PropertyClassId].GenObject;
             Assert.AreEqual("Name", a.AsString("Name"));
             d.Next(PropertyClassId);
-            a.GenObject = d.Context[PropertyClassId].Context;
+            a.GenObject = d.Context[PropertyClassId].GenObject;
             Assert.AreEqual("Operand", a.AsString("Name"));
         }
 
@@ -269,6 +269,27 @@ Property=Operand
         {
             var f = GenDataDef.CreateMinimal();
 
+            var d = SetUpLookupData(f);
+            return d;
+        }
+
+        protected static GenData SetUpReferenceData(string reference)
+        {
+            var f = CreateMinimalReferenceDefinition(reference);
+
+            var d = SetUpLookupData(f);
+            return d;
+        }
+
+        protected static GenDataDef CreateMinimalReferenceDefinition(string reference)
+        {
+            var f = GenDataDef.CreateMinimal();
+            f.AddSubClass("SubClass", "SubClassClass", reference);
+            return f;
+        }
+
+        private static GenData SetUpLookupData(GenDataDef f)
+        {
             var d = new GenData(f);
             d.CreateObject("", "Class").Attributes[0] = "Class";
             d.CreateObject("Class", "Property").Attributes[0] = "Name";

@@ -209,7 +209,48 @@ namespace org.xpangen.Generator.Data
             AddSubClass(className, subClassName);
             var i = Classes.IndexOf(className);
             var j = Classes[i].SubClasses.IndexOf(subClassName);
-            Classes[i].SubClasses[j].Reference= reference;
+            var sc = Classes[i].SubClasses[j];
+            sc.FieldFilters = new GenDataDefFieldFilterList();
+            ParseReference(reference, sc);
+        }
+
+        private void ParseReference(string reference, GenDataDefSubClass sc)
+        {
+            sc.Reference = reference;
+            var ra = reference.Split(':');
+            sc.ReferenceDefinition = ra[0];
+            if (ra.GetUpperBound(0) > 0)
+            {
+                var fa = ra[1].Split(';');
+                for (var i = 0; i <= fa.GetLowerBound(0); i++)
+                {
+                    var ca = fa[i].Split('=');
+                    var ta = ca[0].Split('.');
+                    var sa = ca[1].Split('.');
+                    var tid = GetId(ca[0]);
+                    var sid = GetId(ca[1]);
+                    var ff = new GenDataDefFieldFilter
+                                 {
+                                     Target =
+                                         new GenDataDefId
+                                             {
+                                                 ClassId = tid.ClassId,
+                                                 PropertyId = tid.PropertyId,
+                                                 ClassName = ta[0],
+                                                 PropertyName = ta[1]
+                                             },
+                                     Source =
+                                         new GenDataDefId
+                                             {
+                                                 ClassId = sid.ClassId,
+                                                 PropertyId = sid.PropertyId,
+                                                 ClassName = sa[0],
+                                                 PropertyName = sa[1]
+                                             }
+                                 };
+                    sc.FieldFilters.Add(ff);
+                }
+            }
         }
 
         public int AddClass(string className)

@@ -39,9 +39,13 @@
     <Compile Include="GenAttributes.cs" />
     <Compile Include="GenContext.cs" />
     <Compile Include="GenData.cs" />
+    <Compile Include="GenDataBase.cs" />
+    <Compile Include="GenDataContext.cs" />
     <Compile Include="GenDataDef.cs" />
     <Compile Include="GenDataDefClass.cs" />
     <Compile Include="GenDataDefClassList.cs" />
+    <Compile Include="GenDataDefFieldFilter.cs" />
+    <Compile Include="GenDataDefFieldFilterList.cs" />
     <Compile Include="GenDataDefSubClass.cs" />
     <Compile Include="GenDataDefSubClassList.cs" />
     <Compile Include="GenDataId.cs" />
@@ -49,6 +53,8 @@
     <Compile Include="GenList.cs" />
     <Compile Include="GenObject.cs" />
     <Compile Include="GenObjectList.cs" />
+    <Compile Include="GenObjectListBase.cs" />
+    <Compile Include="GenSubClasses.cs" />
     <Compile Include="ListMove.cs" />
     <Compile Include="IndexList.cs" />
     <Compile Include="NameList.cs" />

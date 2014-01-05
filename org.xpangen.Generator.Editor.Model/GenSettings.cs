@@ -36,20 +36,20 @@ namespace Generator.Editor.Model
         protected override void GenObjectSetNotification()
         {
             FileGroupList = new GenApplicationList<FileGroup>();
-            var list = GenObject.SubClass[0];
+            var list = new GenObjectList(GenObject.SubClass[0]);
             list.First();
             while (!list.Eol)
             {
-                FileGroupList.Add(new FileGroup(GenDataDef) {GenObject = list.Context});
+                FileGroupList.Add(new FileGroup(GenDataDef) {GenObject = list.GenObject});
                 list.Next();
             }
 
             BaseFileList = new GenApplicationList<BaseFile>();
-            list = GenObject.SubClass[0];
+            list = new GenObjectList(GenObject.SubClass[0]);
             list.First();
             while (!list.Eol)
             {
-                BaseFileList.Add(new BaseFile(GenDataDef) {GenObject = list.Context});
+                BaseFileList.Add(new BaseFile(GenDataDef) {GenObject = list.GenObject});
                 list.Next();
             }
 

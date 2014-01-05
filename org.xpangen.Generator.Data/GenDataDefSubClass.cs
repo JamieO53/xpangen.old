@@ -8,5 +8,9 @@
         public GenDataDefClass SubClass { get; set; }
 
         public string Reference { get; set; }
+
+        public GenDataDefFieldFilterList FieldFilters { get; set; }
+
+        public string ReferenceDefinition { get; set; }
     }
 }

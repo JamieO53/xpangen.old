@@ -89,7 +89,7 @@ namespace org.xpangen.Generator.Test
             a.SaveFields();
 
             var i = f.IndexOfSubClass(f.Classes.IndexOf("Class"), f.Classes.IndexOf("SubClass"));
-            var s = o.SubClass[i];
+            var s = new GenObjectList(o.SubClass[i]);
             o = s.CreateObject();
             a.GenObject = o;
             a.SetString("Name", "SubClass");
@@ -106,11 +106,14 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Generator data subclass for a local reference tests")]
         public void GenSubClassLocalReferenceTestTests()
         {
-            var d = SetUpLookupData();
+            var d = SetUpReferenceData("self:Class.Name=SubClass.Name");
             var f = d.GenDataDef;
-            while (!d.Eol(1) && f.Classes[d.Context[1].ClassId].Name != "SubClass")
-                d.Next(1);
-            CreateSubClass(d, "SubClassClass");
+            d.Context[1].Last();
+            d.Context[1].Prior();
+            var sc = d.Context[2].GenObject;
+            //while (!d.Eol(1) && f.Classes[d.Context[1].ClassId].Name != "SubClass")
+            //    d.Next(1);
+            //CreateSubClass(d, "SubClassClass");
             //d.Context[1].Context.SubClass[0].Add(new GenObject(d.Context[1].Context, d.Context[1].Context.SubClass[0], 5));
             // todo: create data anologous to Lookup profile fragment test
         }
@@ -164,19 +167,22 @@ namespace org.xpangen.Generator.Test
         {
             var f = GenDataDef.CreateMinimal();
             var d = new GenData(f);
-            var c = new GenContext(d);
+            //var c = new GenContext(d);
 
             SetUpData(d);
             d.First(ClassClassId);
             d.Last(SubClassClassId);
             //Assert.IsTrue(d.Eol(SubClassClassId));
-            Assert.AreEqual("Property", d.Context[SubClassClassId].Context.Attributes[0]);
-            c.SaveContext();
-            d.Context[SubClassClassId].First();
-            Assert.AreEqual("SubClass", d.Context[SubClassClassId].Context.Attributes[0]);
-            c.RestoreContext();
+            Assert.AreEqual("Property", d.Context[SubClassClassId].GenObject.Attributes[0]);
+            var c = new GenData(d.GenDataBase);
+            c.EstablishContext(d.Context[SubClassClassId].GenObject);
+            Assert.AreEqual("Property", c.Context[SubClassClassId].GenObject.Attributes[0]);
+            //c.SaveContext();
+            c.Context[SubClassClassId].First();
+            Assert.AreEqual("SubClass", c.Context[SubClassClassId].GenObject.Attributes[0]);
+            //c.RestoreContext();
             //Assert.IsTrue(d.Eol(SubClassClassId));
-            Assert.AreEqual("Property", d.Context[SubClassClassId].Context.Attributes[0]);
+            Assert.AreEqual("Property", d.Context[SubClassClassId].GenObject.Attributes[0]);
         }
 
         /// <summary>

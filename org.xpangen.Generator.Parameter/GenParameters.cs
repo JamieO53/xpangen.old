@@ -284,7 +284,7 @@ namespace org.xpangen.Generator.Parameter
                 var subClassId = GenDataDef.Classes.IndexOf(className);
                 var subClassIdx = GenDataDef.IndexOfSubClass(0, subClassId);
                 if (subClassIdx != -1)
-                    LoadSubClass(Context[0].Context, className, subClassId, subClassIdx);
+                    LoadSubClass(Context[0].GenObject, className, subClassId, subClassIdx);
                 else
                     // Error: Invalid data type at the global level - skip it
                     while (!Scan.Eof && className == Scan.RecordType)

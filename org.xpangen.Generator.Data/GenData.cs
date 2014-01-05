@@ -3,50 +3,49 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenData: BindableObject
+    public class GenData
     {
-        public GenDataDef GenDataDef { get; private set; }
-        public List<GenObjectList> Context { get; private set; }
+        public GenDataContext Context { get; private set; }
+        public GenDataBase GenDataBase { get; private set; }
+        public GenDataDef GenDataDef { get { return GenDataBase.GenDataDef; } }
 
-        public GenObject Root { get { return Context[0].Context; } }
-
-        public bool Changed { get; set; }
-
-        public GenData(GenDataDef genDataDef)
+        public bool Changed
         {
-            IgnorePropertyValidation = true;
-            GenDataDef = genDataDef;
-            Context = new List<GenObjectList>();
-            for (var i = 0; i < genDataDef.Classes.Count; i++)
-                Context.Add(null);
-
-            var root = new GenObject(null, null, 0) {GenData = this};
-            Context[0] = new GenObjectList(this, null, 0) {root};
-            First(0);
-            Changed = false;
+            get { return GenDataBase.Changed; }
         }
 
+        public GenObject Root
+        {
+            get { return GenDataBase.Root; }
+        }
+
+        public GenData(GenDataDef genDataDef) : this(new GenDataBase(genDataDef))
+        {
+        }
+
+        public GenData(GenDataBase genDataBase)
+        {
+            GenDataBase = genDataBase;
+            Context = new GenDataContext(GenDataBase);
+            for (var i = 0; i < GenDataDef.Classes.Count; i++)
+                Context.Add(null);
+
+            Context[0] = new GenObjectList(new GenObjectListBase(GenDataBase, null, 0) { GenDataBase.Root });
+            First(0);
+            GenDataBase.Changed = false;
+        }
+        
         public GenObject CreateObject(string parentClassName, string className)
         {
-            var i = GenDataDef.Classes.IndexOf(className);
-            var j = GenDataDef.Classes.IndexOf(parentClassName);
-            var k = GenDataDef.IndexOfSubClass(j, i);
-            var l = Context[j].Context.SubClass[k];
-            var o = new GenObject(l.Parent, l, i);
-            l.Add(o);
+            var parent = Context[GenDataDef.Classes.IndexOf(parentClassName)].GenObject;
+            var o = GenDataBase.CreateGenObject(className, parent);
             EstablishContext(o);
             return o;
         }
 
-        public void RaiseDataChanged(string className, string propertyName)
-        {
-            RaisePropertyChanged(className + '.' + propertyName);
-        }
-        
         public void EstablishContext(GenObject genObject)
         {
             if (genObject == null || genObject.ParentSubClass == null) return;
@@ -56,7 +55,7 @@ namespace org.xpangen.Generator.Data
                 i++;
             if (i < genObject.Parent.SubClass.Count)
             {
-                Context[genObject.ClassId] = genObject.Parent.SubClass[i];
+                Context[genObject.ClassId] = new GenObjectList(genObject.Parent.SubClass[i]);
                 Context[genObject.ClassId].Index = Context[genObject.ClassId].IndexOf(genObject);
             }
             EstablishContext(genObject.Parent);
@@ -128,9 +127,9 @@ namespace org.xpangen.Generator.Data
             for (var i = 0; i < GenDataDef.Classes[classId].SubClasses.Count; i++)
             {
                 var subClassId = GenDataDef.Classes[classId].SubClasses[i].SubClass.ClassId;
-                if (Context[classId].Context == null)
+                if (Context[classId].GenObject == null)
                     First(classId);
-                Context[subClassId] = Context[classId].Context.SubClass[i];
+                Context[subClassId] = new GenObjectList(Context[classId].GenObject.SubClass[i]);
                 Context[subClassId].First();
             }
         }
@@ -172,7 +171,7 @@ namespace org.xpangen.Generator.Data
 
         private string GetValueForId(GenDataId id)
         {
-            var context = Context[id.ClassId].Context;
+            var context = Context[id.ClassId].GenObject;
             return id.PropertyId >= context.Attributes.Count ? "" : context.Attributes[id.PropertyId];
         }
 
@@ -192,8 +191,7 @@ namespace org.xpangen.Generator.Data
         // all the classes and summarising the result.
         public GenDataDef AsDef()
         {
-            var x = new GenDataToDef(this);
-            return x.AsDef();
+            return GenDataBase.AsDef();
         }
     }
 }

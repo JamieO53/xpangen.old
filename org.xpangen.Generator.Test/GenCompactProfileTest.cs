@@ -254,8 +254,8 @@ namespace org.xpangen.Generator.Test
             SetUpData(d);
 
             d.First(ClassClassId);
-            Assert.AreEqual("Class", d.Context[ClassClassId].Context.Attributes[0]);
-            var a = new GenAttributes(f) { GenObject = d.Context[ClassClassId].Context };
+            Assert.AreEqual("Class", d.Context[ClassClassId].GenObject.Attributes[0]);
+            var a = new GenAttributes(f) { GenObject = d.Context[ClassClassId].GenObject };
             a.SetString("NameLT", "Clasa");
             a.SetString("NameEQ", "Class");
             a.SetString("NameGT", "Clasz");

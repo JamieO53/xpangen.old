@@ -38,8 +38,8 @@ namespace org.xpangen.Generator.Test
             SetUpData(d);
 
             d.First(ClassClassId);
-            Assert.AreEqual("Class", d.Context[ClassClassId].Context.Attributes[0]);
-            var a = new GenAttributes(f) { GenObject = d.Context[ClassClassId].Context };
+            Assert.AreEqual("Class", d.Context[ClassClassId].GenObject.Attributes[0]);
+            var a = new GenAttributes(f) { GenObject = d.Context[ClassClassId].GenObject };
             a.SetString("NameLT", "Clasa");
             a.SetString("NameEQ", "Class");
             a.SetString("NameGT", "Clasz");
@@ -48,9 +48,9 @@ namespace org.xpangen.Generator.Test
 
             d.Last(ClassClassId);
             d.Prior(ClassClassId);
-            Assert.AreEqual("Property", d.Context[ClassClassId].Context.Attributes[0]);
+            Assert.AreEqual("Property", d.Context[ClassClassId].GenObject.Attributes[0]);
             d.First(PropertyClassId);
-            a.GenObject = d.Context[PropertyClassId].Context;
+            a.GenObject = d.Context[PropertyClassId].GenObject;
             a.SetString("NameLT", "Nama");
             a.SetString("NameEQ", "Name");
             a.SetString("NameGT", "Namz");
@@ -70,7 +70,7 @@ namespace org.xpangen.Generator.Test
             SetUpData(d);
 
             d.First(PropertyClassId);
-            a.GenObject = d.Context[PropertyClassId].Context;
+            a.GenObject = d.Context[PropertyClassId].GenObject;
             a.SetNumber("Number", 15);
             a.SaveFields();
 

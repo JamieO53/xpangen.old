@@ -15,13 +15,13 @@ namespace org.xpangen.Generator.Data
         private readonly int _xSubClass;
         private readonly int _xProperty;
 
-        private GenData GenData { get; set; }
+        private GenDataBase GenDataBase { get; set; }
         private GenDataDef GenDataDef { get; set; }
 
-        public GenDataToDef(GenData genData)
+        public GenDataToDef(GenDataBase genData)
         {
-            GenData = genData;
-            GenDataDef = GenData.GenDataDef;
+            GenDataBase = genData;
+            GenDataDef = GenDataBase.GenDataDef;
             _nClass = GenDataDef.Classes.IndexOf("Class");
             _nSubClass = GenDataDef.Classes.IndexOf("SubClass");
             _nProperty = GenDataDef.Classes.IndexOf("Property");
@@ -36,7 +36,7 @@ namespace org.xpangen.Generator.Data
         public GenDataDef AsDef()
         {
             var f = new GenDataDef();
-            Navigate(GenData.Root, f);
+            Navigate(GenDataBase.Root, f);
 
             return f;
         }
@@ -49,13 +49,9 @@ namespace org.xpangen.Generator.Data
                         Navigate(s, f);
             else
             {
-                GenData.EstablishContext(c);
-                GenData.Context[_nClass].First();
-                while (!GenData.Context[_nClass].Eol)
-                {
-                    AsDefSubClass(f, GenData.Context[_nClass].Context, GenData.Context[_nClass].IsFirst());
-                    GenData.Context[_nClass].Next();
-                }
+                var sc = c.ParentSubClass;
+                for (var i = 0; i < sc.Count; i++)
+                    AsDefSubClass(f, sc[i], i == 0);
             }
         }
 
