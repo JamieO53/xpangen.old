@@ -91,11 +91,11 @@ namespace Generator.Editor.Model
         protected override void GenObjectSetNotification()
         {
             ProfileList = new GenApplicationList<Profile>();
-            var list = GenObject.SubClass[0];
+            var list = new GenObjectList(GenObject.SubClass[0]);
             list.First();
             while (!list.Eol)
             {
-                ProfileList.Add(new Profile(GenDataDef) {GenObject = list.Context});
+                ProfileList.Add(new Profile(GenDataDef) {GenObject = list.GenObject});
                 list.Next();
             }
 

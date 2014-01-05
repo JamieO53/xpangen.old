@@ -3,11 +3,10 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenObjectList : List<GenObject>
+    public class GenObjectList// : GenObjectListBase
     {
         /// <summary>
         /// Create a new <see cref="GenObjectList"/> list.
@@ -15,21 +14,33 @@ namespace org.xpangen.Generator.Data
         /// <param name="data">The generator data containing the list.</param>
         /// <param name="parent">The generator object owning the list.</param>
         /// <param name="classId">The ID of objects in the list.</param>
-        public GenObjectList(GenData data, GenObject parent, int classId)
+        public GenObjectList(GenDataBase data, GenObject parent, int classId)
+            : this(new GenObjectListBase(data, parent, classId))
         {
-            GenData = data;
-            Parent = parent;
-            ClassId = classId;
         }
 
-        /// <summary>
+        public GenObjectList(GenObjectListBase genObjectListBase)
+        {
+            GenObjectListBase = genObjectListBase;
+        }
+
+
+        public GenObjectListBase GenObjectListBase { get;  private set; }
+
+        public int ClassId { get { return GenObjectListBase.ClassId; } }
+
+        public GenDataBase GenDataBase { get { return GenObjectListBase.GenDataBase; } }
+
+        public GenObject this[int index] { get { return GenObjectListBase[index]; } }
+        
+/// <summary>
         /// The currently selected item.
         /// </summary>
-        public GenObject Context
+        public GenObject GenObject
         {
             get
             {
-                return Eol ? null : this[Index];
+                return Eol ? null : GenObjectListBase[Index];
             }
         }
 
@@ -38,28 +49,18 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         public bool Eol
         {
-            get { return Count == 0 || Index < 0 || Index >= Count; }
+            get { return GenObjectListBase.Count == 0 || Index < 0 || Index >= GenObjectListBase.Count; }
         }
-
-        /// <summary>
-        /// The generator data containing the list.
-        /// </summary>
-        private GenData GenData { get; set; }
-
-        /// <summary>
-        /// The generator object owning the list.
-        /// </summary>
-        public GenObject Parent { get; private set; }
-
-        /// <summary>
-        /// The ID of objects in the list.
-        /// </summary>
-        public int ClassId { get; private set; }
 
         /// <summary>
         /// The index of the currently selected item.
         /// </summary>
         public int Index { get; set; }
+
+        public int Count
+        {
+            get { return GenObjectListBase.Count; }
+        }
 
         /// <summary>
         /// Is the selected item in the first place?
@@ -67,7 +68,7 @@ namespace org.xpangen.Generator.Data
         /// <returns></returns>
         public bool IsFirst()
         {
-            return Index == 0 && Count > 0;
+            return Index == 0 && GenObjectListBase.Count > 0;
         }
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace org.xpangen.Generator.Data
         /// <returns></returns>
         public bool IsLast()
         {
-            return Index == Count - 1 && Count > 0;
+            return Index == GenObjectListBase.Count - 1 && GenObjectListBase.Count > 0;
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         public void First()
         {
-            if (Count == 0)
+            if (GenObjectListBase.Count == 0)
                 Reset();
             else
                 Index = 0;
@@ -105,7 +106,7 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         public void Last()
         {
-            Index = Count - 1;
+            Index = GenObjectListBase.Count - 1;
         }
 
         /// <summary>
@@ -124,18 +125,6 @@ namespace org.xpangen.Generator.Data
         private void Reset()
         {
             Index = -1;
-        }
-
-        /// <summary>
-        /// Create a new <see cref="GenObject"/> and add it to the list.
-        /// </summary>
-        /// <returns>The new item.</returns>
-        public GenObject CreateObject()
-        {
-            var o = new GenObject(Parent, this, ClassId);
-            Add(o);
-            return o;
-
         }
 
         /// <summary>
@@ -166,46 +155,56 @@ namespace org.xpangen.Generator.Data
 
         private void MoveToTop(int itemIndex)
         {
-            if (itemIndex <= 0 || itemIndex >= Count) return;
-            var genObject = this[itemIndex];
-            RemoveAt(itemIndex);
-            Insert(0, genObject);
+            if (itemIndex <= 0 || itemIndex >= GenObjectListBase.Count) return;
+            var genObject = GenObjectListBase[itemIndex];
+            GenObjectListBase.RemoveAt(itemIndex);
+            GenObjectListBase.Insert(0, genObject);
             Index = 0;
-            GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId].Name, "");
-            GenData.Changed = true;
+            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
+            GenDataBase.Changed = true;
         }
 
         private void MoveUp(int itemIndex)
         {
-            if (itemIndex <= 0 || itemIndex >= Count) return;
-            var genObject = this[itemIndex];
-            this[itemIndex] = this[itemIndex - 1];
-            this[itemIndex - 1] = genObject;
+            if (itemIndex <= 0 || itemIndex >= GenObjectListBase.Count) return;
+            var genObject = GenObjectListBase[itemIndex];
+            GenObjectListBase[itemIndex] = GenObjectListBase[itemIndex - 1];
+            GenObjectListBase[itemIndex - 1] = genObject;
             Index = itemIndex - 1;
-            GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId].Name, "");
-            GenData.Changed = true;
+            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
+            GenDataBase.Changed = true;
         }
 
         private void MoveDown(int itemIndex)
         {
-            if (itemIndex < 0 || itemIndex >= Count - 1) return;
-            var genObject = this[itemIndex];
-            this[itemIndex] = this[itemIndex + 1];
-            this[itemIndex + 1] = genObject;
+            if (itemIndex < 0 || itemIndex >= GenObjectListBase.Count - 1) return;
+            var genObject = GenObjectListBase[itemIndex];
+            GenObjectListBase[itemIndex] = GenObjectListBase[itemIndex + 1];
+            GenObjectListBase[itemIndex + 1] = genObject;
             Index = itemIndex + 1;
-            GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId].Name, "");
-            GenData.Changed = true;
+            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
+            GenDataBase.Changed = true;
         }
 
         private void MoveToBottom(int itemIndex)
         {
-            if (itemIndex < 0 || itemIndex >= Count - 1) return;
-            var genObject = this[itemIndex];
-            RemoveAt(itemIndex);
-            Add(genObject);
-            Index = Count - 1;
-            GenData.RaiseDataChanged(GenData.GenDataDef.Classes[ClassId].Name, "");
-            GenData.Changed = true;
+            if (itemIndex < 0 || itemIndex >= GenObjectListBase.Count - 1) return;
+            var genObject = GenObjectListBase[itemIndex];
+            GenObjectListBase.RemoveAt(itemIndex);
+            GenObjectListBase.Add(genObject);
+            Index = GenObjectListBase.Count - 1;
+            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
+            GenDataBase.Changed = true;
+        }
+
+        public GenObject CreateObject()
+        {
+            return GenObjectListBase.CreateObject();
+        }
+
+        public int IndexOf(GenObject genObject)
+        {
+            return GenObjectListBase.IndexOf(genObject);
         }
     }
 }

@@ -65,7 +65,7 @@ namespace GenEdit.View
             
             var builder = new DataEditorTreeViewBuilder(GenDataEditorViewModel.Data);
             builder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, 0);
-            GenDataEditorViewModel.Data.GenData.PropertyChanged += GenData_PropertyChanged;
+            GenDataEditorViewModel.Data.GenData.GenDataBase.PropertyChanged += GenData_PropertyChanged;
         }
 
         private void GenData_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -127,7 +127,7 @@ namespace GenEdit.View
             var nodeData = (GenObjectViewModel) myNode.Tag;
             if (nodeData == null) return;
             var index = myNode.Parent.Nodes.IndexOf(myNode);
-            var genData = nodeData.GenAttributes.GenData;
+            var genData = nodeData.GenData;
             var classId = nodeData.GenAttributes.GenObject.ClassId;
             switch (move)
             {

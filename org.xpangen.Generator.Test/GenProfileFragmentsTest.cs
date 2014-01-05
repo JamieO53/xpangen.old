@@ -244,16 +244,16 @@ namespace org.xpangen.Generator.Test
                             g.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
 
             d.Last(ClassClassId); // Has no subclasses
-            Assert.AreEqual("Property", d.Context[ClassClassId].Context.Attributes[0]);
+            Assert.AreEqual("Property", d.Context[ClassClassId].GenObject.Attributes[0]);
             d.First(SubClassClassId);
             Assert.AreEqual(txt, g.Expand(d));
             var str = GenerateFragment(d, g);
             Assert.AreEqual(txt, str);
 
             d.First(ClassClassId); // Has subclasses
-            Assert.AreEqual("Class", d.Context[ClassClassId].Context.Attributes[0]);
+            Assert.AreEqual("Class", d.Context[ClassClassId].GenObject.Attributes[0]);
             d.First(SubClassClassId);
-            Assert.AreEqual("SubClass", d.Context[SubClassClassId].Context.Attributes[0]);
+            Assert.AreEqual("SubClass", d.Context[SubClassClassId].GenObject.Attributes[0]);
             str = GenerateFragment(d, g);
             Assert.AreEqual("", str);
         }

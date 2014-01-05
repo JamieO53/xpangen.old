@@ -29,7 +29,6 @@ namespace org.xpangen.Generator.Data
 
         public int ClassId { get; set; }
 
-        //
         public GenDataDefSubClassList SubClasses;
 
         public GenDataDefClass()

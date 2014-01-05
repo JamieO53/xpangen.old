@@ -11,7 +11,7 @@ namespace org.xpangen.Generator.Test
     /// Tests the generator data definition functionality
     /// </summary>
 	[TestFixture]
-    public class GenDataDefTests
+    public class GenDataDefTests : GenDataTestsBase
     {
         /// <summary>
         /// Tests the TextList functionality
@@ -109,7 +109,7 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Create minimal definition test")]
         public void CreateMinimalTest()
         {
-            GenDataDef f = GenDataDef.CreateMinimal();
+            var f = GenDataDef.CreateMinimal();
             Assert.AreEqual(0, f.Classes.IndexOf(""));
             Assert.AreEqual(1, f.Classes.IndexOf("Class"));
             Assert.AreEqual(2, f.Classes.IndexOf("SubClass"));
@@ -126,6 +126,28 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(4, f.Classes[2].SubClasses[0].SubClass.ClassId);
         }
 
+        [TestCase(Description="Create Self Reference definition test")]
+        public void SubClassSelfReferenceTest()
+        {
+            var f = CreateMinimalReferenceDefinition("self:Class.Name=SubClass.Name");
+            var sc = f.Classes[f.Classes.IndexOf("SubClass")];
+            Assert.AreEqual(2, sc.SubClasses.Count);
+            Assert.AreEqual("FieldFilter", f.Classes[SubClassClassId].SubClasses[0].SubClass.Name);
+            Assert.AreEqual("", f.Classes[SubClassClassId].SubClasses[0].Reference);
+            Assert.AreEqual("SubClassClass", f.Classes[SubClassClassId].SubClasses[1].SubClass.Name);
+            Assert.AreEqual("self:Class.Name=SubClass.Name", f.Classes[SubClassClassId].SubClasses[1].Reference);
+            Assert.AreEqual(1, f.Classes[SubClassClassId].SubClasses[1].FieldFilters.Count);
+            Assert.AreEqual("self", f.Classes[SubClassClassId].SubClasses[1].ReferenceDefinition);
+            Assert.AreEqual(1, f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Target.ClassId);
+            Assert.AreEqual(0, f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Target.PropertyId);
+            Assert.AreEqual("Class", f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Target.ClassName);
+            Assert.AreEqual("Name", f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Target.PropertyName);
+            Assert.AreEqual(2, f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Source.ClassId);
+            Assert.AreEqual(0, f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Source.PropertyId);
+            Assert.AreEqual("SubClass", f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Source.ClassName);
+            Assert.AreEqual("Name", f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Source.PropertyName);
+        }
+        
         /// <summary>
         /// Set up the Generator data definition tests
         /// </summary>

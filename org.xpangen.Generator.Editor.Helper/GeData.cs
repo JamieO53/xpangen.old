@@ -40,7 +40,7 @@ namespace org.xpangen.Generator.Editor.Helper
                 def.First(1);
                 while (!def.Eol(1))
                 {
-                    list.Add(new Class(def.GenDataDef) {GenObject = def.Context[1].Context});
+                    list.Add(new Class(def.GenDataDef) {GenObject = def.Context[1].GenObject});
                     def.Next(1);
                 }
                 return list;

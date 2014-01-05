@@ -185,7 +185,7 @@ namespace org.xpangen.Generator.Test
             var d = new GenData(f);
             SetUpData(d);
             d.First(ClassClassId);
-            a.GenObject = d.Context[ClassClassId].Context;
+            a.GenObject = d.Context[ClassClassId].GenObject;
             a.SetString("Title", "Class object");
             a.SaveFields();
 
