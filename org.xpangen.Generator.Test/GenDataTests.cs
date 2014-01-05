@@ -167,21 +167,15 @@ namespace org.xpangen.Generator.Test
         {
             var f = GenDataDef.CreateMinimal();
             var d = new GenData(f);
-            //var c = new GenContext(d);
 
             SetUpData(d);
             d.First(ClassClassId);
             d.Last(SubClassClassId);
-            //Assert.IsTrue(d.Eol(SubClassClassId));
             Assert.AreEqual("Property", d.Context[SubClassClassId].GenObject.Attributes[0]);
-            var c = new GenData(d.GenDataBase);
-            c.EstablishContext(d.Context[SubClassClassId].GenObject);
+            var c = d.DuplicateContext();
             Assert.AreEqual("Property", c.Context[SubClassClassId].GenObject.Attributes[0]);
-            //c.SaveContext();
             c.Context[SubClassClassId].First();
             Assert.AreEqual("SubClass", c.Context[SubClassClassId].GenObject.Attributes[0]);
-            //c.RestoreContext();
-            //Assert.IsTrue(d.Eol(SubClassClassId));
             Assert.AreEqual("Property", d.Context[SubClassClassId].GenObject.Attributes[0]);
         }
 

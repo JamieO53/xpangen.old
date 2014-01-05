@@ -3,12 +3,13 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
     public class GenData
     {
-        public GenDataContext Context { get; private set; }
+        public List<GenObjectList> Context { get; private set; }
         public GenDataBase GenDataBase { get; private set; }
         public GenDataDef GenDataDef { get { return GenDataBase.GenDataDef; } }
 
@@ -29,7 +30,7 @@ namespace org.xpangen.Generator.Data
         public GenData(GenDataBase genDataBase)
         {
             GenDataBase = genDataBase;
-            Context = new GenDataContext(GenDataBase);
+            Context = new List<GenObjectList>();
             for (var i = 0; i < GenDataDef.Classes.Count; i++)
                 Context.Add(null);
 
@@ -55,7 +56,10 @@ namespace org.xpangen.Generator.Data
                 i++;
             if (i < genObject.Parent.SubClass.Count)
             {
-                Context[genObject.ClassId] = new GenObjectList(genObject.Parent.SubClass[i]);
+                if (Context[genObject.ClassId] == null)
+                    Context[genObject.ClassId] = new GenObjectList(genObject.Parent.SubClass[i]);
+                else
+                    Context[genObject.ClassId].GenObjectListBase = genObject.Parent.SubClass[i];
                 Context[genObject.ClassId].Index = Context[genObject.ClassId].IndexOf(genObject);
             }
             EstablishContext(genObject.Parent);
@@ -129,7 +133,12 @@ namespace org.xpangen.Generator.Data
                 var subClassId = GenDataDef.Classes[classId].SubClasses[i].SubClass.ClassId;
                 if (Context[classId].GenObject == null)
                     First(classId);
-                Context[subClassId] = new GenObjectList(Context[classId].GenObject.SubClass[i]);
+                var genObject = Context[classId].GenObject;
+                if (genObject != null)
+                    if (Context[subClassId] == null)
+                        Context[subClassId] = new GenObjectList(genObject.SubClass[i]);
+                    else
+                        Context[subClassId].GenObjectListBase = genObject.SubClass[i];
                 Context[subClassId].First();
             }
         }
@@ -192,6 +201,17 @@ namespace org.xpangen.Generator.Data
         public GenDataDef AsDef()
         {
             return GenDataBase.AsDef();
+        }
+
+        public GenData DuplicateContext()
+        {
+            var d = new GenData(GenDataBase);
+            for (var i = 0; i < Context.Count; i++)
+                if (Context[i] != null)
+                    d.Context[i] = new GenObjectList(Context[i].GenObjectListBase) {Index = Context[i].Index};
+                else d.Context[i] = null;
+
+            return d;
         }
     }
 }
