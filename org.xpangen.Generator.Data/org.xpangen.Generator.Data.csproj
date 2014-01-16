@@ -53,7 +53,9 @@
     <Compile Include="GenObject.cs" />
     <Compile Include="GenObjectList.cs" />
     <Compile Include="GenObjectListBase.cs" />
+    <Compile Include="GenObjectListReference.cs" />
     <Compile Include="GenSubClasses.cs" />
+    <Compile Include="IGenObjectListBase.cs" />
     <Compile Include="ListMove.cs" />
     <Compile Include="IndexList.cs" />
     <Compile Include="NameList.cs" />

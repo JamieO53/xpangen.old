@@ -146,10 +146,11 @@ Property=Operand
             CreateProperty(d, "Name");
         }
 
-        private static void CreateGenObject(GenData d, string parentClassName, string className, string name)
+        private static GenObject CreateGenObject(GenData d, string parentClassName, string className, string name)
         {
             var o = d.CreateObject(parentClassName, className);
             o.Attributes[0] = name;
+            return o;
         }
 
         internal static void CreateProperty(GenData d, string name)
@@ -275,16 +276,29 @@ Property=Operand
 
         protected static GenData SetUpReferenceData(string reference)
         {
-            var f = CreateMinimalReferenceDefinition(reference);
+            var f = CreateSelfReferenceDefinition(reference);
 
-            var d = SetUpLookupData(f);
+            var d = new GenData(f);
+            CreateGenObject(d, "", "Root", "Root");
+            CreateGenObject(d, "Root", "ReferenceData", "1").Attributes[1] = "First reference";
+            CreateGenObject(d, "Root", "ReferenceData", "2").Attributes[1] = "Second reference";
+            CreateGenObject(d, "Root", "BaseData", "DataExists").Attributes[1] = "1";
+            CreateGenObject(d, "Root", "BaseData", "DataDoesNotExist").Attributes[1] = "3";
             return d;
         }
 
-        protected static GenDataDef CreateMinimalReferenceDefinition(string reference)
+        protected static GenDataDef CreateSelfReferenceDefinition(string reference)
         {
-            var f = GenDataDef.CreateMinimal();
-            f.AddSubClass("SubClass", "SubClassClass", reference);
+            var f = new GenDataDef();
+            f.AddSubClass("", "Root");
+            f.AddSubClass("Root", "ReferenceData");
+            f.AddSubClass("Root", "BaseData");
+            f.Classes[f.Classes.IndexOf("Root")].Properties.Add("Name");
+            f.Classes[f.Classes.IndexOf("ReferenceData")].Properties.Add("Name");
+            f.Classes[f.Classes.IndexOf("ReferenceData")].Properties.Add("Value");
+            f.Classes[f.Classes.IndexOf("BaseData")].Properties.Add("Name");
+            f.Classes[f.Classes.IndexOf("BaseData")].Properties.Add("ReferenceKey");
+            f.AddSubClass("BaseData", "ReferenceLookup", reference);
             return f;
         }
 

@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Collections.Generic;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 
@@ -104,18 +105,14 @@ namespace org.xpangen.Generator.Test
         /// Tests the generator data subclass functionality
         /// </summary>
         [TestCase(Description = "Generator data subclass for a local reference tests")]
+        [Ignore("Do other stuff first")]
         public void GenSubClassLocalReferenceTestTests()
         {
-            var d = SetUpReferenceData("self:Class.Name=SubClass.Name");
+            var d = SetUpReferenceData("self:BaseData.ReferenceKey=ReferenceData.Name");
             var f = d.GenDataDef;
-            d.Context[1].Last();
-            d.Context[1].Prior();
-            var sc = d.Context[2].GenObject;
-            //while (!d.Eol(1) && f.Classes[d.Context[1].ClassId].Name != "SubClass")
-            //    d.Next(1);
-            //CreateSubClass(d, "SubClassClass");
-            //d.Context[1].Context.SubClass[0].Add(new GenObject(d.Context[1].Context, d.Context[1].Context.SubClass[0], 5));
-            // todo: create data anologous to Lookup profile fragment test
+            d.First(1);
+            d.First(3);
+            var sc = d.Context[3].GenObject;
         }
 
         /// <summary>

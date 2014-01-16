@@ -23,7 +23,7 @@ namespace org.xpangen.Generator.Data
             get { return GenDataBase.Root; }
         }
 
-        public GenData(GenDataDef genDataDef) : this(new GenDataBase(genDataDef))
+        public GenData(GenDataDef genDataDef) : this(new GenDataBase(genDataDef, false))
         {
         }
 
@@ -34,7 +34,10 @@ namespace org.xpangen.Generator.Data
             for (var i = 0; i < GenDataDef.Classes.Count; i++)
                 Context.Add(null);
 
-            Context[0] = new GenObjectList(new GenObjectListBase(GenDataBase, null, 0) { GenDataBase.Root });
+            Context[0] =
+                new GenObjectList(new GenObjectListBase(GenDataBase, null, 0,
+                                                        new GenDataDefSubClass {SubClass = GenDataDef.Classes[0]})
+                                      {GenDataBase.Root});
             First(0);
             GenDataBase.Changed = false;
         }
@@ -121,7 +124,7 @@ namespace org.xpangen.Generator.Data
                     if (!Eol(subClassId))
                     {
                         Reset(subClassId);
-                        Context[subClassId] = null;
+                        Context[subClassId].Reset();
                     }
             }
         }
@@ -212,6 +215,43 @@ namespace org.xpangen.Generator.Data
                 else d.Context[i] = null;
 
             return d;
+        }
+
+        /// <summary>
+        /// Find an item with the specified value.
+        /// </summary>
+        /// <param name="id">The Class / Property identity being sought.</param>
+        /// <param name="val">The value being sought.</param>
+        /// <returns>The value has been found.</returns>
+        public bool Find(GenDataId id, string val)
+        {
+            if (Eol(id.ClassId))
+                return false;
+            if (Context[id.ClassId].GenObject.Attributes[id.PropertyId] == val)
+                return true;
+
+            First(id.ClassId);
+            while (!Eol(id.ClassId) && Context[id.ClassId].GenObject.Attributes[id.PropertyId] != val)
+                Next(id.ClassId);
+            return !Eol(id.ClassId);
+        }
+
+        /// <summary>
+        /// Find all items with the specified value.
+        /// </summary>
+        /// <param name="id">The Class / Property identity being sought.</param>
+        /// <param name="val">The value being sought.</param>
+        /// <returns>The value has been found.</returns>
+        public List<GenObject> FindMatches(GenDataId id, string val)
+        {
+            var list = new List<GenObject>();
+            First(id.ClassId);
+            while (!Eol(id.ClassId))
+            {
+                if (Context[id.ClassId].GenObject.Attributes[id.PropertyId] == val)
+                    list.Add(Context[id.ClassId].GenObject);
+            }
+            return list;
         }
     }
 }

@@ -129,23 +129,23 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Create Self Reference definition test")]
         public void SubClassSelfReferenceTest()
         {
-            var f = CreateMinimalReferenceDefinition("self:Class.Name=SubClass.Name");
-            var sc = f.Classes[f.Classes.IndexOf("SubClass")];
-            Assert.AreEqual(2, sc.SubClasses.Count);
-            Assert.AreEqual("FieldFilter", f.Classes[SubClassClassId].SubClasses[0].SubClass.Name);
-            Assert.AreEqual("", f.Classes[SubClassClassId].SubClasses[0].Reference);
-            Assert.AreEqual("SubClassClass", f.Classes[SubClassClassId].SubClasses[1].SubClass.Name);
-            Assert.AreEqual("self:Class.Name=SubClass.Name", f.Classes[SubClassClassId].SubClasses[1].Reference);
-            Assert.AreEqual(1, f.Classes[SubClassClassId].SubClasses[1].FieldFilters.Count);
-            Assert.AreEqual("self", f.Classes[SubClassClassId].SubClasses[1].ReferenceDefinition);
-            Assert.AreEqual(1, f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Target.ClassId);
-            Assert.AreEqual(0, f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Target.PropertyId);
-            Assert.AreEqual("Class", f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Target.ClassName);
-            Assert.AreEqual("Name", f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Target.PropertyName);
-            Assert.AreEqual(2, f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Source.ClassId);
-            Assert.AreEqual(0, f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Source.PropertyId);
-            Assert.AreEqual("SubClass", f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Source.ClassName);
-            Assert.AreEqual("Name", f.Classes[SubClassClassId].SubClasses[1].FieldFilters[0].Source.PropertyName);
+            var f = CreateSelfReferenceDefinition("self:ReferenceData.Name=BaseData.ReferenceKey");
+            var scp = f.Classes[f.Classes.IndexOf("BaseData")];
+            Assert.AreEqual(1, scp.SubClasses.Count);
+            var sc = scp.SubClasses[0];
+            Assert.AreEqual("ReferenceLookup", sc.SubClass.Name);
+            Assert.AreEqual("self:ReferenceData.Name=BaseData.ReferenceKey", sc.Reference);
+            Assert.AreEqual(1, sc.FieldFilters.Count);
+            Assert.AreEqual("self", sc.ReferenceDefinition);
+            var scf = sc.FieldFilters[0];
+            Assert.AreEqual(2, scf.Target.ClassId);
+            Assert.AreEqual(0, scf.Target.PropertyId);
+            Assert.AreEqual("ReferenceData", scf.Target.ClassName);
+            Assert.AreEqual("Name", scf.Target.PropertyName);
+            Assert.AreEqual(3, scf.Source.ClassId);
+            Assert.AreEqual(1, scf.Source.PropertyId);
+            Assert.AreEqual("BaseData", scf.Source.ClassName);
+            Assert.AreEqual("ReferenceKey", scf.Source.PropertyName);
         }
         
         /// <summary>

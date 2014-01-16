@@ -296,7 +296,7 @@ namespace org.xpangen.Generator.Parameter
         {
             while (!Scan.Eof && className == Scan.RecordType)
             {
-                var child = new GenObject(parent, parent.SubClass[subClassIdx], subClassId);
+                var child = new GenObject(parent, parent.SubClass[subClassIdx] as GenObjectListBase, subClassId);
                 for (var i = 0; i < GenDataDef.Classes[subClassId].Properties.Count; i++)
                 {
                     var s = Scan.Attribute(GenDataDef.Classes[subClassId].Properties[i]);

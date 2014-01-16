@@ -12,17 +12,19 @@ namespace org.xpangen.Generator.Data
         /// Create a new <see cref="GenObjectList"/> list.
         /// </summary>
         /// <param name="genObjectListBase"> The underlying generator object list. </param>
-        public GenObjectList(GenObjectListBase genObjectListBase)
+        public GenObjectList(IGenObjectListBase genObjectListBase)
         {
             GenObjectListBase = genObjectListBase;
         }
 
 
-        public GenObjectListBase GenObjectListBase { get; set; }
+        public IGenObjectListBase GenObjectListBase { get; set; }
 
         public int ClassId { get { return GenObjectListBase.ClassId; } }
 
         private GenDataBase GenDataBase { get { return GenObjectListBase.GenDataBase; } }
+        private GenDataDef GenDataDef { get { return GenDataBase.GenDataDef; } }
+        public GenDataDefClass DefClass { get { return GenDataDef.Classes[ClassId]; } }
 
         public GenObject this[int index] { get { return GenObjectListBase[index]; } }
         
@@ -115,9 +117,10 @@ namespace org.xpangen.Generator.Data
         /// <summary>
         /// Reset the current selection.
         /// </summary>
-        private void Reset()
+        public void Reset()
         {
             Index = -1;
+            GenObjectListBase.Reset();
         }
 
         /// <summary>
@@ -192,7 +195,10 @@ namespace org.xpangen.Generator.Data
 
         public GenObject CreateObject()
         {
-            return GenObjectListBase.CreateObject();
+            var genObjectListBase = GenObjectListBase as GenObjectListBase;
+            if (genObjectListBase != null)
+                return genObjectListBase.CreateObject();
+            return null;
         }
 
         public int IndexOf(GenObject genObject)
