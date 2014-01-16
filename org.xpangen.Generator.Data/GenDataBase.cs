@@ -2,8 +2,9 @@
 {
     public class GenDataBase : BindableObject
     {
-        public GenDataBase(GenDataDef genDataDef)
+        public GenDataBase(GenDataDef genDataDef, bool followReferences)
         {
+            FollowReferences = followReferences;
             GenDataDef = genDataDef;
             IgnorePropertyValidation = true;
             Root = new GenObject(null, null, 0) { GenData = this };
@@ -12,6 +13,8 @@
         public GenDataDef GenDataDef { get; private set; }
         public GenObject Root { get; protected set; }
         public bool Changed { get; set; }
+
+        public bool FollowReferences { get; set; }
 
         public void RaiseDataChanged(string className, string propertyName)
         {
@@ -28,10 +31,14 @@
         {
             var classId = GenDataDef.Classes.IndexOf(className);
             var k = GenDataDef.IndexOfSubClass(parent.ClassId, classId);
-            var l = parent.SubClass[k];
-            var o = new GenObject(l.Parent, l, classId);
-            l.Add(o);
-            return o;
+            var l = parent.SubClass[k] as GenObjectListBase;
+            if (l != null)
+            {
+                var o = new GenObject(l.Parent, l, classId);
+                l.Add(o);
+                return o;
+            }
+            return null;
         }
     }
 }

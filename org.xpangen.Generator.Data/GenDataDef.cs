@@ -181,7 +181,9 @@ namespace org.xpangen.Generator.Data
                 for (var j = 0; j < c.SubClasses.Count; j++)
                 {
                     a.GenObject = d.CreateObject("Class", "SubClass");
-                    a.SetString("Name", c.SubClasses[j].SubClass.Name);
+                    var subClass = c.SubClasses[j].SubClass;
+                    a.SetString("Name", subClass.Name);
+                    a.SetString("Reference", c.SubClasses[j].Reference);
                     a.SaveFields();
                 }
                 for (var j = 0; j < c.Properties.Count; j++)

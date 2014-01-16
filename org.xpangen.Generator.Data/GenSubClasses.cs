@@ -2,7 +2,7 @@
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenSubClasses : List<GenObjectListBase>
+    public class GenSubClasses : List<IGenObjectListBase>
     {
         public GenObject Parent { get; private set; }
         public GenDataBase GenData { get { return Parent.GenData; } }
@@ -10,8 +10,18 @@ namespace org.xpangen.Generator.Data
         public GenSubClasses(GenObject parent)
         {
             Parent = parent;
-            for (var i = 0; i < GenData.GenDataDef.Classes[Parent.ClassId].SubClasses.Count; i++)
-                Add(new GenObjectListBase(GenData, Parent, GenData.GenDataDef.Classes[Parent.ClassId].SubClasses[i].SubClass.ClassId));
+            var parentDef = Parent.GenDataDefClass;
+            for (var i = 0; i < parentDef.SubClasses.Count; i++)
+            {
+                var subClassDef = parentDef.SubClasses[i];
+                var subClassClassDef = subClassDef.SubClass;
+                if (string.IsNullOrEmpty(subClassDef.ReferenceDefinition))
+                    Add(new GenObjectListBase(parent.GenData, Parent, subClassClassDef.ClassId, subClassDef));
+                else
+                {
+                    Add(new GenObjectListReference(parent.GenData, Parent, subClassClassDef.ClassId, subClassDef));
+                }
+            }
         }
     }
 }

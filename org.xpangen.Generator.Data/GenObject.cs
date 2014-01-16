@@ -24,11 +24,9 @@ namespace org.xpangen.Generator.Data
             {
                 if (_genData == value) return;
                 _genData = value;
-                for (var i = 0; i < GenData.GenDataDef.Classes[ClassId].Properties.Count; i++)
+                for (var i = 0; i < GenDataDefClass.Properties.Count; i++)
                     Attributes.Add("");
                 SubClass = new GenSubClasses(this);
-                //for (var i = 0; i < GenData.GenDataDef.Classes[ClassId].SubClasses.Count; i++)
-                //    SubClass.Add(new GenObjectList(GenData, this, GenData.GenDataDef.Classes[ClassId].SubClasses[i].SubClass.ClassId));
             }
         }
 
@@ -39,5 +37,6 @@ namespace org.xpangen.Generator.Data
 
         public GenObject Parent { get; private set; }
         public GenSubClasses SubClass { get; private set; }
+        public GenDataDefClass GenDataDefClass { get { return GenData.GenDataDef.Classes[ClassId]; } }
     }
 }
