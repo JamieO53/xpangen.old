@@ -2,9 +2,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System.Collections.Generic;
+using System;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Parameter;
 
 namespace org.xpangen.Generator.Test
 {
@@ -99,6 +100,69 @@ namespace org.xpangen.Generator.Test
             d.Context[f.Classes.IndexOf("SubClass")].Last();
 
             s.Last();
+        }
+
+        /// <summary>
+        /// Ensure that the 'self' reference is automatically cached.
+        /// </summary>
+        [TestCase(Description = "Ensure that the 'self' reference is automatically cached")]
+        public void ReferenceCacheSelfTest()
+        {
+            var d = GenDataDef.CreateMinimal().AsGenData();
+            var self = d.Cache["Minimal", "self"];
+            Assert.AreSame(d, self);
+        }
+
+        /// <summary>
+        /// Ensure that simple named references are correctly cached
+        /// </summary>
+        [TestCase(Description = "Ensure that the 'self' simple named reference cannot be cached internally")]
+        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "The 'self' generator data cannot be added explicitly to the cache\r\nParameter name: name")]
+        public void ReferenceCacheSelfLocalPathTest()
+        {
+            var d = GenDataDef.CreateMinimal().AsGenData();
+            var d0 = GenDataDef.CreateMinimal().AsGenData();
+            d.Cache.Internal("Minimal", "self", d0);
+        }
+
+        /// <summary>
+        /// Ensure that simple named references are correctly cached
+        /// </summary>
+        [TestCase(Description = "Ensure that simple named references are correctly cached")]
+        public void ReferenceCacheLocalPathTest()
+        {
+            var d = GenDataDef.CreateMinimal().AsGenData();
+            var d0 = GenDataDef.CreateMinimal().AsGenData();
+            var d1 = d0.DuplicateContext();
+            var lookup0 = d.Cache.Internal("Minimal", "d0", d0);
+            var lookup1 = d.Cache.Internal("Minimal", "d1", d1);
+            Assert.AreSame(d0, lookup0);
+            Assert.AreSame(d1, lookup1);
+            lookup0 = d.Cache["Minimal", "d0"];
+            lookup1 = d.Cache["Minimal", "d1"];
+            Assert.AreSame(d0, lookup0);
+            Assert.AreSame(d1, lookup1);
+            Assert.AreNotSame(lookup1, lookup0);
+        }
+
+        /// <summary>
+        /// Ensure that simple named references are correctly cached
+        /// </summary>
+        [TestCase(Description = "Ensure that simple named references are correctly cached")]
+        public void ReferenceCacheFilePathTest()
+        {
+            var d = GenDataDef.CreateMinimal().AsGenData();
+            var minimal = AddToCache(d, "Minimal");
+            var definition = AddToCache(d, "Definition");
+            Assert.AreNotSame(minimal, definition);
+        }
+
+        private static GenData AddToCache(GenData d, string data)
+        {
+            var cached = d.Cache["Data\\Definition", "Data\\" + data];
+            cached.First(1);
+            Assert.AreEqual("Class", cached.Context[1].GenObject.Attributes[0]);
+            return cached;
         }
 
         /// <summary>
@@ -233,7 +297,7 @@ namespace org.xpangen.Generator.Test
         [TestFixtureSetUp]
         public void SetUp()
         {
-            
+            var loader = new GenDataLoader();
         }
 
         /// <summary>
