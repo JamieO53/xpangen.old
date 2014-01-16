@@ -35,6 +35,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GenDataLoader.cs" />
     <Compile Include="GenParameters.cs" />
     <Compile Include="ParameterScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

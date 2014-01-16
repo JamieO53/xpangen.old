@@ -23,12 +23,17 @@ namespace org.xpangen.Generator.Data
             get { return GenDataBase.Root; }
         }
 
+        public GenDataReferenceCache Cache { get; private set; }
+
+        public static IGenDataLoader DataLoader { get; set; }
+
         public GenData(GenDataDef genDataDef) : this(new GenDataBase(genDataDef, false))
         {
         }
 
-        public GenData(GenDataBase genDataBase)
+        private GenData(GenDataBase genDataBase)
         {
+            Cache = new GenDataReferenceCache(this);
             GenDataBase = genDataBase;
             Context = new List<GenObjectList>();
             for (var i = 0; i < GenDataDef.Classes.Count; i++)

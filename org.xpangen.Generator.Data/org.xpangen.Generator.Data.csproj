@@ -48,6 +48,7 @@
     <Compile Include="GenDataDefSubClass.cs" />
     <Compile Include="GenDataDefSubClassList.cs" />
     <Compile Include="GenDataId.cs" />
+    <Compile Include="GenDataReferenceCache.cs" />
     <Compile Include="GenDataToDef.cs" />
     <Compile Include="GenList.cs" />
     <Compile Include="GenObject.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="GenObjectListBase.cs" />
     <Compile Include="GenObjectListReference.cs" />
     <Compile Include="GenSubClasses.cs" />
+    <Compile Include="IGenDataLoader.cs" />
     <Compile Include="IGenObjectListBase.cs" />
     <Compile Include="ListMove.cs" />
     <Compile Include="IndexList.cs" />
