@@ -146,7 +146,7 @@ Property=Operand
             CreateProperty(d, "Name");
         }
 
-        private static GenObject CreateGenObject(GenData d, string parentClassName, string className, string name)
+        protected static GenObject CreateGenObject(GenData d, string parentClassName, string className, string name)
         {
             var o = d.CreateObject(parentClassName, className);
             o.Attributes[0] = name;

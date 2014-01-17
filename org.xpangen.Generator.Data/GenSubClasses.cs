@@ -10,7 +10,7 @@ namespace org.xpangen.Generator.Data
         public GenSubClasses(GenObject parent)
         {
             Parent = parent;
-            var parentDef = Parent.GenDataDefClass;
+            var parentDef = Parent.Definition;
             for (var i = 0; i < parentDef.SubClasses.Count; i++)
             {
                 var subClassDef = parentDef.SubClasses[i];
