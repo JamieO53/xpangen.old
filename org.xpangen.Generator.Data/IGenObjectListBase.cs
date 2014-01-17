@@ -19,7 +19,7 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         int ClassId { get; }
 
-        GenDataDefSubClass SubClassDef { get; }
+        GenDataDefSubClass Definition { get; }
         bool IsReset { get; set; }
 
         /// <summary>

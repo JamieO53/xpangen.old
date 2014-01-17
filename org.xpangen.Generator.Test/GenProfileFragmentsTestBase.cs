@@ -184,7 +184,7 @@ namespace org.xpangen.Generator.Test
             var g = new GenSegment(genData.GenDataDef, "Property", cardinality, root);
             root.Body.Add(g);
             Assert.AreEqual(genCardinality, g.GenCardinality);
-            Assert.AreEqual("Property", genData.GenDataDef.Classes[g.ClassId].Name);
+            Assert.AreEqual("Property", g.Definition.Name);//genData.GenDataDef.Classes[g.ClassId].Name);
             Assert.AreSame(root, g.ParentSegement);
             foreach (var t in fa)
                 g.Body.Add(t);

@@ -8,6 +8,8 @@ namespace org.xpangen.Generator.Profile
 {
     public abstract class GenContainerFragmentBase : GenFragment
     {
+        private int _classId = -1;
+
         protected GenContainerFragmentBase(GenDataDef genDataDef, GenContainerFragmentBase parentSegment)
             : base(genDataDef, parentSegment)
         {
@@ -22,10 +24,18 @@ namespace org.xpangen.Generator.Profile
         {
             get
             {
+                if (_classId != -1)
+                    return _classId;
                 return ParentSegement is GenSegment
                            ? ((GenSegment) ParentSegement).ClassId
                            : (ParentSegement is GenLookup ? ((GenLookup) ParentSegement).ClassId : -1);
             }
+            protected set { _classId = value; }
+        }
+
+        public GenDataDefClass Definition
+        {
+            get { return GenDataDef.Classes[ClassId]; }
         }
     }
 }

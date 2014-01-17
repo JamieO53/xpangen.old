@@ -24,8 +24,6 @@ namespace org.xpangen.Generator.Profile
 
         public GenCardinality GenCardinality { get; set; }
 
-        public new int ClassId { get; set; }
-
         public override string ProfileLabel()
         {
             return GenDataDef.Classes[ClassId].Name;

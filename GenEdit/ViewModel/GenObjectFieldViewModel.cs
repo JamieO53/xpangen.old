@@ -60,15 +60,14 @@ namespace GenEdit.ViewModel
             GenAttributes = genAttributes;
             PropertyId = propertyId;
             Property = property;
-            _name = GenAttributes.GenObject.GenData.GenDataDef.Classes[GenAttributes.GenObject.ClassId].Properties[propertyId];
+            _name = GenAttributes.Definition.Properties[propertyId];
             Name = _name;
-            if (property != null)
-            {
-                Name = property.Name;
-                Hint = property.Title;
-                DataType = property.DataType;
-                Default = property.Default;
-            }
+            if (property == null) return;
+            
+            Name = property.Name;
+            Hint = property.Title;
+            DataType = property.DataType;
+            Default = property.Default;
         }
     }
 }
