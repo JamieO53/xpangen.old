@@ -157,26 +157,46 @@ namespace org.xpangen.Generator.Test
             Assert.AreNotSame(minimal, definition);
         }
 
-        private static GenData AddToCache(GenData d, string data)
+        [TestCase(Description = "Confirm that reference context is set up correctly.")]
+        public void InternalReferenceUnfilteredContextTest()
         {
-            var cached = d.Cache["Data\\Definition", "Data\\" + data];
-            cached.First(1);
-            Assert.AreEqual("Class", cached.Context[1].GenObject.Attributes[0]);
-            return cached;
+            var d = SetUpUnfilteredReferenceData();
+            Assert.IsTrue(d.Cache.Contains("Child"));
+            Assert.AreEqual("Parent", d.Context[1].GenObject.Definition.Name);
+            Assert.AreEqual("Child", d.Context[2].GenObject.Definition.Name);
+            Assert.AreEqual("Grandchild", d.Context[3].GenObject.Definition.Name);
+            Assert.AreEqual(2, d.Context[2].ClassId);
+            Assert.AreEqual(3, d.Context[3].ClassId);
         }
 
-        /// <summary>
-        /// Tests the generator data subclass functionality
-        /// </summary>
-        [TestCase(Description = "Generator data subclass for a local reference tests")]
-        [Ignore("Do other stuff first")]
-        public void GenSubClassLocalReferenceTestTests()
+        [TestCase(Description = "Confirm that reference data gets included.")]
+        public void InternalReferenceUnfilteredTest()
         {
-            var d = SetUpReferenceData("self:BaseData.ReferenceKey=ReferenceData.Name");
-            var f = d.GenDataDef;
+            var d = SetUpUnfilteredReferenceData();
+            Assert.AreEqual(1, d.Context[1].GenObject.Definition.SubClasses.Count);
+            Assert.IsTrue(d.Cache.Contains("Child"));
+            Assert.AreEqual("Child", d.Context[1].GenObject.Definition.SubClasses[0].SubClass.Name);
+            Assert.AreEqual("Child", d.Context[1].GenObject.Definition.SubClasses[0].Reference);
+            Assert.IsNotNull(d.Context[2]);
+            d.First(2);
+            Assert.AreEqual("Child", d.Context[2].GenObject.Definition.Name);
             d.First(1);
-            d.First(3);
-            var sc = d.Context[3].GenObject;
+        }
+
+        [TestCase(Description = "Confirm that resetting the context works.")]
+        public void InternalReferenceSubsetSetResetTest()
+        {
+            var d = SetUpUnfilteredReferenceData();
+            d.First(1);
+            Assert.AreEqual("First child", d.Context[2].GenObject.Attributes[0]);
+        }
+
+        [TestCase(Description = "Confirm that multiple referenced data gets accessed.")]
+        public void InternalReferenceUnfilteredMultipleTest()
+        {
+            var d = SetUpUnfilteredReferenceData();
+            d.First(1);
+            Assert.AreEqual("First child", d.Context[2].GenObject.Attributes[0]);
         }
 
         /// <summary>
@@ -271,33 +291,16 @@ namespace org.xpangen.Generator.Test
             MoveItem(d, ListMove.ToBottom, 1, 2, "123", "Move second subclass to bottom");
         }
 
-        private static void MoveItem(GenData d, ListMove move, int itemIndex, int newItemIndex, string order, string action)
-        {
-            d.Context[SubClassClassId].Index = itemIndex;
-            d.Context[SubClassClassId].MoveItem(move, itemIndex);
-            CheckOrder(d, newItemIndex, order, action);
-        }
-
-        private static void CheckOrder(GenData d, int itemIndex, string order, string action)
-        {
-            var id = d.GenDataDef.GetId("SubClass.Name");
-            Assert.AreEqual(itemIndex, d.Context[id.ClassId].Index, "Expected index value");
-            d.First(ClassClassId);
-            d.First(SubClassClassId);
-            Assert.AreEqual("SubClass" + order[0], d.GetValue(id), action + " first item");
-            d.Next(SubClassClassId);
-            Assert.AreEqual("SubClass" + order[1], d.GetValue(id), action + " second item");
-            d.Next(SubClassClassId);
-            Assert.AreEqual("SubClass" + order[2], d.GetValue(id), action + " third item");
-        }
-
         /// <summary>
         /// Set up the Generator data definition tests
         /// </summary>
         [TestFixtureSetUp]
         public void SetUp()
         {
+#pragma warning disable 168
+            // Reference to initialize static data
             var loader = new GenDataLoader();
+#pragma warning restore 168
         }
 
         /// <summary>

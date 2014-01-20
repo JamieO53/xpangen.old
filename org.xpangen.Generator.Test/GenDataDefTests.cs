@@ -126,28 +126,6 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(4, f.Classes[2].SubClasses[0].SubClass.ClassId);
         }
 
-        [TestCase(Description="Create Self Reference definition test")]
-        public void SubClassSelfReferenceTest()
-        {
-            var f = CreateSelfReferenceDefinition("self:ReferenceData.Name=BaseData.ReferenceKey");
-            var scp = f.Classes[f.Classes.IndexOf("BaseData")];
-            Assert.AreEqual(1, scp.SubClasses.Count);
-            var sc = scp.SubClasses[0];
-            Assert.AreEqual("ReferenceLookup", sc.SubClass.Name);
-            Assert.AreEqual("self:ReferenceData.Name=BaseData.ReferenceKey", sc.Reference);
-            Assert.AreEqual(1, sc.FieldFilters.Count);
-            Assert.AreEqual("self", sc.ReferenceDefinition);
-            var scf = sc.FieldFilters[0];
-            Assert.AreEqual(2, scf.Target.ClassId);
-            Assert.AreEqual(0, scf.Target.PropertyId);
-            Assert.AreEqual("ReferenceData", scf.Target.ClassName);
-            Assert.AreEqual("Name", scf.Target.PropertyName);
-            Assert.AreEqual(3, scf.Source.ClassId);
-            Assert.AreEqual(1, scf.Source.PropertyId);
-            Assert.AreEqual("BaseData", scf.Source.ClassName);
-            Assert.AreEqual("ReferenceKey", scf.Source.PropertyName);
-        }
-        
         /// <summary>
         /// Set up the Generator data definition tests
         /// </summary>
