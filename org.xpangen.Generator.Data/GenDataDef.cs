@@ -214,7 +214,6 @@ namespace org.xpangen.Generator.Data
             var i = Classes.IndexOf(className);
             var j = Classes[i].SubClasses.IndexOf(subClassName);
             var sc = Classes[i].SubClasses[j];
-            sc.FieldFilters = new GenDataDefFieldFilterList();
             ParseReference(reference, sc);
         }
 
@@ -233,26 +232,6 @@ namespace org.xpangen.Generator.Data
                     var sa = ca[1].Split('.');
                     var tid = GetId(ca[0]);
                     var sid = GetId(ca[1]);
-                    var ff = new GenDataDefFieldFilter
-                                 {
-                                     Target =
-                                         new GenDataId
-                                             {
-                                                 ClassId = tid.ClassId,
-                                                 PropertyId = tid.PropertyId,
-                                                 ClassName = ta[0],
-                                                 PropertyName = ta[1]
-                                             },
-                                     Source =
-                                         new GenDataId
-                                             {
-                                                 ClassId = sid.ClassId,
-                                                 PropertyId = sid.PropertyId,
-                                                 ClassName = sa[0],
-                                                 PropertyName = sa[1]
-                                             }
-                                 };
-                    sc.FieldFilters.Add(ff);
                 }
             }
         }

@@ -22,18 +22,10 @@ namespace GenEdit.View
         {
             if (IsBuilding) return;
 
-            var context = new GenContext(GenDataEditorViewModel.Data.GenData);
-            context.SaveContext();
-            try
-            {
-                _selectedItem = e.Node;
-                _fragment = ProfileEditorTreeViewBuilder.GetNodeData(_selectedItem);
-                RefreshProfile();
-            }
-            finally
-            {
-                context.RestoreContext();
-            }
+            var contextData = GenDataEditorViewModel.Data.GenData.DuplicateContext();
+            _selectedItem = e.Node;
+            _fragment = ProfileEditorTreeViewBuilder.GetNodeData(_selectedItem);
+            RefreshProfile(contextData);
         }
 
         private void GenProfileEditor_Load(object sender, System.EventArgs e)
@@ -46,10 +38,10 @@ namespace GenEdit.View
             builder.CreateBodyChildTrees(ProfileNavigatorTreeView.Nodes, GenDataEditorViewModel.Data.Profile);
             IsBuilding = false;
             _selectedItem = ProfileNavigatorTreeView.Nodes.Count > 0 ? ProfileNavigatorTreeView.Nodes[0] : null;
-            RefreshProfile();
+            RefreshProfile(GenDataEditorViewModel.Data.GenData);
         }
 
-        public void RefreshProfile()
+        public void RefreshProfile(GenData genData)
         {
             var text = _fragment != null
                            ? ProfileEditorTreeViewBuilder.GetNodeProfileText(_selectedItem, _fragment,
@@ -66,8 +58,7 @@ namespace GenEdit.View
 
 
             text = _fragment != null
-                       ? ProfileEditorTreeViewBuilder.GetNodeExpansionText(_selectedItem, _fragment,
-                                                                           GenDataEditorViewModel.Data.GenData)
+                       ? ProfileEditorTreeViewBuilder.GetNodeExpansionText(_selectedItem, _fragment, genData)
                        : "";
 
             // Don't change to prevent unnecessary rendering and side effects

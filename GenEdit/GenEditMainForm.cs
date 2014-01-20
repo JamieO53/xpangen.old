@@ -10,7 +10,7 @@ namespace GenEdit
             InitializeComponent();
             genDataEditor1.GenDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
             genProfileEditor1.GenDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
-            genDataEditor1.OnDataChanged = genProfileEditor1.RefreshProfile;
+            genDataEditor1.OnDataChanged = () => genProfileEditor1.RefreshProfile(genProfileEditor1.GenDataEditorViewModel.Data.GenData);
         }
 
     }

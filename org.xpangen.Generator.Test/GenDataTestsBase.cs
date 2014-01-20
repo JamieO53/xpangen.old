@@ -75,7 +75,7 @@ Property=Operand
             Assert.IsTrue(d.Context[ClassClassId].IsFirst());
             Assert.IsTrue(d.Context[SubClassClassId].IsFirst());
             Assert.IsTrue(d.Context[PropertyClassId].IsFirst());
-            Assert.IsNull(d.Context[FieldFilterClassId]);
+            Assert.AreEqual(0, d.Context[FieldFilterClassId].Count);
 
             a.GenObject = d.Context[ClassClassId].GenObject;
             Assert.AreEqual("Class", a.AsString("Name"));
@@ -315,6 +315,82 @@ Property=Operand
             d.CreateObject("Class", "SubClass").Attributes[0] = "SubClass";
             d.CreateObject("Class", "SubClass").Attributes[0] = "Property";
             return d;
+        }
+
+        protected static GenData AddToCache(GenData d, string data)
+        {
+            var cached = d.Cache["Data/Definition", "Data/" + data];
+            cached.First(1);
+            Assert.AreEqual("Class", cached.Context[1].GenObject.Attributes[0]);
+            return cached;
+        }
+
+        protected static GenData SetUpUnfilteredReferenceData()
+        {
+            var defChild = new GenDataDef();
+            defChild.AddSubClass("", "Child");
+            defChild.Classes[1].Properties.Add("Name");
+            defChild.AddSubClass("Child", "Grandchild");
+            defChild.Classes[2].Properties.Add("Name");
+            var dataChild = new GenData(defChild);
+            CreateGenObject(dataChild, "", "Child", "First child");
+            CreateGenObject(dataChild, "Child", "Grandchild", "First child's first child");
+            CreateGenObject(dataChild, "Child", "Grandchild", "First child's second child");
+            CreateGenObject(dataChild, "", "Child", "Second child");
+            CreateGenObject(dataChild, "Child", "Grandchild", "Second child's first child");
+            CreateGenObject(dataChild, "Child", "Grandchild", "Second child's second child");
+            dataChild.First(1);
+            dataChild.First(2);
+
+            var defParent = new GenDataDef();
+            defParent.AddSubClass("", "Parent");
+            defParent.Classes[1].Properties.Add("Name");
+            defParent.AddSubClass("Parent", "Child", "Child");
+            var dataParent = new GenData(defParent);
+            dataParent.Cache.Internal("Minimal", "ChildDef", dataChild.GenDataDef.AsGenData());
+            dataParent.Cache.Internal("ChildDef", "Child", dataChild);
+            CreateGenObject(dataParent, "", "Parent", "Parent");
+            dataParent.First(0);
+            SetSubClassReference(dataParent, "Parent", "Child", "Child");
+            dataParent.ExpandReferences();
+            return dataParent;
+        }
+
+        /// <summary>
+        /// Set the subclass reference.
+        /// </summary>
+        /// <param name="data">The generator data.</param>
+        /// <param name="className">The parent class name.</param>
+        /// <param name="subClassName">The childe class name.</param>
+        /// <param name="reference">The reference path.</param>
+        protected static void SetSubClassReference(GenData data, string className, string subClassName, string reference)
+        {
+            var classes = data.GenDataDef.Classes;
+            var classId = classes.IndexOf(className);
+            var subClassIndex = classes[classId].SubClasses.IndexOf(classes.IndexOf(subClassName));
+            var sub = data.Context[classId].GenObject.SubClass[subClassIndex] as GenObjectListReference;
+            if (sub != null)
+                sub.Reference = reference.ToLowerInvariant();
+        }
+
+        protected static void MoveItem(GenData d, ListMove move, int itemIndex, int newItemIndex, string order, string action)
+        {
+            d.Context[SubClassClassId].Index = itemIndex;
+            d.Context[SubClassClassId].MoveItem(move, itemIndex);
+            CheckOrder(d, newItemIndex, order, action);
+        }
+
+        protected static void CheckOrder(GenData d, int itemIndex, string order, string action)
+        {
+            var id = d.GenDataDef.GetId("SubClass.Name");
+            Assert.AreEqual(itemIndex, d.Context[id.ClassId].Index, "Expected index value");
+            d.First(ClassClassId);
+            d.First(SubClassClassId);
+            Assert.AreEqual("SubClass" + order[0], d.GetValue(id), action + " first item");
+            d.Next(SubClassClassId);
+            Assert.AreEqual("SubClass" + order[1], d.GetValue(id), action + " second item");
+            d.Next(SubClassClassId);
+            Assert.AreEqual("SubClass" + order[2], d.GetValue(id), action + " third item");
         }
     }
 }

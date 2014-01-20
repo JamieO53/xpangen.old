@@ -2,14 +2,11 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
-using System.Collections.Generic;
-
 namespace org.xpangen.Generator.Data
 {
     public class GenData
     {
-        public List<GenObjectList> Context { get; private set; }
+        public GenContext Context { get; private set; }
         public GenDataBase GenDataBase { get; private set; }
         public GenDataDef GenDataDef { get { return GenDataBase.GenDataDef; } }
 
@@ -35,14 +32,15 @@ namespace org.xpangen.Generator.Data
         {
             Cache = new GenDataReferenceCache(this);
             GenDataBase = genDataBase;
-            Context = new List<GenObjectList>();
+            Context = new GenContext();
             for (var i = 0; i < GenDataDef.Classes.Count; i++)
-                Context.Add(null);
+                Context.Add(null, GenDataDef.Classes[i], GenDataBase);
 
-            Context[0] =
-                new GenObjectList(new GenObjectListBase(GenDataBase, null, 0,
-                                                        new GenDataDefSubClass {SubClass = GenDataDef.Classes[0]})
-                                      {GenDataBase.Root});
+            Context[0].GenObjectListBase.Add(GenDataBase.Root);
+            //Context[0] =
+            //    new GenObjectList(new GenObjectListBase(GenDataBase, null, 0,
+            //                                            new GenDataDefSubClass {SubClass = GenDataDef.Classes[0]})
+            //                          {GenDataBase.Root});
             First(0);
             GenDataBase.Changed = false;
         }
@@ -111,7 +109,7 @@ namespace org.xpangen.Generator.Data
 
         public bool Eol(int classId)
         {
-            return Context[classId] == null || Context[classId].Eol;
+            return Context[classId].Eol;
         }
 
         public void Reset(int classId)
@@ -134,7 +132,7 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        internal void SetSubClasses(int classId)
+        private void SetSubClasses(int classId)
         {
             for (var i = 0; i < GenDataDef.Classes[classId].SubClasses.Count; i++)
             {
@@ -145,61 +143,25 @@ namespace org.xpangen.Generator.Data
                 if (genObject != null)
                     if (Context[subClassId] == null)
                         Context[subClassId] = new GenObjectList(genObject.SubClass[i]);
+                    else if (GenDataDef.Classes[classId].SubClasses[i].Reference != "")
+                        ExpandReferences();
                     else
+                    {
                         Context[subClassId].GenObjectListBase = genObject.SubClass[i];
+                        Context[subClassId].First();
+                    }
                 Context[subClassId].First();
             }
         }
 
+        /// <summary>
+        /// Get the text value for the id.
+        /// </summary>
+        /// <param name="id">The identifier being looked up.</param>
+        /// <returns>The text corresponding to the id.</returns>
         public string GetValue(GenDataId id)
         {
-            try
-            {
-                if (
-                    String.Compare(GenDataDef.Classes[id.ClassId].Properties[id.PropertyId], "First",
-                                   StringComparison.OrdinalIgnoreCase) == 0)
-                    return Context[id.ClassId].IsFirst() ? "True" : "";
-                return GetValueForId(id);
-            }
-            catch (Exception)
-            {
-                string c;
-                string p;
-                
-                try
-                {
-                    c = IdClass(id);
-                }
-                catch(Exception)
-                {
-                    c = "Unknown class";
-                }
-                try
-                {
-                    p = IdProperty(id);
-                }
-                catch (Exception)
-                {
-                    p = "Unknown property";
-                }
-                return string.Format("<<<< Invalid Value Lookup: {0}.{1} >>>>", c, p);
-            }
-        }
-
-        private string GetValueForId(GenDataId id)
-        {
-            var context = Context[id.ClassId].GenObject;
-            return id.PropertyId >= context.Attributes.Count ? "" : context.Attributes[id.PropertyId];
-        }
-
-        private string IdClass(GenDataId id)
-        {
-            return GenDataDef.Classes[id.ClassId].Name;
-        }
-
-        private string IdProperty(GenDataId id)
-        {
-            return GenDataDef.Classes[id.ClassId].Properties[id.PropertyId];
+            return Context.GetValue(id);
         }
 
         // The result is only defined if the Class, SubClass and Property classes are
@@ -211,52 +173,68 @@ namespace org.xpangen.Generator.Data
             return GenDataBase.AsDef();
         }
 
+        /// <summary>
+        /// Create a new generator data object and duplicate the context.
+        /// </summary>
+        /// <returns></returns>
         public GenData DuplicateContext()
         {
             var d = new GenData(GenDataBase);
-            for (var i = 0; i < Context.Count; i++)
-                if (Context[i] != null)
-                    d.Context[i] = new GenObjectList(Context[i].GenObjectListBase) {Index = Context[i].Index};
-                else d.Context[i] = null;
+            d.Context.Duplicate(Context);
 
             return d;
         }
 
         /// <summary>
-        /// Find an item with the specified value.
+        /// Expand subclass references
         /// </summary>
-        /// <param name="id">The Class / Property identity being sought.</param>
-        /// <param name="val">The value being sought.</param>
-        /// <returns>The value has been found.</returns>
-        public bool Find(GenDataId id, string val)
+        public void ExpandReferences()
         {
-            if (Eol(id.ClassId))
-                return false;
-            if (Context[id.ClassId].GenObject.Attributes[id.PropertyId] == val)
-                return true;
-
-            First(id.ClassId);
-            while (!Eol(id.ClassId) && Context[id.ClassId].GenObject.Attributes[id.PropertyId] != val)
-                Next(id.ClassId);
-            return !Eol(id.ClassId);
-        }
-
-        /// <summary>
-        /// Find all items with the specified value.
-        /// </summary>
-        /// <param name="id">The Class / Property identity being sought.</param>
-        /// <param name="val">The value being sought.</param>
-        /// <returns>The value has been found.</returns>
-        public List<GenObject> FindMatches(GenDataId id, string val)
-        {
-            var list = new List<GenObject>();
-            First(id.ClassId);
-            while (!Eol(id.ClassId))
+            bool goOn;
+            do
             {
-                if (Context[id.ClassId].GenObject.Attributes[id.PropertyId] == val)
-                    list.Add(Context[id.ClassId].GenObject);
-            }
-            return list;
+                goOn = false;
+                var n = Context.Count;
+                for (var i = 0; i < n; i++)
+                {
+                    if (Eol(i)) continue;
+                    for (var j = 0; j < Context[i].GenObject.SubClass.Count; j++)
+                    {
+                        var subclass = Context[i].GenObject.SubClass[j];
+                        if (subclass is GenObjectListReference)
+                        {
+                            var offset = Context.Count - 2;
+                            var refClassId = subclass.ClassId;
+                            var defName = subclass.Definition.Reference;
+                            var dataName = (subclass as GenObjectListReference).Reference;
+                            var data = Cache[defName, dataName];
+                            Context[refClassId] = new GenObjectList(data.Context[1].GenObjectListBase)
+                                                      {
+                                                          ClassIdOffset = refClassId - 1
+                                                      };
+                            for (var k = 2; k < data.GenDataDef.Classes.Count; k++)
+                            {
+                                Context.Add(new GenObjectList(data.Context[2].GenObjectListBase)
+                                                {
+                                                    ClassIdOffset = offset
+                                                });
+                                Context[Context.Count - 1].First();
+                                if (goOn || Eol(Context.Count - 1) ||
+                                    Context[Context.Count - 1].GenObject.SubClass.Count == 0) continue;
+                                for (var l = 0; l < Context[Context.Count - 1].GenObject.SubClass.Count; l++)
+                                {
+                                    if (!(Context[Context.Count - 1].GenObject.SubClass[l] is GenObjectListReference))
+                                        continue;
+                                    goOn = true;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                            Context[j].First();
+                    }
+                }
+            } while (goOn);
         }
     }
 }

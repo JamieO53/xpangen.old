@@ -1,35 +1,79 @@
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿using System;
+using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenContext
+    public class GenContext : List<GenObjectList>
     {
-        private GenData GenData { get; set; }
-        private IndexList Indices { get; set; }
-
-        public GenContext(GenData genData)
+        public GenContext()
         {
-            GenData = genData;
-            Indices = new IndexList();
+            Classes = new GenDataDefClassList();
         }
 
+        public GenDataDefClassList Classes { get; private set; }
 
-        public void SaveContext()
+        /// <summary>
+        /// Copy the contents of a context to this context.
+        /// </summary>
+        /// <param name="context">The context being copied.</param>
+        public void Duplicate(GenContext context)
         {
-            Indices.Clear();
-            for (var i = 0; i < GenData.Context.Count; i++)
-                Indices.Add(GenData.Context[i] != null ? GenData.Context[i].Index : 0);
+            Classes.AddRange(context.Classes);
+            for (var i = 0; i < context.Count; i++)
+                //if (context[i] != null)
+                    this[i] = new GenObjectList(context[i].GenObjectListBase) { Index = context[i].Index };
+                //else this[i] = null;
         }
 
-        public void RestoreContext()
+        public void Add(GenObjectList item, GenDataDefClass defClass, GenDataBase genDataBase)
         {
-            for (var i = 0; i < GenData.Context.Count; i++)
+            Add(item ??
+                new GenObjectList(new GenObjectListBase(genDataBase, null, 0,
+                                                        new GenDataDefSubClass {SubClass = defClass}))
+                    {
+                        ClassIdOffset = 0
+                    });
+            Classes.Add(defClass);
+        }
+
+        /// <summary>
+        /// Get the text value for the id.
+        /// </summary>
+        /// <param name="id">The identifier being looked up.</param>
+        /// <returns>The text corresponding to the id.</returns>
+        public string GetValue(GenDataId id)
+        {
+            try
             {
-                if (GenData.Context[i] == null || GenData.Context[i].Index == Indices[i]) continue;
-                GenData.Context[i].Index = Indices[i];
-                GenData.SetSubClasses(i);
+                if (
+                    String.Compare(Classes[id.ClassId].Properties[id.PropertyId], "First",
+                                   StringComparison.OrdinalIgnoreCase) == 0)
+                    return this[id.ClassId].IsFirst() ? "True" : "";
+                var o = this[id.ClassId].GenObject;
+                return id.PropertyId >= o.Attributes.Count ? "" : o.Attributes[id.PropertyId];
+            }
+            catch (Exception)
+            {
+                string c;
+                string p;
+
+                try
+                {
+                    c = id.ClassName;
+                }
+                catch (Exception)
+                {
+                    c = "Unknown class";
+                }
+                try
+                {
+                    p = id.PropertyName;
+                }
+                catch (Exception)
+                {
+                    p = "Unknown property";
+                }
+                return string.Format("<<<< Invalid Value Lookup: {0}.{1} >>>>", c, p);
             }
         }
     }

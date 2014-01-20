@@ -9,8 +9,6 @@
 
         public string Reference { get; set; }
 
-        public GenDataDefFieldFilterList FieldFilters { get; set; }
-
         public string ReferenceDefinition { get; set; }
     }
 }

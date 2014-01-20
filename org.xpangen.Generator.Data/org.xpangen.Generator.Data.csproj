@@ -43,8 +43,6 @@
     <Compile Include="GenDataDef.cs" />
     <Compile Include="GenDataDefClass.cs" />
     <Compile Include="GenDataDefClassList.cs" />
-    <Compile Include="GenDataDefFieldFilter.cs" />
-    <Compile Include="GenDataDefFieldFilterList.cs" />
     <Compile Include="GenDataDefSubClass.cs" />
     <Compile Include="GenDataDefSubClassList.cs" />
     <Compile Include="GenDataId.cs" />

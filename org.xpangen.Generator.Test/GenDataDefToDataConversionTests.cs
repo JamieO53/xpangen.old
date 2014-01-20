@@ -31,9 +31,9 @@ namespace org.xpangen.Generator.Test
            
             Assert.AreEqual(RootClassId, d.Context[RootClassId].ClassId);
             Assert.IsNull(d.Context[ClassClassId].GenObject);
-            Assert.IsNull(d.Context[SubClassClassId]);
-            Assert.IsNull(d.Context[PropertyClassId]);
-            Assert.IsNull(d.Context[FieldFilterClassId]);
+            Assert.AreEqual(0, d.Context[SubClassClassId].Count);
+            Assert.AreEqual(0, d.Context[PropertyClassId].Count);
+            Assert.AreEqual(0, d.Context[FieldFilterClassId].Count);
 
             Assert.IsTrue(d.Context[RootClassId].IsFirst());
             a.GenObject = d.Context[RootClassId].GenObject;

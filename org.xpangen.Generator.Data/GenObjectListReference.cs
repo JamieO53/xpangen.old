@@ -19,10 +19,13 @@ namespace org.xpangen.Generator.Data
         public GenDataDefSubClass Definition { get; private set; }
         public void Reset()
         {
-            Clear();
+            if (Definition.ReferenceDefinition != Definition.Reference)
+                Clear();
             IsReset = true;
         }
 
         public bool IsReset { get; set; }
+
+        public string Reference { get; set; }
     }
 }
