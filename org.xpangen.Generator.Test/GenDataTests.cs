@@ -67,12 +67,6 @@ namespace org.xpangen.Generator.Test
             id = f.GetId("SubClass.Name");
             Assert.AreEqual("Property", d.GetValue(id));
 
-            d.Context[ClassClassId].Next();
-            CreateSubClass(d, "FieldFilter");
-
-            id = f.GetId("FieldFilter.Name");
-            Assert.IsTrue(d.Eol(id.ClassId));
-
             ValidateMinimalData(d);
         }
 
@@ -125,6 +119,32 @@ namespace org.xpangen.Generator.Test
             d.Cache.Internal("Minimal", "self", d0);
         }
 
+        [TestCase(Description = "Ensure that the base data references and their definitions can be retrieved.")]
+        public void GetGenDataBaseReferencesTest()
+        {
+            var d = GenDataDef.CreateMinimal().AsGenData();
+            d.GenDataBase.References.Add("Data", "Def");
+            d.GenDataBase.References.Add("Data", "Def");
+            var references = d.GenDataBase.References.ReferenceList;
+            Assert.AreEqual(3, references.Count);
+            Assert.AreEqual("data", references[0].Data);
+            Assert.AreEqual("def", references[0].Definition);
+            Assert.AreEqual("def", references[1].Data);
+            Assert.AreEqual("minimal", references[1].Definition);
+            Assert.AreEqual("minimal", references[2].Data);
+            Assert.AreEqual("minimal", references[2].Definition);
+        }
+
+        [TestCase(Description = "Ensure that the base data references and their definitions are correctly loaded.")]
+        public void GetGenDataBaseReferencesLoadTest()
+        {
+            var d = GenDataDef.CreateMinimal().AsGenData();
+            d.GenDataBase.References.Add("Data/Definition", "Minimal");
+            d.LoadCache();
+            Assert.That(d.Cache.Contains("minimal"));
+            Assert.That(d.Cache.Contains("data\\definition"));
+        }
+
         /// <summary>
         /// Ensure that simple named references are correctly cached
         /// </summary>
@@ -152,51 +172,77 @@ namespace org.xpangen.Generator.Test
         public void ReferenceCacheFilePathTest()
         {
             var d = GenDataDef.CreateMinimal().AsGenData();
-            var minimal = AddToCache(d, "Minimal");
-            var definition = AddToCache(d, "Definition");
+            d.GenDataBase.References.Add("Data/Minimal", "Data/Minimal");
+            d.GenDataBase.References.Add("Data/Definition", "Data/Minimal");
+            d.LoadCache();
+            var minimal = d.Cache["Data/Minimal", "Data/Minimal"];
+            var definition = d.Cache["Data/Minimal", "Data/Definition"];
             Assert.AreNotSame(minimal, definition);
         }
 
-        [TestCase(Description = "Confirm that reference context is set up correctly.")]
-        public void InternalReferenceUnfilteredContextTest()
+        [TestCase(Description = "Verify that the SetUpParentChildData method works as expected")]
+        public void VerifySetUpParentChildDataMethod()
         {
-            var d = SetUpUnfilteredReferenceData();
-            Assert.IsTrue(d.Cache.Contains("Child"));
-            Assert.AreEqual("Parent", d.Context[1].GenObject.Definition.Name);
-            Assert.AreEqual("Child", d.Context[2].GenObject.Definition.Name);
-            Assert.AreEqual("Grandchild", d.Context[3].GenObject.Definition.Name);
-            Assert.AreEqual(2, d.Context[2].ClassId);
-            Assert.AreEqual(3, d.Context[3].ClassId);
+            var d = SetUpParentChildData("Parent", "Child");
+            var f = d.GenDataDef;
+            Assert.AreEqual(3, f.Classes.Count);
+            Assert.AreEqual("Parent", f.Classes[1].Name);
+            Assert.AreEqual("Child", f.Classes[2].Name);
+            Assert.AreEqual(1, f.Classes[1].SubClasses.Count);
+            Assert.AreEqual(2, f.Classes[1].SubClasses[0].SubClass.ClassId);
+            Assert.AreEqual("", f.Classes[1].SubClasses[0].Reference);
+            Assert.AreEqual("Parent", d.Context[1].GenObject.Attributes[0]);
+            Assert.AreEqual("Parent's first child", d.Context[2].GenObject.Attributes[0]);
         }
 
-        [TestCase(Description = "Confirm that reference data gets included.")]
-        public void InternalReferenceUnfilteredTest()
+        [TestCase(Description = "Verify that the SetUpParentChildReferenceData method works as expected")]
+        public void VerifySetUpParentChildReferenceDataMethod()
         {
-            var d = SetUpUnfilteredReferenceData();
-            Assert.AreEqual(1, d.Context[1].GenObject.Definition.SubClasses.Count);
-            Assert.IsTrue(d.Cache.Contains("Child"));
-            Assert.AreEqual("Child", d.Context[1].GenObject.Definition.SubClasses[0].SubClass.Name);
-            Assert.AreEqual("Child", d.Context[1].GenObject.Definition.SubClasses[0].Reference);
-            Assert.IsNotNull(d.Context[2]);
-            d.First(2);
-            Assert.AreEqual("Child", d.Context[2].GenObject.Definition.Name);
-            d.First(1);
+            var dataChild = SetUpParentChildData("Child", "Grandchild");
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", dataChild);
+            Assert.AreEqual(1, dataParent.Root.SubClass.Count);
+            Assert.AreEqual(4, dataParent.Context.Count);
+            Assert.AreEqual("First parent", dataParent.Context[1].GenObject.Attributes[0]);
+            Assert.That(dataParent.Cache.Contains("Child"));
+            Assert.AreEqual(1, dataParent.Context[1].GenObject.SubClass.Count);
+            Assert.IsFalse(dataParent.Eol(2));
+            Assert.AreEqual(2, dataParent.Context[2].ClassId);
+            Assert.AreEqual("Child", dataParent.Context[2].GenObject.Attributes[0]);
+            Assert.AreEqual(1, dataParent.Context[2].DefClass.RefClassId);
+            Assert.AreEqual("Child's first grandchild", dataChild.Context[2].GenObject.Attributes[0]);
+            Assert.AreEqual("Child's first grandchild", dataParent.Context[3].GenObject.Attributes[0]);
         }
 
-        [TestCase(Description = "Confirm that resetting the context works.")]
-        public void InternalReferenceSubsetSetResetTest()
+        [TestCase(Description = "Verify that data context works as expected with reference data")]
+        public void ContextWithReferenceTests()
         {
-            var d = SetUpUnfilteredReferenceData();
-            d.First(1);
-            Assert.AreEqual("First child", d.Context[2].GenObject.Attributes[0]);
+            var dataChild = SetUpParentChildData("Child", "Grandchild");
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", dataChild);
+            dataParent.First(1);
+            for (var i = 0; i < dataParent.GenDataDef.Classes.Count; i++ )
+            {
+                Assert.IsNotNull(dataParent.Context[i].GenObject, i.ToString() + ": " + dataParent.Context[i].DefClass);
+                Assert.AreEqual(dataParent.Context[i].RefClassId, dataParent.Context[i].GenObject.ClassId);
+            }
         }
 
-        [TestCase(Description = "Confirm that multiple referenced data gets accessed.")]
-        public void InternalReferenceUnfilteredMultipleTest()
+        [TestCase(Description = "Verify that the SetUpParentChildReferenceData method works as expected")]
+        public void VerifyNestedSetUpParentChildReferenceDataMethod()
         {
-            var d = SetUpUnfilteredReferenceData();
-            d.First(1);
-            Assert.AreEqual("First child", d.Context[2].GenObject.Attributes[0]);
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild");
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", dataGrandchildhild);
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", dataChild);
+            Assert.AreEqual(1, dataParent.Root.SubClass.Count);
+            Assert.AreEqual(5, dataParent.Context.Count);
+            Assert.AreEqual("First parent", dataParent.Context[1].GenObject.Attributes[0]);
+            Assert.That(dataParent.Cache.Contains("Child"));
+            Assert.AreEqual(1, dataParent.Context[1].GenObject.SubClass.Count);
+            Assert.IsFalse(dataParent.Eol(2));
+            Assert.AreEqual(2, dataParent.Context[2].ClassId);
+            Assert.AreEqual("First child", dataParent.Context[2].GenObject.Attributes[0]);
+            Assert.AreEqual(3, dataParent.Context[3].ClassId);
+            Assert.AreEqual("Grandchild", dataParent.Context[3].GenObject.Attributes[0]);
+            Assert.AreEqual(2, dataParent.Context[3].DefClass.RefClassId);
         }
 
         /// <summary>

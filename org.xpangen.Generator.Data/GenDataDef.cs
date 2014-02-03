@@ -13,11 +13,14 @@ namespace org.xpangen.Generator.Data
         public int CurrentClassId { get; set; }
         public string Definition { get; set; }
 
+        public GenDataDefReferenceCache Cache { get; set; }
+
         public GenDataDef()
         {
             Classes = new GenDataDefClassList();
             AddClass("");
             CurrentClassId = -1;
+            Cache = new GenDataDefReferenceCache(this);
         }
 
         public int AddClass(string parent, string name)
@@ -133,7 +136,13 @@ namespace org.xpangen.Generator.Data
                 }
                 
                 if (Classes[classId].SubClasses.Count == 1)
-                    def.AppendLine("SubClass=" + Classes[classId].SubClasses[0].SubClass.Name);
+                {
+                    def.Append("SubClass=" + Classes[classId].SubClasses[0].SubClass.Name);
+                    if (!string.IsNullOrEmpty(Classes[classId].SubClasses[0].SubClass.Reference))
+                        def.AppendLine("[Reference='" + Classes[classId].SubClasses[0].SubClass.Reference + "']");
+                    else
+                        def.AppendLine();
+                }
                 else if (Classes[classId].SubClasses.Count > 1)
                 {
                     def.Append("SubClass={" + Classes[classId].SubClasses[0].SubClass.Name);
@@ -144,7 +153,14 @@ namespace org.xpangen.Generator.Data
             }
 
             for (var i = 0; i < Classes[classId].SubClasses.Count; i++)
-                ClassProfile(Classes[classId].SubClasses[i].SubClass.ClassId, def, profile);
+                if (string.IsNullOrEmpty(Classes[classId].SubClasses[i].SubClass.Reference))
+                    ClassProfile(Classes[classId].SubClasses[i].SubClass.ClassId, def, profile);
+                else
+                {
+                    profile.Append("`[" + Classes[classId].SubClasses[i].SubClass.Name + ":" +
+                                   Classes[classId].SubClasses[i].SubClass.Name + "[Reference='`" +
+                                   Classes[classId].SubClasses[i].SubClass.Name + ".Reference`']`]");
+                }
 
             if (classId != 0)
                 profile.Append("`]");
@@ -157,13 +173,10 @@ namespace org.xpangen.Generator.Data
             def.AddClass("", "Class");
             def.AddClass("Class", "SubClass");
             def.AddClass("Class", "Property");
-            def.AddClass("SubClass", "FieldFilter");
             def.Classes[def.Classes.IndexOf("Class")].Properties.Add("Name");
             def.Classes[def.Classes.IndexOf("SubClass")].Properties.Add("Name");
             def.Classes[def.Classes.IndexOf("SubClass")].Properties.Add("Reference");
             def.Classes[def.Classes.IndexOf("Property")].Properties.Add("Name");
-            def.Classes[def.Classes.IndexOf("FieldFilter")].Properties.Add("Name");
-            def.Classes[def.Classes.IndexOf("FieldFilter")].Properties.Add("Operand");
             return def;
         }
 
@@ -215,25 +228,76 @@ namespace org.xpangen.Generator.Data
             var j = Classes[i].SubClasses.IndexOf(subClassName);
             var sc = Classes[i].SubClasses[j];
             ParseReference(reference, sc);
+            if (!Cache.Contains(sc.ReferenceDefinition))
+                Cache[sc.ReferenceDefinition] = sc.ReferenceDefinition.Equals("minimal", StringComparison.InvariantCultureIgnoreCase)
+                     ? CreateMinimal()
+                     : GenData.DataLoader.LoadData(sc.ReferenceDefinition).AsDef();
+            var rf = Cache[sc.ReferenceDefinition];
+            for (var k = 1; k < rf.Classes.Count; k++)
+            {
+                var item = rf.Classes[k];
+                if (!Classes.Contains(rf.Classes[k].Name))
+                {
+                    Classes.Add(new GenDataDefClass
+                                    {
+                                        Name = item.Name,
+                                        Parent = item.Parent,
+                                        ClassId = Classes.Count,
+                                        IsReference = true,
+                                        RefClassId = item.ClassId,
+                                        RefDef = rf,
+                                        Reference = sc.Reference,
+                                        ReferenceDefinition = sc.ReferenceDefinition
+                                    });
+                }
+                else
+                {
+                    var oldItem = Classes[Classes.IndexOf(item.Name)];
+                    oldItem.IsReference = true;
+                    oldItem.RefClassId = item.ClassId;
+                    oldItem.RefDef = rf;
+                    oldItem.Reference = sc.Reference;
+                    oldItem.ReferenceDefinition = sc.ReferenceDefinition;
+                }
+            }
+            for (var k = 1; k < rf.Classes.Count; k++)
+            {
+                var item = rf.Classes[k];
+                if (item.SubClasses.Count == 0) continue;
+                var refItem = Classes[Classes.IndexOf(item.Name)];
+                for (var l = 0; l < item.SubClasses.Count; l++)
+                {
+                    var sub = item.SubClasses[l];
+                    var classId = Classes.IndexOf(sub.SubClass.Name);
+                    var newSub = new GenDataDefSubClass
+                                     {
+                                         Reference = sc.Reference,
+                                         ReferenceDefinition = sc.ReferenceDefinition,
+                                         SubClass = Classes[classId]
+                                     };
+                    refItem.SubClasses.Add(newSub);
+                    newSub.SubClass.Parent = refItem;
+                }
+            }
         }
 
-        private void ParseReference(string reference, GenDataDefSubClass sc)
+        private static void ParseReference(string reference, GenDataDefSubClass sc)
         {
             sc.Reference = reference;
             var ra = reference.Split(':');
             sc.ReferenceDefinition = ra[0];
-            if (ra.GetUpperBound(0) > 0)
-            {
-                var fa = ra[1].Split(';');
-                for (var i = 0; i <= fa.GetLowerBound(0); i++)
-                {
-                    var ca = fa[i].Split('=');
-                    var ta = ca[0].Split('.');
-                    var sa = ca[1].Split('.');
-                    var tid = GetId(ca[0]);
-                    var sid = GetId(ca[1]);
-                }
-            }
+            //if (ra.GetUpperBound(0) > 0)
+            //{
+            //    var fa = ra[1].Split(';');
+            //    for (var i = 0; i <= fa.GetLowerBound(0); i++)
+            //    {
+            //        var ca = fa[i].Split('=');
+            //        var ta = ca[0].Split('.');
+            //        var sa = ca[1].Split('.');
+            //        var tid = GetId(ca[0]);
+            //        var sid = GetId(ca[1]);
+            //    }
+            //}
         }
 
         public int AddClass(string className)
@@ -241,7 +305,7 @@ namespace org.xpangen.Generator.Data
             var i = Classes.IndexOf(className);
             if (i == -1)
             {
-                Classes.Add(new GenDataDefClass{Name = className, ClassId = Classes.Count});
+                Classes.Add(new GenDataDefClass{Name = className, ClassId = Classes.Count, RefClassId = Classes.Count });
                 i = Classes.IndexOf(className);
             }
 

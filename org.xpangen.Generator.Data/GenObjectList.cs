@@ -15,19 +15,17 @@ namespace org.xpangen.Generator.Data
         public GenObjectList(IGenObjectListBase genObjectListBase)
         {
             GenObjectListBase = genObjectListBase;
-            ClassIdOffset = 0;
+            DefClass = GenObjectListBase.Definition.SubClass;
         }
-
 
         public IGenObjectListBase GenObjectListBase { get; set; }
 
-        public int ClassIdOffset { get; set; }
+        public int ClassId { get; set; }
 
-        public int ClassId { get { return GenObjectListBase.ClassId + ClassIdOffset; } }
+        public int RefClassId { get; set; }
 
         private GenDataBase GenDataBase { get { return GenObjectListBase.GenDataBase; } }
-        private GenDataDef GenDataDef { get { return GenDataBase.GenDataDef; } }
-        public GenDataDefClass DefClass { get { return GenDataDef.Classes[ClassId]; } }
+        public GenDataDefClass DefClass { get; private set; }
 
         public GenObject this[int index] { get { return GenObjectListBase[index]; } }
         

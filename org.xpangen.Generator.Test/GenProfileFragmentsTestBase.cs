@@ -47,7 +47,7 @@ namespace org.xpangen.Generator.Test
             a.SaveFields();
 
             d.Last(ClassClassId);
-            d.Prior(ClassClassId);
+            //d.Prior(ClassClassId);
             Assert.AreEqual("Property", d.Context[ClassClassId].GenObject.Attributes[0]);
             d.First(PropertyClassId);
             a.GenObject = d.Context[PropertyClassId].GenObject;

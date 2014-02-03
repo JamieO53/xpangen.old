@@ -5,12 +5,15 @@ namespace org.xpangen.Generator.Data
 {
     public class GenContext : List<GenObjectList>
     {
-        public GenContext()
+        public GenContext(GenData genData)
         {
+            Cache = new GenDataReferenceCache(genData);
             Classes = new GenDataDefClassList();
         }
 
         public GenDataDefClassList Classes { get; private set; }
+
+        public GenDataReferenceCache Cache { get; private set; }
 
         /// <summary>
         /// Copy the contents of a context to this context.
@@ -19,20 +22,28 @@ namespace org.xpangen.Generator.Data
         public void Duplicate(GenContext context)
         {
             Classes.AddRange(context.Classes);
+            for (var i = 0; i < Cache.References.Count; i++)
+            {
+                context.Cache.Internal(Cache.References[i].Path, Cache.References[i].GenData);
+            }
             for (var i = 0; i < context.Count; i++)
-                //if (context[i] != null)
-                    this[i] = new GenObjectList(context[i].GenObjectListBase) { Index = context[i].Index };
-                //else this[i] = null;
+                this[i] = new GenObjectList(context[i].GenObjectListBase) { Index = context[i].Index, ClassId = i, RefClassId = i };
         }
 
-        public void Add(GenObjectList item, GenDataDefClass defClass, GenDataBase genDataBase)
+        public void Add(GenObjectList item, GenDataDefClass defClass, GenDataBase genDataBase, string reference, string referenceDefinition)
         {
-            Add(item ??
-                new GenObjectList(new GenObjectListBase(genDataBase, null, 0,
-                                                        new GenDataDefSubClass {SubClass = defClass}))
-                    {
-                        ClassIdOffset = 0
-                    });
+            var myList = item ?? new GenObjectList(new GenObjectListBase(genDataBase, null, defClass.ClassId,
+                                                                         new GenDataDefSubClass
+                                                                             {
+                                                                                 SubClass = defClass,
+                                                                                 Reference = reference,
+                                                                                 ReferenceDefinition = referenceDefinition
+                                                                             }))
+                                     {
+                                         RefClassId = defClass.RefClassId,
+                                         ClassId = defClass.ClassId
+                                     };
+            Add(myList);
             Classes.Add(defClass);
         }
 

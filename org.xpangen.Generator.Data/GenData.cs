@@ -20,27 +20,38 @@ namespace org.xpangen.Generator.Data
             get { return GenDataBase.Root; }
         }
 
-        public GenDataReferenceCache Cache { get; private set; }
+        public GenDataReferenceCache Cache { get { return Context.Cache; } }
 
         public static IGenDataLoader DataLoader { get; set; }
 
-        public GenData(GenDataDef genDataDef) : this(new GenDataBase(genDataDef, false))
+        public GenData(GenDataDef genDataDef) : this(new GenDataBase(genDataDef))
         {
         }
 
         private GenData(GenDataBase genDataBase)
         {
-            Cache = new GenDataReferenceCache(this);
             GenDataBase = genDataBase;
-            Context = new GenContext();
+            Context = new GenContext(this);
             for (var i = 0; i < GenDataDef.Classes.Count; i++)
-                Context.Add(null, GenDataDef.Classes[i], GenDataBase);
+            {
+                var parent = GenDataDef.Classes[i].Parent;
+                var reference = "";
+                var referenceDefinition = "";
+                if (parent != null)
+                {
+                    foreach (var subClass in parent.SubClasses)
+                    {
+                        if (subClass.SubClass != GenDataDef.Classes[i]) continue;
+                        
+                        reference = subClass.Reference;
+                        referenceDefinition = subClass.ReferenceDefinition;
+                        break;
+                    }
+                }
+                Context.Add(null, GenDataDef.Classes[i], GenDataBase, reference, referenceDefinition);
+            }
 
             Context[0].GenObjectListBase.Add(GenDataBase.Root);
-            //Context[0] =
-            //    new GenObjectList(new GenObjectListBase(GenDataBase, null, 0,
-            //                                            new GenDataDefSubClass {SubClass = GenDataDef.Classes[0]})
-            //                          {GenDataBase.Root});
             First(0);
             GenDataBase.Changed = false;
         }
@@ -136,21 +147,43 @@ namespace org.xpangen.Generator.Data
         {
             for (var i = 0; i < GenDataDef.Classes[classId].SubClasses.Count; i++)
             {
-                var subClassId = GenDataDef.Classes[classId].SubClasses[i].SubClass.ClassId;
+                var subClass = GenDataDef.Classes[classId].SubClasses[i].SubClass;
+                var subClassId = subClass.ClassId;
                 if (Context[classId].GenObject == null)
                     First(classId);
                 var genObject = Context[classId].GenObject;
                 if (genObject != null)
-                    if (Context[subClassId] == null)
-                        Context[subClassId] = new GenObjectList(genObject.SubClass[i]);
-                    else if (GenDataDef.Classes[classId].SubClasses[i].Reference != "")
-                        ExpandReferences();
+                    if (!string.IsNullOrEmpty(GenDataDef.Classes[classId].SubClasses[i].Reference))
+                    {
+                        var referenceData = genObject.SubClass[i] as GenObjectListReference;
+                        if (referenceData != null)
+                            SetReferenceSubClasses(classId, i,
+                                                   Cache[
+                                                       referenceData.Definition.ReferenceDefinition, //GenDataDef.Classes[classId].SubClasses[i].Reference,
+                                                       referenceData.Reference]);
+                    }
                     else
                     {
                         Context[subClassId].GenObjectListBase = genObject.SubClass[i];
-                        Context[subClassId].First();
+                        First(subClassId);
                     }
+            }
+        }
+
+        private void SetReferenceSubClasses(int classId, int subClassIndex, GenData data)
+        {
+            {
+                var subClass = Context[classId].DefClass.SubClasses[subClassIndex].SubClass;
+                var subClassId = subClass.ClassId;
+                var subRefClassId = subClass.RefClassId;
+                Context[subClassId].GenObjectListBase = data.Context[subRefClassId].GenObjectListBase;
+                Context[subClassId].ClassId = subClass.ClassId;
+                Context[subClassId].RefClassId = subRefClassId;
+                data.First(subRefClassId);
                 Context[subClassId].First();
+                if (!data.Eol(subRefClassId))
+                    for (var i = 0; i < data.Context[subRefClassId].DefClass.SubClasses.Count; i++)
+                        SetReferenceSubClasses(subClassId, i, data);
             }
         }
 
@@ -186,55 +219,23 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Expand subclass references
+        /// Cache the references in GenDataBase
         /// </summary>
-        public void ExpandReferences()
+        private void CacheReferences()
         {
-            bool goOn;
-            do
+            foreach (var reference in GenDataBase.References.ReferenceList)
             {
-                goOn = false;
-                var n = Context.Count;
-                for (var i = 0; i < n; i++)
-                {
-                    if (Eol(i)) continue;
-                    for (var j = 0; j < Context[i].GenObject.SubClass.Count; j++)
-                    {
-                        var subclass = Context[i].GenObject.SubClass[j];
-                        if (subclass is GenObjectListReference)
-                        {
-                            var offset = Context.Count - 2;
-                            var refClassId = subclass.ClassId;
-                            var defName = subclass.Definition.Reference;
-                            var dataName = (subclass as GenObjectListReference).Reference;
-                            var data = Cache[defName, dataName];
-                            Context[refClassId] = new GenObjectList(data.Context[1].GenObjectListBase)
-                                                      {
-                                                          ClassIdOffset = refClassId - 1
-                                                      };
-                            for (var k = 2; k < data.GenDataDef.Classes.Count; k++)
-                            {
-                                Context.Add(new GenObjectList(data.Context[2].GenObjectListBase)
-                                                {
-                                                    ClassIdOffset = offset
-                                                });
-                                Context[Context.Count - 1].First();
-                                if (goOn || Eol(Context.Count - 1) ||
-                                    Context[Context.Count - 1].GenObject.SubClass.Count == 0) continue;
-                                for (var l = 0; l < Context[Context.Count - 1].GenObject.SubClass.Count; l++)
-                                {
-                                    if (!(Context[Context.Count - 1].GenObject.SubClass[l] is GenObjectListReference))
-                                        continue;
-                                    goOn = true;
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                            Context[j].First();
-                    }
-                }
-            } while (goOn);
+                var dummy = Cache[reference.Definition, reference.Data];
+            }
+        }
+
+        /// <summary>
+        /// Load the cache from the data references and loaded data references
+        /// </summary>
+        public void LoadCache()
+        {
+            CacheReferences();
+            Cache.Merge();
         }
     }
 }

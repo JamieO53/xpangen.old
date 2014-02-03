@@ -40,13 +40,18 @@
     <Compile Include="GenContext.cs" />
     <Compile Include="GenData.cs" />
     <Compile Include="GenDataBase.cs" />
+    <Compile Include="GenDataBaseReference.cs" />
+    <Compile Include="GenDataBaseReferences.cs" />
     <Compile Include="GenDataDef.cs" />
     <Compile Include="GenDataDefClass.cs" />
     <Compile Include="GenDataDefClassList.cs" />
+    <Compile Include="GenDataDefReferenceCache.cs" />
     <Compile Include="GenDataDefSubClass.cs" />
     <Compile Include="GenDataDefSubClassList.cs" />
     <Compile Include="GenDataId.cs" />
-    <Compile Include="GenDataReferenceCache.cs" />
+    <Compile Include="GenDataReferenceCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GenDataToDef.cs" />
     <Compile Include="GenList.cs" />
     <Compile Include="GenObject.cs" />

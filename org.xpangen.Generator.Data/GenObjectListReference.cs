@@ -4,6 +4,8 @@ namespace org.xpangen.Generator.Data
 {
     public class GenObjectListReference : List<GenObject>, IGenObjectListBase
     {
+        private string _reference;
+
         public GenObjectListReference(GenDataBase genDataBase, GenObject parent, int classId, GenDataDefSubClass subClassDef)
         {
             GenDataBase = genDataBase;
@@ -26,6 +28,14 @@ namespace org.xpangen.Generator.Data
 
         public bool IsReset { get; set; }
 
-        public string Reference { get; set; }
+        public string Reference
+        {
+            get { return _reference; }
+            set
+            {
+                _reference = value;
+                GenDataBase.References.Add(value, Definition.Reference);
+            }
+        }
     }
 }
