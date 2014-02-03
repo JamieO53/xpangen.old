@@ -2,19 +2,33 @@
 {
     public class GenDataBase : BindableObject
     {
-        public GenDataBase(GenDataDef genDataDef, bool followReferences)
+        private GenDataBaseReferences _references;
+
+        public GenDataBase(GenDataDef genDataDef)
         {
-            FollowReferences = followReferences;
             GenDataDef = genDataDef;
             IgnorePropertyValidation = true;
             Root = new GenObject(null, null, 0) { GenData = this };
         }
 
         public GenDataDef GenDataDef { get; private set; }
-        public GenObject Root { get; protected set; }
-        public bool Changed { get; set; }
+        public GenObject Root { get; private set; }
+        public GenDataBaseReferences References
+        {
+            get
+            {
+                if (HasReferences)
+                    _references = new GenDataBaseReferences();
+                return _references;
+            }
+        }
 
-        public bool FollowReferences { get; set; }
+        public bool HasReferences
+        {
+            get { return _references == null; }
+        }
+
+        public bool Changed { get; set; }
 
         public void RaiseDataChanged(string className, string propertyName)
         {

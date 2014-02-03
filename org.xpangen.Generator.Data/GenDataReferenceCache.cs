@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Collections.Generic;
 
@@ -14,6 +15,27 @@ namespace org.xpangen.Generator.Data
             Self = genData;
         }
 
+        public void Merge()
+        {
+            if (_localCache == null) return;
+            foreach (var pair in References)
+            {
+                pair.GenData.LoadCache();
+                if (pair.GenData.Cache._localCache == null)
+                    continue;
+                pair.GenData.Cache.Merge();
+                foreach (var item in pair.GenData.Cache.References)
+                    if (!LocalCache.ContainsKey(item.Path))
+                        LocalCache.Add(item.Path, item.GenData);
+            }
+        }
+
+        /// <summary>
+        /// Check if the cache does not contain the data, and adds it then returns the cached data.
+        /// </summary>
+        /// <param name="defPath">The data's definition location.</param>
+        /// <param name="path">The data's locations.</param>
+        /// <returns></returns>
         public GenData this[string defPath, string path]
         {
             get
@@ -21,15 +43,31 @@ namespace org.xpangen.Generator.Data
                 if (path.Equals("self", StringComparison.InvariantCultureIgnoreCase))
                     return Self;
                 var f = AddDef(defPath);
-                if (!LocalCache.ContainsKey(path))
+                var p = path.ToLowerInvariant().Replace('/', '\\');
+                if (!LocalCache.ContainsKey(p))
                 {
-                    var fullPath = Path.GetExtension(path) == "" ? path + ".dcb" : path;
+                    var fullPath = Path.GetExtension(path) == "" ? p + ".dcb" : path;
                     if (!File.Exists(fullPath))
                         throw new ArgumentException("The lookup path is undefined: " + path, "path");
                     var d = GenData.DataLoader.LoadData(f.AsDef(), fullPath);
-                    LocalCache.Add(path, d);
+                    LocalCache.Add(p, d);
+                    foreach (var reference in d.Cache.References)
+                        if (!LocalCache.ContainsKey(reference.Path))
+                            LocalCache.Add(reference.Path, reference.GenData);
                 }
-                return LocalCache[path];
+                return LocalCache[p];
+            }
+        }
+
+        protected internal List<GenDataReferenceCacheItem> References
+        {
+            get
+            {
+                var references = new List<GenDataReferenceCacheItem>();
+                if (_localCache != null)
+                    foreach (var item in _localCache)
+                        references.Add(new GenDataReferenceCacheItem(item.Key, item.Value));
+                return references;
             }
         }
 
@@ -47,13 +85,24 @@ namespace org.xpangen.Generator.Data
         /// <returns></returns>
         public GenData Internal(string def, string name, GenData genData)
         {
-            var n = name.ToLowerInvariant();
+            var n = name.ToLowerInvariant().Replace('/', '\\');
             if (n.Equals("self"))
                 throw new ArgumentException("The 'self' generator data cannot be added explicitly to the cache", "name");
-            AddDef(def);
+            if (!string.IsNullOrEmpty(def)) AddDef(def);
             if (!LocalCache.ContainsKey(n))
                 LocalCache.Add(n, genData);
             return genData;
+        }
+
+        /// <summary>
+        /// Cache a data file programatically.
+        /// </summary>
+        /// <param name="name">The name of the cached data.</param>
+        /// <param name="genData">The data being cached.</param>
+        /// <returns></returns>
+        public void Internal(string name, GenData genData)
+        {
+            Internal(null, name, genData);
         }
 
         private GenData AddDef(string def)
@@ -90,5 +139,17 @@ namespace org.xpangen.Generator.Data
             var d = reference.ToLowerInvariant().Replace('/', '\\');
             return d == "self" || _localCache != null && LocalCache.ContainsKey(d);
         }
+    }
+
+    public struct GenDataReferenceCacheItem
+    {
+        public GenDataReferenceCacheItem(string path, GenData genData) : this()
+        {
+            GenData = genData;
+            Path = path;
+        }
+
+        public string Path { get; private set; }
+        public GenData GenData { get; private set; }
     }
 }

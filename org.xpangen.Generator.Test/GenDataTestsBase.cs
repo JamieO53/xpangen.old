@@ -15,8 +15,6 @@ namespace org.xpangen.Generator.Test
         protected const int ClassClassId = 1;
         protected const int SubClassClassId = 2;
         protected const int PropertyClassId = 3;
-        protected const int FieldFilterClassId = 4;
-
 
         protected const string GenDataSaveText =
             @"Definition=Minimal
@@ -25,9 +23,6 @@ Field={Name,Title}
 SubClass={SubClass,Property}
 Class=SubClass
 Field={Name,Reference}
-SubClass=FieldFilter
-Class=FieldFilter
-Field={Name,Operand}
 Class=Property
 Field=Name
 .
@@ -36,21 +31,17 @@ SubClass=SubClass[]
 SubClass=Property[]
 Property=Name
 Class=SubClass[]
-SubClass=FieldFilter[]
 Property=Name
 Property=Reference
 Class=Property[]
 Property=Name
-Class=FieldFilter[]
-Property=Name
-Property=Operand
 ";
 
         protected static void ValidateMinimalData(GenData d)
         {
             var a = new GenAttributes(d.GenDataDef);
             Assert.AreEqual("Minimal", d.GenDataDef.Definition);
-            Assert.AreEqual(5, d.Context.Count);
+            Assert.AreEqual(4, d.Context.Count);
 
             Assert.IsFalse(d.Eol(RootClassId));
             Assert.IsFalse(d.Eol(ClassClassId));
@@ -71,11 +62,9 @@ Property=Operand
             Assert.IsFalse(d.Eol(ClassClassId));
             Assert.IsFalse(d.Eol(SubClassClassId));
             Assert.IsFalse(d.Eol(PropertyClassId));
-            Assert.IsTrue(d.Eol(FieldFilterClassId));
             Assert.IsTrue(d.Context[ClassClassId].IsFirst());
             Assert.IsTrue(d.Context[SubClassClassId].IsFirst());
             Assert.IsTrue(d.Context[PropertyClassId].IsFirst());
-            Assert.AreEqual(0, d.Context[FieldFilterClassId].Count);
 
             a.GenObject = d.Context[ClassClassId].GenObject;
             Assert.AreEqual("Class", a.AsString("Name"));
@@ -89,7 +78,7 @@ Property=Operand
             Assert.IsTrue(d.Context[SubClassClassId].IsFirst());
             a.GenObject = d.Context[SubClassClassId].GenObject;
             Assert.AreEqual("SubClass", a.AsString("Name"));
-            Assert.AreEqual(1, d.Context[SubClassClassId].GenObject.SubClass.Count);
+            Assert.AreEqual(0, d.Context[SubClassClassId].GenObject.SubClass.Count);
 
             // SubClass class tests - Property
             d.Next(SubClassClassId);
@@ -103,18 +92,13 @@ Property=Operand
             Assert.IsFalse(d.Eol(ClassClassId));
             a.GenObject = d.Context[ClassClassId].GenObject;
             Assert.AreEqual("SubClass", a.AsString("Name"));
-            Assert.AreEqual(1, d.Context[SubClassClassId].Count);
+            Assert.AreEqual(0, d.Context[SubClassClassId].Count);
             Assert.AreEqual(2, d.Context[PropertyClassId].Count);
             a.GenObject = d.Context[PropertyClassId].GenObject;
             Assert.AreEqual("Name", a.AsString("Name"));
             d.Next(PropertyClassId);
             a.GenObject = d.Context[PropertyClassId].GenObject;
             Assert.AreEqual("Reference", a.AsString("Name"));
-
-            // SubClass class tests - FieldFilter
-            Assert.IsTrue(d.Context[SubClassClassId].IsFirst());
-            a.GenObject = d.Context[SubClassClassId].GenObject;
-            Assert.AreEqual("FieldFilter", a.AsString("Name"));
 
             // Property class tests
             d.Next(ClassClassId);
@@ -125,19 +109,6 @@ Property=Operand
             Assert.AreEqual(1, d.Context[PropertyClassId].Count);
             a.GenObject = d.Context[PropertyClassId].GenObject;
             Assert.AreEqual("Name", a.AsString("Name"));
-
-            // FieldFilter class tests
-            d.Next(ClassClassId);
-            Assert.IsFalse(d.Eol(ClassClassId));
-            a.GenObject = d.Context[ClassClassId].GenObject;
-            Assert.AreEqual("FieldFilter", a.AsString("Name"));
-            Assert.AreEqual(0, d.Context[SubClassClassId].Count);
-            Assert.AreEqual(2, d.Context[PropertyClassId].Count);
-            a.GenObject = d.Context[PropertyClassId].GenObject;
-            Assert.AreEqual("Name", a.AsString("Name"));
-            d.Next(PropertyClassId);
-            a.GenObject = d.Context[PropertyClassId].GenObject;
-            Assert.AreEqual("Operand", a.AsString("Name"));
         }
 
         protected static void CreateClass(GenData d, string name)
@@ -169,16 +140,13 @@ Property=Operand
             Assert.AreEqual(ClassClassId, f.Classes.IndexOf("Class"));
             Assert.AreEqual(SubClassClassId, f.Classes.IndexOf("SubClass"));
             Assert.AreEqual(PropertyClassId, f.Classes.IndexOf("Property"));
-            Assert.AreEqual(FieldFilterClassId, f.Classes.IndexOf("FieldFilter"));
             Assert.AreEqual(1, f.Classes[0].SubClasses.Count);
             Assert.AreEqual(2, f.Classes[ClassClassId].SubClasses.Count);
-            Assert.AreEqual(1, f.Classes[SubClassClassId].SubClasses.Count);
+            Assert.AreEqual(0, f.Classes[SubClassClassId].SubClasses.Count);
             Assert.AreEqual(0, f.Classes[PropertyClassId].SubClasses.Count);
-            Assert.AreEqual(0, f.Classes[FieldFilterClassId].SubClasses.Count);
             Assert.AreEqual(ClassClassId, f.Classes[0].SubClasses[0].SubClass.ClassId);
             Assert.AreEqual(SubClassClassId, f.Classes[ClassClassId].SubClasses[0].SubClass.ClassId);
             Assert.AreEqual(PropertyClassId, f.Classes[ClassClassId].SubClasses[1].SubClass.ClassId);
-            Assert.AreEqual(FieldFilterClassId, f.Classes[SubClassClassId].SubClasses[0].SubClass.ClassId);
         }
 
         protected static void VerifyDataCreation(GenData d)
@@ -209,13 +177,10 @@ Property=Operand
             CreateClass(genData, "SubClass");
             CreateProperty(genData, "Reference");
             CreateClass(genData, "Property");
-            CreateClass(genData, "FieldFilter");
-            CreateProperty(genData, "Operand");
             genData.Context[ClassClassId].First();
             CreateSubClass(genData, "SubClass");
             CreateSubClass(genData, "Property");
             genData.Context[ClassClassId].Next();
-            CreateSubClass(genData, "FieldFilter");
             genData.First(ClassClassId);
         }
 
@@ -317,43 +282,56 @@ Property=Operand
             return d;
         }
 
-        protected static GenData AddToCache(GenData d, string data)
+        protected static GenData SetUpParentChildReferenceData(string parentClassName, string childClassName, string childDefName, GenData dataChild)
         {
-            var cached = d.Cache["Data/Definition", "Data/" + data];
-            cached.First(1);
-            Assert.AreEqual("Class", cached.Context[1].GenObject.Attributes[0]);
-            return cached;
+            var def = SetUpParentChildReferenceDef(parentClassName, childClassName, childDefName, dataChild.GenDataDef);
+            var data = new GenData(def);
+            CreateGenObject(data, "", parentClassName, "First " + parentClassName.ToLowerInvariant());
+            SetUpParentReference(data, dataChild, childClassName + "Def", parentClassName, childClassName, childClassName);
+            return data;
         }
 
-        protected static GenData SetUpUnfilteredReferenceData()
+        protected static GenDataDef SetUpParentChildReferenceDef(string parentClassName, string childClassName,
+                                                               string childDefName, GenDataDef defChild)
         {
-            var defChild = new GenDataDef();
-            defChild.AddSubClass("", "Child");
-            defChild.Classes[1].Properties.Add("Name");
-            defChild.AddSubClass("Child", "Grandchild");
-            defChild.Classes[2].Properties.Add("Name");
-            var dataChild = new GenData(defChild);
-            CreateGenObject(dataChild, "", "Child", "First child");
-            CreateGenObject(dataChild, "Child", "Grandchild", "First child's first child");
-            CreateGenObject(dataChild, "Child", "Grandchild", "First child's second child");
-            CreateGenObject(dataChild, "", "Child", "Second child");
-            CreateGenObject(dataChild, "Child", "Grandchild", "Second child's first child");
-            CreateGenObject(dataChild, "Child", "Grandchild", "Second child's second child");
-            dataChild.First(1);
-            dataChild.First(2);
+            var def = new GenDataDef();
+            def.Definition = parentClassName;
+            def.Cache.Internal(childDefName, defChild);
+            def.AddSubClass("", parentClassName);
+            def.Classes[1].Properties.Add("Name");
+            def.AddSubClass(parentClassName, childClassName, childDefName);
+            return def;
+        }
 
-            var defParent = new GenDataDef();
-            defParent.AddSubClass("", "Parent");
-            defParent.Classes[1].Properties.Add("Name");
-            defParent.AddSubClass("Parent", "Child", "Child");
-            var dataParent = new GenData(defParent);
-            dataParent.Cache.Internal("Minimal", "ChildDef", dataChild.GenDataDef.AsGenData());
-            dataParent.Cache.Internal("ChildDef", "Child", dataChild);
-            CreateGenObject(dataParent, "", "Parent", "Parent");
-            dataParent.First(0);
-            SetSubClassReference(dataParent, "Parent", "Child", "Child");
-            dataParent.ExpandReferences();
-            return dataParent;
+        protected static GenData SetUpParentChildData(string parentClassName, string childClassName)
+        {
+            var def = SetUpParentChildDef(parentClassName, childClassName);
+            var data = new GenData(def);
+            CreateGenObject(data, "", parentClassName, parentClassName);
+            CreateGenObject(data, parentClassName, childClassName, parentClassName + "'s first " + childClassName.ToLowerInvariant());
+            //data.First(0);
+            return data;
+        }
+
+        protected static GenDataDef SetUpParentChildDef(string parentClassName, string childClassName)
+        {
+            var def = new GenDataDef();
+            def.Definition = parentClassName;
+            def.AddSubClass("", parentClassName);
+            def.Classes[1].Properties.Add("Name");
+            def.AddSubClass(parentClassName, childClassName);
+            def.Classes[2].Properties.Add("Name");
+            return def;
+        }
+
+        private static void SetUpParentReference(GenData dataParent, GenData dataChild, string childDefName,
+                                                 string parentClassName, string childClassName, string childName)
+        {
+            dataParent.Cache.Internal("Minimal", childDefName, dataChild.GenDataDef.AsGenData());
+            dataParent.Cache.Internal(childDefName, childName, dataChild);
+            dataParent.Cache.Merge();
+            SetSubClassReference(dataParent, parentClassName, childClassName, childName);
+            dataParent.First(1);
         }
 
         /// <summary>

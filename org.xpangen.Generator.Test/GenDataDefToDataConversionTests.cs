@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Test
             var f = new GenDataDef();
             var d = f.AsGenData(); // Creates from a minimal definition, i.e. Root class, Class class, SubClass class, Properties class and FieldFilter class
             var a = new GenAttributes(f);
-            Assert.AreEqual(5, d.Context.Count);
+            Assert.AreEqual(4, d.Context.Count);
             
             Assert.IsFalse(d.Eol(RootClassId));
             Assert.IsTrue(d.Eol(ClassClassId));
@@ -33,7 +33,6 @@ namespace org.xpangen.Generator.Test
             Assert.IsNull(d.Context[ClassClassId].GenObject);
             Assert.AreEqual(0, d.Context[SubClassClassId].Count);
             Assert.AreEqual(0, d.Context[PropertyClassId].Count);
-            Assert.AreEqual(0, d.Context[FieldFilterClassId].Count);
 
             Assert.IsTrue(d.Context[RootClassId].IsFirst());
             a.GenObject = d.Context[RootClassId].GenObject;
