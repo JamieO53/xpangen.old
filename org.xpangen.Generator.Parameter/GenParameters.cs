@@ -385,7 +385,7 @@ namespace org.xpangen.Generator.Parameter
                     parent.SubClass[subClassIdx].Reference = reference;
                     var referenceData = DataLoader.LoadData(reference);
                     var definition = referenceData.GenDataDef.Definition;
-                    GenDataDef.Cache.Internal(definition == "" ? reference + "Def" : definition, referenceData.GenDataDef);
+                    GenDataDef.Cache.Internal(string.IsNullOrEmpty(definition) ? reference + "Def" : definition, referenceData.GenDataDef);
                     Cache.Internal(reference, referenceData);
                     Scan.ScanObject();
                 }
@@ -395,6 +395,10 @@ namespace org.xpangen.Generator.Parameter
         public static FileStream CreateStream(string filePath)
         {
             var path = filePath + (Path.GetExtension(filePath) == "" ? ".dcb" : "");
+            if (!File.Exists(path) && Path.GetDirectoryName(path) == "" && Directory.Exists("data"))
+            {
+                path = "data\\" + Path.GetFileName(path);
+            }
             if (!File.Exists(path))
                 throw new ArgumentException("The generator data file does not exist: " + path, "filePath");
             return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
