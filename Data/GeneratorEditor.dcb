@@ -1,0 +1,32 @@
+Definition=Definition
+Class=Class
+Field=Name
+SubClass={SubClass,Property}
+Class=SubClass
+Field={Name,Reference}
+Class=Property
+Field={Name,Title,DataType,Default}
+.
+Class=GenSettings[Title='Container for generator settings']
+SubClass=FileGroup
+SubClass=BaseFile
+Property=HomeDir[Title='The default location of the base files',DataType=String]
+Class=FileGroup[Title='Related group of files for editing a file']
+Property=Name[Title='The file group name',DataType=String]
+Property=FileName[Title='The name of the file being edited',DataType=String]
+Property=FilePath[Title='The full path of the file being edited',DataType=String]
+Property=BaseFileName[Title='The name of the file''s definitions data file',DataType=String]
+Property=Generated[Title='The file path of the generated file',DataType=String]
+Property=Profile[Title='The file path of the profile used to generate the file''s output',DataType=String]
+Class=BaseFile[Title='The base files that can be used for editing generator data']
+SubClass=Profile
+Property=Name[Title='The file name of the base file',DataType=String]
+Property=FileName[Title='The base file name',DataType=String]
+Property=FilePath[Title='The full path of the base file',DataType=String]
+Property=Title[Title='Description of the files created using this base file',DataType=String]
+Property=FileExtension[Title='The default extension of files using this base file',DataType=String]
+Class=Profile[Title='Profile compatible with a Base File']
+Property=Name[Title='The profile name',DataType=String]
+Property=FileName[Title='Profile file name',DataType=String]
+Property=FilePath[Title='Full path of profile',DataType=String]
+Property=Title[Title='Description of profile',DataType=String]
