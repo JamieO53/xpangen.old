@@ -104,6 +104,10 @@ namespace gen
                 return -1;
             }
 
+#pragma warning disable 168
+            // Reference to initialize static data
+            var loader = new GenDataLoader();
+#pragma warning restore 168
             var dataStream = new FileStream(data, FileMode.Open);
             var d = new GenParameters(dataStream);
             var p = new GenCompactProfileParser(d, profile, "");
