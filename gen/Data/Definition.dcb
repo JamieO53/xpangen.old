@@ -1,13 +1,11 @@
+Definition=Definition
 Class=Class
 Field=Name
 SubClass={SubClass,Property}
 Class=SubClass
 Field={Name,Reference}
-SubClass=FieldFilter
 Class=Property
 Field={Name,Title,DataType,Default}
-Class=FieldFilter
-Field={Name,Operand}
 .
 Class=Class[Title='Class Definition']
 SubClass=SubClass
