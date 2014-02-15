@@ -1,0 +1,16 @@
+Definition=Definition
+Class=Class
+Field=Name
+SubClass={SubClass,Property}
+Class=SubClass
+Field={Name,Reference}
+Class=Property
+Field={Name,Title,DataType,Default}
+.
+Class=Solution[Title='The solution targeted by the generated code']
+SubClass=Assembly
+Property=Name[Title='The solution name',DataType=String]
+Property=Title[Title='Description of the assembly',DataType=String]
+Property=FilePath[Title='The full path of the solution',DataType=String]
+Class=Assembly[Title='The assembly targeted by the generator']
+SubClass=Class[Reference=Definition]
