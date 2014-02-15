@@ -4,6 +4,7 @@
 
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Parameter;
 
 namespace org.xpangen.Generator.Test
 {
@@ -64,5 +65,38 @@ namespace org.xpangen.Generator.Test
             VerifyAsDef(f0);
         }
         
+        /// <summary>
+        /// Tests the extraction of an minimal definition
+        /// </summary>
+        [TestCase(Description = "Generator definition with a reference to data extract test")]
+        public void ReferenceGenDataAsDefTest()
+        {
+            var fGrandchild = SetUpParentChildDef("Grandchild", "Greatgrandchild");
+            var fChild = SetUpParentChildReferenceDef("Child", "Grandchild", "GrandchildDef", fGrandchild);
+            var fParent = SetUpParentChildReferenceDef("Parent", "Child", "ChildDef", fChild);
+            var f = fParent.AsGenData().AsDef();
+            CompareGenDataDef(fParent, f, "Parent");
+        }
+
+        /// <summary>
+        /// Set up the Generator data definition tests
+        /// </summary>
+        [TestFixtureSetUp]
+        public void SetUp()
+        {
+#pragma warning disable 168
+            // Reference to initialize static data
+            var loader = new GenDataLoader();
+#pragma warning restore 168
+        }
+
+        /// <summary>
+        /// Tear down the Generator data definition tests
+        /// </summary>
+        [TestFixtureTearDown]
+        public void TearDown()
+        {
+
+        }
     }
 }

@@ -192,7 +192,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(2, f.Classes[1].SubClasses[0].SubClass.ClassId);
             Assert.AreEqual("", f.Classes[1].SubClasses[0].Reference);
             Assert.AreEqual("Parent", d.Context[1].GenObject.Attributes[0]);
-            Assert.AreEqual("Parent's first child", d.Context[2].GenObject.Attributes[0]);
+            Assert.AreEqual("Child", d.Context[2].GenObject.Attributes[0]);
         }
 
         [TestCase(Description = "Verify that the SetUpParentChildReferenceData method works as expected")]
@@ -202,15 +202,24 @@ namespace org.xpangen.Generator.Test
             var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", dataChild);
             Assert.AreEqual(1, dataParent.Root.SubClass.Count);
             Assert.AreEqual(4, dataParent.Context.Count);
-            Assert.AreEqual("First parent", dataParent.Context[1].GenObject.Attributes[0]);
+            Assert.AreEqual("Parent", dataParent.Context[1].GenObject.Attributes[0]);
             Assert.That(dataParent.Cache.Contains("Child"));
             Assert.AreEqual(1, dataParent.Context[1].GenObject.SubClass.Count);
             Assert.IsFalse(dataParent.Eol(2));
             Assert.AreEqual(2, dataParent.Context[2].ClassId);
             Assert.AreEqual("Child", dataParent.Context[2].GenObject.Attributes[0]);
             Assert.AreEqual(1, dataParent.Context[2].DefClass.RefClassId);
-            Assert.AreEqual("Child's first grandchild", dataChild.Context[2].GenObject.Attributes[0]);
-            Assert.AreEqual("Child's first grandchild", dataParent.Context[3].GenObject.Attributes[0]);
+            Assert.AreEqual("Grandchild", dataChild.Context[2].GenObject.Attributes[0]);
+            Assert.AreEqual("Grandchild", dataParent.Context[3].GenObject.Attributes[0]);
+        }
+
+        [TestCase(Description = "Verify that the SetUpParentChildReferenceData method sets up the data definitions as expected")]
+        public void VerifyParentChildReferenceDataDef()
+        {
+            var dataChild = SetUpParentChildData("Child", "Grandchild");
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", dataChild);
+            var p = dataParent.GenDataDef.CreateProfile();
+            Assert.AreEqual(ReferenceGenDataSaveProfile, p);
         }
 
         [TestCase(Description = "Verify that data context works as expected with reference data")]
@@ -221,7 +230,7 @@ namespace org.xpangen.Generator.Test
             dataParent.First(1);
             for (var i = 0; i < dataParent.GenDataDef.Classes.Count; i++ )
             {
-                Assert.IsNotNull(dataParent.Context[i].GenObject, i.ToString() + ": " + dataParent.Context[i].DefClass);
+                Assert.IsNotNull(dataParent.Context[i].GenObject, i + ": " + dataParent.Context[i].DefClass);
                 Assert.AreEqual(dataParent.Context[i].RefClassId, dataParent.Context[i].GenObject.ClassId);
             }
         }
@@ -234,12 +243,12 @@ namespace org.xpangen.Generator.Test
             var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", dataChild);
             Assert.AreEqual(1, dataParent.Root.SubClass.Count);
             Assert.AreEqual(5, dataParent.Context.Count);
-            Assert.AreEqual("First parent", dataParent.Context[1].GenObject.Attributes[0]);
+            Assert.AreEqual("Parent", dataParent.Context[1].GenObject.Attributes[0]);
             Assert.That(dataParent.Cache.Contains("Child"));
             Assert.AreEqual(1, dataParent.Context[1].GenObject.SubClass.Count);
             Assert.IsFalse(dataParent.Eol(2));
             Assert.AreEqual(2, dataParent.Context[2].ClassId);
-            Assert.AreEqual("First child", dataParent.Context[2].GenObject.Attributes[0]);
+            Assert.AreEqual("Child", dataParent.Context[2].GenObject.Attributes[0]);
             Assert.AreEqual(3, dataParent.Context[3].ClassId);
             Assert.AreEqual("Grandchild", dataParent.Context[3].GenObject.Attributes[0]);
             Assert.AreEqual(2, dataParent.Context[3].DefClass.RefClassId);
@@ -304,6 +313,117 @@ namespace org.xpangen.Generator.Test
             c.Context[SubClassClassId].First();
             Assert.AreEqual("SubClass", c.Context[SubClassClassId].GenObject.Attributes[0]);
             Assert.AreEqual("Property", d.Context[SubClassClassId].GenObject.Attributes[0]);
+        }
+
+        [TestCase(Description="Test First property - property does not exist; first record")]
+        public void ContextNoFirstPropertyExistsFirstTest()
+        {
+            var f = GenDataDef.CreateMinimal();
+            var d = new GenData(f);
+
+            SetUpData(d);
+            var id = f.GetId("Class.First");
+            Assert.AreEqual("True", d.GetValue(id));
+        }
+
+        [TestCase(Description = "Test First property - property does not exist; second record")]
+        public void ContextNoFirstPropertyExistsSecondTest()
+        {
+            var f = GenDataDef.CreateMinimal();
+            var d = new GenData(f);
+
+            SetUpData(d);
+            d.Root.SubClass[0].Add(new GenObject(d.Root, d.Root.SubClass[0], 1));
+            d.Context[1].Next();
+            var id = f.GetId("Class.First");
+            Assert.AreEqual("", d.GetValue(id));
+        }
+
+        [TestCase(Description = "Test First property - property exists and is empty")]
+        public void ContextEmptyFirstPropertyExistsTest()
+        {
+            var f = GenDataDef.CreateMinimal();
+            f.Classes[1].Properties.Add("First");
+            var d = new GenData(f);
+
+            SetUpData(d);
+            var id = f.GetId("Class.First");
+            Assert.AreEqual("", d.GetValue(id));
+        }
+
+        [TestCase(Description = "Test First property - property exists and is not empty")]
+        public void ContextFirstPropertyExistsWithValueTest()
+        {
+            var f = GenDataDef.CreateMinimal();
+            f.Classes[1].Properties.Add("First");
+            var d = new GenData(f);
+
+            SetUpData(d);
+            d.Context[1].GenObject.Attributes[1] = "First value";
+            var id = f.GetId("Class.First");
+            Assert.AreEqual("First value", d.GetValue(id));
+        }
+
+        [TestCase(Description = "Test Reference property - property does not exist and there is no reference")]
+        public void ContextNoReferencePropertyExistsNoReferenceTest()
+        {
+            var f = GenDataDef.CreateMinimal();
+            var d = new GenData(f);
+
+            SetUpData(d);
+            var id = f.GetId("Class.Reference");
+            Assert.AreEqual("", d.GetValue(id));
+        }
+
+        [TestCase(Description = "Test Reference property - property does not exist and there is a reference")]
+        public void ContextNoReferencePropertyExistsWithReferenceTest()
+        {
+            var f = GenDataDef.CreateMinimal();
+            var d = new GenData(f);
+
+            SetUpData(d);
+            d.Context[1].Reference = "Class reference";
+            var id = f.GetId("Class.Reference");
+            Assert.AreEqual("Class reference", d.GetValue(id));
+        }
+
+        [TestCase(Description = "Test First property - property exists and is empty")]
+        public void ContextEmptyReferencePropertyExistsTest()
+        {
+            var f = GenDataDef.CreateMinimal();
+            f.Classes[1].Properties.Add("Reference");
+            var d = new GenData(f);
+
+            SetUpData(d);
+            var id = f.GetId("Class.Reference");
+            Assert.AreEqual("", d.GetValue(id));
+        }
+
+        [TestCase(Description = "Test First property - property exists and is not empty")]
+        public void ContextReferencePropertyExistsWithValueTest()
+        {
+            var f = GenDataDef.CreateMinimal();
+            f.Classes[1].Properties.Add("Reference");
+            var d = new GenData(f);
+
+            SetUpData(d);
+            var id = f.GetId("Class.Reference");
+            d.Context[1].GenObject.Attributes[1] = "Reference value";
+            Assert.AreEqual("Reference value", d.GetValue(id));
+        }
+
+        [TestCase(Description = "Test First property - property exists and is not empty and a reference exists")]
+        public void ContextReferencePropertyExistsWithValueAndReferenceTest()
+        {
+            var f = GenDataDef.CreateMinimal();
+            f.Classes[1].Properties.Add("Reference");
+            var d = new GenData(f);
+
+            SetUpData(d);
+            var id = f.GetId("Class.Reference");
+            d.Context[1].Reference = "Class reference";
+            d.Context[1].GenObject.Attributes[1] = "Reference value";
+            Assert.AreEqual("Reference value", d.GetValue(id));
         }
 
         /// <summary>

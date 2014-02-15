@@ -118,6 +118,12 @@ namespace org.xpangen.Generator.Profile
                         genData.Prior(ClassId);
                     }
                     break;
+                case GenCardinality.Reference:
+                    s.Append(genData.GenDataDef.Classes[ClassId].Name);
+                    s.Append("[Reference='");
+                    s.Append(genData.Context[ClassId].Reference);
+                    s.AppendLine("']");
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -213,6 +219,12 @@ namespace org.xpangen.Generator.Profile
                         generated |= Body.Generate(prefix, genData, writer);
                         genData.Prior(ClassId);
                     }
+                    break;
+                case GenCardinality.Reference:
+                    writer.Write(genData.GenDataDef.Classes[ClassId].Name);
+                    writer.Write("[Reference='");
+                    writer.Write(genData.Context[ClassId].Reference);
+                    writer.Write("']\r\n");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

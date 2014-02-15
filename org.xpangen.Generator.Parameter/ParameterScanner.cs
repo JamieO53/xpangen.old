@@ -87,8 +87,12 @@ namespace org.xpangen.Generator.Parameter
                     _values.Add(name);
                     if (CheckChar('['))
                         ScanAttributes();
+                    if(Eof)
+                        Rescan(" "); // Force processing of current record
                 }
             }
+            else if (CheckChar('['))
+                ScanAttributes();
         }
 
         public string Attribute(string fieldName)

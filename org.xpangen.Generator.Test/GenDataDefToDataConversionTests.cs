@@ -97,5 +97,26 @@ namespace org.xpangen.Generator.Test
             var d = f.AsGenData();
             ValidateMinimalData(d);
         }
+
+        /// <summary>
+        /// Tests the extraction of a definition of a single class with properties
+        /// </summary>
+        [TestCase(Description = "Generator class with property definition extract test")]
+        public void ReferenceGenDefExtractTest()
+        {
+            var fChild = SetUpParentChildDef("Child", "Grandchild");
+            var fParent = SetUpParentChildReferenceDef("Parent", "Child", "ChildDef", fChild);
+            var d = fParent.AsGenData();
+            var a = new GenAttributes(fParent);
+
+            Assert.AreEqual(1, d.Context[ClassClassId].Count);
+            Assert.AreEqual(1, d.Context[RootClassId].GenObject.SubClass.Count);
+            d.First(ClassClassId);
+            a.GenObject = d.Context[ClassClassId].GenObject;
+            Assert.AreEqual("Parent", a.AsString("Name"));
+            a.GenObject = d.Context[SubClassClassId].GenObject;
+            Assert.AreEqual("Child", a.AsString("Name"));
+            Assert.AreEqual("ChildDef", a.AsString("Reference"));
+        }
     }
 }

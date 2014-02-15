@@ -19,7 +19,7 @@ namespace org.xpangen.Generator.Editor.Helper
                 DefGenData = null;
             else
             {
-                DefGenData = new GenParameters(CreateStream(filePath));
+                DefGenData = new GenParameters(GenParameters.CreateStream(filePath));
                 GenData = new GenData(DefGenData.AsDef());
             }
         }
@@ -31,14 +31,9 @@ namespace org.xpangen.Generator.Editor.Helper
             else
             {
                 GenData = DefGenData == null
-                              ? new GenParameters(CreateStream(filePath))
-                              : new GenParameters(DefGenData.AsDef(), CreateStream(filePath));
+                              ? new GenParameters(GenParameters.CreateStream(filePath))
+                              : new GenParameters(DefGenData.AsDef(), GenParameters.CreateStream(filePath));
             }
-        }
-
-        private static FileStream CreateStream(string filePath)
-        {
-            return new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
     }
 }

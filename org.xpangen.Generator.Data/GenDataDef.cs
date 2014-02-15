@@ -13,7 +13,7 @@ namespace org.xpangen.Generator.Data
         public int CurrentClassId { get; set; }
         public string Definition { get; set; }
 
-        public GenDataDefReferenceCache Cache { get; set; }
+        public GenDataDefReferenceCache Cache { get; private set; }
 
         public GenDataDef()
         {
@@ -62,7 +62,15 @@ namespace org.xpangen.Generator.Data
                     if (createIfMissing)
                         id.PropertyId = Classes[id.ClassId].Properties.Add(propertyName);
                     else if (propertyName.Equals("First", StringComparison.InvariantCultureIgnoreCase))
+                    {
                         id.PropertyId = c.Properties.Add("First");
+                        c.SetPseudo(id.PropertyId);
+                    }
+                    else if (propertyName.Equals("Reference", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        id.PropertyId = c.Properties.Add("Reference");
+                        c.SetPseudo(id.PropertyId);
+                    }
             }
 
             if (id.ClassId == -1 && id.PropertyId == -1)
@@ -156,11 +164,7 @@ namespace org.xpangen.Generator.Data
                 if (string.IsNullOrEmpty(Classes[classId].SubClasses[i].SubClass.Reference))
                     ClassProfile(Classes[classId].SubClasses[i].SubClass.ClassId, def, profile);
                 else
-                {
-                    profile.Append("`[" + Classes[classId].SubClasses[i].SubClass.Name + ":" +
-                                   Classes[classId].SubClasses[i].SubClass.Name + "[Reference='`" +
-                                   Classes[classId].SubClasses[i].SubClass.Name + ".Reference`']`]");
-                }
+                    profile.Append("`[" + Classes[classId].SubClasses[i].SubClass.Name + "@:`]");
 
             if (classId != 0)
                 profile.Append("`]");
@@ -187,6 +191,7 @@ namespace org.xpangen.Generator.Data
             var a = new GenAttributes(f);
             for (var i = 1; i < Classes.Count; i++)
             {
+                if (!string.IsNullOrEmpty(Classes[i].ReferenceDefinition)) continue;
                 a.GenObject = d.CreateObject("", "Class");
                 var c = Classes[i];
                 a.SetString("Name", c.Name);
@@ -224,6 +229,8 @@ namespace org.xpangen.Generator.Data
         public void AddSubClass(string className, string subClassName, string reference)
         {
             AddSubClass(className, subClassName);
+            if (string.IsNullOrEmpty(reference)) return;
+            
             var i = Classes.IndexOf(className);
             var j = Classes[i].SubClasses.IndexOf(subClassName);
             var sc = Classes[i].SubClasses[j];

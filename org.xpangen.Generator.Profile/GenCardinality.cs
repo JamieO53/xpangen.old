@@ -13,6 +13,7 @@ namespace org.xpangen.Generator.Profile
         First,
         Tail,
         Last,
-        Trunk
+        Trunk,
+        Reference
     }
 }

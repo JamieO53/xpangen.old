@@ -14,6 +14,7 @@ namespace org.xpangen.Generator.Data
         /// <param name="subClassDef">The definition of the subclass</param>
         public GenObjectListBase(GenDataBase data, GenObject parent, int classId, GenDataDefSubClass subClassDef)
         {
+            Reference = "";
             Definition = subClassDef;
             GenDataBase = data;
             Parent = parent;
@@ -35,6 +36,8 @@ namespace org.xpangen.Generator.Data
         /// The ID of objects in the list.
         /// </summary>
         public int ClassId { get; private set; }
+
+        public string Reference { get; set; }
 
         public GenDataDefSubClass Definition { get; private set; }
         public bool IsReset { get; set; }

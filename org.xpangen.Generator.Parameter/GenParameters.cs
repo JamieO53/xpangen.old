@@ -162,12 +162,25 @@ namespace org.xpangen.Generator.Parameter
                 }
 
                 if (genDataDef.Classes[classId].SubClasses.Count == 1)
-                    def.AppendLine("SubClass=" + genDataDef.Classes[classId].SubClasses[0].SubClass.Name);
+                {
+                    //def.AppendLine("SubClass=" + genDataDef.Classes[classId].SubClasses[0].SubClass.Name);
+                    def.Append("SubClass=" + genDataDef.Classes[classId].SubClasses[0].SubClass.Name);
+                    if (!String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[0].SubClass.Reference))
+                        def.AppendLine("[Reference='" + genDataDef.Classes[classId].SubClasses[0].SubClass.Reference + "']");
+                    else
+                        def.AppendLine();
+                }
                 else if (genDataDef.Classes[classId].SubClasses.Count > 1)
                 {
                     def.Append("SubClass={" + genDataDef.Classes[classId].SubClasses[0].SubClass.Name);
+                    if (!String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[0].SubClass.Reference))
+                        def.AppendLine("[Reference='" + genDataDef.Classes[classId].SubClasses[0].SubClass.Reference + "']");
                     for (var i = 1; i < genDataDef.Classes[classId].SubClasses.Count; i++)
+                    {
                         def.Append("," + genDataDef.Classes[classId].SubClasses[i].SubClass.Name);
+                        if (!String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[0].SubClass.Reference))
+                            def.AppendLine("[Reference='" + genDataDef.Classes[classId].SubClasses[0].SubClass.Reference + "']");
+                    }
                     def.AppendLine("}");
                 }
 
@@ -175,7 +188,13 @@ namespace org.xpangen.Generator.Parameter
             }
 
             for (var i = 0; i < genDataDef.Classes[classId].SubClasses.Count; i++)
-                ClassProfile(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.ClassId, def, classProfile ?? profile, parentSegment);
+                if (String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[i].SubClass.Reference))
+                    ClassProfile(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.ClassId, def, classProfile ?? profile, parentSegment);
+                else
+                {
+                    var refClass = new GenSegment(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.Name, GenCardinality.Reference, parentSegment);
+                    (classProfile ?? profile).Body.Add(refClass);
+                }
         }
 
         private ParameterScanner Scan { get; set; }
@@ -209,29 +228,35 @@ namespace org.xpangen.Generator.Parameter
             var f = new GenDataDef();
             var classId = -1;
             var className = "";
-            var token = reader.ScanWhile(ScanReader.AlphaNumeric);
+            var token = reader.ScanWhile(ScanReader.Identifier);
             while (token != "")
             {
                 switch (token)
                 {
                     case "Definition":
+                        reader.ScanWhile(ScanReader.WhiteSpace);
                         if (reader.CheckChar('=')) reader.SkipChar();
+                        reader.ScanWhile(ScanReader.WhiteSpace);
                         f.Definition = reader.ScanWhile(ScanReader.QualifiedIdentifier);
                         break;
                     case "Class":
+                        reader.ScanWhile(ScanReader.WhiteSpace);
                         if (reader.CheckChar('=')) reader.SkipChar();
+                        reader.ScanWhile(ScanReader.WhiteSpace);
                         className = reader.ScanWhile(ScanReader.AlphaNumeric);
                         classId = f.AddClass(className);
                         if (f.Classes.Count == 2)
                             f.AddSubClass("", className);
                         break;
                     case "Field":
+                        reader.ScanWhile(ScanReader.WhiteSpace);
                         if (reader.CheckChar('=')) reader.SkipChar();
                         if (reader.CheckChar('{'))
                         {
                             while (!reader.CheckChar('}'))
                             {
                                 reader.SkipChar();
+                                reader.ScanWhile(ScanReader.WhiteSpace);    
                                 var field = reader.ScanWhile(ScanReader.AlphaNumeric);
                                 f.Classes[classId].Properties.Add(field);
                             }
@@ -239,26 +264,28 @@ namespace org.xpangen.Generator.Parameter
                         }
                         else
                         {
+                            reader.ScanWhile(ScanReader.WhiteSpace);
                             var field = reader.ScanWhile(ScanReader.AlphaNumeric);
                             f.Classes[classId].Properties.Add(field);
+                            reader.ScanWhile(ScanReader.WhiteSpace);  
                         }
                         break;
                     case "SubClass":
+                        reader.ScanWhile(ScanReader.WhiteSpace);
                         if (reader.CheckChar('=')) reader.SkipChar();
                         if (reader.CheckChar('{'))
                         {
                             while (!reader.CheckChar('}'))
                             {
                                 reader.SkipChar();
-                                var sub = reader.ScanWhile(ScanReader.AlphaNumeric);
-                                f.AddSubClass(className, sub);
+                                ParseDefSubClass(reader, f, className);
                             }
                             reader.SkipChar();
                         }
                         else
                         {
-                            var sub = reader.ScanWhile(ScanReader.AlphaNumeric);
-                            f.AddSubClass(className, sub);
+                            ParseDefSubClass(reader, f, className);
+                            reader.ScanWhile(ScanReader.WhiteSpace);
                         }
                         break;
                 }
@@ -266,6 +293,36 @@ namespace org.xpangen.Generator.Parameter
                 token = reader.ScanWhile(ScanReader.AlphaNumeric);
             }
             return f;
+        }
+
+        private static void ParseDefSubClass(ScanReader reader, GenDataDef f, string className)
+        {
+            reader.ScanWhile(ScanReader.WhiteSpace);
+            var sub = reader.ScanWhile(ScanReader.AlphaNumeric);
+            if (reader.CheckChar('['))
+            {
+                reader.SkipChar();
+                reader.ScanWhile(ScanReader.WhiteSpace);
+                var field = reader.ScanWhile(ScanReader.Identifier);
+                if (!field.Equals("Reference", StringComparison.InvariantCultureIgnoreCase))
+                    throw new ApplicationException("Data definition reference expected: " + field);
+                reader.ScanWhile(ScanReader.WhiteSpace);
+                if (!reader.CheckChar('='))
+                    throw new ApplicationException("Data definition [Reference=definition] expected: " + field);
+                reader.SkipChar();
+                reader.ScanWhile(ScanReader.WhiteSpace);
+                var value = reader.CheckChar('\'')
+                                ? reader.ScanQuotedString()
+                                : reader.ScanWhile(ScanReader.Identifier);
+                f.AddSubClass(className, sub, value);
+                reader.ScanWhile(ScanReader.WhiteSpace);
+                if (!reader.CheckChar(']'))
+                    throw new ApplicationException("Data definition ] expected");
+                reader.SkipChar();
+            }
+            else
+                f.AddSubClass(className, sub);
+            reader.ScanWhile(ScanReader.WhiteSpace);
         }
 
         private void Parse()
@@ -290,33 +347,57 @@ namespace org.xpangen.Generator.Parameter
                     while (!Scan.Eof && className == Scan.RecordType)
                         Scan.ScanObject();
             }
+            Cache.Merge();
         }
 
         private void LoadSubClass(GenObject parent, string className, int subClassId, int subClassIdx)
         {
             while (!Scan.Eof && className == Scan.RecordType)
             {
-                var child = new GenObject(parent, parent.SubClass[subClassIdx] as GenObjectListBase, subClassId);
-                for (var i = 0; i < GenDataDef.Classes[subClassId].Properties.Count; i++)
+                if (Scan.Attribute("Name") != "" || Scan.Attribute("Reference") == "")
                 {
-                    var s = Scan.Attribute(GenDataDef.Classes[subClassId].Properties[i]);
-                    child.Attributes[i] = s;
-                }
-                parent.SubClass[subClassIdx].Add(child);
-                Scan.ScanObject();
-                if (!Scan.Eof && className != Scan.RecordType)
-                {
-                    int subSubClassIdx;
-                    do
+                    var child = new GenObject(parent, parent.SubClass[subClassIdx] as GenObjectListBase, subClassId);
+                    for (var i = 0; i < GenDataDef.Classes[subClassId].Properties.Count; i++)
                     {
-                        var subClassName = Scan.RecordType;
-                        var subSubClassId = GenDataDef.Classes.IndexOf(subClassName);
-                        subSubClassIdx = GenDataDef.IndexOfSubClass(subClassId, subSubClassId);
-                        if (subSubClassIdx != -1)
-                            LoadSubClass(child, subClassName, subSubClassId, subSubClassIdx);
-                    } while (!Scan.Eof && subSubClassIdx != -1);
+                        var s = Scan.Attribute(GenDataDef.Classes[subClassId].Properties[i]);
+                        child.Attributes[i] = s;
+                    }
+                    parent.SubClass[subClassIdx].Add(child);
+                    Scan.ScanObject();
+                    if (!Scan.Eof && !className.Equals(Scan.RecordType, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        int subSubClassIdx;
+                        do
+                        {
+                            var subClassName = Scan.RecordType;
+                            var subSubClassId = GenDataDef.Classes.IndexOf(subClassName);
+                            subSubClassIdx = GenDataDef.IndexOfSubClass(subClassId, subSubClassId);
+                            if (subSubClassIdx != -1)
+                            {
+                                LoadSubClass(child, subClassName, subSubClassId, subSubClassIdx);
+                            }
+                        } while (!Scan.Eof && subSubClassIdx != -1);
+                    }
+                }
+                else
+                {
+                    var reference = Scan.Attribute("Reference");
+                    parent.SubClass[subClassIdx].Reference = reference;
+                    var referenceData = DataLoader.LoadData(reference);
+                    var definition = referenceData.GenDataDef.Definition;
+                    GenDataDef.Cache.Internal(definition == "" ? reference + "Def" : definition, referenceData.GenDataDef);
+                    Cache.Internal(reference, referenceData);
+                    Scan.ScanObject();
                 }
             }
+        }
+
+        public static FileStream CreateStream(string filePath)
+        {
+            var path = filePath + (Path.GetExtension(filePath) == "" ? ".dcb" : "");
+            if (!File.Exists(path))
+                throw new ArgumentException("The generator data file does not exist: " + path, "filePath");
+            return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
     }
 }

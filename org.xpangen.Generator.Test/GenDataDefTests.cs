@@ -4,6 +4,7 @@
 
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile;
 
 namespace org.xpangen.Generator.Test
 {
@@ -154,21 +155,21 @@ namespace org.xpangen.Generator.Test
             Assert.AreSame(fParent.Classes[2], fParent.Classes[3].Parent);
         }
 
-        [TestCase(Description = "Verify that the SetUpParentChildReferenceDef method generates a profile as expected")]
-        public void VerifySetUpParentChildReferenceDefProfile()
-        {
-            const string profile = @"Definition=Parent
+private const string Profile = @"Definition=Parent
 Class=Parent
 Field=Name
 SubClass=Child[Reference='ChildDef']
 .
 `[Parent:Parent=`Parent.Name`
-`[Child:Child[Reference='`Child.Reference`']`]`]";
+`[Child@:`]`]";
 
+        [TestCase(Description = "Verify that the SetUpParentChildReferenceDef method generates a profile as expected")]
+        public void VerifySetUpParentChildReferenceDefProfile()
+        {
             var fChild = SetUpParentChildDef("Child", "Grandchild");
             var fParent = SetUpParentChildReferenceDef("Parent", "Child", "ChildDef", fChild);
             var p = fParent.CreateProfile();
-            Assert.AreEqual(profile, p);
+            Assert.AreEqual(Profile, p);
         }
 
         [TestCase(Description = "Verify that the SetUpParentChildReferenceDef method works as expected when nested")]

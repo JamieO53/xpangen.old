@@ -8,7 +8,7 @@ namespace org.xpangen.Generator.Data
     {
         private GenDataBase _genData;
 
-        public GenObject(GenObject parent, GenObjectListBase parentSubClass, int classId)
+        public GenObject(GenObject parent, IGenObjectListBase parentSubClass, int classId)
         {
             Parent = parent;
             ParentSubClass = parentSubClass;
@@ -32,7 +32,7 @@ namespace org.xpangen.Generator.Data
 
         public TextList Attributes { get; private set; }
 
-        public GenObjectListBase ParentSubClass { get; private set; }
+        public IGenObjectListBase ParentSubClass { get; private set; }
         public int ClassId { get; private set; }
 
         public GenObject Parent { get; private set; }

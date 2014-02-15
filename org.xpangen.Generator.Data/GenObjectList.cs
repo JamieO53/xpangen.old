@@ -8,6 +8,8 @@ namespace org.xpangen.Generator.Data
 {
     public class GenObjectList
     {
+        private string _reference;
+
         /// <summary>
         /// Create a new <see cref="GenObjectList"/> list.
         /// </summary>
@@ -53,10 +55,18 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         public int Index { get; set; }
 
+        /// <summary>
+        /// The number of items in the list.
+        /// </summary>
         public int Count
         {
             get { return GenObjectListBase.Count; }
         }
+
+        /// <summary>
+        /// The data reference of the list.
+        /// </summary>
+        public string Reference { get; set; }
 
         /// <summary>
         /// Is the selected item in the first place?

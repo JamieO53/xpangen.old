@@ -19,6 +19,11 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         int ClassId { get; }
 
+        /// <summary>
+        /// The data reference of the list
+        /// </summary>
+        string Reference { get; set; }
+        
         GenDataDefSubClass Definition { get; }
         bool IsReset { get; set; }
 

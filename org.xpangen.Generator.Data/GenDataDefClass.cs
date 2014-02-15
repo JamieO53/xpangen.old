@@ -47,6 +47,8 @@ namespace org.xpangen.Generator.Data
 
         public GenDataDefSubClassList SubClasses;
 
+        private IndexList Pseudos { get; set; }
+
         public GenDataDefClass()
         {
             Properties = new NameList();
@@ -55,7 +57,17 @@ namespace org.xpangen.Generator.Data
             RefClassId = 0;
             Reference = "";
             ReferenceDefinition = "";
+        }
 
+        public bool IsPseudo(int propertyId)
+        {
+            return Pseudos != null && Pseudos.Contains(propertyId);
+        }
+
+        public void SetPseudo(int propertyId)
+        {
+            if (Pseudos == null) Pseudos = new IndexList();
+            if (!Pseudos.Contains(propertyId)) Pseudos.Add(propertyId);
         }
     }
 }
