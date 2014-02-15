@@ -476,16 +476,33 @@ Child[Reference='child']
 
         protected static void CompareGenDataDef(GenDataDef expected, GenDataDef actual, string path)
         {
+            Assert.AreEqual(expected.Definition, actual.Definition);
             Assert.AreEqual(expected.Classes.Count, actual.Classes.Count, path);
             for (var i = 0; i < expected.Classes.Count; i++)
             {
-                Assert.AreEqual(expected.Classes[i].ToString(), actual.Classes[i].ToString(), path);
+                var expClass = expected.Classes[i];
+                var actClass = actual.Classes[i];
+                Assert.AreEqual(expClass.ToString(), actClass.ToString(), path);
+                Assert.AreEqual(expClass.Properties.Count, actClass.Properties.Count, path + '.' + expClass);
+                for (var j = 0; j < expClass.Properties.Count; j++)
+                {
+                    Assert.AreEqual(expClass.Properties[j], actClass.Properties[j], path + '.' + expClass);
+                }
+                if (expClass.RefDef != null)
+                {
+                    Assert.IsNotNull(actClass.RefDef, path + '.' + expClass + " RefDef");
+                    Assert.AreEqual(expClass.RefDef.ToString(), actClass.RefDef.ToString(),
+                                path + '.' + expClass + " RefDef");
+                }
+                Assert.AreEqual(expClass.RefClassId, actClass.RefClassId, path + '.' + expClass + " RefClassId");
+                Assert.AreEqual(expClass.IsReference, actClass.IsReference, path + '.' + expClass + " RefClassId");
             }
             Assert.AreEqual(expected.Cache.Count, actual.Cache.Count, path);
             var expectedReferences = expected.Cache.References;
             for (var i = 0; i < expectedReferences.Count; i++)
             {
-                CompareGenDataDef(expectedReferences[i].GenDataDef, actual.Cache[expectedReferences[i].Path], expectedReferences[i].Path);
+                CompareGenDataDef(expectedReferences[i].GenDataDef, actual.Cache[expectedReferences[i].Path],
+                                  expectedReferences[i].Path);
             }
         }
     }
