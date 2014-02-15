@@ -3,7 +3,6 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.IO;
-using System.Threading;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 
@@ -35,6 +34,104 @@ Property=Name
 Property=Reference
 Class=Property[]
 Property=Name
+";
+
+        protected const string ReferenceGenDataSaveText =
+            @"Definition=Parent
+Class=Parent
+Field=Name
+SubClass=Child[Reference='ChildDef']
+.
+Parent=First parent
+Child[Reference='ChildDef']
+";
+
+        protected const string ReferenceGenDataSaveProfile =
+            @"Definition=Parent
+Class=Parent
+Field=Name
+SubClass=Child[Reference='Child']
+.
+`[Parent:Parent=`Parent.Name`
+`[Child@:`]`]";
+
+        protected const string ReferenceGrandchildDefText =
+            @"Definition=Minimal
+Class=Class
+Field=Name
+SubClass={SubClass,Property}
+Class=SubClass
+Field={Name,Reference}
+Class=Property
+Field=Name
+.
+Class=Grandchild
+SubClass=Greatgrandchild[]
+Property=Name
+Class=Greatgrandchild
+Property=Name
+";
+
+        protected const string ReferenceGrandchildText =
+            @"Definition=Grandchild
+Class=Grandchild
+Field=Name
+SubClass=Greatgrandchild
+Class=Greatgrandchild
+Field=Name
+.
+Grandchild=Grandchild
+Greatgrandchild=Greatgrandchild
+";
+
+        protected const string ReferenceChildDefText =
+            @"Definition=Minimal
+Class=Class
+Field=Name
+SubClass={SubClass,Property}
+Class=SubClass
+Field={Name,Reference}
+Class=Property
+Field=Name
+.
+Class=Child
+SubClass=Grandchild[Reference=GrandchildDef]
+Property=Name
+";
+
+        protected const string ReferenceChildText =
+            @"Definition=Child
+Class=Child
+Field=Name
+SubClass=Grandchild[Reference='GrandchildDef']
+.
+Child=Child
+Grandchild[Reference='grandchild']
+";
+
+        protected const string ReferenceParentDefText =
+            @"Definition=Minimal
+Class=Class
+Field=Name
+SubClass={SubClass,Property}
+Class=SubClass
+Field={Name,Reference}
+Class=Property
+Field=Name
+.
+Class=Parent
+SubClass=Child[Reference=ChildDef]
+Property=Name
+";
+
+        protected const string ReferenceParentText =
+            @"Definition=Parent
+Class=Parent
+Field=Name
+SubClass=Child[Reference='ChildDef']
+.
+Parent=Parent
+Child[Reference='child']
 ";
 
         protected static void ValidateMinimalData(GenData d)
@@ -192,9 +289,15 @@ Property=Name
 
         protected static void CreateGenDataSaveText(string fileName)
         {
+            var text = GenDataSaveText;
+            CreateGenDataSaveText(fileName, text);
+        }
+
+        public static void CreateGenDataSaveText(string fileName, string text)
+        {
             if (File.Exists(fileName))
                 File.Delete(fileName);
-            File.WriteAllText(fileName, GenDataSaveText);
+            File.WriteAllText(fileName, text);
         }
 
         protected static GenData SetUpLookupContextData()
@@ -286,7 +389,7 @@ Property=Name
         {
             var def = SetUpParentChildReferenceDef(parentClassName, childClassName, childDefName, dataChild.GenDataDef);
             var data = new GenData(def);
-            CreateGenObject(data, "", parentClassName, "First " + parentClassName.ToLowerInvariant());
+            CreateGenObject(data, "", parentClassName, parentClassName);
             SetUpParentReference(data, dataChild, childClassName + "Def", parentClassName, childClassName, childClassName);
             return data;
         }
@@ -308,7 +411,7 @@ Property=Name
             var def = SetUpParentChildDef(parentClassName, childClassName);
             var data = new GenData(def);
             CreateGenObject(data, "", parentClassName, parentClassName);
-            CreateGenObject(data, parentClassName, childClassName, parentClassName + "'s first " + childClassName.ToLowerInvariant());
+            CreateGenObject(data, parentClassName, childClassName, childClassName);
             //data.First(0);
             return data;
         }
@@ -369,6 +472,21 @@ Property=Name
             Assert.AreEqual("SubClass" + order[1], d.GetValue(id), action + " second item");
             d.Next(SubClassClassId);
             Assert.AreEqual("SubClass" + order[2], d.GetValue(id), action + " third item");
+        }
+
+        protected static void CompareGenDataDef(GenDataDef expected, GenDataDef actual, string path)
+        {
+            Assert.AreEqual(expected.Classes.Count, actual.Classes.Count, path);
+            for (var i = 0; i < expected.Classes.Count; i++)
+            {
+                Assert.AreEqual(expected.Classes[i].ToString(), actual.Classes[i].ToString(), path);
+            }
+            Assert.AreEqual(expected.Cache.Count, actual.Cache.Count, path);
+            var expectedReferences = expected.Cache.References;
+            for (var i = 0; i < expectedReferences.Count; i++)
+            {
+                CompareGenDataDef(expectedReferences[i].GenDataDef, actual.Cache[expectedReferences[i].Path], expectedReferences[i].Path);
+            }
         }
     }
 }

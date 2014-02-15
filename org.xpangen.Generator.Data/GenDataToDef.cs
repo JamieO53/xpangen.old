@@ -70,7 +70,7 @@ namespace org.xpangen.Generator.Data
             for (var i = 0; i < classObject.SubClass[_xSubClass].Count; i++)
             {
                 attributes.GenObject = classObject.SubClass[_xSubClass][i];
-                data.AddSubClass(sName, attributes.AsString("Name"));
+                data.AddSubClass(sName, attributes.AsString("Name"), attributes.AsString("Reference"));
             }
         }
     }

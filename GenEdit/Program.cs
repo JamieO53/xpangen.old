@@ -4,6 +4,7 @@
 
 using System;
 using System.Windows.Forms;
+using org.xpangen.Generator.Parameter;
 
 namespace GenEdit
 {
@@ -17,6 +18,10 @@ namespace GenEdit
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+#pragma warning disable 168
+            // Reference to initialize static data
+            var loader = new GenDataLoader();
+#pragma warning restore 168
             Application.Run(new GenEditMainForm());
         }
     }

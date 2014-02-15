@@ -59,6 +59,7 @@ namespace org.xpangen.Generator.Test
             ProcessSegment(GenData, "<", GenCardinality.Back, "Property2,Property,");
             ProcessSegment(GenData, "/", GenCardinality.AllDlm, "Property,Property2");
             ProcessSegment(GenData, "\\", GenCardinality.BackDlm, "Property2,Property");
+            ProcessSegment(GenData, "@", GenCardinality.Reference, "Property[Reference='']\r\n");
         }
 
         /// <summary>

@@ -37,7 +37,8 @@ namespace org.xpangen.Generator.Data
                                                                              {
                                                                                  SubClass = defClass,
                                                                                  Reference = reference,
-                                                                                 ReferenceDefinition = referenceDefinition
+                                                                                 ReferenceDefinition =
+                                                                                     referenceDefinition
                                                                              }))
                                      {
                                          RefClassId = defClass.RefClassId,
@@ -56,10 +57,13 @@ namespace org.xpangen.Generator.Data
         {
             try
             {
-                if (
-                    String.Compare(Classes[id.ClassId].Properties[id.PropertyId], "First",
-                                   StringComparison.OrdinalIgnoreCase) == 0)
-                    return this[id.ClassId].IsFirst() ? "True" : "";
+                if (Classes[id.ClassId].IsPseudo(id.PropertyId))
+                {
+                    if (String.Compare(Classes[id.ClassId].Properties[id.PropertyId], "First", StringComparison.OrdinalIgnoreCase) == 0)
+                        return this[id.ClassId].IsFirst() ? "True" : "";
+                    if (String.Compare(Classes[id.ClassId].Properties[id.PropertyId], "Reference", StringComparison.OrdinalIgnoreCase) == 0)
+                        return this[id.ClassId].Reference ?? "";
+                }
                 var o = this[id.ClassId].GenObject;
                 return id.PropertyId >= o.Attributes.Count ? "" : o.Attributes[id.PropertyId];
             }

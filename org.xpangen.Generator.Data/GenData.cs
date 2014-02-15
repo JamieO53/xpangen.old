@@ -160,7 +160,8 @@ namespace org.xpangen.Generator.Data
                             SetReferenceSubClasses(classId, i,
                                                    Cache[
                                                        referenceData.Definition.ReferenceDefinition, //GenDataDef.Classes[classId].SubClasses[i].Reference,
-                                                       referenceData.Reference]);
+                                                       referenceData.Reference],
+                                                   referenceData.Reference);
                     }
                     else
                     {
@@ -170,7 +171,7 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        private void SetReferenceSubClasses(int classId, int subClassIndex, GenData data)
+        private void SetReferenceSubClasses(int classId, int subClassIndex, GenData data, string reference)
         {
             {
                 var subClass = Context[classId].DefClass.SubClasses[subClassIndex].SubClass;
@@ -179,11 +180,12 @@ namespace org.xpangen.Generator.Data
                 Context[subClassId].GenObjectListBase = data.Context[subRefClassId].GenObjectListBase;
                 Context[subClassId].ClassId = subClass.ClassId;
                 Context[subClassId].RefClassId = subRefClassId;
+                Context[subClassId].Reference = reference;
                 data.First(subRefClassId);
                 Context[subClassId].First();
                 if (!data.Eol(subRefClassId))
                     for (var i = 0; i < data.Context[subRefClassId].DefClass.SubClasses.Count; i++)
-                        SetReferenceSubClasses(subClassId, i, data);
+                        SetReferenceSubClasses(subClassId, i, data, reference);
             }
         }
 

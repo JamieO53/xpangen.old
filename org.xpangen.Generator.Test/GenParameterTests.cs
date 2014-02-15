@@ -167,7 +167,77 @@ namespace org.xpangen.Generator.Test
         {
             var f0 = GenDataDef.CreateMinimal();
             var p = GenParameters.CreateProfile(f0);
-            Assert.AreEqual("`[:" + f0.CreateProfile() + "`]", p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary).Replace(">:", ":"));
+            Assert.AreEqual("`[:" + f0.CreateProfile() + "`]",
+                            p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary)
+                             .Replace(">:", ":"));
+        }
+
+        /// <summary>
+        /// Tests that the output profile is created correctly for data with a reference
+        /// </summary>
+        [TestCase(Description = "Generator Output Profile for data with a nested reference test")]
+        public void ReferenceOutputProfileTest()
+        {
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild");
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", dataGrandchildhild);
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", dataChild);
+            var p = GenParameters.CreateProfile(dataParent.GenDataDef);
+            Assert.AreEqual("`[:" + dataParent.GenDataDef.CreateProfile() + "`]",
+                            p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary)
+                             .Replace(">:", ":"));
+        }
+
+        [TestCase(Description = "Verify that the data expansion profile works correctly for references")]
+        [Ignore("Incomplete test")]
+        public void VerifyParentChildReferenceDefProfileExpansion()
+        {
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild");
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", dataGrandchildhild);
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", dataChild);
+            var seg = new GenSegment(dataParent.GenDataDef, "Parent", GenCardinality.All, null);
+            var text = seg.Expand(dataParent);
+        }
+
+        /// <summary>
+        /// Tests the scanning of a parameter file using a file stream with that is referenced
+        /// </summary>
+        [TestCase(Description = "Generator Parameter Scanner Reference Referred Test")]
+        public void GenParameterReferenceReferredTest()
+        {
+            CreateGenDataSaveText("Grandchild.dcb", ReferenceGrandchildDefText);
+            CreateGenDataSaveText("Grandchild.txt", ReferenceGrandchildText);
+            GenParameters f;
+            using (var s = new FileStream("Grandchild.dcb", FileMode.Open, FileAccess.ReadWrite))
+                f = new GenParameters(s);
+            GenParameters d;
+            using (var s = new FileStream("Grandchild.txt", FileMode.Open, FileAccess.ReadWrite))
+                d = new GenParameters(f.AsDef(), s);
+            Assert.AreEqual(3, d.Context.Count);
+            d.First(1);
+            Assert.AreEqual("Grandchild", d.Context[1].GenObject.Attributes[0]);
+            Assert.That(!d.Eol(2));
+        }
+
+        /// <summary>
+        /// Tests the scanning of a parameter file using a file stream with no definition
+        /// </summary>
+        [TestCase(Description = "Generator Parameter Scanner Test")]
+        public void GenParameterNestedReferenceTest()
+        {
+            CreateGenDataSaveText("Child.dcb", ReferenceChildDefText);
+            CreateGenDataSaveText("Child.txt", ReferenceChildText);
+            GenParameters f;
+            using (var s = new FileStream("Child.dcb", FileMode.Open, FileAccess.ReadWrite))
+                f = new GenParameters(s);
+            GenParameters d;
+            using (var s = new FileStream("Child.txt", FileMode.Open, FileAccess.ReadWrite))
+                d = new GenParameters(f.AsDef(), s);
+            Assert.AreEqual(4, d.GenDataDef.Classes.Count);
+            Assert.AreEqual(4, d.Context.Count);
+            d.First(1);
+            Assert.AreEqual("Child", d.Context[1].GenObject.Attributes[0]);
+            Assert.That(!d.Eol(2));
+            Assert.That(d.Cache.Contains("grandchild"));
         }
 
         /// <summary>
@@ -196,12 +266,93 @@ namespace org.xpangen.Generator.Test
         }
 
         /// <summary>
+        /// Tests the generator data save functionality
+        /// </summary>
+        [TestCase(Description = "Generator data with reference save tests")]
+        public void ParentReferenceGenDataSaveTests()
+        {
+            const string fileNameDef = "ParentDef.dcb";
+            const string expectedDef = ReferenceParentDefText;
+            const string fileName = "Parent.dcb";
+            const string expected = ReferenceParentText;
+
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild");
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", dataGrandchildhild);
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", dataChild);
+
+            var genData = dataParent;
+
+            GenParameters.SaveToFile(genData.GenDataDef.AsGenData(), fileNameDef);
+            var file = File.ReadAllText(fileNameDef);
+            Assert.AreEqual(expectedDef, file);
+            
+            GenParameters.SaveToFile(genData, fileName);
+            file = File.ReadAllText(fileName);
+            Assert.AreEqual(expected, file);
+        }
+
+        /// <summary>
+        /// Tests the generator data save functionality
+        /// </summary>
+        [TestCase(Description = "Generator data with reference save tests")]
+        public void ChildReferenceGenDataSaveTests()
+        {
+            const string fileNameDef = "ChildDef.dcb";
+            const string expectedDef = ReferenceChildDefText;
+            const string fileName = "Child.dcb";
+            const string expected = ReferenceChildText;
+
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild");
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", dataGrandchildhild);
+
+            var genData = dataChild;
+            Assert.AreEqual("GrandchildDef", genData.GenDataDef.Classes[1].SubClasses[0].Reference);
+
+            var genDataDef = genData.GenDataDef.AsGenData();
+            Assert.AreEqual("GrandchildDef", genDataDef.Context[2].GenObject.Attributes[1]);
+            GenParameters.SaveToFile(genDataDef, fileNameDef);
+            var file = File.ReadAllText(fileNameDef);
+            Assert.AreEqual(expectedDef, file);
+
+            GenParameters.SaveToFile(genData, fileName);
+            file = File.ReadAllText(fileName);
+            Assert.AreEqual(expected, file);
+        }
+
+        /// <summary>
+        /// Tests the generator data save functionality
+        /// </summary>
+        [TestCase(Description = "Generator data with reference save tests - referenced data")]
+        public void GrandchildReferenceGenDataSaveTests()
+        {
+            const string fileNameDef = "GrandchildDef.dcb";
+            const string expectedDef = ReferenceGrandchildDefText;
+            const string fileName = "Grandchild.dcb";
+            const string expected = ReferenceGrandchildText;
+
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild");
+
+            var genData = dataGrandchildhild;
+
+            GenParameters.SaveToFile(genData.GenDataDef.AsGenData(), fileNameDef);
+            var file = File.ReadAllText(fileNameDef);
+            Assert.AreEqual(expectedDef, file);
+
+            GenParameters.SaveToFile(genData, fileName);
+            file = File.ReadAllText(fileName);
+            Assert.AreEqual(expected, file);
+        }
+
+        /// <summary>
         /// Set up the Generator data definition tests
         /// </summary>
         [TestFixtureSetUp]
         public void SetUp()
         {
-            
+#pragma warning disable 168
+            // Reference to initialize static data
+            var loader = new GenDataLoader();
+#pragma warning restore 168
         }
 
         /// <summary>

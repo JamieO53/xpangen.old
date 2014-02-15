@@ -47,8 +47,6 @@ namespace org.xpangen.Generator.Data
                 if (!LocalCache.ContainsKey(p))
                 {
                     var fullPath = Path.GetExtension(path) == "" ? p + ".dcb" : path;
-                    if (!File.Exists(fullPath))
-                        throw new ArgumentException("The lookup path is undefined: " + path, "path");
                     var d = GenData.DataLoader.LoadData(f.AsDef(), fullPath);
                     LocalCache.Add(p, d);
                     foreach (var reference in d.Cache.References)
@@ -121,7 +119,7 @@ namespace org.xpangen.Generator.Data
             }
             else if (!LocalCache.ContainsKey(f))
             {
-                d = GenData.DataLoader.LoadData(Path.GetExtension(f) == "" ? f + ".dcb" : f);
+                d = GenData.DataLoader.LoadData(f);
                 LocalCache.Add(f, d);
             }
             else

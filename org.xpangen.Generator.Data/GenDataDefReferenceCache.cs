@@ -32,11 +32,11 @@ namespace org.xpangen.Generator.Data
             set 
             {
                 if (!defPath.Equals("self", StringComparison.InvariantCultureIgnoreCase))
-                    LocalCache.Add(defPath, value);
+                    LocalCache.Add(defPath.ToLowerInvariant(), value);
             }
         }
 
-        protected internal List<GenDataDefReferenceCacheItem> References
+        public List<GenDataDefReferenceCacheItem> References
         {
             get
             {
@@ -51,6 +51,11 @@ namespace org.xpangen.Generator.Data
         private Dictionary<string, GenDataDef> LocalCache
         {
             get { return _localCache ?? (_localCache = new Dictionary<string, GenDataDef>()); }
+        }
+
+        public int Count
+        {
+            get { return _localCache == null ? 0 : LocalCache.Count; }
         }
 
         /// <summary>
@@ -86,7 +91,7 @@ namespace org.xpangen.Generator.Data
             }
             else if (!LocalCache.ContainsKey(f))
             {
-                d = GenData.DataLoader.LoadData(Path.GetExtension(f) == "" ? f + ".dcb" : f).AsDef();
+                d = GenData.DataLoader.LoadData(f).AsDef();
                 LocalCache.Add(f, d);
             }
             else
