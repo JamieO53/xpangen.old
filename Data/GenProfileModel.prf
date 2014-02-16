@@ -2,8 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using Generator.Application;
-using Generator.Data;
+using org.xpangen.Generator.Application;
 
 namespace `Assembly.Namespace`
 {
@@ -32,15 +31,20 @@ namespace `Assembly.Namespace`
 
 `]`[SubClass:        public GenApplicationList<`SubClass.Name`> `SubClass.Name`List { get; private set; }
 `]`[SubClass':
-        protected override void GenObjectSetNotification(GenObject oldGenObject)
+        protected override void GenObjectSetNotification()
         {
 `]`@MapSet:'var' 'var '`]`[SubClass:            `SubClass.Name`List = new GenApplicationList<`SubClass.Name`>();
-            `@MapGet:'var'`]`@MapSet:'var' ''`]list = GenObject.SubClass[0];
-            list.First();
-            while (!list.Eol)
+            `@MapGet:'var'`]classId = GenDataDef.Classes.IndexOf("`SubClass.Name`");
+            `@MapGet:'var'`]`@MapSet:'var' ''`]classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
+            if (classIdx != -1)
             {
-                `SubClass.Name`List.Add(new `SubClass.Name`(GenDataDef) {GenObject = list.Context});
-                list.Next();
+                var list = new GenObjectList(GenObject.SubClass[classIdx]);
+                list.First();
+                while (!list.Eol)
+                {
+                    `SubClass.Name`List.Add(new `SubClass.Name`(GenDataDef) {GenObject = list.GenObject});
+                    list.Next();
+                }
             }
 
 `]`[SubClass':        }
