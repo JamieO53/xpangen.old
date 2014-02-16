@@ -185,8 +185,7 @@ namespace org.xpangen.Generator.Data
                 data.First(subRefClassId);
                 Context[subClassId].First();
                 if (!data.Eol(subRefClassId))
-                    //data.SetSubClasses(subRefClassId);
-                    for (var i = 0; i < data.Context[subRefClassId].DefClass.SubClasses.Count; i++)
+                    for (var i = 0; i < Context[subClassId].DefClass.SubClasses.Count; i++)
                         SetReferenceSubClasses(subClassId, i, data, reference);
             }
         }
