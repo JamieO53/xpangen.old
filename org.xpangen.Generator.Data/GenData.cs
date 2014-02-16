@@ -145,21 +145,22 @@ namespace org.xpangen.Generator.Data
 
         private void SetSubClasses(int classId)
         {
-            for (var i = 0; i < GenDataDef.Classes[classId].SubClasses.Count; i++)
+            var classDef = Context[classId].DefClass;
+            for (var i = 0; i < classDef.SubClasses.Count; i++)
             {
-                var subClass = GenDataDef.Classes[classId].SubClasses[i].SubClass;
+                var subClass = classDef.SubClasses[i].SubClass;
                 var subClassId = subClass.ClassId;
                 if (Context[classId].GenObject == null)
                     First(classId);
                 var genObject = Context[classId].GenObject;
                 if (genObject != null)
-                    if (!string.IsNullOrEmpty(GenDataDef.Classes[classId].SubClasses[i].Reference))
+                    if (!string.IsNullOrEmpty(classDef.SubClasses[i].Reference))
                     {
                         var referenceData = genObject.SubClass[i] as GenObjectListReference;
                         if (referenceData != null)
                             SetReferenceSubClasses(classId, i,
                                                    Cache[
-                                                       referenceData.Definition.ReferenceDefinition, //GenDataDef.Classes[classId].SubClasses[i].Reference,
+                                                       referenceData.Definition.ReferenceDefinition,
                                                        referenceData.Reference],
                                                    referenceData.Reference);
                     }
@@ -184,6 +185,7 @@ namespace org.xpangen.Generator.Data
                 data.First(subRefClassId);
                 Context[subClassId].First();
                 if (!data.Eol(subRefClassId))
+                    //data.SetSubClasses(subRefClassId);
                     for (var i = 0; i < data.Context[subRefClassId].DefClass.SubClasses.Count; i++)
                         SetReferenceSubClasses(subClassId, i, data, reference);
             }

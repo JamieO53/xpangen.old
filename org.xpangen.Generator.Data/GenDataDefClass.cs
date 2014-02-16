@@ -31,7 +31,16 @@ namespace org.xpangen.Generator.Data
         /// <summary>
         /// The class' properties
         /// </summary>
-        public NameList Properties { get; private set; }
+        public NameList Properties
+        {
+            get
+            {
+                return _properties ??
+                       (_properties = RefDef != null && RefClassId >= 0 && RefClassId < RefDef.Classes.Count
+                                          ? RefDef.Classes[RefClassId].Properties
+                                          : new NameList());
+            }
+        }
 
         public int ClassId { get; set; }
 
@@ -46,12 +55,12 @@ namespace org.xpangen.Generator.Data
         public string Reference { get; set; }
 
         public GenDataDefSubClassList SubClasses;
+        private NameList _properties;
 
         private IndexList Pseudos { get; set; }
 
         public GenDataDefClass()
         {
-            Properties = new NameList();
             SubClasses = new GenDataDefSubClassList();
             IsReference = false;
             RefClassId = 0;

@@ -184,6 +184,10 @@ SubClass=Child[Reference='ChildDef']
             Assert.AreEqual("Child", fParent.Classes[2].Name);
             Assert.AreEqual("Grandchild", fParent.Classes[3].Name);
             Assert.AreEqual("Greatgrandchild", fParent.Classes[4].Name);
+            Assert.AreEqual("Name", fParent.Classes[1].Properties[0]);
+            Assert.AreEqual("Name", fParent.Classes[2].Properties[0]);
+            Assert.AreEqual("Name", fParent.Classes[3].Properties[0]);
+            Assert.AreEqual("Name", fParent.Classes[4].Properties[0]);
             Assert.AreEqual(1, fParent.Classes[1].SubClasses.Count);
             Assert.AreEqual(2, fParent.Classes[1].SubClasses[0].SubClass.ClassId);
             Assert.AreEqual("ChildDef", fParent.Classes[1].SubClasses[0].Reference);
