@@ -151,7 +151,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
 
         private void ScanBlockParams(GenSegBody body, GenContainerFragmentBase parentSegment)
         {
-            Scan.ScanWhile(CompactProfileScanner.WhiteSpace);
+            Scan.ScanWhile(ScanReader.WhiteSpace);
 
             if (Scan.CheckChar(Scan.Delimiter))
                 Scan.SkipChar();

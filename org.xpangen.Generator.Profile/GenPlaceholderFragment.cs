@@ -17,7 +17,7 @@ namespace org.xpangen.Generator.Profile
 
         public override string ProfileLabel()
         {
-            return GenDataDef.GetIdentifier(Id);
+            return Id.Identifier;
         }
 
         public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)

@@ -6,8 +6,7 @@ Field={Name,Reference}
 SubClass=FieldFilter
 Class=Property
 Field=Name
-Class=FieldFilter
-Field={Name,Operand}
+
 .
 Class=Class
 SubClass=SubClass
@@ -19,6 +18,3 @@ Property=Name
 Property=Reference
 Class=Property
 Property=Name
-Class=FieldFilter
-Property=Name
-Property=Operand

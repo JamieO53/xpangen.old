@@ -16,5 +16,9 @@ namespace org.xpangen.Generator.Data
                        : (PropertyId == -1 ? "<<<< Invalid Property >>>>" : ClassName + "." + PropertyName);
         }
         }
+        public override string ToString()
+        {
+            return Identifier;
+        }
     }
 }
