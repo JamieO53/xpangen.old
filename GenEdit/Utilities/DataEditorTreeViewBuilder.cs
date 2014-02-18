@@ -44,7 +44,7 @@ namespace GenEdit.Utilities
                                            definition);
 
             var objectList = dat.Context[classId];
-            if (objectList != null)
+            if (objectList != null && !dat.Eol(classId))
             {
                 dat.First(classId);
                 while (!dat.Eol(classId))

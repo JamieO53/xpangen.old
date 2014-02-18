@@ -43,8 +43,8 @@ namespace org.xpangen.Generator.Data
                     {
                         if (subClass.SubClass != GenDataDef.Classes[i]) continue;
                         
-                        reference = subClass.Reference;
-                        referenceDefinition = subClass.ReferenceDefinition;
+                        reference = subClass.Reference ?? "";
+                        referenceDefinition = subClass.ReferenceDefinition ?? "";
                         break;
                     }
                 }
@@ -228,7 +228,10 @@ namespace org.xpangen.Generator.Data
         {
             foreach (var reference in GenDataBase.References.ReferenceList)
             {
+#pragma warning disable 168
+                // Side effect: Cache saves the reference if it does not already exist
                 var dummy = Cache[reference.Definition, reference.Data];
+#pragma warning restore 168
             }
         }
 

@@ -108,6 +108,9 @@
     <None Include="Data\GeneratorDefinitionModel.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Data\GeneratorEditor.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data\GenProfileModel.prf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

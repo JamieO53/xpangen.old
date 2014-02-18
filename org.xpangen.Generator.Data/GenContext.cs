@@ -32,18 +32,36 @@ namespace org.xpangen.Generator.Data
 
         public void Add(GenObjectList item, GenDataDefClass defClass, GenDataBase genDataBase, string reference, string referenceDefinition)
         {
-            var myList = item ?? new GenObjectList(new GenObjectListBase(genDataBase, null, defClass.ClassId,
-                                                                         new GenDataDefSubClass
-                                                                             {
-                                                                                 SubClass = defClass,
-                                                                                 Reference = reference,
-                                                                                 ReferenceDefinition =
-                                                                                     referenceDefinition
-                                                                             }))
-                                     {
-                                         RefClassId = defClass.RefClassId,
-                                         ClassId = defClass.ClassId
-                                     };
+            GenObjectList myList;
+            if (item != null) myList = item;
+            else if (reference == "")
+                myList = new GenObjectList(new GenObjectListBase(genDataBase, null, defClass.ClassId,
+                                                                 new GenDataDefSubClass
+                                                                     {
+                                                                         SubClass = defClass,
+                                                                         Reference = reference,
+                                                                         ReferenceDefinition =
+                                                                             referenceDefinition
+                                                                     }))
+                             {
+                                 RefClassId = defClass.RefClassId,
+                                 ClassId = defClass.ClassId,
+                                 Reference = reference
+                             };
+            else
+                myList = new GenObjectList(new GenObjectListReference(genDataBase, null, defClass.ClassId,
+                                                                 new GenDataDefSubClass
+                                                                     {
+                                                                         SubClass = defClass,
+                                                                         Reference = reference,
+                                                                         ReferenceDefinition =
+                                                                             referenceDefinition
+                                                                     }))
+                             {
+                                 RefClassId = defClass.RefClassId,
+                                 ClassId = defClass.ClassId,
+                                 Reference = reference
+                             };
             Add(myList);
             Classes.Add(defClass);
         }
