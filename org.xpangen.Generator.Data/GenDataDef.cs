@@ -42,7 +42,7 @@ namespace org.xpangen.Generator.Data
             var id = new GenDataId {ClassId = -1, PropertyId = -1, ClassName = "", PropertyName = ""};
             var sa = name.Split(new[] {'.'}, 2);
             var className = "";
-            var propertyName = "";
+            string propertyName;
             if (sa.GetUpperBound(0) == 0)
             {
                 id.ClassId = CurrentClassId;
