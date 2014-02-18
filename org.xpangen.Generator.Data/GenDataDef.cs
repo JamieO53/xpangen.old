@@ -276,6 +276,17 @@ namespace org.xpangen.Generator.Data
                 {
                     var sub = item.SubClasses[l];
                     var classId = Classes.IndexOf(sub.SubClass.Name);
+                    
+                    var found = false;
+                    for (var m = 0; m < refItem.SubClasses.Count; m++)
+                    {
+                        if (refItem.SubClasses[m].SubClass.ClassId != classId) continue;
+                        found = true;
+                        break;
+                    }
+                    
+                    if (found) continue;
+                    
                     var newSub = new GenDataDefSubClass
                                      {
                                          Reference = sc.Reference,
@@ -293,18 +304,6 @@ namespace org.xpangen.Generator.Data
             sc.Reference = reference;
             var ra = reference.Split(':');
             sc.ReferenceDefinition = ra[0];
-            //if (ra.GetUpperBound(0) > 0)
-            //{
-            //    var fa = ra[1].Split(';');
-            //    for (var i = 0; i <= fa.GetLowerBound(0); i++)
-            //    {
-            //        var ca = fa[i].Split('=');
-            //        var ta = ca[0].Split('.');
-            //        var sa = ca[1].Split('.');
-            //        var tid = GetId(ca[0]);
-            //        var sid = GetId(ca[1]);
-            //    }
-            //}
         }
 
         public int AddClass(string className)

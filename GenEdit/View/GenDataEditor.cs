@@ -58,7 +58,7 @@ namespace GenEdit.View
                 OnDataChanged();
         }
 
-        private void GenDataEditor_Load(object sender, System.EventArgs e)
+        private void GenDataEditor_Load(object sender, EventArgs e)
         {
             DataNavigatorTreeView.Nodes.Clear();
             if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null) return;

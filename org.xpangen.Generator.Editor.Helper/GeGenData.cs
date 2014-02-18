@@ -20,7 +20,9 @@ namespace org.xpangen.Generator.Editor.Helper
             else
             {
                 DefGenData = new GenParameters(GenParameters.CreateStream(filePath));
-                GenData = new GenData(DefGenData.AsDef());
+                var f = DefGenData.AsDef();
+                f.Definition = Path.GetFileNameWithoutExtension(filePath);
+                GenData = new GenData(f);
             }
         }
 
