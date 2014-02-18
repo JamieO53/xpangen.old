@@ -10,7 +10,10 @@ Field={Name,Title,DataType,Default}
 Class=Solution[Title='The solution targeted by the generated code']
 SubClass=Assembly
 Property=Name[Title='The solution name',DataType=String]
-Property=Title[Title='Description of the assembly',DataType=String]
+Property=Title[Title='Description of the solution',DataType=String]
 Property=FilePath[Title='The full path of the solution',DataType=String]
 Class=Assembly[Title='The assembly targeted by the generator']
+Property=Name[Title='The assembly name',DataType=String]
+Property=Title[Title='Description of the assembly',DataType=String]
+Property=Namespace[Title='Namespace of the assembly',DataType=String]
 SubClass=Class[Reference=Definition]
