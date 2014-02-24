@@ -5,10 +5,10 @@
 using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data;
 
-namespace Generator.Editor.Model
+namespace org.xpangen.Generator.Editor.Model
 {
     /// <summary>
-    /// Related group of files for editing a file
+    /// 
     /// </summary>
     public class FileGroup : GenApplicationBase
     {
@@ -17,88 +17,52 @@ namespace Generator.Editor.Model
         }
 
         /// <summary>
-        /// The file group name
+        /// The default location of the base files
         /// </summary>
-        public string Name
+        public string HomeDir
         {
-            get { return AsString("Name"); }
+            get { return AsString("HomeDir"); }
             set
             {
-                if (Name == value) return;
-                SetString("Name", value);
+                if (HomeDir == value) return;
+                SetString("HomeDir", value);
                 SaveFields();
             }
         }
 
-        /// <summary>
-        /// The name of the file being edited
-        /// </summary>
-        public string FileName
-        {
-            get { return AsString("FileName"); }
-            set
-            {
-                if (FileName == value) return;
-                SetString("FileName", value);
-                SaveFields();
-            }
-        }
+        public GenApplicationList<FileGroup> FileGroupList { get; private set; }
+        public GenApplicationList<BaseFile> BaseFileList { get; private set; }
 
-        /// <summary>
-        /// The full path of the file being edited
-        /// </summary>
-        public string FilePath
+        protected override void GenObjectSetNotification()
         {
-            get { return AsString("FilePath"); }
-            set
+            FileGroupList = new GenApplicationList<FileGroup>();
+            var classId = GenDataDef.Classes.IndexOf("FileGroup");
+            var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
+            if (classIdx != -1)
             {
-                if (FilePath == value) return;
-                SetString("FilePath", value);
-                SaveFields();
+                var list = new GenObjectList(GenObject.SubClass[classIdx]);
+                list.First();
+                while (!list.Eol)
+                {
+                    FileGroupList.Add(new FileGroup(GenDataDef) {GenObject = list.GenObject});
+                    list.Next();
+                }
             }
-        }
 
-        /// <summary>
-        /// The name of the file's definitions data file
-        /// </summary>
-        public string BaseFileName
-        {
-            get { return AsString("BaseFileName"); }
-            set
+            BaseFileList = new GenApplicationList<BaseFile>();
+            classId = GenDataDef.Classes.IndexOf("BaseFile");
+            classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
+            if (classIdx != -1)
             {
-                if (BaseFileName == value) return;
-                SetString("BaseFileName", value);
-                SaveFields();
+                var list = new GenObjectList(GenObject.SubClass[classIdx]);
+                list.First();
+                while (!list.Eol)
+                {
+                    BaseFileList.Add(new BaseFile(GenDataDef) {GenObject = list.GenObject});
+                    list.Next();
+                }
             }
-        }
 
-        /// <summary>
-        /// The file path of the generated file
-        /// </summary>
-        public string Generated
-        {
-            get { return AsString("Generated"); }
-            set
-            {
-                if (Generated == value) return;
-                SetString("Generated", value);
-                SaveFields();
-            }
         }
-
-        /// <summary>
-        /// The file path of the profile used to generate the file's output
-        /// </summary>
-        public string Profile
-        {
-            get { return AsString("Profile"); }
-            set
-            {
-                if (Profile == value) return;
-                SetString("Profile", value);
-                SaveFields();
-            }
-        }
-
     }
 }

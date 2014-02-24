@@ -10,6 +10,7 @@ namespace org.xpangen.Generator.Application
     {
         protected GenApplicationBase(GenDataDef genDataDef) : base(genDataDef)
         {
+            DelayedSave = false;
         }
 
         protected virtual void GenObjectSetNotification()
@@ -17,6 +18,8 @@ namespace org.xpangen.Generator.Application
             
         }
 
+        public bool DelayedSave { get; set; }
+        
         public override GenObject GenObject
         {
             get

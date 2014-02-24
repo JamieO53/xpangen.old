@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="ApplicationBaseTests.cs" />
     <Compile Include="CharSetTests.cs" />
+    <Compile Include="DataModelTests.cs" />
     <Compile Include="GenDataDefToDataConversionTests.cs" />
     <Compile Include="GenDataDefTests.cs" />
     <Compile Include="GenDataTests.cs" />
@@ -56,12 +57,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\org.xpangen.Generator.Application\org.xpangen.Generator.Application.csproj">
       <Project>{A6C5CC30-C8D2-4C3E-A57F-7F3C603E67FB}</Project>
       <Name>org.xpangen.Generator.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\org.xpangen.Generator.Data.Model.Definition\org.xpangen.Generator.Data.Model.Definition.csproj">
+      <Project>{A07C4F8E-0CC5-4051-93B2-425CAF4E841C}</Project>
+      <Name>org.xpangen.Generator.Data.Model.Definition</Name>
     </ProjectReference>
     <ProjectReference Include="..\org.xpangen.Generator.Data.Model.Minimal\org.xpangen.Generator.Data.Model.Minimal.csproj">
       <Project>{87DE8F4D-F782-452B-B338-929A179E6974}</Project>
@@ -119,9 +121,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Service References\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

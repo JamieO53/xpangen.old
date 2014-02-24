@@ -3,6 +3,7 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Definition;
 using org.xpangen.Generator.Profile;
@@ -28,7 +29,8 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             get { return GenData != null ? GenData.GenDataDef : null; }
         }
-        public GenList<Class> ClassList
+
+        private GenList<Class> ClassList
         {
             get
             {
@@ -37,15 +39,27 @@ namespace org.xpangen.Generator.Editor.Helper
                     return null;
                 
                 var list = new GenList<Class>();
-                def.First(1);
-                while (!def.Eol(1))
+                AddClasses(def, list);
+                var references = def.Cache.References;
+                for (var i = 0; i < references.Count; i++)
                 {
-                    list.Add(new Class(def.GenDataDef) {GenObject = def.Context[1].GenObject});
-                    def.Next(1);
+                    var reference = references[i];
+                    AddClasses(reference.GenData, list);
                 }
                 return list;
             }
         }
+
+        private static void AddClasses(GenData def, GenList<Class> list)
+        {
+            def.First(1);
+            while (!def.Eol(1))
+            {
+                list.Add(new Class(def.GenDataDef) {GenObject = def.Context[1].GenObject});
+                def.Next(1);
+            }
+        }
+
         public GenSegment Profile { get; set; } 
         public IGenData GenDataStore { get; set; }
         public IGenSettings Settings { get; set; }
@@ -61,6 +75,15 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             // todo: signature for key press event handler
             throw new NotImplementedException("GridKeyPress method not implemented");
+        }
+
+        public GenApplicationBase FindClassDefinition(int classId)
+        {
+            var defClass = GenDataDef.Classes[classId];
+            for (var i = 0; i < ClassList.Count; i++)
+                if (ClassList[i].Name == defClass.Name)
+                    return ClassList[i];
+            return null;
         }
     }
 }

@@ -29,10 +29,11 @@ namespace org.xpangen.Generator.Data
                 var f = AddDef(defPath);
                 return f;
             }
-            set 
+            set
             {
-                if (!defPath.Equals("self", StringComparison.InvariantCultureIgnoreCase))
-                    LocalCache.Add(defPath.ToLowerInvariant(), value);
+                var path = defPath.ToLowerInvariant();
+                if (!defPath.Equals("self", StringComparison.InvariantCultureIgnoreCase) && !LocalCache.ContainsKey(path))
+                    LocalCache.Add(path, value);
             }
         }
 

@@ -5,10 +5,10 @@
 using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data;
 
-namespace Generator.Editor.Model
+namespace org.xpangen.Generator.Editor.Model
 {
     /// <summary>
-    /// Container for generator settings
+    /// 
     /// </summary>
     public class GenSettings : GenApplicationBase
     {
@@ -36,22 +36,31 @@ namespace Generator.Editor.Model
         protected override void GenObjectSetNotification()
         {
             FileGroupList = new GenApplicationList<FileGroup>();
-            var list = new GenObjectList(GenObject.SubClass[0]);
-            list.First();
-            while (!list.Eol)
+            var classId = GenDataDef.Classes.IndexOf("FileGroup");
+            var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
+            if (classIdx != -1)
             {
-                FileGroupList.Add(new FileGroup(GenDataDef) {GenObject = list.GenObject});
-                list.Next();
+                var list = new GenObjectList(GenObject.SubClass[classIdx]);
+                list.First();
+                while (!list.Eol)
+                {
+                    FileGroupList.Add(new FileGroup(GenDataDef) {GenObject = list.GenObject});
+                    list.Next();
+                }
             }
 
             BaseFileList = new GenApplicationList<BaseFile>();
-            list.GenObjectListBase = GenObject.SubClass[0];
-
-            list.First();
-            while (!list.Eol)
+            classId = GenDataDef.Classes.IndexOf("BaseFile");
+            classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
+            if (classIdx != -1)
             {
-                BaseFileList.Add(new BaseFile(GenDataDef) {GenObject = list.GenObject});
-                list.Next();
+                var list = new GenObjectList(GenObject.SubClass[classIdx]);
+                list.First();
+                while (!list.Eol)
+                {
+                    BaseFileList.Add(new BaseFile(GenDataDef) {GenObject = list.GenObject});
+                    list.Next();
+                }
             }
 
         }

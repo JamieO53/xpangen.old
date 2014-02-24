@@ -3,6 +3,7 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
+using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Data.Model.Basic
 {
@@ -16,7 +17,7 @@ namespace org.xpangen.Generator.Data.Model.Basic
         }
 
         /// <summary>
-        /// Object name: must be well formed
+        /// Class name: must be well formed
         /// </summary>
         public string Name
         {
@@ -30,7 +31,7 @@ namespace org.xpangen.Generator.Data.Model.Basic
         }
 
         /// <summary>
-        /// Object description: used as a hint when editing
+        /// Class description: used as a hint when editing
         /// </summary>
         public string Title
         {
@@ -49,21 +50,31 @@ namespace org.xpangen.Generator.Data.Model.Basic
         protected override void GenObjectSetNotification()
         {
             SubClassList = new GenApplicationList<SubClass>();
-            var list = new GenObjectList(GenObject.SubClass[0]);
-            list.First();
-            while (!list.Eol)
+            var classId = GenDataDef.Classes.IndexOf("SubClass");
+            var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
+            if (classIdx != -1)
             {
-                SubClassList.Add(new SubClass(GenDataDef) {GenObject = list.GenObject});
-                list.Next();
+                var list = new GenObjectList(GenObject.SubClass[classIdx]);
+                list.First();
+                while (!list.Eol)
+                {
+                    SubClassList.Add(new SubClass(GenDataDef) {GenObject = list.GenObject});
+                    list.Next();
+                }
             }
 
             PropertyList = new GenApplicationList<Property>();
-            list.GenObjectListBase = GenObject.SubClass[0];
-            list.First();
-            while (!list.Eol)
+            classId = GenDataDef.Classes.IndexOf("Property");
+            classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
+            if (classIdx != -1)
             {
-                PropertyList.Add(new Property(GenDataDef) {GenObject = list.GenObject});
-                list.Next();
+                var list = new GenObjectList(GenObject.SubClass[classIdx]);
+                list.First();
+                while (!list.Eol)
+                {
+                    PropertyList.Add(new Property(GenDataDef) {GenObject = list.GenObject});
+                    list.Next();
+                }
             }
 
         }
