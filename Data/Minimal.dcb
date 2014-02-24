@@ -1,20 +1,18 @@
+Definition=Definition
 Class=Class
-Field=Name
+Field={Name,Title}
 SubClass={SubClass,Property}
 Class=SubClass
 Field={Name,Reference}
-SubClass=FieldFilter
 Class=Property
-Field=Name
-
+Field={Name,Title,DataType,Default}
 .
-Class=Class
-SubClass=SubClass
-SubClass=Property
-Property=Name
-Class=SubClass
-SubClass=FieldFilter
-Property=Name
-Property=Reference
-Class=Property
-Property=Name
+Class=Class[Title='Class Definition']
+SubClass=SubClass[]
+SubClass=Property[]
+Property=Name[Title='Class name: must be well formed',DataType=String]
+Class=SubClass[]
+Property=Name[Title='Subclass name: refers to a class and is used for hierarchical browsing',DataType=String]
+Property=Reference[Title='Location of the subclass',DataType=String]
+Class=Property[Title='Property definition']
+Property=Name[Title='Property name: must be well formed',DataType=String]

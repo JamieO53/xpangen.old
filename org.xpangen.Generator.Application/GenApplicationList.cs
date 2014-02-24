@@ -6,7 +6,7 @@ using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Application
 {
-    public class GenApplicationList<T> : GenList<T>
+    public class GenApplicationList<T> : GenList<T> where T : GenApplicationBase
     {
         public override void Move(ListMove move, int itemIndex)
         {

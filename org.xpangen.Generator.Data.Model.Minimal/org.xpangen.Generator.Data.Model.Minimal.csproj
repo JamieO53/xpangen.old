@@ -38,6 +38,9 @@
     <Compile Include="Class.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Property.cs" />
+    <Compile Include="Root.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SubClass.cs" />
   </ItemGroup>
   <ItemGroup>

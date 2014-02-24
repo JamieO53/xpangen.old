@@ -5,7 +5,8 @@
 using System.Collections;
 using System.Windows.Forms;
 using GenEdit.ViewModel;
-using org.xpangen.Generator.Application;
+using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Data.Model.Definition;
 using org.xpangen.Generator.Editor.Helper;
 
 namespace GenEdit.Utilities
@@ -29,16 +30,7 @@ namespace GenEdit.Utilities
 
         private TreeNode CreateClassSubTree(int classId)
         {
-            var className = Data.GenDataDef.Classes[classId].Name;
-            GenApplicationBase definition = null;
-            for (var i = 0; i < Data.ClassList.Count; i++)
-            {
-                if (Data.ClassList[i].Name == className)
-                {
-                    definition = Data.ClassList[i];
-                    break;
-                }
-            }
+            var definition = Data.FindClassDefinition(classId);
 
             var classItem = CreateTreeNode(2, def.Classes[classId].Name, def.Classes[classId].Name,
                                            definition);
@@ -49,9 +41,8 @@ namespace GenEdit.Utilities
                 dat.First(classId);
                 while (!dat.Eol(classId))
                 {
-                    TreeNode childItem;
                     var obj = new GenObjectViewModel(objectList.GenObject, definition, Data.GenData);
-                    childItem = CreateTreeNode(1, obj.Name, obj.Hint, obj);
+                    var childItem = CreateTreeNode(1, obj.Name, obj.Hint, obj);
                     classItem.Nodes.Add(childItem);
                     CreateSubClassTrees(childItem.Nodes, classId);
                     dat.Next(classId);

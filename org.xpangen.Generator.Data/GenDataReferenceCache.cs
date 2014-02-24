@@ -57,7 +57,7 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        protected internal List<GenDataReferenceCacheItem> References
+        public List<GenDataReferenceCacheItem> References
         {
             get
             {

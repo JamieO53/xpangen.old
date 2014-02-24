@@ -22,6 +22,13 @@ namespace org.xpangen.Generator.Editor.Helper
                 DefGenData = new GenParameters(GenParameters.CreateStream(filePath));
                 var f = DefGenData.AsDef();
                 f.Definition = Path.GetFileNameWithoutExtension(filePath);
+                var references = f.Cache.References;
+                for (var i = 0; i < references.Count; i++)
+                {
+                    var reference = references[i].Path;
+                    if (!DefGenData.Cache.Contains(reference))
+                        DefGenData.Cache.Internal(reference, new GenParameters(GenParameters.CreateStream(reference)));
+                }
                 GenData = new GenData(f);
             }
         }

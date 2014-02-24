@@ -3,22 +3,23 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
+using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Data.Model.Definition
 {
     /// <summary>
     /// Class Definition
     /// </summary>
-    public class Class : GenApplicationBase
+    public class Class : GenNamedApplicationBase
     {
         public Class(GenDataDef genDataDef) : base(genDataDef)
         {
         }
 
         /// <summary>
-        /// Object name: must be well formed
+        /// Class name: must be well formed
         /// </summary>
-        public string Name
+        public override string Name
         {
             get { return AsString("Name"); }
             set
@@ -30,7 +31,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
         }
 
         /// <summary>
-        /// Object description: used as a hint when editing
+        /// Class description: used as a hint when editing
         /// </summary>
         public string Title
         {

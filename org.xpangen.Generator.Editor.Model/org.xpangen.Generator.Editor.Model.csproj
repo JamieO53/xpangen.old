@@ -8,7 +8,7 @@
     <ProjectGuid>{E16E083B-933C-499C-8BD2-0BCAFA98FD16}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Generator.Editor.Model</RootNamespace>
+    <RootNamespace>org.xpangen.Generator.Editor.Model</RootNamespace>
     <AssemblyName>Generator.Editor.Model</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -40,6 +40,9 @@
     <Compile Include="GenSettings.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Root.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\org.xpangen.Generator.Application\org.xpangen.Generator.Application.csproj">

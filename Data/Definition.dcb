@@ -1,3 +1,4 @@
+Definition=Definition
 Class=Class
 Field={Name,Title}
 SubClass={SubClass,Property}
@@ -9,8 +10,8 @@ Field={Name,Title,DataType,Default}
 Class=Class[Title='Class Definition']
 SubClass=SubClass[]
 SubClass=Property[]
-Property=Name[Title='Object name: must be well formed',DataType=String]
-Property=Title[Title='Object description: used as a hint when editing',DataType=String]
+Property=Name[Title='Class name: must be well formed',DataType=String]
+Property=Title[Title='Class description: used as a hint when editing',DataType=String]
 Class=SubClass[Title='Class to SubClass link']
 Property=Name[Title='Subclass name: refers to a class and is used for hierarchical browsing',DataType=String]
 Property=Reference[Title='Location of the subclass',DataType=String]
