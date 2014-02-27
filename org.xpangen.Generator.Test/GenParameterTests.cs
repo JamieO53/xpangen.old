@@ -116,7 +116,7 @@ namespace org.xpangen.Generator.Test
             CreateGenDataSaveText("GenParameterTest.txt");
             GenParameters d;
             using (var s = new FileStream("GenParameterTest.txt", FileMode.Open, FileAccess.ReadWrite))
-                d = new GenParameters(s);
+                d = new GenParameters(s) { DataName = "GenParameterTest" };
             var f = d.AsDef();
             VerifyAsDef(f);
         }
@@ -142,7 +142,7 @@ namespace org.xpangen.Generator.Test
             var f0 = GenDataDef.CreateMinimal();
             GenParameters d;
             using (var s = new FileStream("GenDefParameterTest.txt", FileMode.Open, FileAccess.ReadWrite))
-                d = new GenParameters(f0, s);
+                d = new GenParameters(f0, s) { DataName = "GenDefParameterTest" };
             var f = d.AsDef();
             VerifyAsDef(f);
         }
@@ -208,10 +208,10 @@ namespace org.xpangen.Generator.Test
             CreateGenDataSaveText("Grandchild.txt", ReferenceGrandchildText);
             GenParameters f;
             using (var s = new FileStream("Grandchild.dcb", FileMode.Open, FileAccess.ReadWrite))
-                f = new GenParameters(s);
+                f = new GenParameters(s) { DataName = "Grandchild" };
             GenParameters d;
             using (var s = new FileStream("Grandchild.txt", FileMode.Open, FileAccess.ReadWrite))
-                d = new GenParameters(f.AsDef(), s);
+                d = new GenParameters(f.AsDef(), s) { DataName = "Grandchild" };
             Assert.AreEqual(3, d.Context.Count);
             d.First(1);
             Assert.AreEqual("Grandchild", d.Context[1].GenObject.Attributes[0]);
@@ -228,10 +228,10 @@ namespace org.xpangen.Generator.Test
             CreateGenDataSaveText("Child.txt", ReferenceChildText);
             GenParameters f;
             using (var s = new FileStream("Child.dcb", FileMode.Open, FileAccess.ReadWrite))
-                f = new GenParameters(s);
+                f = new GenParameters(s) { DataName = "Child" };
             GenParameters d;
             using (var s = new FileStream("Child.txt", FileMode.Open, FileAccess.ReadWrite))
-                d = new GenParameters(f.AsDef(), s);
+                d = new GenParameters(f.AsDef(), s) { DataName = "Child" };
             Assert.AreEqual(4, d.GenDataDef.Classes.Count);
             Assert.AreEqual(4, d.Context.Count);
             d.First(1);
@@ -344,27 +344,35 @@ namespace org.xpangen.Generator.Test
         }
 
         /// <summary>
-        /// Verifies that the 
+        /// Verifies that the Definition references in GeneratorDefinitionModel are loaded correctly
         /// </summary>
-        [TestCase(Description = "Verifies that the Definition reference in GeneratorDefinitionModel is loaded correctly")]
+        [TestCase(Description = "Verifies that the Definition references in GeneratorDefinitionModel are loaded correctly")]
         public void GeneratorDefinitionModelDefinitionLoadTest()
         {
             GenParameters defData;
             using (var stream = new FileStream("Data\\ProgramDefinition.dcb", FileMode.Open, FileAccess.Read))
-            {
-                defData = new GenParameters(stream);
-            }
+                defData = new GenParameters(stream) { DataName = "ProgramDefinition" };
             var def = defData.AsDef();
             def.Definition = "ProgramDefinition";
             GenParameters data;
             using (var stream = new FileStream("Data\\GeneratorDefinitionModel.dcb", FileMode.Open, FileAccess.Read))
-            {
-                data = new GenParameters(def, stream);
-            }
+                data = new GenParameters(def, stream) { DataName = "GeneratorDefinitionModel" };
+            var definition = data.Cache["definition", "definition"];
+            definition.Last(1);
+            Assert.AreEqual(4, definition.Context[3].Count);
             Assert.AreEqual("Property", def.Classes[5].Name);
             Assert.AreEqual(4, def.Classes[5].Properties.Count);
             data.Next(2);
             data.Next(2);
+            Assert.AreEqual("GeneratorDataModelDefinition", data.Context[2].GenObject.Attributes[0]);
+            Assert.AreEqual("Definition.Class", data.Context[3].DefClass.ToString());
+            Assert.AreEqual("Class", data.Context[3].GenObject.Attributes[0]);
+            data.Next(3);
+            Assert.AreEqual("SubClass", data.Context[3].GenObject.Attributes[0]);
+            data.Next(3);
+            Assert.AreEqual("Property", data.Context[3].GenObject.Attributes[0]);
+            Assert.AreEqual(4, data.Context[3].GenObject.SubClass[1].Count);
+            Assert.AreEqual(4, data.Context[5].Count);
         }
 
         /// <summary>

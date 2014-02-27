@@ -419,9 +419,10 @@ namespace org.xpangen.Generator.Test
             GenParameters.SaveToFile(d, fileName);
             Assert.IsTrue(Directory.Exists(dir), "Output directory is not created.");
             Assert.IsTrue(File.Exists(fileName));
-            var stream = new FileStream(fileName, FileMode.Open);
-            var d1 = new GenParameters(stream);
-            
+            GenParameters d1;
+            using (var stream = new FileStream(fileName, FileMode.Open))
+                d1 = new GenParameters(stream) {DataName = "GenProfileTest"};
+
             VerifyDataCreation(d1);
         }
 

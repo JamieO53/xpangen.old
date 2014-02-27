@@ -6,7 +6,7 @@ namespace org.xpangen.Generator.Data
 {
     public class GenObject
     {
-        private GenDataBase _genData;
+        private GenDataBase _genDataBase;
 
         public GenObject(GenObject parent, IGenObjectListBase parentSubClass, int classId)
         {
@@ -14,16 +14,16 @@ namespace org.xpangen.Generator.Data
             ParentSubClass = parentSubClass;
             ClassId = classId;
             Attributes = new TextList();
-            if (Parent != null) GenData = Parent.GenData;
+            if (Parent != null) GenDataBase = Parent.GenDataBase;
         }
 
-        public GenDataBase GenData
+        public GenDataBase GenDataBase
         {
-            get { return _genData; }
+            get { return _genDataBase; }
             set 
             {
-                if (_genData == value) return;
-                _genData = value;
+                if (_genDataBase == value) return;
+                _genDataBase = value;
                 for (var i = 0; i < Definition.Properties.Count; i++)
                     Attributes.Add("");
                 SubClass = new GenSubClasses(this);
@@ -37,6 +37,10 @@ namespace org.xpangen.Generator.Data
 
         public GenObject Parent { get; private set; }
         public GenSubClasses SubClass { get; private set; }
-        public GenDataDefClass Definition { get { return GenData.GenDataDef.Classes[ClassId]; } }
+        public GenDataDefClass Definition { get { return GenDataBase.GenDataDef.Classes[ClassId]; } }
+        public override string ToString()
+        {
+            return GenDataBase.ToString() + "." + Definition.Name + "." + Attributes[0];
+        }
     }
 }

@@ -374,9 +374,7 @@ namespace org.xpangen.Generator.Parameter
                             var subSubClassId = GenDataDef.Classes.IndexOf(subClassName);
                             subSubClassIdx = GenDataDef.IndexOfSubClass(subClassId, subSubClassId);
                             if (subSubClassIdx != -1)
-                            {
                                 LoadSubClass(child, subClassName, subSubClassId, subSubClassIdx);
-                            }
                         } while (!Scan.Eof && subSubClassIdx != -1);
                     }
                 }

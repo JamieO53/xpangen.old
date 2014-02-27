@@ -4,7 +4,6 @@
 
 using System.IO;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Parameter;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
@@ -19,7 +18,7 @@ namespace org.xpangen.Generator.Editor.Helper
                 DefGenData = null;
             else
             {
-                DefGenData = new GenParameters(GenParameters.CreateStream(filePath));
+                DefGenData = GenData.DataLoader.LoadData(filePath);
                 var f = DefGenData.AsDef();
                 f.Definition = Path.GetFileNameWithoutExtension(filePath);
                 var references = f.Cache.References;
@@ -27,7 +26,7 @@ namespace org.xpangen.Generator.Editor.Helper
                 {
                     var reference = references[i].Path;
                     if (!DefGenData.Cache.Contains(reference))
-                        DefGenData.Cache.Internal(reference, new GenParameters(GenParameters.CreateStream(reference)));
+                        DefGenData.Cache.Internal(reference, GenData.DataLoader.LoadData(reference));
                 }
                 GenData = new GenData(f);
             }
@@ -40,8 +39,8 @@ namespace org.xpangen.Generator.Editor.Helper
             else
             {
                 GenData = DefGenData == null
-                              ? new GenParameters(GenParameters.CreateStream(filePath))
-                              : new GenParameters(DefGenData.AsDef(), GenParameters.CreateStream(filePath));
+                              ? GenData.DataLoader.LoadData(filePath)
+                              : GenData.DataLoader.LoadData(DefGenData.AsDef(), filePath);
             }
         }
     }

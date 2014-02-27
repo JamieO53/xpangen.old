@@ -108,8 +108,9 @@ namespace gen
             // Reference to initialize static data
             var loader = new GenDataLoader();
 #pragma warning restore 168
-            var dataStream = new FileStream(data, FileMode.Open);
-            var d = new GenParameters(dataStream);
+            GenParameters d;
+            using (var dataStream = new FileStream(data, FileMode.Open))
+                d = new GenParameters(dataStream) {DataName = Path.GetFileNameWithoutExtension(data)};
             var p = new GenCompactProfileParser(d, profile, "");
             using (var writer = new GenWriter(null) { FileName = output })
             {

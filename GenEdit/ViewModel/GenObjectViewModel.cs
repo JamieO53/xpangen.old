@@ -57,7 +57,7 @@ namespace GenEdit.ViewModel
             GenData = genData;
             IgnorePropertyValidation = true;
             Definition = definition;
-            GenAttributes = new GenAttributes(genObject.GenData.GenDataDef) { GenObject = genObject };
+            GenAttributes = new GenAttributes(genObject.GenDataBase.GenDataDef) { GenObject = genObject };
             Changed = false;
         }
 

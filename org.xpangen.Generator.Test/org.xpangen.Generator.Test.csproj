@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="ApplicationBaseTests.cs" />
     <Compile Include="CharSetTests.cs" />
+    <Compile Include="GenDataCacheTests.cs" />
     <Compile Include="DataModelTests.cs" />
     <Compile Include="GenDataDefToDataConversionTests.cs" />
     <Compile Include="GenDataDefTests.cs" />

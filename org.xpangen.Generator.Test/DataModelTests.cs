@@ -16,9 +16,7 @@ namespace org.xpangen.Generator.Test
         {
             GenParameters data;
             using (Stream stream = new FileStream("data\\definition.dcb", FileMode.Open, FileAccess.Read))
-            {
-                data = new GenParameters(stream);
-            }
+                data = new GenParameters(stream) { DataName = "definition" };
             var model = new Definition.Root(data.GenDataDef) {GenObject = data.Root};
             Assert.AreEqual(3, model.ClassList.Count);
             Assert.AreEqual("Class", model.ClassList[0].Name);

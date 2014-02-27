@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Data
                 if (value != null)
                 {
                     ClassId = value.ClassId;
-                    GenDataDef = value.GenData.GenDataDef;
+                    GenDataDef = value.GenDataBase.GenDataDef;
                 }
 
                 GetFields();
@@ -112,7 +112,7 @@ namespace org.xpangen.Generator.Data
                 if (oldValue != newValue)
                 {
                     changed = true;
-                    GenObject.GenData.RaiseDataChanged(className, propertyName);
+                    GenObject.GenDataBase.RaiseDataChanged(className, propertyName);
                 }
             }
 
@@ -121,7 +121,7 @@ namespace org.xpangen.Generator.Data
                 GenObject.Attributes.Clear();
                 for (var i = 0; i < n; i++)
                     GenObject.Attributes.Add(AsString(props[i]));
-                GenObject.GenData.Changed = true;
+                GenObject.GenDataBase.Changed = true;
             }
         }
     }
