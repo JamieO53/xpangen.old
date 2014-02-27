@@ -8,7 +8,7 @@
         {
             GenDataDef = genDataDef;
             IgnorePropertyValidation = true;
-            Root = new GenObject(null, null, 0) { GenData = this };
+            Root = new GenObject(null, null, 0) { GenDataBase = this };
         }
 
         public GenDataDef GenDataDef { get; private set; }
@@ -29,6 +29,8 @@
         }
 
         public bool Changed { get; set; }
+
+        public string DataName { get; set; }
 
         public void RaiseDataChanged(string className, string propertyName)
         {
@@ -53,6 +55,11 @@
                 return o;
             }
             return null;
+        }
+
+        public override string ToString()
+        {
+            return DataName;
         }
     }
 }

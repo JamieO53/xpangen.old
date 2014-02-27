@@ -8,8 +8,6 @@ namespace org.xpangen.Generator.Data
 {
     public class GenObjectList
     {
-        private string _reference;
-
         /// <summary>
         /// Create a new <see cref="GenObjectList"/> list.
         /// </summary>
@@ -95,6 +93,7 @@ namespace org.xpangen.Generator.Data
                 Reset();
             else
                 Index = 0;
+            if (!string.IsNullOrEmpty(Reference)) ReferenceData.First(RefClassId);
         }
 
         /// <summary>
@@ -105,6 +104,7 @@ namespace org.xpangen.Generator.Data
             Index++;
             if (Eol)
                 Reset();
+            if (!string.IsNullOrEmpty(Reference)) ReferenceData.Next(RefClassId);
         }
 
         /// <summary>
@@ -113,6 +113,7 @@ namespace org.xpangen.Generator.Data
         public void Last()
         {
             Index = GenObjectListBase.Count - 1;
+            if (!string.IsNullOrEmpty(Reference)) ReferenceData.Last(RefClassId);
         }
 
         /// <summary>
@@ -123,7 +124,10 @@ namespace org.xpangen.Generator.Data
             Index--;
             if (Eol)
                 Reset();
+            if (!string.IsNullOrEmpty(Reference)) ReferenceData.Prior(RefClassId);
         }
+
+        public GenData ReferenceData { get; set; }
 
         /// <summary>
         /// Reset the current selection.
@@ -215,6 +219,11 @@ namespace org.xpangen.Generator.Data
         public int IndexOf(GenObject genObject)
         {
             return GenObjectListBase.IndexOf(genObject);
+        }
+
+        public override string ToString()
+        {
+            return DefClass + (Eol || GenObject.Attributes.Count == 0 ? "" : ":" + GenObject.Attributes[0]) ;
         }
     }
 }

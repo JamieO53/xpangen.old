@@ -35,7 +35,7 @@ namespace org.xpangen.Generator.Data
     
         public GenDataDef AsDef()
         {
-            var f = new GenDataDef();
+            var f = new GenDataDef {Definition = GenDataBase.DataName};
             Navigate(GenDataBase.Root, f);
 
             return f;

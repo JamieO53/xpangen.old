@@ -40,9 +40,9 @@ namespace org.xpangen.Generator.Test
 
         private static void MoveItem(GenData genData, Class c, ListMove move, int itemIndex, string order, bool changedExpected, string action)
         {
-            c.GenObject.GenData.Changed = false;
+            c.GenObject.GenDataBase.Changed = false;
             c.SubClassList.Move(move, itemIndex);
-            Assert.AreEqual(changedExpected, c.GenObject.GenData.Changed, "Data changed flag");
+            Assert.AreEqual(changedExpected, c.GenObject.GenDataBase.Changed, "Data changed flag");
             CheckOrder(genData, c, order, action);
         }
 

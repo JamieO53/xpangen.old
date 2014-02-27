@@ -355,7 +355,7 @@ Child[Reference='child']
             return d;
         }
 
-        protected static GenDataDef CreateSelfReferenceDefinition(string reference)
+        private static GenDataDef CreateSelfReferenceDefinition(string reference)
         {
             var f = new GenDataDef();
             f.AddSubClass("", "Root");
@@ -427,7 +427,7 @@ Child[Reference='child']
             return def;
         }
 
-        private static void SetUpParentReference(GenData dataParent, GenData dataChild, string childDefName,
+        protected static void SetUpParentReference(GenData dataParent, GenData dataChild, string childDefName,
                                                  string parentClassName, string childClassName, string childName)
         {
             dataParent.Cache.Internal("Minimal", childDefName, dataChild.GenDataDef.AsGenData());

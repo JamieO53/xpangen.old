@@ -187,7 +187,7 @@ namespace org.xpangen.Generator.Data
         public GenData AsGenData()
         {
             var f = CreateMinimal();
-            var d = new GenData(f);
+            var d = new GenData(f) {DataName = Definition};
             var a = new GenAttributes(f);
             for (var i = 1; i < Classes.Count; i++)
             {

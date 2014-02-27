@@ -89,6 +89,7 @@ namespace org.xpangen.Generator.Data
             if (!string.IsNullOrEmpty(def)) AddDef(def);
             if (!LocalCache.ContainsKey(n))
                 LocalCache.Add(n, genData);
+            else return LocalCache[n];
             return genData;
         }
 
@@ -107,23 +108,13 @@ namespace org.xpangen.Generator.Data
         {
             var f = def.ToLowerInvariant().Replace('/', '\\');
             GenData d;
-            if (f.Equals("minimal"))
+            if (LocalCache.ContainsKey(f))
+                d = LocalCache[f];
+            else
             {
-                if (!LocalCache.ContainsKey(f))
-                {
-                    d = GenDataDef.CreateMinimal().AsGenData();
-                    LocalCache.Add(f, d);
-                }
-                else
-                    d = LocalCache[f];
-            }
-            else if (!LocalCache.ContainsKey(f))
-            {
-                d = GenData.DataLoader.LoadData(f);
+                d = f.Equals("minimal") ? GenDataDef.CreateMinimal().AsGenData() : GenData.DataLoader.LoadData(f);
                 LocalCache.Add(f, d);
             }
-            else
-                d = LocalCache[f];
             return d;
         }
 

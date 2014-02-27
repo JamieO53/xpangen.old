@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Parameter
@@ -20,7 +21,8 @@ namespace org.xpangen.Generator.Parameter
         /// <returns>The loaded data.</returns>
         public GenData LoadData(string path)
         {
-            return new GenParameters(GenParameters.CreateStream(path));
+            using (var stream = GenParameters.CreateStream(path))
+                return new GenParameters(stream) {DataName = Path.GetFileNameWithoutExtension(path)};
         }
 
         /// <summary>
@@ -31,7 +33,8 @@ namespace org.xpangen.Generator.Parameter
         /// <returns>The loaded data.</returns>
         public GenData LoadData(GenDataDef dataDef, string path)
         {
-            return new GenParameters(dataDef, GenParameters.CreateStream(path));
+            using (var stream = GenParameters.CreateStream(path))
+                return new GenParameters(dataDef, stream) {DataName = Path.GetFileNameWithoutExtension(path)};
         }
     }
 }
