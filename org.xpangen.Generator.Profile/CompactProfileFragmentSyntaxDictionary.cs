@@ -105,7 +105,7 @@ namespace org.xpangen.Generator.Profile
                             }
                         if (genCondition.UseLit || genCondition.Var2.ClassId == -1 || genCondition.Var2.PropertyId == -1)
                         {
-                            if (v1[0] == '\'')
+                            if (v2[0] == '\'')
                                 if (v2[v2.Length - 1] == '\'')
                                     genCondition.Lit = v2.Substring(1, v2.Length - 2);
                                 else

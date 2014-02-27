@@ -16,7 +16,7 @@ namespace `Assembly.Namespace`
         {
         }
 
-`[Class':        public GenApplicationList<`Class.Name`> `Class.Name`List { get; private set; }
+`[Class':        public GenNamedApplicationList<`Class.Name`> `Class.Name`List { get; private set; }
 `]`[Class':
         protected override void GenObjectSetNotification()
         {
@@ -58,7 +58,7 @@ namespace `Assembly.Namespace`
 `[Property:        /// <summary>
         /// `Property.Title`
         /// </summary>
-        public`?Property.Name=Name: override`] string `Property.Name`
+        public`?Property.Name='Name': override`] string `Property.Name`
         {
             get { return AsString("`Property.Name`"); }
             set

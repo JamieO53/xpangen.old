@@ -16,11 +16,11 @@ namespace org.xpangen.Generator.Editor.Model
         {
         }
 
-        public GenApplicationList<GenSettings> GenSettingsList { get; private set; }
+        public GenNamedApplicationList<GenSettings> GenSettingsList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            GenSettingsList = new GenApplicationList<GenSettings>();
+            GenSettingsList = new GenNamedApplicationList<GenSettings>();
             var classId = GenDataDef.Classes.IndexOf("GenSettings");
             var classIdx = GenDataDef.IndexOfSubClass(0, classId);
             if (classIdx != -1)

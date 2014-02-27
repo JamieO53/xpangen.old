@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
             {
                 if (Name == value) return;
                 SetString("Name", value);
-                SaveFields();
+                if (!DelayedSave) SaveFields();
             }
         }
 
@@ -40,7 +40,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
             {
                 if (Title == value) return;
                 SetString("Title", value);
-                SaveFields();
+                if (!DelayedSave) SaveFields();
             }
         }
 

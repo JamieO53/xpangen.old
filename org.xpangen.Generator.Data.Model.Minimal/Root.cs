@@ -16,11 +16,11 @@ namespace org.xpangen.Generator.Data.Model.Minimal
         {
         }
 
-        public GenApplicationList<Class> ClassList { get; private set; }
+        public GenNamedApplicationList<Class> ClassList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            ClassList = new GenApplicationList<Class>();
+            ClassList = new GenNamedApplicationList<Class>();
             var classId = GenDataDef.Classes.IndexOf("Class");
             var classIdx = GenDataDef.IndexOfSubClass(0, classId);
             if (classIdx != -1)

@@ -10,59 +10,67 @@ namespace org.xpangen.Generator.Editor.Model
     /// <summary>
     /// 
     /// </summary>
-    public class Profile : GenApplicationBase
+    public class Profile : GenNamedApplicationBase
     {
         public Profile(GenDataDef genDataDef) : base(genDataDef)
         {
         }
 
         /// <summary>
-        /// The default location of the base files
+        /// The profile name
         /// </summary>
-        public string HomeDir
+        public override string Name
         {
-            get { return AsString("HomeDir"); }
+            get { return AsString("Name"); }
             set
             {
-                if (HomeDir == value) return;
-                SetString("HomeDir", value);
-                SaveFields();
+                if (Name == value) return;
+                SetString("Name", value);
+                if (!DelayedSave) SaveFields();
             }
         }
 
-        public GenApplicationList<FileGroup> FileGroupList { get; private set; }
-        public GenApplicationList<BaseFile> BaseFileList { get; private set; }
-
-        protected override void GenObjectSetNotification()
+        /// <summary>
+        /// Profile file name
+        /// </summary>
+        public string FileName
         {
-            FileGroupList = new GenApplicationList<FileGroup>();
-            var classId = GenDataDef.Classes.IndexOf("FileGroup");
-            var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
-            if (classIdx != -1)
+            get { return AsString("FileName"); }
+            set
             {
-                var list = new GenObjectList(GenObject.SubClass[classIdx]);
-                list.First();
-                while (!list.Eol)
-                {
-                    FileGroupList.Add(new FileGroup(GenDataDef) {GenObject = list.GenObject});
-                    list.Next();
-                }
+                if (FileName == value) return;
+                SetString("FileName", value);
+                if (!DelayedSave) SaveFields();
             }
-
-            BaseFileList = new GenApplicationList<BaseFile>();
-            classId = GenDataDef.Classes.IndexOf("BaseFile");
-            classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
-            if (classIdx != -1)
-            {
-                var list = new GenObjectList(GenObject.SubClass[classIdx]);
-                list.First();
-                while (!list.Eol)
-                {
-                    BaseFileList.Add(new BaseFile(GenDataDef) {GenObject = list.GenObject});
-                    list.Next();
-                }
-            }
-
         }
+
+        /// <summary>
+        /// Full path of profile
+        /// </summary>
+        public string FilePath
+        {
+            get { return AsString("FilePath"); }
+            set
+            {
+                if (FilePath == value) return;
+                SetString("FilePath", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+        /// <summary>
+        /// Description of profile
+        /// </summary>
+        public string Title
+        {
+            get { return AsString("Title"); }
+            set
+            {
+                if (Title == value) return;
+                SetString("Title", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
     }
 }

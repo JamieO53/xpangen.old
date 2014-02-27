@@ -10,7 +10,7 @@ namespace org.xpangen.Generator.Data.Model.Basic
     /// <summary>
     /// Class Definition
     /// </summary>
-    public class Class : GenApplicationBase
+    public class Class : GenNamedApplicationBase
     {
         public Class(GenDataDef genDataDef) : base(genDataDef)
         {
@@ -19,14 +19,14 @@ namespace org.xpangen.Generator.Data.Model.Basic
         /// <summary>
         /// Class name: must be well formed
         /// </summary>
-        public string Name
+        public override string Name
         {
             get { return AsString("Name"); }
             set
             {
                 if (Name == value) return;
                 SetString("Name", value);
-                SaveFields();
+                if (!DelayedSave) SaveFields();
             }
         }
 
@@ -40,7 +40,7 @@ namespace org.xpangen.Generator.Data.Model.Basic
             {
                 if (Title == value) return;
                 SetString("Title", value);
-                SaveFields();
+                if (!DelayedSave) SaveFields();
             }
         }
 

@@ -10,7 +10,7 @@ namespace org.xpangen.Generator.Editor.Model
     /// <summary>
     /// 
     /// </summary>
-    public class GenSettings : GenApplicationBase
+    public class GenSettings : GenNamedApplicationBase
     {
         public GenSettings(GenDataDef genDataDef) : base(genDataDef)
         {
@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Editor.Model
             {
                 if (HomeDir == value) return;
                 SetString("HomeDir", value);
-                SaveFields();
+                if (!DelayedSave) SaveFields();
             }
         }
 
