@@ -3,13 +3,14 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
+using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Data.Model.Definition
 {
     /// <summary>
     /// Property definition
     /// </summary>
-    public class Property : GenApplicationBase
+    public class Property : GenNamedApplicationBase
     {
         public Property(GenDataDef genDataDef) : base(genDataDef)
         {
@@ -18,14 +19,14 @@ namespace org.xpangen.Generator.Data.Model.Definition
         /// <summary>
         /// Property name: must be well formed
         /// </summary>
-        public string Name
+        public override string Name
         {
             get { return AsString("Name"); }
             set
             {
                 if (Name == value) return;
                 SetString("Name", value);
-                SaveFields();
+                if (!DelayedSave) SaveFields();
             }
         }
 
@@ -39,7 +40,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
             {
                 if (Title == value) return;
                 SetString("Title", value);
-                SaveFields();
+                if (!DelayedSave) SaveFields();
             }
         }
 
@@ -53,7 +54,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
             {
                 if (DataType == value) return;
                 SetString("DataType", value);
-                SaveFields();
+                if (!DelayedSave) SaveFields();
             }
         }
 
@@ -67,7 +68,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
             {
                 if (Default == value) return;
                 SetString("Default", value);
-                SaveFields();
+                if (!DelayedSave) SaveFields();
             }
         }
 

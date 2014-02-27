@@ -10,59 +10,25 @@ namespace org.xpangen.Generator.Data.Model.Minimal
     /// <summary>
     /// Property definition
     /// </summary>
-    public class Property : GenApplicationBase
+    public class Property : GenNamedApplicationBase
     {
         public Property(GenDataDef genDataDef) : base(genDataDef)
         {
         }
 
         /// <summary>
-        /// Class name: must be well formed
+        /// Property name: must be well formed
         /// </summary>
-        public string Name
+        public override string Name
         {
             get { return AsString("Name"); }
             set
             {
                 if (Name == value) return;
                 SetString("Name", value);
-                SaveFields();
+                if (!DelayedSave) SaveFields();
             }
         }
 
-        public GenApplicationList<SubClass> SubClassList { get; private set; }
-        public GenApplicationList<Property> PropertyList { get; private set; }
-
-        protected override void GenObjectSetNotification()
-        {
-            SubClassList = new GenApplicationList<SubClass>();
-            var classId = GenDataDef.Classes.IndexOf("SubClass");
-            var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
-            if (classIdx != -1)
-            {
-                var list = new GenObjectList(GenObject.SubClass[classIdx]);
-                list.First();
-                while (!list.Eol)
-                {
-                    SubClassList.Add(new SubClass(GenDataDef) {GenObject = list.GenObject});
-                    list.Next();
-                }
-            }
-
-            PropertyList = new GenApplicationList<Property>();
-            classId = GenDataDef.Classes.IndexOf("Property");
-            classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
-            if (classIdx != -1)
-            {
-                var list = new GenObjectList(GenObject.SubClass[classIdx]);
-                list.First();
-                while (!list.Eol)
-                {
-                    PropertyList.Add(new Property(GenDataDef) {GenObject = list.GenObject});
-                    list.Next();
-                }
-            }
-
-        }
     }
 }
