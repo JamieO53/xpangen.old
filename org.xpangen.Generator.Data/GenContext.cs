@@ -19,15 +19,20 @@ namespace org.xpangen.Generator.Data
         /// Copy the contents of a context to this context.
         /// </summary>
         /// <param name="context">The context being copied.</param>
-        public void Duplicate(GenContext context)
+        public void Duplicate(GenContext context, GenDataBase genDataBase)
         {
             Classes.AddRange(context.Classes);
             for (var i = 0; i < Cache.References.Count; i++)
-            {
                 context.Cache.Internal(Cache.References[i].Path, Cache.References[i].GenData);
-            }
             for (var i = 0; i < context.Count; i++)
-                this[i] = new GenObjectList(context[i].GenObjectListBase) { Index = context[i].Index, ClassId = i, RefClassId = i };
+                this[i] = new GenObjectList(context[i].GenObjectListBase, genDataBase)
+                              {
+                                  Index = context[i].Index,
+                                  ClassId = Classes[i].ClassId,
+                                  RefClassId = Classes[i].RefClassId,
+                                  Reference = context[i].Reference,
+                                  ReferenceData = context[i].ReferenceData
+                              };
         }
 
         public void Add(GenObjectList item, GenDataDefClass defClass, GenDataBase genDataBase, string reference, string referenceDefinition)
@@ -42,7 +47,7 @@ namespace org.xpangen.Generator.Data
                                                                          Reference = reference,
                                                                          ReferenceDefinition =
                                                                              referenceDefinition
-                                                                     }))
+                                                                     }), genDataBase)
                              {
                                  RefClassId = defClass.RefClassId,
                                  ClassId = defClass.ClassId,
@@ -56,7 +61,7 @@ namespace org.xpangen.Generator.Data
                                                                          Reference = reference,
                                                                          ReferenceDefinition =
                                                                              referenceDefinition
-                                                                     }))
+                                                                     }), genDataBase)
                              {
                                  RefClassId = defClass.RefClassId,
                                  ClassId = defClass.ClassId,

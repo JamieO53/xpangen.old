@@ -71,6 +71,47 @@ namespace org.xpangen.Generator.Test
             d.Last(2);
             Assert.AreEqual("Property", d.Context[2].GenObject.Attributes[0]);
             Assert.AreEqual(4, d.Context[4].Count);
+            d.First(0);
+        }
+
+        [TestCase(Description = "Test for repeated navigation of data with references.")]
+        public void DataNavigationTest()
+        {
+            var f = new GenDataDef();
+            f.AddSubClass("", "Parent");
+            f.Classes[f.Classes.IndexOf("Parent")].Properties.Add("Name");
+            f.AddSubClass("Parent", "Class", "Definition");
+
+            var d = new GenData(f);
+
+            CreateGenObject(d, "", "Parent", "Minimal");
+            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Minimal";
+            CreateGenObject(d, "", "Parent", "Basic");
+            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Basic";
+            CreateGenObject(d, "", "Parent", "Definition");
+            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Definition";
+            d.Cache.Merge();
+
+            //var minimal = d.Cache["definition", "Minimal"];
+            //var basic = d.Cache["definition", "Basic"];
+            //var newDefinition = d.Cache["definition", "Definition"];
+
+            var d1 = d.DuplicateContext();
+            Navigate(d1, 0);
+            Navigate(d1, 0);
+        }
+
+        private static void Navigate(GenData d, int classId)
+        {
+            d.First(classId);
+            while (!d.Eol(classId))
+            {
+                for (var i = 0; i < d.Context[classId].DefClass.SubClasses.Count; i++)
+                {
+                    Navigate(d, d.Context[classId].DefClass.SubClasses[i].SubClass.ClassId);
+                }
+                d.Next(classId);
+            }
         }
 
         /// <summary>

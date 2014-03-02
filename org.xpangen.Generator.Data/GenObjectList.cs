@@ -12,8 +12,9 @@ namespace org.xpangen.Generator.Data
         /// Create a new <see cref="GenObjectList"/> list.
         /// </summary>
         /// <param name="genObjectListBase"> The underlying generator object list. </param>
-        public GenObjectList(IGenObjectListBase genObjectListBase)
+        public GenObjectList(IGenObjectListBase genObjectListBase, GenDataBase genDataBase)
         {
+            GenDataBase = genDataBase;
             GenObjectListBase = genObjectListBase;
             DefClass = GenObjectListBase.Definition.SubClass;
         }
@@ -24,7 +25,7 @@ namespace org.xpangen.Generator.Data
 
         public int RefClassId { get; set; }
 
-        private GenDataBase GenDataBase { get { return GenObjectListBase.GenDataBase; } }
+        private GenDataBase GenDataBase { get; set; }
         public GenDataDefClass DefClass { get; private set; }
 
         public GenObject this[int index] { get { return GenObjectListBase[index]; } }
@@ -223,7 +224,7 @@ namespace org.xpangen.Generator.Data
 
         public override string ToString()
         {
-            return DefClass + (Eol || GenObject.Attributes.Count == 0 ? "" : ":" + GenObject.Attributes[0]) ;
+            return GenDataBase.GenDataDef.Classes[ClassId] + (Eol || GenObject.Attributes.Count == 0 ? "" : ":" + GenObject.Attributes[0]) ;
         }
     }
 }

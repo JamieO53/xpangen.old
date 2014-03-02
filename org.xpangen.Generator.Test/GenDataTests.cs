@@ -85,7 +85,7 @@ namespace org.xpangen.Generator.Test
             a.SaveFields();
 
             var i = f.IndexOfSubClass(f.Classes.IndexOf("Class"), f.Classes.IndexOf("SubClass"));
-            var s = new GenObjectList(o.SubClass[i]);
+            var s = new GenObjectList(o.SubClass[i], d.GenDataBase);
             o = s.CreateObject();
             a.GenObject = o;
             a.SetString("Name", "SubClass");
