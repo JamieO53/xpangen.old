@@ -25,7 +25,7 @@ namespace `Assembly.Namespace`
             var classIdx = GenDataDef.IndexOfSubClass(0, classId);
             if (classIdx != -1)
             {
-                var list = new GenObjectList(GenObject.SubClass[classIdx]);
+                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase);
                 list.First();
                 while (!list.Eol)
                 {
@@ -78,7 +78,7 @@ namespace `Assembly.Namespace`
             `@MapGet:'var'`]`@MapSet:'var' ''`]classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
             if (classIdx != -1)
             {
-                var list = new GenObjectList(GenObject.SubClass[classIdx]);
+                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase);
                 list.First();
                 while (!list.Eol)
                 {
