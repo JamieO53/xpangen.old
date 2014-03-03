@@ -31,6 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GenDataEditor));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.DataNavigatorTreeView = new System.Windows.Forms.TreeView();
+            this.DataNavigatorImageList = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.MoveToTopButton = new System.Windows.Forms.ToolStripButton();
             this.MoveUpButton = new System.Windows.Forms.ToolStripButton();
@@ -39,26 +42,27 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.AddItemButton = new System.Windows.Forms.ToolStripButton();
             this.RemoveItemButton = new System.Windows.Forms.ToolStripButton();
-            this.DataNavigatorTreeView = new System.Windows.Forms.TreeView();
-            this.DataNavigatorImageList = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.GenDataDataGrid = new System.Windows.Forms.DataGridView();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.SaveItemChangesButton = new System.Windows.Forms.ToolStripButton();
             this.CancelItemChangesButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.DataEditorStatusLabel = new System.Windows.Forms.ToolStripLabel();
             this.DataEditorHintLabel = new System.Windows.Forms.ToolStripLabel();
-            this.GenDataDataGrid = new System.Windows.Forms.DataGridView();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
+            this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GenDataDataGrid)).BeginInit();
+            this.toolStrip2.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,18 +74,48 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.panel3);
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip1);
-            this.splitContainer1.Panel1.Controls.Add(this.DataNavigatorTreeView);
             this.splitContainer1.Panel1.Controls.Add(this.panel1);
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.panel4);
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip2);
-            this.splitContainer1.Panel2.Controls.Add(this.GenDataDataGrid);
             this.splitContainer1.Panel2.Controls.Add(this.panel2);
             this.splitContainer1.Size = new System.Drawing.Size(614, 283);
             this.splitContainer1.SplitterDistance = 204;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.DataNavigatorTreeView);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(0, 20);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(204, 238);
+            this.panel3.TabIndex = 4;
+            // 
+            // DataNavigatorTreeView
+            // 
+            this.DataNavigatorTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DataNavigatorTreeView.ImageIndex = 0;
+            this.DataNavigatorTreeView.ImageList = this.DataNavigatorImageList;
+            this.DataNavigatorTreeView.Location = new System.Drawing.Point(0, 0);
+            this.DataNavigatorTreeView.Name = "DataNavigatorTreeView";
+            this.DataNavigatorTreeView.SelectedImageIndex = 0;
+            this.DataNavigatorTreeView.Size = new System.Drawing.Size(204, 238);
+            this.DataNavigatorTreeView.TabIndex = 2;
+            this.DataNavigatorTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.DataNavigatorTreeView_BeforeSelect);
+            this.DataNavigatorTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.DataNavigatorTreeView_AfterSelect);
+            // 
+            // DataNavigatorImageList
+            // 
+            this.DataNavigatorImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("DataNavigatorImageList.ImageStream")));
+            this.DataNavigatorImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.DataNavigatorImageList.Images.SetKeyName(0, "DataBrowserSelection.png");
+            this.DataNavigatorImageList.Images.SetKeyName(1, "DataBrowserClass.png");
+            this.DataNavigatorImageList.Images.SetKeyName(2, "DataBrowserSubClass.png");
             // 
             // toolStrip1
             // 
@@ -169,27 +203,6 @@
             this.RemoveItemButton.Text = "Remove item";
             this.RemoveItemButton.ToolTipText = "Remove the selected item from its list";
             // 
-            // DataNavigatorTreeView
-            // 
-            this.DataNavigatorTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DataNavigatorTreeView.ImageIndex = 0;
-            this.DataNavigatorTreeView.ImageList = this.DataNavigatorImageList;
-            this.DataNavigatorTreeView.Location = new System.Drawing.Point(0, 20);
-            this.DataNavigatorTreeView.Name = "DataNavigatorTreeView";
-            this.DataNavigatorTreeView.SelectedImageIndex = 0;
-            this.DataNavigatorTreeView.Size = new System.Drawing.Size(204, 263);
-            this.DataNavigatorTreeView.TabIndex = 2;
-            this.DataNavigatorTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.DataNavigatorTreeView_BeforeSelect);
-            this.DataNavigatorTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.DataNavigatorTreeView_AfterSelect);
-            // 
-            // DataNavigatorImageList
-            // 
-            this.DataNavigatorImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("DataNavigatorImageList.ImageStream")));
-            this.DataNavigatorImageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.DataNavigatorImageList.Images.SetKeyName(0, "DataBrowserSelection.png");
-            this.DataNavigatorImageList.Images.SetKeyName(1, "DataBrowserClass.png");
-            this.DataNavigatorImageList.Images.SetKeyName(2, "DataBrowserSubClass.png");
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.label1);
@@ -209,6 +222,28 @@
             this.label1.Size = new System.Drawing.Size(101, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "Data navigator";
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.GenDataDataGrid);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(0, 20);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(406, 238);
+            this.panel4.TabIndex = 3;
+            // 
+            // GenDataDataGrid
+            // 
+            this.GenDataDataGrid.AllowUserToAddRows = false;
+            this.GenDataDataGrid.AllowUserToDeleteRows = false;
+            this.GenDataDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.GenDataDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GenDataDataGrid.Location = new System.Drawing.Point(0, 0);
+            this.GenDataDataGrid.Name = "GenDataDataGrid";
+            this.GenDataDataGrid.Size = new System.Drawing.Size(406, 238);
+            this.GenDataDataGrid.TabIndex = 2;
+            this.GenDataDataGrid.ColumnAdded += new System.Windows.Forms.DataGridViewColumnEventHandler(this.GenDataDataGrid_ColumnAdded);
+            this.GenDataDataGrid.SelectionChanged += new System.EventHandler(this.GenDataDataGrid_SelectionChanged);
             // 
             // toolStrip2
             // 
@@ -260,19 +295,6 @@
             this.DataEditorHintLabel.Name = "DataEditorHintLabel";
             this.DataEditorHintLabel.Size = new System.Drawing.Size(0, 22);
             // 
-            // GenDataDataGrid
-            // 
-            this.GenDataDataGrid.AllowUserToAddRows = false;
-            this.GenDataDataGrid.AllowUserToDeleteRows = false;
-            this.GenDataDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.GenDataDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GenDataDataGrid.Location = new System.Drawing.Point(0, 20);
-            this.GenDataDataGrid.Name = "GenDataDataGrid";
-            this.GenDataDataGrid.Size = new System.Drawing.Size(406, 263);
-            this.GenDataDataGrid.TabIndex = 2;
-            this.GenDataDataGrid.ColumnAdded += new System.Windows.Forms.DataGridViewColumnEventHandler(this.GenDataDataGrid_ColumnAdded);
-            this.GenDataDataGrid.SelectionChanged += new System.EventHandler(this.GenDataDataGrid_SelectionChanged);
-            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.label2);
@@ -306,13 +328,15 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.GenDataDataGrid)).EndInit();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.GenDataDataGrid)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
@@ -343,6 +367,8 @@
         private System.Windows.Forms.ToolStripLabel DataEditorStatusLabel;
         private System.Windows.Forms.ImageList DataNavigatorImageList;
         private System.Windows.Forms.ToolStripLabel DataEditorHintLabel;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
 
     }
 }

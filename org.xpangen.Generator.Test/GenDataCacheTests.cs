@@ -90,7 +90,7 @@ namespace org.xpangen.Generator.Test
             ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Basic";
             CreateGenObject(d, "", "Parent", "Definition");
             ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Definition";
-            d.Cache.Merge();
+            //d.Cache.Merge();
 
             //var minimal = d.Cache["definition", "Minimal"];
             //var basic = d.Cache["definition", "Basic"];
@@ -99,6 +99,45 @@ namespace org.xpangen.Generator.Test
             var d1 = d.DuplicateContext();
             Navigate(d1, 0);
             Navigate(d1, 0);
+        }
+
+        [TestCase(Description = "Test for restoring context with references.")]
+        public void DataRestoreContextTest()
+        {
+            var f = new GenDataDef();
+            f.AddSubClass("", "Parent");
+            f.Classes[f.Classes.IndexOf("Parent")].Properties.Add("Name");
+            f.AddSubClass("Parent", "Class", "Definition");
+
+            var d = new GenData(f);
+
+            CreateGenObject(d, "", "Parent", "Minimal");
+            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Minimal";
+            CreateGenObject(d, "", "Parent", "Basic");
+            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Basic";
+            CreateGenObject(d, "", "Parent", "Definition");
+            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Definition";
+            
+            d.First(1);
+            var o = d.Context[4].GenObject;
+            var sc = d.SaveContext(4);
+            Assert.AreEqual("minimal", o.GenDataBase.ToString());
+            Assert.AreEqual("Minimal", d.Context[4].Reference);
+            Assert.AreEqual("Minimal", d.Context[3].Reference);
+            Assert.AreEqual("Minimal", d.Context[2].Reference);
+            Assert.AreEqual("", d.Context[1].Reference);
+            d.Last(1);
+            Assert.AreEqual("definition", d.Context[4].GenObject.GenDataBase.ToString());
+            Assert.AreEqual("Definition", d.Context[4].Reference);
+            Assert.AreEqual("Definition", d.Context[3].Reference);
+            Assert.AreEqual("Definition", d.Context[2].Reference);
+            Assert.AreEqual("", d.Context[1].Reference);
+            d.EstablishContext(sc);
+            Assert.AreSame(o, d.Context[4].GenObject);
+            Assert.AreEqual("Minimal", d.Context[4].Reference);
+            Assert.AreEqual("Minimal", d.Context[3].Reference);
+            Assert.AreEqual("Minimal", d.Context[2].Reference);
+            Assert.AreEqual("", d.Context[1].Reference);
         }
 
         private static void Navigate(GenData d, int classId)

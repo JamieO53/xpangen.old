@@ -58,6 +58,7 @@
     <Compile Include="GenObjectList.cs" />
     <Compile Include="GenObjectListBase.cs" />
     <Compile Include="GenObjectListReference.cs" />
+    <Compile Include="GenSavedContext.cs" />
     <Compile Include="GenSubClasses.cs" />
     <Compile Include="IGenDataLoader.cs" />
     <Compile Include="IGenObjectListBase.cs" />
