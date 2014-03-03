@@ -41,7 +41,7 @@ namespace GenEdit.Utilities
                 dat.First(classId);
                 while (!dat.Eol(classId))
                 {
-                    var obj = new GenObjectViewModel(objectList.GenObject, definition, Data.GenData);
+                    var obj = new GenObjectViewModel(objectList.GenObject, definition, Data.GenData.SaveContext(classId));
                     var childItem = CreateTreeNode(1, obj.Name, obj.Hint, obj);
                     classItem.Nodes.Add(childItem);
                     CreateSubClassTrees(childItem.Nodes, classId);

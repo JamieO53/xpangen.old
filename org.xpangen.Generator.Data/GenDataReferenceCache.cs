@@ -31,6 +31,22 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
+        /// Returns the cached data.
+        /// </summary>
+        /// <param name="path">The data's locations.</param>
+        /// <returns></returns>
+        public GenData this[string path]
+        {
+            get
+            {
+                if (path.Equals("self", StringComparison.InvariantCultureIgnoreCase))
+                    return Self;
+                var p = path.ToLowerInvariant().Replace('/', '\\');
+                return LocalCache.ContainsKey(p) ? LocalCache[p] : null;
+            }
+        }
+
+        /// <summary>
         /// Check if the cache does not contain the data, and adds it then returns the cached data.
         /// </summary>
         /// <param name="defPath">The data's definition location.</param>

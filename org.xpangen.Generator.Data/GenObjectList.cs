@@ -11,7 +11,8 @@ namespace org.xpangen.Generator.Data
         /// <summary>
         /// Create a new <see cref="GenObjectList"/> list.
         /// </summary>
-        /// <param name="genObjectListBase"> The underlying generator object list. </param>
+        /// <param name="genObjectListBase"> The underlying generator object list.</param>
+        /// <param name="genDataBase">The underlying data container.</param>
         public GenObjectList(IGenObjectListBase genObjectListBase, GenDataBase genDataBase)
         {
             GenDataBase = genDataBase;

@@ -127,7 +127,7 @@ namespace GenEdit.View
             var nodeData = (GenObjectViewModel) myNode.Tag;
             if (nodeData == null) return;
             var index = myNode.Parent.Nodes.IndexOf(myNode);
-            var genData = nodeData.GenData;
+            var genData = nodeData.SavedContext.GenData;
             var classId = nodeData.GenAttributes.GenObject.ClassId;
             switch (move)
             {

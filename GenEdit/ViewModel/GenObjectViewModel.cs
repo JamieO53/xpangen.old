@@ -52,12 +52,13 @@ namespace GenEdit.ViewModel
         /// </summary>
         /// <param name="genObject">The <see cref="GenObject"/> being edited.</param>
         /// <param name="definition">The class definition of the object being edited.</param>
-        public GenObjectViewModel(GenObject genObject, GenApplicationBase definition, GenData genData)
+        /// <param name="savedContext">The context of the object being edited</param>
+        public GenObjectViewModel(GenObject genObject, GenApplicationBase definition, GenSavedContext savedContext)
         {
-            GenData = genData;
+            SavedContext = savedContext;
             IgnorePropertyValidation = true;
             Definition = definition;
-            GenAttributes = new GenAttributes(genObject.GenDataBase.GenDataDef) { GenObject = genObject };
+            GenAttributes = new GenAttributes(genObject.GenDataBase.GenDataDef) { GenObject = savedContext.GenObject };
             Changed = false;
         }
 
@@ -80,7 +81,7 @@ namespace GenEdit.ViewModel
         /// </summary>
         public string Hint { get { return GenAttributes.AsString("Title"); } }
 
-        public GenData GenData { get; private set; }
+        public GenSavedContext SavedContext { get; private set; }
 
         /// <summary>
         /// Saves the object data
@@ -105,7 +106,7 @@ namespace GenEdit.ViewModel
         /// </summary>
         public void EstablishContext()
         {
-            GenData.EstablishContext(GenAttributes.GenObject);
+            SavedContext.EstablishContext();
         }
 
         private void FieldPropertyChanged(object sender, PropertyChangedEventArgs e)

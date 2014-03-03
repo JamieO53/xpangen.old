@@ -2,6 +2,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
+
 namespace org.xpangen.Generator.Data
 {
     public class GenData
@@ -70,26 +72,81 @@ namespace org.xpangen.Generator.Data
         {
             var parent = Context[GenDataDef.Classes.IndexOf(parentClassName)].GenObject;
             var o = GenDataBase.CreateGenObject(className, parent);
-            EstablishContext(o);
+            Context[o.ClassId].GenObjectListBase = o.ParentSubClass;
+            Context[o.ClassId].Index = Context[o.ClassId].IndexOf(o);
             return o;
         }
 
         public void EstablishContext(GenObject genObject)
         {
-            if (genObject == null || genObject.ParentSubClass == null) return;
-            
-            var i = 0;
-            while (i < genObject.Parent.SubClass.Count && genObject.Parent.SubClass[i].ClassId != genObject.ClassId)
-                i++;
-            if (i < genObject.Parent.SubClass.Count)
+            if (genObject.ParentSubClass != null)
+                EstablishContext(genObject.ClassId, genObject.ParentSubClass, genObject, "", 0, null);
+        }
+
+        public void EstablishContext(GenSavedContext savedContext)
+        {
+            EstablishContext(savedContext.ClassId, savedContext.GenObjectListBase, savedContext.GenObject,
+                             savedContext.Reference, savedContext.RefClassId, savedContext.ReferenceData);
+        }
+
+        private void EstablishContext(int classId, IGenObjectListBase genObjectListBase, GenObject genObject,
+                                      string reference, int refClassId, GenData referenceData)
+        {
+            if (string.IsNullOrEmpty(reference))
             {
-                if (Context[genObject.ClassId] == null)
-                    Context[genObject.ClassId] = new GenObjectList(genObject.Parent.SubClass[i], GenDataBase);
-                else
-                    Context[genObject.ClassId].GenObjectListBase = genObject.Parent.SubClass[i];
-                Context[genObject.ClassId].Index = Context[genObject.ClassId].IndexOf(genObject);
+                if (genObject.ParentSubClass != null)
+                    EstablishContext(genObject.Parent.ClassId, genObject.ParentSubClass, genObject.Parent, reference, 0,
+                                     this);
             }
-            EstablishContext(genObject.Parent);
+            else if (genObject.ClassId != 0)
+            {
+                var parentClassId = GenDataDef.Classes[classId].Parent.ClassId;
+                var parentRefClassId = referenceData.GenDataDef.Classes.IndexOf(GenDataDef.Classes[parentClassId].Name);
+                EstablishContext(parentClassId, genObject.ParentSubClass, genObject.Parent, reference, parentRefClassId,
+                                 referenceData);
+            }
+
+            Context[classId].GenObjectListBase = genObjectListBase;
+            Context[classId].RefClassId = refClassId;
+            Context[classId].ReferenceData = referenceData;
+            if (referenceData == null ||
+                GenDataDef.Classes[classId].Reference.Equals(referenceData.GenDataDef.Definition,
+                                                             StringComparison.InvariantCultureIgnoreCase))
+            {
+                Context[classId].Reference = reference;
+                Context[classId].Index = Context[classId].IndexOf(genObject);
+            }
+            else if (classId != 0)
+            {
+                for (var i = 0; i < GenDataDef.Classes[classId].Parent.SubClasses.Count; i++)
+                {
+                    if (GenDataDef.Classes[classId].Parent.SubClasses[i].Reference !=
+                        referenceData.GenDataDef.Definition) continue;
+                    for (var j = 0;
+                         j < Context[GenDataDef.Classes[classId].Parent.ClassId].GenObject.SubClass.Count;
+                         j++)
+                    {
+                        if (reference !=
+                            Context[GenDataDef.Classes[classId].Parent.ClassId].GenObject.SubClass[j].Reference)
+                            continue;
+                        Context[GenDataDef.Classes[classId].Parent.ClassId].Index = j;
+                        break;
+                    }
+                }
+            }
+
+            for (var i = 0; i < GenDataDef.Classes[classId].SubClasses.Count; i++)
+            {
+                var subDef = GenDataDef.Classes[classId].SubClasses[i].SubClass;
+                if (string.IsNullOrEmpty(subDef.Reference)) continue;
+                var sub = Context[subDef.ClassId];
+// ReSharper disable PossibleNullReferenceException
+                sub.GenObjectListBase = referenceData.Context[subDef.RefClassId].GenObjectListBase;
+// ReSharper restore PossibleNullReferenceException
+                sub.Reference = reference;
+                sub.ReferenceData = referenceData;
+                sub.First();
+            }
         }
 
         public void First(int classId)
@@ -262,6 +319,21 @@ namespace org.xpangen.Generator.Data
         public override string ToString()
         {
             return !string.IsNullOrEmpty(DataName) ? DataName : base.ToString();
+        }
+
+        public GenSavedContext SaveContext(int classId)
+        {
+            var sc = new GenSavedContext
+                         {
+                             GenData = this,
+                             ClassId = classId,
+                             GenObject = Context[classId].GenObject,
+                             GenObjectListBase = Context[classId].GenObjectListBase,
+                             Reference = Context[classId].Reference,
+                             RefClassId = Context[classId].RefClassId,
+                             ReferenceData = Context[classId].ReferenceData
+                         };
+            return sc;
         }
     }
 }

@@ -193,6 +193,7 @@
             this.ProfileTextBox.Location = new System.Drawing.Point(0, 20);
             this.ProfileTextBox.Multiline = true;
             this.ProfileTextBox.Name = "ProfileTextBox";
+            this.ProfileTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.ProfileTextBox.Size = new System.Drawing.Size(443, 153);
             this.ProfileTextBox.TabIndex = 2;
             // 
@@ -222,6 +223,7 @@
             this.ProfileExpansionTextBox.Location = new System.Drawing.Point(0, 20);
             this.ProfileExpansionTextBox.Multiline = true;
             this.ProfileExpansionTextBox.Name = "ProfileExpansionTextBox";
+            this.ProfileExpansionTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.ProfileExpansionTextBox.Size = new System.Drawing.Size(443, 142);
             this.ProfileExpansionTextBox.TabIndex = 3;
             // 
