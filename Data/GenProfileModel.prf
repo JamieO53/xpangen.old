@@ -12,7 +12,7 @@ namespace `Assembly.Namespace`
     /// </summary>
     public class Root : GenApplicationBase
     {
-        public Root(GenDataDef genDataDef) : base(genDataDef)
+        public Root(GenData genData) : base(genData)
         {
         }
 
@@ -29,7 +29,7 @@ namespace `Assembly.Namespace`
                 list.First();
                 while (!list.Eol)
                 {
-                    `Class.Name`List.Add(new `Class.Name`(GenDataDef) {GenObject = list.GenObject});
+                    `Class.Name`List.Add(new `Class.Name`(GenData) {GenObject = list.GenObject});
                     list.Next();
                 }
             }
@@ -51,7 +51,7 @@ namespace `Assembly.Namespace`
     /// </summary>
     public class `Class.Name` : GenNamedApplicationBase
     {
-        public `Class.Name`(GenDataDef genDataDef) : base(genDataDef)
+        public `Class.Name`(GenData genData) : base(genData)
         {
         }
 
@@ -82,7 +82,7 @@ namespace `Assembly.Namespace`
                 list.First();
                 while (!list.Eol)
                 {
-                    `SubClass.Name`List.Add(new `SubClass.Name`(GenDataDef) {GenObject = list.GenObject});
+                    `SubClass.Name`List.Add(new `SubClass.Name`(GenData) {GenObject = list.GenObject});
                     list.Next();
                 }
             }
