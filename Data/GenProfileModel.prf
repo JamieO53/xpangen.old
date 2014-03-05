@@ -69,11 +69,11 @@ namespace `Assembly.Namespace`
             }
         }
 
-`]`[SubClass:        public GenApplicationList<`SubClass.Name`> `SubClass.Name`List { get; private set; }
+`]`[SubClass:        public GenNamedApplicationList<`SubClass.Name`> `SubClass.Name`List { get; private set; }
 `]`[SubClass':
         protected override void GenObjectSetNotification()
         {
-`]`@MapSet:'var' 'var '`]`[SubClass:            `SubClass.Name`List = new GenApplicationList<`SubClass.Name`>();
+`]`@MapSet:'var' 'var '`]`[SubClass:            `SubClass.Name`List = new GenNamedApplicationList<`SubClass.Name`>();
             `@MapGet:'var'`]classId = GenDataDef.Classes.IndexOf("`SubClass.Name`");
             `@MapGet:'var'`]`@MapSet:'var' ''`]classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
             if (classIdx != -1)
