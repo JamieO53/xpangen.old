@@ -1,0 +1,24 @@
+Definition=GeneratorEditor
+Class=GenSettings
+Field=HomeDir
+SubClass={FileGroup,BaseFile}
+Class=FileGroup
+Field={Name,FileName,FilePath,BaseFileName,Generated,Profile}
+Class=BaseFile
+Field={Name,FileName,FilePath,Title,FileExtension}
+SubClass=Profile
+Class=Profile
+Field={Name,FileName,FilePath,Title}
+.
+GenSettings[HomeDir='.']
+FileGroup=Minimal[FileName='Minimal.dcb',FilePath=Data,BaseFileName=Definition]
+FileGroup=Basic[FileName='Basic.dcb',FilePath=Data,BaseFileName=Definition]
+FileGroup=Definition[FileName='Definition.dcb',FilePath=Data,BaseFileName=Definition]
+FileGroup=ProgramDefinition[FileName='ProgramDefinition.dcb',FilePath=Data,BaseFileName=Definition]
+FileGroup=GeneratorEditor[FileName='GeneratorEditor.dcb',FilePath=Data,BaseFileName=Definition]
+FileGroup=GeneratorDefinitionModel[FileName='GeneratorDefinitionModel.dcb',FilePath=Data,BaseFileName=ProgramDefinition,Profile=GenProfileModel]
+BaseFile=Minimal[FileName='Minimal.dcb',FilePath=Data,Title='The simplest definition required by the generator',FileExtension='.dcb']
+BaseFile=Definition[FileName='Definition.dcb',FilePath=Data,Title='The definition required by the editor',FileExtension='.dcb']
+BaseFile=ProgramDefinition[FileName='ProgramDefinition.dcb',FilePath=Data,Title='Defines generator editor data models',FileExtension='.dcb']
+Profile=GenProfileModel[FileName='GenProfileModel.prf',FilePath=Data]
+BaseFile=GeneratorEditor[FileName='GeneratorEditor.dcb',FilePath=Data,Title='Defines generator editor settings data',FileExtension='.dcb']
