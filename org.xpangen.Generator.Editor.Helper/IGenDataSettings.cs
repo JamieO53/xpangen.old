@@ -3,13 +3,14 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
+using org.xpangen.Generator.Editor.Model;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
-    public interface IGenSettings
+    public interface IGenDataSettings
     {
         void DeleteFileGroup();
-        string GetFileFromCaption(string caption);
+        FileGroup GetFileFromCaption(string caption);
         void GetFileGroup();
         List<string> GetFileHistory(); 
         void SetFileGroup();

@@ -55,14 +55,14 @@ namespace org.xpangen.Generator.Editor.Helper
             def.First(1);
             while (!def.Eol(1))
             {
-                list.Add(new Class(def.GenDataDef) {GenObject = def.Context[1].GenObject});
+                list.Add(new Class(def) {GenObject = def.Context[1].GenObject});
                 def.Next(1);
             }
         }
 
         public GenSegment Profile { get; set; } 
         public IGenData GenDataStore { get; set; }
-        public IGenSettings Settings { get; set; }
+        public IGenDataSettings Settings { get; set; }
         public bool Testing { get; set; }
         public IGenValidator Validator { get; set; }
 

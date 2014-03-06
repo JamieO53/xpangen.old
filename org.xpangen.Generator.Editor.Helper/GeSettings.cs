@@ -4,19 +4,28 @@
 
 using System;
 using System.Collections.Generic;
+using org.xpangen.Generator.Editor.Model;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
-    public class GenSettings : IGenSettings
+    public class GeSettings : IGenDataSettings
     {
+        public Root Model { get; private set; }
+
+        public GeSettings(Root model)
+        {
+            Model = model;
+        }
+
         public void DeleteFileGroup()
         {
             throw new NotImplementedException();
         }
 
-        public string GetFileFromCaption(string caption)
+        public FileGroup GetFileFromCaption(string caption)
         {
-            throw new NotImplementedException();
+            FileGroup = Model.GenSettingsList[0].FileGroupList.Find(caption);
+            return FileGroup;
         }
 
         public void GetFileGroup()
@@ -70,9 +79,22 @@ namespace org.xpangen.Generator.Editor.Helper
         //  function GetFileFromCaption(Caption: string): string;
         //  procedure SetFileGroup;
         //end;
-        public string Base { get; set; }
-        public string FileGroup { get; set; }
-        public string FilePath { get; set; }
+        public BaseFile BaseFile
+        {
+            get
+            {
+                return Model.GenSettingsList[0].BaseFileList.Find(FileGroup.BaseFileName);
+            } set
+            {
+                FileGroup.BaseFileName = value.Name;
+            }
+        }
+        public FileGroup FileGroup { get; set; }
+        public string FilePath
+        {
+            get { return FileGroup.FilePath + "/" + FileGroup.FileName; }
+            set {}
+        }
         public string Generated { get; set; }
         public string HomeDir { get; set; }
         public string Profile { get; set; }
