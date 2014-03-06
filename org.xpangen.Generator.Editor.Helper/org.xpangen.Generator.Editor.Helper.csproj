@@ -36,9 +36,9 @@
     <Compile Include="GeData.cs" />
     <Compile Include="GeGenData.cs" />
     <Compile Include="GeGridDataValidator.cs" />
-    <Compile Include="GenSettings.cs" />
+    <Compile Include="GeSettings.cs" />
     <Compile Include="IGenData.cs" />
-    <Compile Include="IGenSettings.cs" />
+    <Compile Include="IGenDataSettings.cs" />
     <Compile Include="IGenTreeNavigator.cs" />
     <Compile Include="IGenValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -55,6 +55,10 @@
     <ProjectReference Include="..\org.xpangen.Generator.Data\org.xpangen.Generator.Data.csproj">
       <Project>{879183A8-0A57-494A-B645-27366F1D912E}</Project>
       <Name>org.xpangen.Generator.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\org.xpangen.Generator.Editor.Model\org.xpangen.Generator.Editor.Model.csproj">
+      <Project>{E16E083B-933C-499C-8BD2-0BCAFA98FD16}</Project>
+      <Name>org.xpangen.Generator.Editor.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\org.xpangen.Generator.Parameter\org.xpangen.Generator.Parameter.csproj">
       <Project>{CDF47B32-3EE1-4E90-AA0F-FDA5070C71D9}</Project>
