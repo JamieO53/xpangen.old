@@ -12,7 +12,7 @@ namespace org.xpangen.Generator.Data.Model.Minimal
     /// </summary>
     public class Class : GenNamedApplicationBase
     {
-        public Class(GenDataDef genDataDef) : base(genDataDef)
+        public Class(GenData genData) : base(genData)
         {
         }
 
@@ -44,7 +44,7 @@ namespace org.xpangen.Generator.Data.Model.Minimal
                 list.First();
                 while (!list.Eol)
                 {
-                    SubClassList.Add(new SubClass(GenDataDef) {GenObject = list.GenObject});
+                    SubClassList.Add(new SubClass(GenData) {GenObject = list.GenObject});
                     list.Next();
                 }
             }
@@ -58,7 +58,7 @@ namespace org.xpangen.Generator.Data.Model.Minimal
                 list.First();
                 while (!list.Eol)
                 {
-                    PropertyList.Add(new Property(GenDataDef) {GenObject = list.GenObject});
+                    PropertyList.Add(new Property(GenData) {GenObject = list.GenObject});
                     list.Next();
                 }
             }

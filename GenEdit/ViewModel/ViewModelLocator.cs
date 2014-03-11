@@ -5,7 +5,10 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Editor.Helper;
+using org.xpangen.Generator.Editor.Model;
+using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
 
 namespace GenEdit.ViewModel
@@ -38,23 +41,16 @@ namespace GenEdit.ViewModel
         private static GeData GetDefaultGeData()
         {
             var geData = new GeData();
-            //var processName = Process.GetCurrentProcess().ProcessName;
-            //if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
-            //    MessageBox.Show(processName, "Process name", MessageBoxButtons.OK);
-            //Clipboard.SetText(processName);
-            //if (IsInDesignMode)
             {
+                var data = GenData.DataLoader.LoadData("Settings");
+                var model = new Root(data) {GenObject = data.Root};
+                geData.Settings = new GeSettings(model);
                 geData.Testing = true;
-                if (File.Exists(@"Data\ProgramDefinition.dcb"))
-                {
-                    geData.GenDataStore.SetBase(@"Data\ProgramDefinition.dcb");
-                    geData.GenDataStore.SetData(@"Data\GeneratorDefinitionModel.dcb");
-                    geData.Profile = new GenCompactProfileParser(geData.GenData, @"Data\GenProfileModel.prf", "");
-                }
+                geData.SetFileGroup("GeneratorDefinitionModel");
             } 
             return geData;
         }
-        
+
         public static GenDataEditorViewModel GenDataEditorViewModel
         {
             get { return _genDataEditorViewModel ?? (_genDataEditorViewModel = new GenDataEditorViewModel {Data = GeData}); }

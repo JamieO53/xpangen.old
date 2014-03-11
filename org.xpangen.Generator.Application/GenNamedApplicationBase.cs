@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using org.xpangen.Generator.Data;
+﻿using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Application
 {
     public class GenNamedApplicationBase: GenApplicationBase
     {
 
-        protected GenNamedApplicationBase(GenDataDef genDataDef) : base(genDataDef)
+        protected GenNamedApplicationBase(GenData genData) : base(genData)
         {
         }
 

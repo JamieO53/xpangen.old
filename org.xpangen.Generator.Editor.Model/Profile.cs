@@ -12,7 +12,7 @@ namespace org.xpangen.Generator.Editor.Model
     /// </summary>
     public class Profile : GenNamedApplicationBase
     {
-        public Profile(GenDataDef genDataDef) : base(genDataDef)
+        public Profile(GenData genData) : base(genData)
         {
         }
 

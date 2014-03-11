@@ -12,7 +12,7 @@ namespace org.xpangen.Generator.Editor.Model
     /// </summary>
     public class BaseFile : GenNamedApplicationBase
     {
-        public BaseFile(GenDataDef genDataDef) : base(genDataDef)
+        public BaseFile(GenData genData) : base(genData)
         {
         }
 
@@ -86,11 +86,11 @@ namespace org.xpangen.Generator.Editor.Model
             }
         }
 
-        public GenApplicationList<Profile> ProfileList { get; private set; }
+        public GenNamedApplicationList<Profile> ProfileList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            ProfileList = new GenApplicationList<Profile>();
+            ProfileList = new GenNamedApplicationList<Profile>();
             var classId = GenDataDef.Classes.IndexOf("Profile");
             var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
             if (classIdx != -1)
@@ -99,7 +99,7 @@ namespace org.xpangen.Generator.Editor.Model
                 list.First();
                 while (!list.Eol)
                 {
-                    ProfileList.Add(new Profile(GenDataDef) {GenObject = list.GenObject});
+                    ProfileList.Add(new Profile(GenData) {GenObject = list.GenObject});
                     list.Next();
                 }
             }

@@ -12,7 +12,7 @@ namespace org.xpangen.Generator.Editor.Model
     /// </summary>
     public class GenSettings : GenNamedApplicationBase
     {
-        public GenSettings(GenDataDef genDataDef) : base(genDataDef)
+        public GenSettings(GenData genData) : base(genData)
         {
         }
 
@@ -30,12 +30,12 @@ namespace org.xpangen.Generator.Editor.Model
             }
         }
 
-        public GenApplicationList<FileGroup> FileGroupList { get; private set; }
-        public GenApplicationList<BaseFile> BaseFileList { get; private set; }
+        public GenNamedApplicationList<FileGroup> FileGroupList { get; private set; }
+        public GenNamedApplicationList<BaseFile> BaseFileList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            FileGroupList = new GenApplicationList<FileGroup>();
+            FileGroupList = new GenNamedApplicationList<FileGroup>();
             var classId = GenDataDef.Classes.IndexOf("FileGroup");
             var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
             if (classIdx != -1)
@@ -44,12 +44,12 @@ namespace org.xpangen.Generator.Editor.Model
                 list.First();
                 while (!list.Eol)
                 {
-                    FileGroupList.Add(new FileGroup(GenDataDef) {GenObject = list.GenObject});
+                    FileGroupList.Add(new FileGroup(GenData) {GenObject = list.GenObject});
                     list.Next();
                 }
             }
 
-            BaseFileList = new GenApplicationList<BaseFile>();
+            BaseFileList = new GenNamedApplicationList<BaseFile>();
             classId = GenDataDef.Classes.IndexOf("BaseFile");
             classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
             if (classIdx != -1)
@@ -58,7 +58,7 @@ namespace org.xpangen.Generator.Editor.Model
                 list.First();
                 while (!list.Eol)
                 {
-                    BaseFileList.Add(new BaseFile(GenDataDef) {GenObject = list.GenObject});
+                    BaseFileList.Add(new BaseFile(GenData) {GenObject = list.GenObject});
                     list.Next();
                 }
             }

@@ -64,6 +64,10 @@
       <Project>{CDF47B32-3EE1-4E90-AA0F-FDA5070C71D9}</Project>
       <Name>org.xpangen.Generator.Parameter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\org.xpangen.Generator.Profile.Parser.CompactProfileParser\org.xpangen.Generator.Profile.Parser.CompactProfileParser.csproj">
+      <Project>{63F6122C-817E-4476-A11A-5ECC2AFBCA1E}</Project>
+      <Name>org.xpangen.Generator.Profile.Parser.CompactProfileParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\org.xpangen.Generator.Profile\org.xpangen.Generator.Profile.csproj">
       <Project>{BC2435D5-863A-4EC4-AB98-6DD124A04179}</Project>
       <Name>org.xpangen.Generator.Profile</Name>
