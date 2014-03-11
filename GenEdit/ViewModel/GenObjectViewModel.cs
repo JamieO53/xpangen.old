@@ -64,7 +64,7 @@ namespace GenEdit.ViewModel
 
         private GenApplicationBase Definition { get; set; }
 
-        public GenAttributes GenAttributes { get; set; }
+        public GenAttributes GenAttributes { get; private set; }
 
         /// <summary>
         /// One or more field values have changed

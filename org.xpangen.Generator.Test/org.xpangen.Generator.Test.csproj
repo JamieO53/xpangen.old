@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="ApplicationBaseTests.cs" />
     <Compile Include="CharSetTests.cs" />
+    <Compile Include="EditorHelperTests.cs" />
     <Compile Include="GenDataCacheTests.cs" />
     <Compile Include="DataModelTests.cs" />
     <Compile Include="GenDataDefToDataConversionTests.cs" />
@@ -77,6 +78,10 @@
     <ProjectReference Include="..\org.xpangen.Generator.Editor.Helper\org.xpangen.Generator.Editor.Helper.csproj">
       <Project>{7E0C3F90-F0E4-418E-91F2-4164C40357EF}</Project>
       <Name>org.xpangen.Generator.Editor.Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\org.xpangen.Generator.Editor.Model\org.xpangen.Generator.Editor.Model.csproj">
+      <Project>{E16E083B-933C-499C-8BD2-0BCAFA98FD16}</Project>
+      <Name>org.xpangen.Generator.Editor.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\org.xpangen.Generator.Parameter\org.xpangen.Generator.Parameter.csproj">
       <Project>{CDF47B32-3EE1-4E90-AA0F-FDA5070C71D9}</Project>
@@ -119,6 +124,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Data\ProgramDefinition.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\Settings.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\GeneratorDefinitionModelTest.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\ProgramDefinitionTest.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

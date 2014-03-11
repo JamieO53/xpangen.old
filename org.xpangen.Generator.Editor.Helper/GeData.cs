@@ -7,6 +7,7 @@ using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Definition;
 using org.xpangen.Generator.Profile;
+using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
@@ -84,6 +85,18 @@ namespace org.xpangen.Generator.Editor.Helper
                 if (ClassList[i].Name == defClass.Name)
                     return ClassList[i];
             return null;
+        }
+
+        /// <summary>
+        /// Set the current files from the selected file group.
+        /// </summary>
+        /// <param name="fileGroup">The name of the selected file group.</param>
+        public void SetFileGroup(string fileGroup)
+        {
+            Settings.GetFileGroup(fileGroup);
+            GenDataStore.SetBase(Settings.BaseFilePath);
+            GenDataStore.SetData(Settings.FilePath);
+            Profile = new GenCompactProfileParser(GenData, Settings.Profile, "");
         }
     }
 }

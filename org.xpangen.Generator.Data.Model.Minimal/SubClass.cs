@@ -12,7 +12,7 @@ namespace org.xpangen.Generator.Data.Model.Minimal
     /// </summary>
     public class SubClass : GenNamedApplicationBase
     {
-        public SubClass(GenDataDef genDataDef) : base(genDataDef)
+        public SubClass(GenData genData) : base(genData)
         {
         }
 

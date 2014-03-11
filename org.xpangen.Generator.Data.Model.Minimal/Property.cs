@@ -12,7 +12,7 @@ namespace org.xpangen.Generator.Data.Model.Minimal
     /// </summary>
     public class Property : GenNamedApplicationBase
     {
-        public Property(GenDataDef genDataDef) : base(genDataDef)
+        public Property(GenData genData) : base(genData)
         {
         }
 

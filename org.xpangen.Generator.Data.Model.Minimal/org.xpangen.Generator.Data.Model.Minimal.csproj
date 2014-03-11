@@ -52,6 +52,10 @@
       <Project>{879183A8-0A57-494A-B645-27366F1D912E}</Project>
       <Name>org.xpangen.Generator.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\org.xpangen.Generator.Editor.Model\org.xpangen.Generator.Editor.Model.csproj">
+      <Project>{E16E083B-933C-499C-8BD2-0BCAFA98FD16}</Project>
+      <Name>org.xpangen.Generator.Editor.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

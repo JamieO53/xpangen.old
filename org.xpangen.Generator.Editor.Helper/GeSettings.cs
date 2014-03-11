@@ -2,101 +2,156 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
-using System.Collections.Generic;
+using System.IO;
+using org.xpangen.Generator.Application;
+using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Editor.Model;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
     public class GeSettings : IGenDataSettings
     {
+        private FileGroup _fileGroup;
+        /// <summary>
+        /// The Root of the GenData container of the editor's settings.
+        /// </summary>
         public Root Model { get; private set; }
 
+        /// <summary>
+        /// Create a new editor settings object
+        /// </summary>
+        /// <param name="model"></param>
         public GeSettings(Root model)
         {
             Model = model;
         }
 
-        public void DeleteFileGroup()
+        /// <summary>
+        /// The relative path of the file group's base file.
+        /// </summary>
+        public string BaseFilePath
         {
-            throw new NotImplementedException();
+            get { return BaseFile.FilePath + "/" + BaseFile.FileName; }
         }
 
-        public FileGroup GetFileFromCaption(string caption)
+        /// <summary>
+        /// Searches for the requested file group, and moves it to the top of the 
+        /// </summary>
+        /// <param name="name">The name of the selected file group</param>
+        /// <returns>The selected file group.</returns>
+        public FileGroup GetFileGroup(string name)
         {
-            FileGroup = Model.GenSettingsList[0].FileGroupList.Find(caption);
+            FileGroup = Model.GenSettingsList[0].FileGroupList.Find(name);
             return FileGroup;
         }
-
-        public void GetFileGroup()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<string> GetFileHistory()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetFileGroup()
-        {
-            throw new NotImplementedException();
-        }
-        //TGESettings = class(TBlackboardComponent, IGenSettings)
-        //private
-        //  RegIni: TRegIniFile;
-        //  FFileGroup: string;
-        //  FHomeDir: string;
-        //  function GetBase: string;
-        //  function GetFileName: string;
-        //  function GetFileGroupName: string;
-        //  function GetGenerated: string;
-        //  function GetHomeDir: string;
-        //  function GetProfile: string;
-        //  procedure SetBase(const Value: string);
-        //  procedure SetFileGroupName(const Value: string);
-        //  procedure SetFileName(const Value: string);
-        //  procedure SetGenerated(const Value: string);
-        //  procedure SetProfile(const Value: string);
-        //public
-        //  property Base: string
-        //    read GetBase write SetBase;
-        //  property FileGroup: string
-        //    read GetFileGroupName write SetFileGroupName;
-        //  property FileName: string
-        //    read GetFileName write SetFileName;
-        //  property Generated: string
-        //    read GetGenerated write SetGenerated;
-        //  property HomeDir: string
-        //    read FHomeDir;
-        //  property Profile: string
-        //    read GetProfile write SetProfile;
-        //  constructor Create(AOwner: TComponent); override;
-        //  destructor Destroy; override;
-        //  procedure DeleteFileGroup;
-        //  procedure GetFileGroup;
-        //  procedure GetFileHistory(sl: TStrings);
-        //  function GetFileFromCaption(Caption: string): string;
-        //  procedure SetFileGroup;
-        //end;
+        
+        /// <summary>
+        /// The base file information for the selected file group.
+        /// </summary>
         public BaseFile BaseFile
         {
             get
             {
-                return Model.GenSettingsList[0].BaseFileList.Find(FileGroup.BaseFileName);
-            } set
+                return Model.GenSettingsList[0].BaseFileList.Find(FileGroup.BaseFileName) ??
+                       Model.GenSettingsList[0].BaseFileList.Find("Definition");
+            } 
+            set
             {
                 FileGroup.BaseFileName = value.Name;
             }
         }
-        public FileGroup FileGroup { get; set; }
+        
+        /// <summary>
+        /// The most recently selected file group
+        /// </summary>
+        public FileGroup FileGroup
+        {
+            get { return _fileGroup; }
+            private set
+            {
+                _fileGroup = value;
+                Model.GenSettingsList[0].FileGroupList.Move(ListMove.ToTop, Model.GenSettingsList[0].FileGroupList.IndexOf(FileGroup));
+            }
+        }
+
+        /// <summary>
+        /// The relative path of the selected file group.
+        /// </summary>
         public string FilePath
         {
             get { return FileGroup.FilePath + "/" + FileGroup.FileName; }
-            set {}
+            set 
+            {
+                var name = Path.GetFileNameWithoutExtension(value);
+                var filePath = Path.GetDirectoryName(value);
+                var fileName = Path.GetFileName(value);
+                if (name != FileGroup.Name)
+                {
+                    if (FileGroup.Changed)
+                        FileGroup.SaveFields();
+                    var newFileGroup = Model.GenSettingsList[0].FileGroupList.Find(FileGroup.Name);
+                    if (Model.GenSettingsList[0].FileGroupList.Find(FileGroup.Name) == null)
+                    {
+                        newFileGroup = new FileGroup(Model.GenData)
+                                           {
+                                               GenObject =
+                                                   Model.GenData.CreateObject("GenSettings",
+                                                                              "FileGroup"),
+                                               Name = name,
+                                               FilePath = filePath,
+                                               FileName = fileName
+                                           };
+                    }
+                    FileGroup = newFileGroup;
+                }
+                FileGroup.FilePath = filePath;
+                FileGroup.FileName = fileName;
+            }
         }
-        public string Generated { get; set; }
-        public string HomeDir { get; set; }
-        public string Profile { get; set; }
+        
+        /// <summary>
+        /// The full path of the generated file.
+        /// </summary>
+        public string Generated
+        {
+            get { return FileGroup.Generated; }
+            set { FileGroup.Generated = value; }
+        }
+        
+        /// <summary>
+        /// The home directory of the generator data
+        /// </summary>
+        public string HomeDir
+        {
+            get { return Model.GenSettingsList[0].HomeDir; }
+            set { Model.GenSettingsList[0].HomeDir = value; }
+        }
+        
+        /// <summary>
+        /// The name of the most recently generated profile for the selected file group.
+        /// </summary>
+        public string Profile
+        {
+            get { return FileGroup.Profile.Replace('/', '\\'); }
+            set { FileGroup.Profile = value; }
+        }
+
+        /// <summary>
+        /// Get a list of all the file groups.
+        /// </summary>
+        /// <returns>The file group list.</returns>
+        public GenNamedApplicationList<FileGroup> GetFileGroups()
+        {
+            return Model.GenSettingsList[0].FileGroupList;
+        }
+
+        /// <summary>
+        /// Get a list of all the base files.
+        /// </summary>
+        /// <returns>The base file list.</returns>
+        public GenNamedApplicationList<BaseFile> GetBaseFiles()
+        {
+            return Model.GenSettingsList[0].BaseFileList;
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace org.xpangen.Generator.Test
         {
             var d = CreateOrderedGenData();
             Assert.IsFalse(d.Changed, "Class creation should not change Changed flag");
-            var c = new Class(d.GenDataDef) {GenObject = d.Context[ClassClassId].GenObject};
+            var c = new Class(d) {GenObject = d.Context[ClassClassId].GenObject};
 
             // Verify initial subclass order
             Assert.IsFalse(d.Changed, "Class creation should not change Changed flag");

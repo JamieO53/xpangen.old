@@ -12,7 +12,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
     /// </summary>
     public class Root : GenApplicationBase
     {
-        public Root(GenDataDef genDataDef) : base(genDataDef)
+        public Root(GenData genData) : base(genData)
         {
         }
 
@@ -29,7 +29,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
                 list.First();
                 while (!list.Eol)
                 {
-                    ClassList.Add(new Class(GenDataDef) {GenObject = list.GenObject});
+                    ClassList.Add(new Class(GenData) {GenObject = list.GenObject});
                     list.Next();
                 }
             }
