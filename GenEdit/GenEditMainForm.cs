@@ -11,6 +11,7 @@ namespace GenEdit
             genDataEditor1.GenDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
             genProfileEditor1.GenDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
             genDataEditor1.OnDataChanged = () => genProfileEditor1.RefreshProfile(genProfileEditor1.GenDataEditorViewModel.Data.GenData);
+            genLibrary1.GenDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
         }
 
     }
