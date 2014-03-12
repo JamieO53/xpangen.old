@@ -132,7 +132,12 @@ namespace org.xpangen.Generator.Editor.Helper
         /// </summary>
         public string Profile
         {
-            get { return FileGroup.Profile.Replace('/', '\\'); }
+            get
+            {
+                var profile = FileGroup.Profile;
+                var p = BaseFile.ProfileList.Find(profile);
+                return ((string.IsNullOrEmpty(p.FilePath) ? "" : p.FilePath + "/") + p.FileName).Replace('/', '\\');
+            }
             set { FileGroup.Profile = value; }
         }
 
