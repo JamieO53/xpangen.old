@@ -60,12 +60,6 @@ namespace GenEdit.View
 
         private void GenDataEditor_Load(object sender, EventArgs e)
         {
-            DataNavigatorTreeView.Nodes.Clear();
-            if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null) return;
-            
-            var builder = new DataEditorTreeViewBuilder(GenDataEditorViewModel.Data);
-            builder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, 0);
-            GenDataEditorViewModel.Data.GenData.GenDataBase.PropertyChanged += GenData_PropertyChanged;
         }
 
         private void GenData_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -199,6 +193,17 @@ namespace GenEdit.View
             nodes.Add(node);
             DataNavigatorTreeView.SelectedNode = node;
             DataNavigatorTreeView.EndUpdate();
+            RaiseDataChanged();
+        }
+
+        public void LoadData()
+        {
+            DataNavigatorTreeView.Nodes.Clear();
+            if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null) return;
+
+            var builder = new DataEditorTreeViewBuilder(GenDataEditorViewModel.Data);
+            builder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, 0);
+            GenDataEditorViewModel.Data.GenData.GenDataBase.PropertyChanged += GenData_PropertyChanged;
             RaiseDataChanged();
         }
     }

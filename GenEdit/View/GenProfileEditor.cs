@@ -30,6 +30,11 @@ namespace GenEdit.View
 
         private void GenProfileEditor_Load(object sender, System.EventArgs e)
         {
+        }
+
+        public void LoadData()
+        {
+            ProfileNavigatorTreeView.Nodes.Clear();
             if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null || GenDataEditorViewModel.Data.Profile == null) return;
             
             var builder = new ProfileEditorTreeViewBuilder(GenDataEditorViewModel.Data) { ShowText = false };

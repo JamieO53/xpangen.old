@@ -136,7 +136,9 @@ namespace org.xpangen.Generator.Editor.Helper
             {
                 var profile = FileGroup.Profile;
                 var p = BaseFile.ProfileList.Find(profile);
-                return ((string.IsNullOrEmpty(p.FilePath) ? "" : p.FilePath + "/") + p.FileName).Replace('/', '\\');
+                return p == null
+                           ? ""
+                           : (string.IsNullOrEmpty(p.FilePath) ? "" : p.FilePath.Replace('/', '\\') + "/") + p.FileName;
             }
             set { FileGroup.Profile = value; }
         }
