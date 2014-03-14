@@ -331,7 +331,7 @@ namespace org.xpangen.Generator.Data
                              GenObjectListBase = Context[classId].GenObjectListBase,
                              Reference = Context[classId].Reference,
                              RefClassId = Context[classId].RefClassId,
-                             ReferenceData = Context[classId].ReferenceData
+                             ReferenceData = Context[classId].ReferenceData ?? this
                          };
             return sc;
         }

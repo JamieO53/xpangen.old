@@ -29,12 +29,14 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.genLibrary1 = new GenEdit.View.GenLibrary();
             this.genDataEditor1 = new GenEdit.View.GenDataEditor();
             this.genProfileEditor1 = new GenEdit.View.GenProfileEditor();
-            this.genLibrary1 = new GenEdit.View.GenLibrary();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -51,9 +53,18 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.genProfileEditor1);
-            this.splitContainer1.Size = new System.Drawing.Size(930, 614);
+            this.splitContainer1.Size = new System.Drawing.Size(720, 614);
             this.splitContainer1.SplitterDistance = 156;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // genLibrary1
+            // 
+            this.genLibrary1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.genLibrary1.GenDataEditorViewModel = null;
+            this.genLibrary1.Location = new System.Drawing.Point(720, 0);
+            this.genLibrary1.Name = "genLibrary1";
+            this.genLibrary1.Size = new System.Drawing.Size(210, 614);
+            this.genLibrary1.TabIndex = 1;
             // 
             // genDataEditor1
             // 
@@ -61,7 +72,7 @@
             this.genDataEditor1.GenDataEditorViewModel = null;
             this.genDataEditor1.Location = new System.Drawing.Point(0, 0);
             this.genDataEditor1.Name = "genDataEditor1";
-            this.genDataEditor1.Size = new System.Drawing.Size(930, 156);
+            this.genDataEditor1.Size = new System.Drawing.Size(720, 156);
             this.genDataEditor1.TabIndex = 0;
             // 
             // genProfileEditor1
@@ -70,29 +81,31 @@
             this.genProfileEditor1.GenDataEditorViewModel = null;
             this.genProfileEditor1.Location = new System.Drawing.Point(0, 0);
             this.genProfileEditor1.Name = "genProfileEditor1";
-            this.genProfileEditor1.Size = new System.Drawing.Size(930, 454);
+            this.genProfileEditor1.Size = new System.Drawing.Size(720, 454);
             this.genProfileEditor1.TabIndex = 0;
             // 
-            // genLibrary1
+            // panel1
             // 
-            this.genLibrary1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.genLibrary1.Location = new System.Drawing.Point(720, 0);
-            this.genLibrary1.Name = "genLibrary1";
-            this.genLibrary1.Size = new System.Drawing.Size(210, 614);
-            this.genLibrary1.TabIndex = 1;
+            this.panel1.Controls.Add(this.splitContainer1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(720, 614);
+            this.panel1.TabIndex = 2;
             // 
             // GenEditMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(930, 614);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.genLibrary1);
-            this.Controls.Add(this.splitContainer1);
             this.Name = "GenEditMainForm";
             this.Text = "Generator editor";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -103,6 +116,7 @@
         private View.GenDataEditor genDataEditor1;
         private View.GenProfileEditor genProfileEditor1;
         private View.GenLibrary genLibrary1;
+        private System.Windows.Forms.Panel panel1;
 
     }
 }
