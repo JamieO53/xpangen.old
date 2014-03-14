@@ -12,12 +12,24 @@ namespace GenEdit.View
 {
     public partial class GenLibrary : UserControl
     {
+        public delegate void DataLoaded();
+
+        public DataLoaded OnDataLoaded;
+
         public GenLibrary()
         {
             InitializeComponent();
         }
 
         public GenDataEditorViewModel GenDataEditorViewModel { get; set; }
+
+        private bool Background { get; set; }
+
+        private void RaiseDataLoaded()
+        {
+            if (OnDataLoaded != null)
+                OnDataLoaded();
+        }
 
         private void splitContainer1_Panel1_Resize(object sender, EventArgs e)
         {
@@ -33,7 +45,7 @@ namespace GenEdit.View
 
         private void GenLibrary_Load(object sender, EventArgs e)
         {
-            if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null || GenDataEditorViewModel.Data.Profile == null) return;
+            if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null) return;
 
             var data = GenDataEditorViewModel.Data;
             comboBoxFileGroup.Items.Clear();
@@ -50,35 +62,40 @@ namespace GenEdit.View
                 comboBoxBaseFile.Items.Add(baseFiles[i]);
         }
 
-        private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
+        private void comboBoxFileGroup_SelectedValueChanged(object sender, EventArgs e)
         {
+            if (Background) return;
             var selected = comboBoxFileGroup.SelectedItem as FileGroup;
             if (selected == null) return;
             var data = GenDataEditorViewModel.Data;
             
             if (selected != data.Settings.FileGroup)
             {
-                selected = data.Settings.GetFileGroup(selected.Name);
+                data.SetFileGroup(selected.Name);
                 if (comboBoxFileGroup.SelectedIndex != 0)
                 {
                     comboBoxFileGroup.Items.RemoveAt(comboBoxFileGroup.SelectedIndex);
                     comboBoxFileGroup.Items.Insert(0, selected);
+                    Background = true;
                     comboBoxFileGroup.SelectedIndex = 0;
+                    Background = false;
                 }
             }
             textBoxFileName.Text = selected.FileName;
             textBoxFilePath.Text = selected.FilePath;
             textBoxGenerated.Text = selected.Generated;
             comboBoxBaseFile.SelectedIndex = comboBoxBaseFile.Items.IndexOf(data.Settings.BaseFile);
+            RaiseDataLoaded();
         }
 
-        private void comboBoxProfile_SelectedValueChanged(object sender, EventArgs e)
+        private void comboBoxBaseFile_SelectedValueChanged(object sender, EventArgs e)
         {
             var selected = comboBoxFileGroup.SelectedItem as FileGroup;
             if (selected == null) return;
             var data = GenDataEditorViewModel.Data;
 
             var n = -1;
+            comboBoxProfile.ResetText();
             comboBoxProfile.Items.Clear();
             for (var i = 0; i < data.Settings.BaseFile.ProfileList.Count; i++)
             {
@@ -88,7 +105,6 @@ namespace GenEdit.View
             }
             if (n != -1 && n != comboBoxProfile.SelectedIndex)
                 comboBoxProfile.SelectedIndex = n;
-
         }
     }
 }

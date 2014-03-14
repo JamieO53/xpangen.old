@@ -4,12 +4,9 @@
 
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Editor.Helper;
 using org.xpangen.Generator.Editor.Model;
-using org.xpangen.Generator.Profile;
-using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
 
 namespace GenEdit.ViewModel
 {

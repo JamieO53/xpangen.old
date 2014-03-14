@@ -1,11 +1,16 @@
-﻿namespace GenEdit.View
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace GenEdit.View
 {
     partial class GenLibrary
     {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary> 
         /// Clean up any resources being used.
@@ -114,7 +119,7 @@
             this.comboBoxFileGroup.Name = "comboBoxFileGroup";
             this.comboBoxFileGroup.Size = new System.Drawing.Size(252, 21);
             this.comboBoxFileGroup.TabIndex = 0;
-            this.comboBoxFileGroup.SelectedValueChanged += new System.EventHandler(this.comboBox1_SelectedValueChanged);
+            this.comboBoxFileGroup.SelectedValueChanged += new System.EventHandler(this.comboBoxFileGroup_SelectedValueChanged);
             // 
             // label7
             // 
@@ -132,7 +137,6 @@
             this.comboBoxProfile.Name = "comboBoxProfile";
             this.comboBoxProfile.Size = new System.Drawing.Size(252, 21);
             this.comboBoxProfile.TabIndex = 0;
-            this.comboBoxProfile.SelectedValueChanged += new System.EventHandler(this.comboBoxProfile_SelectedValueChanged);
             // 
             // label5
             // 
@@ -150,6 +154,7 @@
             this.comboBoxBaseFile.Name = "comboBoxBaseFile";
             this.comboBoxBaseFile.Size = new System.Drawing.Size(252, 21);
             this.comboBoxBaseFile.TabIndex = 0;
+            this.comboBoxBaseFile.SelectedValueChanged += new System.EventHandler(this.comboBoxBaseFile_SelectedValueChanged);
             // 
             // textBoxFilePath
             // 
@@ -201,8 +206,6 @@
             // 
             // GenLibrary
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.panel1);
             this.Name = "GenLibrary";
@@ -221,20 +224,20 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBoxFileGroup;
-        private System.Windows.Forms.TextBox textBoxFilePath;
-        private System.Windows.Forms.TextBox textBoxFileName;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox comboBoxBaseFile;
-        private System.Windows.Forms.TextBox textBoxGenerated;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ComboBox comboBoxProfile;
+        private Panel panel1;
+        private Label label1;
+        private SplitContainer splitContainer1;
+        private Label label2;
+        private ComboBox comboBoxFileGroup;
+        private TextBox textBoxFilePath;
+        private TextBox textBoxFileName;
+        private Label label4;
+        private Label label3;
+        private Label label5;
+        private ComboBox comboBoxBaseFile;
+        private TextBox textBoxGenerated;
+        private Label label6;
+        private Label label7;
+        private ComboBox comboBoxProfile;
     }
 }
