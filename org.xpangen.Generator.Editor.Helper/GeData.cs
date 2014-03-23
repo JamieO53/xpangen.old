@@ -3,11 +3,14 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using org.xpangen.Generator.Application;
+using System.IO;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Definition;
+using org.xpangen.Generator.Editor.Model;
+using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
+using Root = org.xpangen.Generator.Editor.Model.Root;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
@@ -22,10 +25,17 @@ namespace org.xpangen.Generator.Editor.Helper
             get { return GenDataStore.DefGenData; }
         }
 
+        /// <summary>
+        /// The open data file.
+        /// </summary>
         public GenData GenData
         {
             get { return GenDataStore.GenData; }
         }
+        
+        /// <summary>
+        /// The open data file's definition.
+        /// </summary>
         public GenDataDef GenDataDef
         {
             get { return GenData != null ? GenData.GenDataDef : null; }
@@ -78,7 +88,12 @@ namespace org.xpangen.Generator.Editor.Helper
             throw new NotImplementedException("GridKeyPress method not implemented");
         }
 
-        public GenApplicationBase FindClassDefinition(int classId)
+        /// <summary>
+        /// Find the editor properties for the class.
+        /// </summary>
+        /// <param name="classId">The ID of the class.</param>
+        /// <returns>The class definition.</returns>
+        public Class FindClassDefinition(int classId)
         {
             var defClass = GenDataDef.Classes[classId];
             for (var i = 0; i < ClassList.Count; i++)
@@ -93,10 +108,75 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <param name="fileGroup">The name of the selected file group.</param>
         public void SetFileGroup(string fileGroup)
         {
-            Settings.GetFileGroup(fileGroup);
+            if (Settings.GetFileGroup(fileGroup) == null)
+                return;
             GenDataStore.SetBase(Settings.BaseFilePath);
             GenDataStore.SetData(Settings.FilePath);
-            Profile = new GenCompactProfileParser(GenData, Settings.Profile, "");
+            Profile = Settings.Profile != "" ? new GenCompactProfileParser(GenData, Settings.Profile, "") : null;
+        }
+
+        /// <summary>
+        /// Create a new file group.
+        /// </summary>
+        /// <returns>The new file group.</returns>
+        public FileGroup NewFileGroup()
+        {
+            return new FileGroup(Settings.Model.GenData)
+                       {
+                           GenObject =
+                               Settings.Model.GenData.CreateObject("GenSettings",
+                                                                   "FileGroup"),
+                           DelayedSave = true,
+                           BaseFileName = "Definition"
+                       };
+        }
+
+        /// <summary>
+        /// Create a new file and save the file group.
+        /// </summary>
+        /// <param name="fileGroup">The file group defining the new file.</param>
+        public void CreateFile(FileGroup fileGroup)
+        {
+            fileGroup.SaveFields();
+            if (!File.Exists(BuildFilePath(fileGroup.FilePath, fileGroup.FileName).Replace('/', '\\')))
+            {
+                var dataDef = Settings.FindBaseFile(fileGroup.BaseFileName);
+                var f = GenData.DataLoader.LoadData(BuildFilePath(dataDef.FilePath, dataDef.FileName)).AsDef();
+                var d = new GenData(f);
+                GenParameters.SaveToFile(d, BuildFilePath(fileGroup.FilePath, fileGroup.FileName));
+            }
+            if (Settings.FindFileGroup(fileGroup.Name) == null)
+                Settings.GetFileGroups().Add(fileGroup);
+            SetFileGroup(fileGroup.Name);
+            SaveSettings();
+        }
+
+        private void SaveSettings()
+        {
+            if (SaveToDisk)
+                GenParameters.SaveToFile(GenData, "Data/Settings.dcb");
+        }
+
+        private static string BuildFilePath(string filePath, string fileName)
+        {
+            return (filePath == "" ? "" : filePath + "/") + fileName;
+        }
+
+        public IGenDataSettings GetDefaultSettings()
+        {
+            var data = GenData.DataLoader.LoadData("Settings");
+            var settings = LoadSettingsFromData(data);
+            SaveToDisk = true;
+            return settings;
+        }
+
+        protected bool SaveToDisk { get; set; }
+
+        public IGenDataSettings LoadSettingsFromData(GenData data)
+        {
+            var model = new Root(data) {GenObject = data.Root};
+            SaveToDisk = false;
+            return new GeSettings(model);
         }
     }
 }

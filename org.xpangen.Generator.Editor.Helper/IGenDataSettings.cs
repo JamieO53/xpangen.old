@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <summary>
         /// The most recently selected file group
         /// </summary>
-        FileGroup FileGroup { get; }
+        FileGroup FileGroup { get; set; }
 
         /// <summary>
         /// The relative path of the selected file group.
@@ -67,5 +67,19 @@ namespace org.xpangen.Generator.Editor.Helper
         /// </summary>
         /// <returns>The base file list.</returns>
         GenNamedApplicationList<BaseFile> GetBaseFiles();
+
+        /// <summary>
+        /// Find the specified base file.
+        /// </summary>
+        /// <param name="name">The name of the sought base file.</param>
+        /// <returns>The requested base file</returns>
+        BaseFile FindBaseFile(string name);
+
+        /// <summary>
+        /// Find the specified file group.
+        /// </summary>
+        /// <param name="name">The name of the sought file group.</param>
+        /// <returns>The requested base file</returns>
+        FileGroup FindFileGroup(string name);
     }
 }

@@ -3,6 +3,7 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace org.xpangen.Generator.Data
@@ -104,25 +105,29 @@ namespace org.xpangen.Generator.Data
             var className = GenObject.Definition.Name;
             var n = props.Count;
             var changed = false;
+            var changedProps = new bool[n];
             for (var i = 0; i < n; i++)
             {
                 var oldValue = GenObject.Attributes.Count <= i ? "" : GenObject.Attributes[i];
                 var propertyName = props[i];
                 var newValue = AsString(propertyName);
-                if (oldValue != newValue)
-                {
-                    changed = true;
-                    GenObject.GenDataBase.RaiseDataChanged(className, propertyName);
-                }
+                changedProps[i] = oldValue != newValue;
+                
+                if (!changedProps[i]) continue;
+                
+                changed = true;
+                if (i >= GenObject.Attributes.Count)
+                    GenObject.Attributes.Add(newValue);
+                else
+                    GenObject.Attributes[i] = newValue;
             }
 
-            if (changed)
-            {
-                GenObject.Attributes.Clear();
-                for (var i = 0; i < n; i++)
-                    GenObject.Attributes.Add(AsString(props[i]));
-                GenObject.GenDataBase.Changed = true;
-            }
+            if (!changed) return;
+            
+            for (var i = 0; i < n; i++)
+                if (changedProps[i])
+                    GenObject.GenDataBase.RaiseDataChanged(className, props[i]);
+            GenObject.GenDataBase.Changed = true;
         }
     }
 }
