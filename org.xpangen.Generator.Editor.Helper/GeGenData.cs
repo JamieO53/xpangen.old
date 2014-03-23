@@ -9,9 +9,9 @@ namespace org.xpangen.Generator.Editor.Helper
 {
     public class GeGenData : IGenData
     {
-        public bool Changed { get; set; }
-        public GenData DefGenData { get; set; }
-        public GenData GenData { get; set; }
+        public bool Changed { get { return GenData != null && GenData.Changed; } }
+        public GenData DefGenData { get; private set; }
+        public GenData GenData { get; private set; }
         public void SetBase(string filePath)
         {
             if (filePath == "")

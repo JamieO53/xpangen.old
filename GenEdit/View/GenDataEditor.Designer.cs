@@ -269,6 +269,7 @@
             this.SaveItemChangesButton.Size = new System.Drawing.Size(23, 22);
             this.SaveItemChangesButton.Text = "Save changes";
             this.SaveItemChangesButton.ToolTipText = "Save the changes to the current item";
+            this.SaveItemChangesButton.Click += new System.EventHandler(this.SaveItemChangesButton_Click);
             // 
             // CancelItemChangesButton
             // 
@@ -279,6 +280,7 @@
             this.CancelItemChangesButton.Size = new System.Drawing.Size(23, 22);
             this.CancelItemChangesButton.Text = "Cancel changes";
             this.CancelItemChangesButton.ToolTipText = "Cancel any changes made to the selected item";
+            this.CancelItemChangesButton.Click += new System.EventHandler(this.CancelItemChangesButton_Click);
             // 
             // toolStripSeparator2
             // 

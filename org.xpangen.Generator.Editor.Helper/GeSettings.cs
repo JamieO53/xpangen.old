@@ -31,7 +31,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// </summary>
         public string BaseFilePath
         {
-            get { return BaseFile.FilePath + "/" + BaseFile.FileName; }
+            get { return BaseFile != null ? BaseFile.FilePath + "/" + BaseFile.FileName : ""; }
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <returns>The selected file group.</returns>
         public FileGroup GetFileGroup(string name)
         {
-            FileGroup = Model.GenSettingsList[0].FileGroupList.Find(name);
+            FileGroup = FindFileGroup(name);
             return FileGroup;
         }
         
@@ -50,11 +50,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// </summary>
         public BaseFile BaseFile
         {
-            get
-            {
-                return Model.GenSettingsList[0].BaseFileList.Find(FileGroup.BaseFileName) ??
-                       Model.GenSettingsList[0].BaseFileList.Find("Definition");
-            } 
+            get { return FileGroup != null ? (FindBaseFile(FileGroup.BaseFileName) ?? FindBaseFile("Definition")) : null; }
             set
             {
                 FileGroup.BaseFileName = value.Name;
@@ -67,10 +63,19 @@ namespace org.xpangen.Generator.Editor.Helper
         public FileGroup FileGroup
         {
             get { return _fileGroup; }
-            private set
+            set
             {
                 _fileGroup = value;
-                Model.GenSettingsList[0].FileGroupList.Move(ListMove.ToTop, Model.GenSettingsList[0].FileGroupList.IndexOf(FileGroup));
+                var groups = GetFileGroups();
+                var index = groups.IndexOf(FileGroup);
+                if (index == 0) return;
+                
+                if (index == -1)
+                {
+                    index = groups.Count;
+                    groups.Add(value);
+                }
+                groups.Move(ListMove.ToTop, index);
             }
         }
 
@@ -79,7 +84,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// </summary>
         public string FilePath
         {
-            get { return FileGroup.FilePath + "/" + FileGroup.FileName; }
+            get { return FileGroup != null ? FileGroup.FilePath + "/" + FileGroup.FileName : ""; }
             set 
             {
                 var name = Path.GetFileNameWithoutExtension(value);
@@ -89,26 +94,21 @@ namespace org.xpangen.Generator.Editor.Helper
                 {
                     if (FileGroup.Changed)
                         FileGroup.SaveFields();
-                    var newFileGroup = Model.GenSettingsList[0].FileGroupList.Find(FileGroup.Name);
-                    if (Model.GenSettingsList[0].FileGroupList.Find(FileGroup.Name) == null)
-                    {
-                        newFileGroup = new FileGroup(Model.GenData)
-                                           {
-                                               GenObject =
-                                                   Model.GenData.CreateObject("GenSettings",
-                                                                              "FileGroup"),
-                                               Name = name,
-                                               FilePath = filePath,
-                                               FileName = fileName
-                                           };
-                    }
-                    FileGroup = newFileGroup;
+                    FileGroup = FindFileGroup(FileGroup.Name) ??
+                                new FileGroup(Model.GenData)
+                                    {
+                                        GenObject =
+                                            Model.GenData.CreateObject("GenSettings", "FileGroup"),
+                                        Name = name,
+                                        FilePath = filePath,
+                                        FileName = fileName
+                                    };
                 }
                 FileGroup.FilePath = filePath;
                 FileGroup.FileName = fileName;
             }
         }
-        
+
         /// <summary>
         /// The full path of the generated file.
         /// </summary>
@@ -134,6 +134,8 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             get
             {
+                if (FileGroup == null)
+                    return "";
                 var profile = FileGroup.Profile;
                 var p = BaseFile.ProfileList.Find(profile);
                 return p == null
@@ -159,6 +161,31 @@ namespace org.xpangen.Generator.Editor.Helper
         public GenNamedApplicationList<BaseFile> GetBaseFiles()
         {
             return Model.GenSettingsList[0].BaseFileList;
+        }
+
+        /// <summary>
+        /// Find the specified file group.
+        /// </summary>
+        /// <param name="name">The name of the sought file group.</param>
+        /// <returns>The requested base file</returns>
+        public FileGroup FindFileGroup(string name)
+        {
+            return GetFileGroups().Find(name);
+        }
+
+        /// <summary>
+        /// Find the specified base file.
+        /// </summary>
+        /// <param name="name">The name of the sought base file.</param>
+        /// <returns>The requested base file</returns>
+        public BaseFile FindBaseFile(string name)
+        {
+            return GetBaseFiles().Find(name);
+        }
+
+        public override string ToString()
+        {
+            return "GeSettings" + (FileGroup == null ? "" : "." + FileGroup.Name);
         }
     }
 }

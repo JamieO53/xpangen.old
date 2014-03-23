@@ -199,12 +199,33 @@ namespace GenEdit.View
         public void LoadData()
         {
             DataNavigatorTreeView.Nodes.Clear();
-            if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null) return;
+            if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null ||
+                GenDataEditorViewModel.Data.GenData == null) 
+                return;
 
             var builder = new DataEditorTreeViewBuilder(GenDataEditorViewModel.Data);
             builder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, 0);
             GenDataEditorViewModel.Data.GenData.GenDataBase.PropertyChanged += GenData_PropertyChanged;
             RaiseDataChanged();
+        }
+
+        private void SaveItemChangesButton_Click(object sender, EventArgs e)
+        {
+            var data = GenDataEditorViewModel;
+            var node = data.SelectedNode;
+            if (node != null && node.Changed)
+            {
+                node.Save();
+                RaiseDataChanged();
+            }
+        }
+
+        private void CancelItemChangesButton_Click(object sender, EventArgs e)
+        {
+            var data = GenDataEditorViewModel;
+            var node = data.SelectedNode;
+            if (node != null && node.Changed)
+                node.Cancel();
         }
     }
 }

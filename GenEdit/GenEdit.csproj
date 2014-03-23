@@ -232,7 +232,15 @@
   <ItemGroup>
     <None Include="Resources\list-add-4.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\document-close-4.png" />
+    <Content Include="Resources\document-new-5.png" />
+    <Content Include="Resources\document-open-5.png" />
+    <Content Include="Resources\document-open-folder.png" />
+    <Content Include="Resources\document-save-2.png" />
+    <Content Include="Resources\document-save-as-2.png" />
+    <Content Include="Resources\view-refresh-7.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

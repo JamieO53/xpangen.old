@@ -39,11 +39,8 @@ namespace GenEdit.ViewModel
         {
             var geData = new GeData();
             {
-                var data = GenData.DataLoader.LoadData("Settings");
-                var model = new Root(data) {GenObject = data.Root};
-                geData.Settings = new GeSettings(model);
+                geData.Settings = GeData.GetDefaultSettings();
                 geData.Testing = true;
-                geData.SetFileGroup("GeneratorDefinitionModel");
             } 
             return geData;
         }

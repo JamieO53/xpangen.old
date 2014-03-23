@@ -13,23 +13,26 @@ namespace GenEdit.Utilities
         protected TreeViewBuilderBase(GeData data)
         {
             Data = data;
-            dat = data.GenData;
-            def = data.GenDataDef;
-            dat.First(0);
+            Dat = data.GenData;
+            Def = data.GenDataDef;
+            Dat.First(0);
         }
 
-        protected GeData Data { get; set; }
-        protected GenDataDef def { get; set; }
-        protected GenData dat { get; set; }
+        protected GeData Data { get; private set; }
+        protected GenDataDef Def { get; private set; }
+        protected GenData Dat { get; private set; }
 
-        protected TreeNode CreateTreeNode(int iconIndex, string name, string hint, object nodeItem)
+        /// <summary>
+        /// Create a new tree node.
+        /// </summary>
+        /// <param name="iconIndex">The index of the node's icon.</param>
+        /// <param name="name">The node's name.</param>
+        /// <param name="hint">The node's tool tip text.</param>
+        /// <param name="nodeItem">The data linked to the node.</param>
+        /// <returns></returns>
+        protected static TreeNode CreateTreeNode(int iconIndex, string name, string hint, object nodeItem)
         {
-            var classItem = new TreeNode();
-            classItem.Text = name;
-            classItem.ImageIndex = iconIndex;
-            if (hint != "") classItem.ToolTipText = hint;
-            classItem.Tag = nodeItem;
-            return classItem;
+            return new TreeNode {Text = name, ImageIndex = iconIndex, ToolTipText = hint, Tag = nodeItem};
         }
     }
 }

@@ -5,6 +5,7 @@
 using System.IO;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Editor.Model;
 
 namespace org.xpangen.Generator.Test
 {
@@ -504,6 +505,112 @@ Child[Reference='child']
                 CompareGenDataDef(expectedReferences[i].GenDataDef, actual.Cache[expectedReferences[i].Path],
                                   expectedReferences[i].Path);
             }
+        }
+
+        protected static Root PopulateGenSettings()
+        {
+            var f = GenData.DataLoader.LoadData("data/GeneratorEditor").AsDef();
+            var d = new GenData(f);
+            var model = new Root(d) {GenObject = d.Root};
+            model.SaveFields();
+            var settings = new GenSettings(d) {GenObject = d.CreateObject("", "GenSettings"), HomeDir = "."};
+            model.GenSettingsList.Add(settings);
+            settings.BaseFileList.Add(new BaseFile(d)
+                                          {
+                                              GenObject = d.CreateObject("GenSettings", "BaseFile"),
+                                              Name = "Minimal",
+                                              Title = "The simplest definition required by the generator",
+                                              FileName = "Minimal.dcb",
+                                              FilePath = "Data",
+                                              FileExtension = ".dcb"
+                                          });
+            settings.BaseFileList.Add(new BaseFile(d)
+                                          {
+                                              GenObject = d.CreateObject("GenSettings", "BaseFile"),
+                                              Name = "Definition",
+                                              Title = "The definition required by the editor",
+                                              FileName = "Definition.dcb",
+                                              FilePath = "Data",
+                                              FileExtension = ".dcb"
+                                          });
+            var baseFile = new BaseFile(d)
+                               {
+                                   GenObject = d.CreateObject("GenSettings", "BaseFile"),
+                                   Name = "ProgramDefinition",
+                                   Title = "Defines generator editor data models",
+                                   FileName = "ProgramDefinition.dcb",
+                                   FilePath = "Data",
+                                   FileExtension = ".dcb"
+                               };
+            baseFile.ProfileList.Add(new Editor.Model.Profile(d)
+                                         {
+                                             GenObject = d.CreateObject("BaseFile", "Profile"),
+                                             Name = "GenProfileModel",
+                                             Title = "",
+                                             FileName = "GenProfileModel.prf",
+                                             FilePath = "Data"
+                                         });
+            settings.BaseFileList.Add(baseFile);
+            settings.BaseFileList.Add(new BaseFile(d)
+                                          {
+                                              GenObject = d.CreateObject("GenSettings", "BaseFile"),
+                                              Name = "GeneratorEditor",
+                                              Title = "Defines generator editor settings data",
+                                              FileName = "GeneratorEditor.dcb",
+                                              FilePath = "Data",
+                                              FileExtension = ".dcb"
+                                          });
+            settings.FileGroupList.Add(new FileGroup(d)
+                                           {
+                                               GenObject = d.CreateObject("GenSettings", "FileGroup"),
+                                               Name = "Minimal",
+                                               FileName = "Minimal.dcb",
+                                               FilePath = "Data",
+                                               BaseFileName = "Definition"
+                                           });
+            settings.FileGroupList.Add(new FileGroup(d)
+                                           {
+                                               GenObject = d.CreateObject("GenSettings", "FileGroup"),
+                                               Name = "Basic",
+                                               FileName = "Basic.dcb",
+                                               FilePath = "Data",
+                                               BaseFileName = "Definition"
+                                           });
+            settings.FileGroupList.Add(new FileGroup(d)
+                                           {
+                                               GenObject = d.CreateObject("GenSettings", "FileGroup"),
+                                               Name = "Definition",
+                                               FileName = "Definition.dcb",
+                                               FilePath = "Data",
+                                               BaseFileName = "Definition"
+                                           });
+            settings.FileGroupList.Add(new FileGroup(d)
+                                           {
+                                               GenObject = d.CreateObject("GenSettings", "FileGroup"),
+                                               Name = "ProgramDefinition",
+                                               FileName = "ProgramDefinition.dcb",
+                                               FilePath = "Data",
+                                               BaseFileName = "Definition"
+                                           });
+            settings.FileGroupList.Add(new FileGroup(d)
+                                           {
+                                               GenObject = d.CreateObject("GenSettings", "FileGroup"),
+                                               Name = "GeneratorEditor",
+                                               FileName = "GeneratorEditor.dcb",
+                                               FilePath = "Data",
+                                               BaseFileName = "Definition"
+                                           });
+            settings.FileGroupList.Add(new FileGroup(d)
+                                           {
+                                               GenObject = d.CreateObject("GenSettings", "FileGroup"),
+                                               Name = "GeneratorDefinitionModel",
+                                               FileName = "GeneratorDefinitionModel.dcb",
+                                               FilePath = "Data",
+                                               BaseFileName = "ProgramDefinition",
+                                               Profile = "GenProfileModel"
+                                           });
+            d.First(1);
+            return model;
         }
     }
 }
