@@ -38,10 +38,8 @@ namespace GenEdit.ViewModel
         private static GeData GetDefaultGeData()
         {
             var geData = new GeData();
-            {
-                geData.Settings = GeData.GetDefaultSettings();
-                geData.Testing = true;
-            } 
+            geData.Settings = geData.GetDefaultSettings();
+            geData.Testing = true;
             return geData;
         }
 
