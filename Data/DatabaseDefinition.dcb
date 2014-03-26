@@ -1,0 +1,44 @@
+Class=Class
+Field={Name,Title}
+SubClass={SubClass,Property}
+Class=SubClass
+Field=Name
+Class=Property
+Field={Name,Title,DataType}
+.
+Class=Database[Title='Database definition']
+SubClass=Schema
+SubClass=Table
+Property=Name[Title='Database name',DataType=String]
+Class=Schema[Title='Database schema definition']
+Property=Name[Title='Database schema name',DataType=String]
+Class=Table[Title='Database table']
+SubClass=Column
+SubClass=Index
+Property=Name[Title='Database table name',DataType=String]
+Property=Schema[Title='The database table schema reference',DataType=String]
+Class=Column[Title='Table column definition']
+SubClass=Default
+Property=Name[Title='Column name',DataType=String]
+Property=NativeDataType[Title='The native database type of the column',DataType=String]
+Property=ODBCDataType[Title='The ODBC data type of the column',DataType=Integer]
+Property=Length[Title='The length of the data column',DataType=String]
+Property=Precison[Title='The precision of the data column',DataType=Integer]
+Property=Scale[Title='Numeric data scale',DataType=Integer]
+Property=IsNullable[Title='Is the data column nullable?',DataType=Boolean]
+Property=IsKey[Title='Is this column part of the primary key',DataType=Boolean]
+Class=Default[Title='Column default constraint']
+Property=Name[Title='The default constraint name',DataType=String]
+Property=Value[Title='The default value - quoted if required',DataType=String]
+Class=Index[Title='Table index']
+SubClass=KeyColumn
+SubClass=DataColumn
+Property=Name[Title='The name of the index',DataType=String]
+Property=IsPrimaryKey[Title='Is this the table''s primary key?',DataType=Boolean]
+Property=IsUnique[Title='Is this a unique key?',DataType=Boolean]
+Property=IsClusterKey[Title='Is this a cluster key?',DataType=Boolean]
+Class=KeyColumn[Title='Index key column reference']
+Property=Name[Title='The key column name',DataType=String]
+Property=Order[Title='The order of the column in the key',DataType=Integer]
+Class=DataColumn[Title='Index data column reference']
+Property=Name[Title='The name of the data column',DataType=String]
