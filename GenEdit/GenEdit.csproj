@@ -102,6 +102,9 @@
     <None Include="Data\Basic.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Data\DatabaseDefinition.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data\Definition.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -112,6 +115,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Data\GenProfileModel.prf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\JamInvestDatabaseDefinition.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Data\Minimal.dcb">
