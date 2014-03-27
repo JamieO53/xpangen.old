@@ -2,23 +2,24 @@ Class=Class
 Field={Name,Title}
 SubClass={SubClass,Property}
 Class=SubClass
-Field=Name
+Field={Name,Reference}
 Class=Property
-Field={Name,Title,DataType}
+Field={Name,Title,DataType,Default}
 .
 Class=Database[Title='Database definition']
-SubClass=Schema
-SubClass=Table
+SubClass=Schema[]
+SubClass=Table[]
 Property=Name[Title='Database name',DataType=String]
 Class=Schema[Title='Database schema definition']
 Property=Name[Title='Database schema name',DataType=String]
 Class=Table[Title='Database table']
-SubClass=Column
-SubClass=Index
+SubClass=Column[]
+SubClass=Index[]
+SubClass=ForeignKey[]
 Property=Name[Title='Database table name',DataType=String]
 Property=Schema[Title='The database table schema reference',DataType=String]
 Class=Column[Title='Table column definition']
-SubClass=Default
+SubClass=Default[]
 Property=Name[Title='Column name',DataType=String]
 Property=NativeDataType[Title='The native database type of the column',DataType=String]
 Property=ODBCDataType[Title='The ODBC data type of the column',DataType=Integer]
@@ -31,8 +32,8 @@ Class=Default[Title='Column default constraint']
 Property=Name[Title='The default constraint name',DataType=String]
 Property=Value[Title='The default value - quoted if required',DataType=String]
 Class=Index[Title='Table index']
-SubClass=KeyColumn
-SubClass=DataColumn
+SubClass=KeyColumn[]
+SubClass=DataColumn[]
 Property=Name[Title='The name of the index',DataType=String]
 Property=IsPrimaryKey[Title='Is this the table''s primary key?',DataType=Boolean]
 Property=IsUnique[Title='Is this a unique key?',DataType=Boolean]
@@ -42,3 +43,12 @@ Property=Name[Title='The key column name',DataType=String]
 Property=Order[Title='The order of the column in the key',DataType=Integer]
 Class=DataColumn[Title='Index data column reference']
 Property=Name[Title='The name of the data column',DataType=String]
+Class=ForeignKey[Title='The foreign key definition']
+SubClass=ForeignKeyColumn[]
+Property=Name[Title='The name of the foreign key constraint',DataType=String]
+Property=ReferenceTable[Title='The table referred to',DataType=String]
+Property=DeleteAction[Title='The action to be taken when the referred row is deleted',DataType=String]
+Property=UpdateAction[Title='The action to be taken when the referred key is updated',DataType=String]
+Class=ForeignKeyColumn[Title='Defines the column relationship']
+Property=Name[Title='The column name',DataType=String]
+Property=RelatedColumn[Title='The name of the referenced column',DataType=String]
