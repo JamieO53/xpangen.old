@@ -109,7 +109,12 @@ namespace org.xpangen.Generator.Editor.Helper
         public void SetFileGroup(string fileGroup)
         {
             if (Settings.GetFileGroup(fileGroup) == null)
+            {
+                GenDataStore.SetData("");
+                GenDataStore.SetBase("");
+                Profile = null;
                 return;
+            }
             GenDataStore.SetBase(Settings.BaseFilePath);
             GenDataStore.SetData(Settings.FilePath);
             Profile = Settings.Profile != "" ? new GenCompactProfileParser(GenData, Settings.Profile, "") : null;

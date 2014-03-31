@@ -2,7 +2,6 @@
 using System.IO;
 using System.Windows.Forms;
 using GenEdit.ViewModel;
-using org.xpangen.Generator.Editor.Helper;
 using org.xpangen.Generator.Editor.Model;
 
 namespace GenEdit.View
@@ -35,10 +34,8 @@ namespace GenEdit.View
             if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null) return;
 
             var changed = GenDataEditorViewModel.Data.GenDataStore.Changed;
-            comboBoxFileGroup.Enabled = !changed;
-            comboBoxBaseFile.Enabled = !changed;
-            textBoxFileName.Enabled = !changed;
-            textBoxFilePath.Enabled = !changed;
+            EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: changed,
+                           saveAsEnabled: true, fileGroupEnabled: false);
         }
         
         private void splitContainer1_Panel1_Resize(object sender, EventArgs e)
@@ -59,12 +56,8 @@ namespace GenEdit.View
 
             var data = GenDataEditorViewModel.Data;
 
-            buttonClose.Enabled = false;
-            buttonNew.Enabled = true;
-            buttonOpen.Enabled = false;
-            buttonClose.Enabled = false;
-            buttonSave.Enabled = false;
-            buttonSaveAs.Enabled = false;
+            EnableControls(newEnabled: true, closeEnabled: false, saveEnabled: false,
+                           saveAsEnabled: false, fileGroupEnabled: true);
             
             comboBoxFileGroup.Items.Clear();
             comboBoxFileGroup.DisplayMember = "Name";
@@ -83,17 +76,18 @@ namespace GenEdit.View
         private void comboBoxFileGroup_SelectedValueChanged(object sender, EventArgs e)
         {
             if (Background) return;
-            var selected = comboBoxFileGroup.SelectedItem as FileGroup;
-            if (selected == null) return;
+            Selected = comboBoxFileGroup.SelectedItem as FileGroup;
+            if (Selected == null) return;
             var data = GenDataEditorViewModel.Data;
             
-            SetFileGroupFields(selected);
+            data.SetFileGroup(Selected.Name);
 
-            buttonNew.Enabled = true;
-            buttonOpen.Enabled = selected != data.Settings.FileGroup;
-            buttonClose.Enabled = true;
-            buttonSave.Enabled = data.Changed;
-            buttonSaveAs.Enabled = true;
+            SetFileGroupFields(Selected);
+
+            EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: false,
+                           saveAsEnabled: false, fileGroupEnabled: false);
+
+            RaiseDataLoaded();
         }
 
         private void comboBoxBaseFile_SelectedValueChanged(object sender, EventArgs e)
@@ -117,32 +111,16 @@ namespace GenEdit.View
                 comboBoxProfile.SelectedIndex = n;
         }
 
-        private void buttonOpen_Click(object sender, EventArgs e)
-        {
-            var data = GenDataEditorViewModel.Data;
-            Selected = comboBoxFileGroup.SelectedItem as FileGroup;
-            if (Selected == null) return;
-            data.SetFileGroup(Selected.Name);
-
-            buttonOpen.Enabled = false;
-            buttonClose.Enabled = true;
-            buttonSave.Enabled = data.Changed;
-            buttonSaveAs.Enabled = true;
-
-            RaiseDataLoaded();
-        }
-
         private void buttonClose_Click(object sender, EventArgs e)
         {
             GenDataEditorViewModel.Data.SetFileGroup("");
-            if (Selected == null) return;
+            comboBoxFileGroup.SelectedIndex = -1;
+            SetFileGroupFields(Selected);
+
             var data = GenDataEditorViewModel.Data;
 
-            buttonNew.Enabled = true;
-            buttonOpen.Enabled = Selected != data.Settings.FileGroup;
-            buttonClose.Enabled = true;
-            buttonSave.Enabled = data.Changed;
-            buttonSaveAs.Enabled = true;
+            EnableControls(newEnabled: true, closeEnabled: false, saveEnabled: false,
+                           saveAsEnabled: false, fileGroupEnabled: true);
 
             RaiseDataLoaded();
         }
@@ -156,12 +134,18 @@ namespace GenEdit.View
 
             SetFileGroupFields(Selected);
 
-            buttonNew.Enabled = true;
-            buttonOpen.Enabled = true;
-            buttonClose.Enabled = true;
-            buttonSave.Enabled = true;
-            buttonSaveAs.Enabled = true;
+            EnableControls(newEnabled: false, closeEnabled: false, saveEnabled: true,
+                           saveAsEnabled: false, fileGroupEnabled: false);
+        }
 
+        private void EnableControls(bool newEnabled, bool closeEnabled, bool saveEnabled,
+                                    bool saveAsEnabled, bool fileGroupEnabled)
+        {
+            comboBoxFileGroup.Enabled = fileGroupEnabled;
+            buttonNew.Enabled = newEnabled;
+            buttonClose.Enabled = closeEnabled;
+            buttonSave.Enabled = saveEnabled;
+            buttonSaveAs.Enabled = saveAsEnabled;
         }
 
         private void buttonRestore_Click(object sender, EventArgs e)
@@ -199,7 +183,17 @@ namespace GenEdit.View
                     comboBoxFileGroup.SelectedIndex = 0;
                     Background = false;
                     if (i == -1)
-                        buttonOpen_Click(sender, e);
+                    {
+                        var data1 = GenDataEditorViewModel.Data;
+                        Selected = comboBoxFileGroup.SelectedItem as FileGroup;
+                        if (Selected == null) return;
+                        data1.SetFileGroup(Selected.Name);
+
+                        EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: false,
+                                       saveAsEnabled: false, fileGroupEnabled: false);
+
+                        RaiseDataLoaded();
+                    }
                 }
             }
         }
@@ -208,12 +202,12 @@ namespace GenEdit.View
         {
             comboBoxFileGroup.ResetText();
             comboBoxFileGroup.SelectedItem = selected;
-            textBoxFileName.Text = selected.FileName;
-            textBoxFilePath.Text = selected.FilePath;
-            textBoxGenerated.Text = selected.Generated;
+            textBoxFileName.Text = selected != null ? selected.FileName : "";
+            textBoxFilePath.Text = selected != null ? selected.FilePath : "";
+            textBoxGenerated.Text = selected != null ? selected.Generated : "";
             var settings = GenDataEditorViewModel.Data.Settings;
             comboBoxBaseFile.SelectedIndex =
-                selected.BaseFileName == ""
+                selected == null || selected.BaseFileName == ""
                     ? comboBoxBaseFile.Items.IndexOf(settings.FindBaseFile("Definition"))
                     : comboBoxBaseFile.Items.IndexOf(settings.FindBaseFile(selected.BaseFileName));
         }
