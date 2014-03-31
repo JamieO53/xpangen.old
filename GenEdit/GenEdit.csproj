@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>xpangen.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -246,6 +249,8 @@
     <Content Include="Resources\document-save-2.png" />
     <Content Include="Resources\document-save-as-2.png" />
     <Content Include="Resources\view-refresh-7.png" />
+    <Content Include="Resources\xpangen.ico" />
+    <Content Include="xpangen.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

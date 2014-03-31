@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using org.xpangen.Generator.Editor.Model;
 
 namespace GenEdit.View
 {
@@ -38,12 +39,10 @@ namespace GenEdit.View
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolStripLibrary = new System.Windows.Forms.ToolStrip();
-            this.buttonOpen = new System.Windows.Forms.ToolStripButton();
             this.buttonNew = new System.Windows.Forms.ToolStripButton();
             this.buttonSave = new System.Windows.Forms.ToolStripButton();
             this.buttonSaveAs = new System.Windows.Forms.ToolStripButton();
             this.buttonClose = new System.Windows.Forms.ToolStripButton();
-            this.buttonRestore = new System.Windows.Forms.ToolStripButton();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxFileGroup = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -117,28 +116,15 @@ namespace GenEdit.View
             // 
             this.toolStripLibrary.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.toolStripLibrary.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.buttonOpen,
             this.buttonNew,
             this.buttonSave,
             this.buttonSaveAs,
-            this.buttonClose,
-            this.buttonRestore});
+            this.buttonClose});
             this.toolStripLibrary.Location = new System.Drawing.Point(0, 67);
             this.toolStripLibrary.Name = "toolStripLibrary";
             this.toolStripLibrary.Size = new System.Drawing.Size(303, 25);
             this.toolStripLibrary.TabIndex = 2;
             this.toolStripLibrary.Text = "toolStrip1";
-            // 
-            // buttonOpen
-            // 
-            this.buttonOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.buttonOpen.Image = ((System.Drawing.Image)(resources.GetObject("buttonOpen.Image")));
-            this.buttonOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.buttonOpen.Name = "buttonOpen";
-            this.buttonOpen.Size = new System.Drawing.Size(23, 22);
-            this.buttonOpen.Text = "toolStripButton1";
-            this.buttonOpen.ToolTipText = "Open the data file";
-            this.buttonOpen.Click += new System.EventHandler(this.buttonOpen_Click);
             // 
             // buttonNew
             // 
@@ -182,17 +168,6 @@ namespace GenEdit.View
             this.buttonClose.Text = "toolStripButton1";
             this.buttonClose.ToolTipText = "Close the data file";
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
-            // 
-            // buttonRestore
-            // 
-            this.buttonRestore.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.buttonRestore.Image = ((System.Drawing.Image)(resources.GetObject("buttonRestore.Image")));
-            this.buttonRestore.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.buttonRestore.Name = "buttonRestore";
-            this.buttonRestore.Size = new System.Drawing.Size(23, 22);
-            this.buttonRestore.Text = "Restore";
-            this.buttonRestore.ToolTipText = "Restore to the open data file.";
-            this.buttonRestore.Click += new System.EventHandler(this.buttonRestore_Click);
             // 
             // label2
             // 
@@ -333,11 +308,9 @@ namespace GenEdit.View
         private Label label7;
         private ComboBox comboBoxProfile;
         private ToolStrip toolStripLibrary;
-        private ToolStripButton buttonOpen;
         private ToolStripButton buttonNew;
         private ToolStripButton buttonSave;
         private ToolStripButton buttonSaveAs;
         private ToolStripButton buttonClose;
-        private ToolStripButton buttonRestore;
     }
 }

@@ -66,6 +66,8 @@ namespace org.xpangen.Generator.Editor.Helper
             set
             {
                 _fileGroup = value;
+                if (value == null) return;
+
                 var groups = GetFileGroups();
                 var index = groups.IndexOf(FileGroup);
                 if (index == 0) return;

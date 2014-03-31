@@ -28,10 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GenEditMainForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.genLibrary1 = new GenEdit.View.GenLibrary();
             this.genDataEditor1 = new GenEdit.View.GenDataEditor();
             this.genProfileEditor1 = new GenEdit.View.GenProfileEditor();
+            this.genLibrary1 = new GenEdit.View.GenLibrary();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -57,15 +58,6 @@
             this.splitContainer1.SplitterDistance = 156;
             this.splitContainer1.TabIndex = 0;
             // 
-            // genLibrary1
-            // 
-            this.genLibrary1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.genLibrary1.GenDataEditorViewModel = null;
-            this.genLibrary1.Location = new System.Drawing.Point(720, 0);
-            this.genLibrary1.Name = "genLibrary1";
-            this.genLibrary1.Size = new System.Drawing.Size(210, 614);
-            this.genLibrary1.TabIndex = 1;
-            // 
             // genDataEditor1
             // 
             this.genDataEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -84,6 +76,15 @@
             this.genProfileEditor1.Size = new System.Drawing.Size(720, 454);
             this.genProfileEditor1.TabIndex = 0;
             // 
+            // genLibrary1
+            // 
+            this.genLibrary1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.genLibrary1.GenDataEditorViewModel = null;
+            this.genLibrary1.Location = new System.Drawing.Point(720, 0);
+            this.genLibrary1.Name = "genLibrary1";
+            this.genLibrary1.Size = new System.Drawing.Size(210, 614);
+            this.genLibrary1.TabIndex = 1;
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.splitContainer1);
@@ -100,6 +101,7 @@
             this.ClientSize = new System.Drawing.Size(930, 614);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.genLibrary1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "GenEditMainForm";
             this.Text = "Generator editor";
             this.splitContainer1.Panel1.ResumeLayout(false);
