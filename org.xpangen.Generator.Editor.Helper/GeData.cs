@@ -16,7 +16,14 @@ namespace org.xpangen.Generator.Editor.Helper
 {
     public class GeData
     {
-        public bool Changed { get; set; }
+        public bool Changed
+        {
+            get
+            {
+                return GenData != null && GenData.Changed;
+            }
+        }
+
         public bool Created { get; set; }
         public bool DataChanged { get; set; }
         public IGenTreeNavigator DataNavigator { get; set; }
@@ -159,7 +166,7 @@ namespace org.xpangen.Generator.Editor.Helper
         private void SaveSettings()
         {
             if (SaveToDisk)
-                GenParameters.SaveToFile(GenData, "Data/Settings.dcb");
+                GenParameters.SaveToFile(Settings.Model.GenData, "Data/Settings.dcb");
         }
 
         private static string BuildFilePath(string filePath, string fileName)
@@ -182,6 +189,17 @@ namespace org.xpangen.Generator.Editor.Helper
             var model = new Root(data) {GenObject = data.Root};
             SaveToDisk = false;
             return new GeSettings(model);
+        }
+
+        public void SaveFile(FileGroup fileGroup)
+        {
+            fileGroup.SaveFields();
+            GenParameters.SaveToFile(GenData, BuildFilePath(fileGroup.FilePath, fileGroup.FileName));
+
+            if (Settings.FindFileGroup(fileGroup.Name) == null)
+                Settings.GetFileGroups().Add(fileGroup);
+            SetFileGroup(fileGroup.Name);
+            SaveSettings();
         }
     }
 }

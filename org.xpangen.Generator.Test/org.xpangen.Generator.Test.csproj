@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="ApplicationBaseTests.cs" />
     <Compile Include="CharSetTests.cs" />
+    <Compile Include="DebugTests.cs" />
     <Compile Include="EditorHelperTests.cs" />
     <Compile Include="GenDataCacheTests.cs" />
     <Compile Include="DataModelTests.cs" />
@@ -108,7 +109,9 @@
     <None Include="Data\Basic.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\DatabaseDefinition.dcb" />
+    <None Include="Data\DatabaseDefinition.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data\Definition.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -121,7 +124,9 @@
     <None Include="Data\GenProfileModel.prf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\JamInvestDatabaseDefinition.dcb" />
+    <None Include="Data\JamInvestDatabaseDefinition.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data\Minimal.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

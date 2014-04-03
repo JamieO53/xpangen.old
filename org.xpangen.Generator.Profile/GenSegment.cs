@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Profile
             GenCardinality = cardinality;
         }
 
-        public GenCardinality GenCardinality { get; set; }
+        public GenCardinality GenCardinality { get; private set; }
 
         public override string ProfileLabel()
         {

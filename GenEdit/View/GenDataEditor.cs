@@ -54,6 +54,9 @@ namespace GenEdit.View
 
         private void RaiseDataChanged()
         {
+            if (DataNavigatorTreeView.SelectedNode != null)
+                DataNavigatorTreeView.SelectedNode.Text =
+                    GenDataEditorViewModel.SelectedNode.GenAttributes.AsString("Name");
             if (OnDataChanged != null)
                 OnDataChanged();
         }
@@ -199,33 +202,50 @@ namespace GenEdit.View
         public void LoadData()
         {
             DataNavigatorTreeView.Nodes.Clear();
+            GenDataDataGrid.DataSource = null;
             if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null ||
                 GenDataEditorViewModel.Data.GenData == null) 
                 return;
 
             var builder = new DataEditorTreeViewBuilder(GenDataEditorViewModel.Data);
             builder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, 0);
+            GenDataEditorViewModel.Data.GenData.First(0);
             GenDataEditorViewModel.Data.GenData.GenDataBase.PropertyChanged += GenData_PropertyChanged;
             RaiseDataChanged();
         }
 
         private void SaveItemChangesButton_Click(object sender, EventArgs e)
         {
+            if (!SaveEditorChanges()) return;
+            RaiseDataChanged();
+        }
+
+        public bool SaveEditorChanges()
+        {
             var data = GenDataEditorViewModel;
             var node = data.SelectedNode;
-            if (node != null && node.Changed)
-            {
-                node.Save();
-                RaiseDataChanged();
-            }
+            if (node == null) return true;
+            if (GenDataDataGrid.CurrentCell.IsInEditMode)
+                GenDataDataGrid.CommitEdit(0);
+
+            if (!node.Changed) return false;
+            node.Save();
+            return true;
         }
 
         private void CancelItemChangesButton_Click(object sender, EventArgs e)
         {
             var data = GenDataEditorViewModel;
             var node = data.SelectedNode;
-            if (node != null && node.Changed)
+            if (node == null) return;
+            if (GenDataDataGrid.CurrentCell.IsInEditMode)
+                GenDataDataGrid.CommitEdit(0);
+
+            if (node.Changed)
                 node.Cancel();
+            var save = GenDataDataGrid.DataSource;
+            GenDataDataGrid.DataSource = null;
+            GenDataDataGrid.DataSource = save;
         }
     }
 }

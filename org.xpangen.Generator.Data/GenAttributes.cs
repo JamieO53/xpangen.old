@@ -124,10 +124,10 @@ namespace org.xpangen.Generator.Data
 
             if (!changed) return;
             
+            GenObject.GenDataBase.Changed = true;
             for (var i = 0; i < n; i++)
                 if (changedProps[i])
                     GenObject.GenDataBase.RaiseDataChanged(className, props[i]);
-            GenObject.GenDataBase.Changed = true;
         }
     }
 }

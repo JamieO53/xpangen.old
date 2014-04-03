@@ -1,7 +1,4 @@
-﻿using org.xpangen.Generator.Application;
-using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Editor.Helper;
-using org.xpangen.Generator.Editor.Model;
+﻿using org.xpangen.Generator.Editor.Helper;
 using NUnit.Framework;
 using org.xpangen.Generator.Parameter;
 
