@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using GenEdit.ViewModel;
 
 namespace GenEdit
@@ -15,6 +16,29 @@ namespace GenEdit
             genLibrary1.GenDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
             genLibrary1.OnDataLoaded = () => genDataEditor1.LoadData();
             genLibrary1.OnDataLoaded += () => genProfileEditor1.LoadData();
+        }
+
+        private void GenEditMainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var vm = ViewModelLocator.GenDataEditorViewModel;
+            genDataEditor1.SaveEditorChanges();
+            if (!vm.Data.Changed) return;
+
+            var dr = MessageBox.Show("The data has changed. Save before closing?", "GenEdit closing",
+                                     MessageBoxButtons.YesNoCancel);
+            switch (dr)
+            {
+                case DialogResult.Cancel:
+                    e.Cancel = true;
+                    break;
+                case DialogResult.Yes:
+                    genLibrary1.SaveOrCreateFile();
+                    break;
+                case DialogResult.No:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
     }

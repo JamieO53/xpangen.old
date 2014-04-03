@@ -148,54 +148,54 @@ namespace GenEdit.View
             buttonSaveAs.Enabled = saveAsEnabled;
         }
 
-        private void buttonRestore_Click(object sender, EventArgs e)
-        {
-            SetFileGroupFields(Selected);
-        }
-
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            var data = GenDataEditorViewModel.Data;
+            var i = SaveOrCreateFile();
 
-            if (Selected != data.Settings.FileGroup)
+            if (i != 0)
             {
-                var i = comboBoxFileGroup.Items.IndexOf(Selected);
-                if (i != 0)
+                if (i > 0)
                 {
-                    if (i > 0)
-                    {
-                        comboBoxFileGroup.Items.RemoveAt(i);
-                    }
-                    else if (i == -1)
-                    {
-                        // todo: validate this stuff.
-                        Selected.Name = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
-                        Selected.FileName = textBoxFileName.Text +
-                                            (Path.GetExtension(textBoxFileName.Text) == "" ? ".dcb" : "");
-                        Selected.FilePath = textBoxFilePath.Text;
-                        Selected.BaseFileName = ((BaseFile)comboBoxBaseFile.SelectedItem).Name;
-                        Selected.Profile = comboBoxProfile.SelectedText;
-                        Selected.Generated = textBoxGenerated.Text;
-                        data.CreateFile(Selected);
-                    }
-                    comboBoxFileGroup.Items.Insert(0, Selected);
-                    Background = true;
-                    comboBoxFileGroup.SelectedIndex = 0;
-                    Background = false;
-                    if (i == -1)
-                    {
-                        var data1 = GenDataEditorViewModel.Data;
-                        Selected = comboBoxFileGroup.SelectedItem as FileGroup;
-                        if (Selected == null) return;
-                        data1.SetFileGroup(Selected.Name);
+                    comboBoxFileGroup.Items.RemoveAt(i);
+                }
+                else if (i == -1)
+                {
+                }
+                comboBoxFileGroup.Items.Insert(0, Selected);
+                Background = true;
+                comboBoxFileGroup.SelectedIndex = 0;
+                Background = false;
+                if (i == -1)
+                {
+                    var data = GenDataEditorViewModel.Data;
+                    Selected = comboBoxFileGroup.SelectedItem as FileGroup;
+                    if (Selected == null) return;
+                    data.SetFileGroup(Selected.Name);
 
-                        EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: false,
-                                       saveAsEnabled: false, fileGroupEnabled: false);
-
-                        RaiseDataLoaded();
-                    }
+                    RaiseDataLoaded();
                 }
             }
+
+            EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: false,
+                            saveAsEnabled: true, fileGroupEnabled: false);
+        }
+
+        public int SaveOrCreateFile()
+        {
+            var data = GenDataEditorViewModel.Data;
+            var i = comboBoxFileGroup.Items.IndexOf(Selected);
+            Selected.Name = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
+            Selected.FileName = textBoxFileName.Text +
+                                (Path.GetExtension(textBoxFileName.Text) == "" ? ".dcb" : "");
+            Selected.FilePath = textBoxFilePath.Text;
+            Selected.BaseFileName = ((BaseFile) comboBoxBaseFile.SelectedItem).Name;
+            Selected.Profile = comboBoxProfile.SelectedText;
+            Selected.Generated = textBoxGenerated.Text;
+            if (i == -1)
+                data.CreateFile(Selected);
+            else
+                data.SaveFile(Selected);
+            return i;
         }
 
         private void SetFileGroupFields(FileGroup selected)

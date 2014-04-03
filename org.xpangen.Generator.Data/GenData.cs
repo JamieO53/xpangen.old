@@ -94,8 +94,8 @@ namespace org.xpangen.Generator.Data
         {
             if (string.IsNullOrEmpty(reference))
             {
-                if (genObject.ParentSubClass != null)
-                    EstablishContext(genObject.Parent.ClassId, genObject.ParentSubClass, genObject.Parent, reference, 0,
+                if (genObject.Parent != null && genObject.Parent.ParentSubClass != null)
+                    EstablishContext(genObject.Parent.ClassId, genObject.Parent.ParentSubClass, genObject.Parent, reference, 0,
                                      this);
             }
             else if (genObject.ClassId != 0)
