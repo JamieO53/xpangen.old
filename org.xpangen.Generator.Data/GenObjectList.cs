@@ -213,9 +213,7 @@ namespace org.xpangen.Generator.Data
         public GenObject CreateObject()
         {
             var genObjectListBase = GenObjectListBase as GenObjectListBase;
-            if (genObjectListBase != null)
-                return genObjectListBase.CreateObject();
-            return null;
+            return genObjectListBase != null ? genObjectListBase.CreateObject() : null;
         }
 
         public int IndexOf(GenObject genObject)

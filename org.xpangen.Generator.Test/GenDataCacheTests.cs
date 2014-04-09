@@ -120,7 +120,7 @@ namespace org.xpangen.Generator.Test
             
             d.First(1);
             var o = d.Context[4].GenObject;
-            var sc = d.SaveContext(4);
+            var sc = d.SaveContext(4, d.SaveContext(3, d.SaveContext(2, d.SaveContext(1, null))));
             Assert.AreEqual("minimal", o.GenDataBase.ToString());
             Assert.AreEqual("Minimal", d.Context[4].Reference);
             Assert.AreEqual("Minimal", d.Context[3].Reference);
@@ -132,7 +132,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Definition", d.Context[3].Reference);
             Assert.AreEqual("Definition", d.Context[2].Reference);
             Assert.AreEqual("", d.Context[1].Reference);
-            d.EstablishContext(sc);
+            sc.EstablishContext();//d.EstablishContext(sc);
             Assert.AreSame(o, d.Context[4].GenObject);
             Assert.AreEqual("Minimal", d.Context[4].Reference);
             Assert.AreEqual("Minimal", d.Context[3].Reference);

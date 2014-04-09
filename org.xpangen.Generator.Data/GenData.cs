@@ -2,8 +2,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
-
 namespace org.xpangen.Generator.Data
 {
     public class GenData
@@ -77,76 +75,17 @@ namespace org.xpangen.Generator.Data
             return o;
         }
 
-        public void EstablishContext(GenObject genObject)
-        {
-            if (genObject.ParentSubClass != null)
-                EstablishContext(genObject.ClassId, genObject.ParentSubClass, genObject, "", 0, null);
-        }
-
         public void EstablishContext(GenSavedContext savedContext)
         {
-            EstablishContext(savedContext.ClassId, savedContext.GenObjectListBase, savedContext.GenObject,
-                             savedContext.Reference, savedContext.RefClassId, savedContext.ReferenceData);
-        }
+            if (savedContext.ParentContext != null)
+                savedContext.ParentContext.EstablishContext();
+            Context[savedContext.ClassId].GenObjectListBase = savedContext.GenObjectListBase;
+            Context[savedContext.ClassId].RefClassId = savedContext.RefClassId;
+            Context[savedContext.ClassId].Reference = savedContext.Reference;
+            Context[savedContext.ClassId].ReferenceData = savedContext.ReferenceData;
+            Context[savedContext.ClassId].Index = savedContext.GenObjectListBase.IndexOf(savedContext.GenObject);
 
-        private void EstablishContext(int classId, IGenObjectListBase genObjectListBase, GenObject genObject,
-                                      string reference, int refClassId, GenData referenceData)
-        {
-            if (string.IsNullOrEmpty(reference))
-            {
-                if (genObject.Parent != null && genObject.Parent.ParentSubClass != null)
-                    EstablishContext(genObject.Parent.ClassId, genObject.Parent.ParentSubClass, genObject.Parent, reference, 0,
-                                     this);
-            }
-            else if (genObject.ClassId != 0)
-            {
-                var parentClassId = GenDataDef.Classes[classId].Parent.ClassId;
-                var parentRefClassId = referenceData.GenDataDef.Classes.IndexOf(GenDataDef.Classes[parentClassId].Name);
-                EstablishContext(parentClassId, genObject.ParentSubClass, genObject.Parent, reference, parentRefClassId,
-                                 referenceData);
-            }
-
-            Context[classId].GenObjectListBase = genObjectListBase;
-            Context[classId].RefClassId = refClassId;
-            Context[classId].ReferenceData = referenceData;
-            if (referenceData == null ||
-                GenDataDef.Classes[classId].Reference.Equals(referenceData.GenDataDef.Definition,
-                                                             StringComparison.InvariantCultureIgnoreCase))
-            {
-                Context[classId].Reference = reference;
-                Context[classId].Index = Context[classId].IndexOf(genObject);
-            }
-            else if (classId != 0)
-            {
-                for (var i = 0; i < GenDataDef.Classes[classId].Parent.SubClasses.Count; i++)
-                {
-                    if (GenDataDef.Classes[classId].Parent.SubClasses[i].Reference !=
-                        referenceData.GenDataDef.Definition) continue;
-                    for (var j = 0;
-                         j < Context[GenDataDef.Classes[classId].Parent.ClassId].GenObject.SubClass.Count;
-                         j++)
-                    {
-                        if (reference !=
-                            Context[GenDataDef.Classes[classId].Parent.ClassId].GenObject.SubClass[j].Reference)
-                            continue;
-                        Context[GenDataDef.Classes[classId].Parent.ClassId].Index = j;
-                        break;
-                    }
-                }
-            }
-
-            for (var i = 0; i < GenDataDef.Classes[classId].SubClasses.Count; i++)
-            {
-                var subDef = GenDataDef.Classes[classId].SubClasses[i].SubClass;
-                if (string.IsNullOrEmpty(subDef.Reference)) continue;
-                var sub = Context[subDef.ClassId];
-// ReSharper disable PossibleNullReferenceException
-                sub.GenObjectListBase = referenceData.Context[subDef.RefClassId].GenObjectListBase;
-// ReSharper restore PossibleNullReferenceException
-                sub.Reference = reference;
-                sub.ReferenceData = referenceData;
-                sub.First();
-            }
+            SetSubClasses(savedContext.ClassId);
         }
 
         public void First(int classId)
@@ -321,10 +260,11 @@ namespace org.xpangen.Generator.Data
             return !string.IsNullOrEmpty(DataName) ? DataName : base.ToString();
         }
 
-        public GenSavedContext SaveContext(int classId)
+        public GenSavedContext SaveContext(int classId, GenSavedContext parentContext)
         {
             var sc = new GenSavedContext
                          {
+                             ParentContext = parentContext,
                              GenData = this,
                              ClassId = classId,
                              GenObject = Context[classId].GenObject,

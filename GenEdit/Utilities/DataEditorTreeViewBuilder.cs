@@ -18,17 +18,18 @@ namespace GenEdit.Utilities
         {
         }
 
-        public void CreateSubClassTrees(IList parentItems, int parentClassId)
+        public void CreateSubClassTrees(IList parentItems, GenSavedContext parentContext)
         {
-            for (var i = 0; i < Def.Classes[parentClassId].SubClasses.Count; i++)
+            var classId = parentContext == null ? 0 : parentContext.ClassId;
+            for (var i = 0; i < Def.Classes[classId].SubClasses.Count; i++)
             {
-                var classId = Def.Classes[parentClassId].SubClasses[i].SubClass.ClassId;
-                var classSubTree = CreateClassSubTree(classId);
+                var subClassId = Def.Classes[classId].SubClasses[i].SubClass.ClassId;
+                var classSubTree = CreateClassSubTree(subClassId, parentContext);
                 parentItems.Add(classSubTree);
             }
         }
 
-        private TreeNode CreateClassSubTree(int classId)
+        private TreeNode CreateClassSubTree(int classId, GenSavedContext parentContext)
         {
             var definition = Data.FindClassDefinition(classId);
 
@@ -41,10 +42,10 @@ namespace GenEdit.Utilities
                 Dat.First(classId);
                 while (!Dat.Eol(classId))
                 {
-                    var obj = new GenObjectViewModel(objectList.GenObject, definition, Data.GenData.SaveContext(classId));
+                    var obj = new GenObjectViewModel(objectList.GenObject, definition, Data.GenData.SaveContext(classId, parentContext));
                     var childItem = CreateTreeNode(1, obj.Name, obj.Hint, obj);
                     classItem.Nodes.Add(childItem);
-                    CreateSubClassTrees(childItem.Nodes, classId);
+                    CreateSubClassTrees(childItem.Nodes, obj.SavedContext);
                     Dat.Next(classId);
                 }
             }
