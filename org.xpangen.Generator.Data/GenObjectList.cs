@@ -173,8 +173,8 @@ namespace org.xpangen.Generator.Data
             GenObjectListBase.RemoveAt(itemIndex);
             GenObjectListBase.Insert(0, genObject);
             Index = 0;
-            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
             GenDataBase.Changed = true;
+            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
         }
 
         private void MoveUp(int itemIndex)
@@ -184,8 +184,8 @@ namespace org.xpangen.Generator.Data
             GenObjectListBase[itemIndex] = GenObjectListBase[itemIndex - 1];
             GenObjectListBase[itemIndex - 1] = genObject;
             Index = itemIndex - 1;
-            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
             GenDataBase.Changed = true;
+            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
         }
 
         private void MoveDown(int itemIndex)
@@ -195,8 +195,8 @@ namespace org.xpangen.Generator.Data
             GenObjectListBase[itemIndex] = GenObjectListBase[itemIndex + 1];
             GenObjectListBase[itemIndex + 1] = genObject;
             Index = itemIndex + 1;
-            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
             GenDataBase.Changed = true;
+            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
         }
 
         private void MoveToBottom(int itemIndex)
@@ -206,8 +206,8 @@ namespace org.xpangen.Generator.Data
             GenObjectListBase.RemoveAt(itemIndex);
             GenObjectListBase.Add(genObject);
             Index = GenObjectListBase.Count - 1;
-            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
             GenDataBase.Changed = true;
+            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
         }
 
         public GenObject CreateObject()

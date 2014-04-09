@@ -17,7 +17,7 @@ namespace GenEdit.View
 
         public delegate void FocusChanged();
 
-        public DataChanged OnFocusChanged;
+        public FocusChanged OnFocusChanged;
 
         public GenDataEditor()
         {
@@ -235,7 +235,7 @@ namespace GenEdit.View
             var data = GenDataEditorViewModel;
             var node = data.SelectedNode;
             if (node == null) return true;
-            if (GenDataDataGrid.CurrentCell.IsInEditMode)
+            if (GenDataDataGrid.CurrentCell != null && GenDataDataGrid.CurrentCell.IsInEditMode)
                 GenDataDataGrid.CommitEdit(0);
 
             if (!node.Changed) return false;
