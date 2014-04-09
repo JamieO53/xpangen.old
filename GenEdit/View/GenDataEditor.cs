@@ -15,6 +15,10 @@ namespace GenEdit.View
 
         public DataChanged OnDataChanged;
 
+        public delegate void FocusChanged();
+
+        public DataChanged OnFocusChanged;
+
         public GenDataEditor()
         {
             InitializeComponent();
@@ -49,16 +53,22 @@ namespace GenEdit.View
             var data = GenDataEditorViewModel;
             data.SelectedNode = DataEditorTreeViewBuilder.GetNodeData(DataNavigatorTreeView.SelectedNode);
             GenDataDataGrid.DataSource = data.SelectedNode != null ? data.SelectedNode.Fields : null;
-            RaiseDataChanged();
+            RaiseFocusChanged();
         }
 
         private void RaiseDataChanged()
         {
-            if (DataNavigatorTreeView.SelectedNode != null)
+            if (DataNavigatorTreeView.SelectedNode != null && GenDataEditorViewModel.SelectedNode != null)
                 DataNavigatorTreeView.SelectedNode.Text =
                     GenDataEditorViewModel.SelectedNode.GenAttributes.AsString("Name");
             if (OnDataChanged != null)
                 OnDataChanged();
+        }
+
+        private void RaiseFocusChanged()
+        {
+            if (OnFocusChanged != null)
+                OnFocusChanged();
         }
 
         private void GenDataEditor_Load(object sender, EventArgs e)
@@ -157,7 +167,7 @@ namespace GenEdit.View
             nodes.Insert(0, node);
             DataNavigatorTreeView.SelectedNode = node;
             DataNavigatorTreeView.EndUpdate();
-            RaiseDataChanged();
+            RaiseFocusChanged();
         }
 
         private void MoveUp(int index, TreeNode myNode)
@@ -170,7 +180,7 @@ namespace GenEdit.View
             nodes.Insert(index - 1, node);
             DataNavigatorTreeView.SelectedNode = node;
             DataNavigatorTreeView.EndUpdate();
-            RaiseDataChanged();
+            RaiseFocusChanged();
         }
 
         private void MoveDown(int index, TreeNode myNode)
@@ -183,7 +193,7 @@ namespace GenEdit.View
             nodes.Insert(index + 1, node);
             DataNavigatorTreeView.SelectedNode = node;
             DataNavigatorTreeView.EndUpdate();
-            RaiseDataChanged();
+            RaiseFocusChanged();
         }
 
         private void MoveToBottom(int index, TreeNode myNode)
@@ -196,7 +206,7 @@ namespace GenEdit.View
             nodes.Add(node);
             DataNavigatorTreeView.SelectedNode = node;
             DataNavigatorTreeView.EndUpdate();
-            RaiseDataChanged();
+            RaiseFocusChanged();
         }
 
         public void LoadData()
@@ -208,7 +218,7 @@ namespace GenEdit.View
                 return;
 
             var builder = new DataEditorTreeViewBuilder(GenDataEditorViewModel.Data);
-            builder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, 0);
+            builder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, null);
             GenDataEditorViewModel.Data.GenData.First(0);
             GenDataEditorViewModel.Data.GenData.GenDataBase.PropertyChanged += GenData_PropertyChanged;
             RaiseDataChanged();

@@ -15,6 +15,8 @@
 
         public GenData ReferenceData { get; set; }
 
+        public GenSavedContext ParentContext { get; set; }
+
         public void EstablishContext()
         {
             GenData.EstablishContext(this);

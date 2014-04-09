@@ -90,7 +90,6 @@ namespace org.xpangen.Generator.Test
             a.GenObject = o;
             a.SetString("Name", "SubClass");
             a.SaveFields();
-            d.EstablishContext(o);
             d.Context[f.Classes.IndexOf("SubClass")].Last();
 
             s.Last();

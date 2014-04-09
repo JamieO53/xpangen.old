@@ -22,5 +22,10 @@ namespace org.xpangen.Generator.Application
                 if (!DelayedSave) SaveFields();
             }
         }
+
+        public override string ToString()
+        {
+            return GetType().Name + "." + Name;
+        }
     }
 }
