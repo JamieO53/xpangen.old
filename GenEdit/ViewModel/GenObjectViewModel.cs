@@ -60,6 +60,7 @@ namespace GenEdit.ViewModel
             Definition = definition;
             GenAttributes = new GenAttributes(genObject.GenDataBase.GenDataDef) { GenObject = savedContext.GenObject };
             Changed = false;
+            IsNew = false;
         }
 
         private GenApplicationBase Definition { get; set; }
@@ -82,6 +83,8 @@ namespace GenEdit.ViewModel
         public string Hint { get { return GenAttributes.AsString("Title"); } }
 
         public GenSavedContext SavedContext { get; private set; }
+
+        public bool IsNew { get; set; }
 
         /// <summary>
         /// Saves the object data

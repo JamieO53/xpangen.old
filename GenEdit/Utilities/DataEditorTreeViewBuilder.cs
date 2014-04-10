@@ -43,18 +43,56 @@ namespace GenEdit.Utilities
                 while (!Dat.Eol(classId))
                 {
                     var obj = new GenObjectViewModel(objectList.GenObject, definition, Data.GenData.SaveContext(classId, parentContext));
-                    var childItem = CreateTreeNode(1, obj.Name, obj.Hint, obj);
-                    classItem.Nodes.Add(childItem);
-                    CreateSubClassTrees(childItem.Nodes, obj.SavedContext);
+                    var childItem = ChildItem(obj, classItem);
                     Dat.Next(classId);
                 }
             }
             return classItem;
         }
 
+        public TreeNode ChildItem(GenObjectViewModel obj, TreeNode classItem)
+        {
+            var childItem = CreateTreeNode(1, obj.Name, obj.Hint, obj);
+            classItem.Nodes.Add(childItem);
+            CreateSubClassTrees(childItem.Nodes, obj.SavedContext);
+            return childItem;
+        }
+
         public static GenObjectViewModel GetNodeData(object selectedItem)
         {
             return ((TreeNode)selectedItem).Tag as GenObjectViewModel;
+        }
+
+        public void CreateNewChildItem(TreeView treeView)
+        {
+            var parentClassNode = treeView.SelectedNode.Tag is GenObjectViewModel
+                                      ? treeView.SelectedNode.Parent
+                                      : treeView.SelectedNode;
+            var parentNode = parentClassNode.Parent;
+
+            string parentClassName;
+            GenSavedContext parentContext;
+            if (parentNode != null)
+            {
+                var parentObj = DataEditorTreeViewBuilder.GetNodeData(parentNode);
+                parentClassName = parentObj.GenAttributes.GenObject.Definition.Name;
+                parentContext = parentObj.SavedContext;
+            }
+            else
+            {
+                parentClassName = "";
+                parentContext = null;
+            }
+
+            var className = parentClassNode.Text;
+            var o = Data.GenData.CreateObject(parentClassName, className);
+            o.Attributes[0] = "new";
+
+            var obj = new GenObjectViewModel(o, Data.FindClassDefinition(o.ClassId),
+                                             Data.GenData.SaveContext(o.ClassId, parentContext));
+            obj.IsNew = true;
+            var childItem = ChildItem(obj, parentClassNode);
+            treeView.SelectedNode = childItem;
         }
     }
 }

@@ -217,12 +217,14 @@ namespace GenEdit.View
                 GenDataEditorViewModel.Data.GenData == null) 
                 return;
 
-            var builder = new DataEditorTreeViewBuilder(GenDataEditorViewModel.Data);
-            builder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, null);
+            DataEditorTreeViewBuilder = new DataEditorTreeViewBuilder(GenDataEditorViewModel.Data);
+            DataEditorTreeViewBuilder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, null);
             GenDataEditorViewModel.Data.GenData.First(0);
             GenDataEditorViewModel.Data.GenData.GenDataBase.PropertyChanged += GenData_PropertyChanged;
             RaiseDataChanged();
         }
+
+        private DataEditorTreeViewBuilder DataEditorTreeViewBuilder { get; set; }
 
         private void SaveItemChangesButton_Click(object sender, EventArgs e)
         {
@@ -251,11 +253,36 @@ namespace GenEdit.View
             if (GenDataDataGrid.CurrentCell.IsInEditMode)
                 GenDataDataGrid.CommitEdit(0);
 
+            if (node.IsNew)
+            {
+                var selectedNode = DataNavigatorTreeView.SelectedNode;
+                var genObject = data.SelectedNode.GenAttributes.GenObject;
+                genObject.ParentSubClass.Remove(genObject);
+                selectedNode.Parent.Nodes.Remove(selectedNode);
+                return;
+            }
+            
             if (node.Changed)
                 node.Cancel();
             var save = GenDataDataGrid.DataSource;
             GenDataDataGrid.DataSource = null;
             GenDataDataGrid.DataSource = save;
+        }
+
+        private void AddItemButton_Click(object sender, EventArgs e)
+        {
+            DataEditorTreeViewBuilder.CreateNewChildItem(DataNavigatorTreeView);
+        }
+
+        private void RemoveItemButton_Click(object sender, EventArgs e)
+        {
+            var data = GenDataEditorViewModel;
+            var selectedNode = DataNavigatorTreeView.SelectedNode;
+            var genObject = data.SelectedNode.GenAttributes.GenObject;
+            data.Data.GenData.Context[genObject.ClassId].Delete();
+            //genObject.ParentSubClass.Remove(genObject);
+            selectedNode.Parent.Nodes.Remove(selectedNode);
+            RaiseDataChanged();
         }
     }
 }
