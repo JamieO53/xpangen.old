@@ -221,7 +221,7 @@ namespace org.xpangen.Generator.Data
                     if (!string.IsNullOrEmpty(classDef.SubClasses[i].Reference))
                     {
                         var referenceData = genObject.SubClass[i] as GenObjectListReference;
-                        if (referenceData != null)
+                        if (referenceData != null && !string.IsNullOrEmpty(referenceData.Reference))
                             SetReferenceSubClasses(classId, i,
                                                    Cache[
                                                        referenceData.Definition.ReferenceDefinition,

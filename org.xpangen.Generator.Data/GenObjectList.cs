@@ -210,6 +210,10 @@ namespace org.xpangen.Generator.Data
             GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
         }
 
+        /// <summary>
+        /// Create a new <see cref="GenObject"/> and append it to the list.
+        /// </summary>
+        /// <returns>The new object.</returns>
         public GenObject CreateObject()
         {
             var genObjectListBase = GenObjectListBase as GenObjectListBase;
@@ -224,6 +228,16 @@ namespace org.xpangen.Generator.Data
         public override string ToString()
         {
             return GenDataBase.GenDataDef.Classes[ClassId] + (Eol || GenObject.Attributes.Count == 0 ? "" : ":" + GenObject.Attributes[0]) ;
+        }
+
+        /// <summary>
+        /// Delete the currently selected object if any.
+        /// </summary>
+        public void Delete()
+        {
+            if (Eol) return;
+            GenObjectListBase.RemoveAt(Index);
+            GenDataBase.Changed = true;
         }
     }
 }

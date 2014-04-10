@@ -192,6 +192,7 @@
             this.AddItemButton.Size = new System.Drawing.Size(23, 22);
             this.AddItemButton.Text = "AddI item";
             this.AddItemButton.ToolTipText = "Add an item to the bottom of the current list";
+            this.AddItemButton.Click += new System.EventHandler(this.AddItemButton_Click);
             // 
             // RemoveItemButton
             // 
@@ -202,6 +203,7 @@
             this.RemoveItemButton.Size = new System.Drawing.Size(23, 22);
             this.RemoveItemButton.Text = "Remove item";
             this.RemoveItemButton.ToolTipText = "Remove the selected item from its list";
+            this.RemoveItemButton.Click += new System.EventHandler(this.RemoveItemButton_Click);
             // 
             // panel1
             // 
