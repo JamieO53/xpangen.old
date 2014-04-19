@@ -12,12 +12,13 @@ namespace GenEdit.View
         public GenDataEditorViewModel GenDataEditorViewModel { get; set; }
 
         public delegate void DataChanged();
-
         public DataChanged OnDataChanged;
 
         public delegate void FocusChanged();
-
         public FocusChanged OnFocusChanged;
+
+        private int NameColumnIndex { get; set; }
+        private int ValueColumnIndex { get; set; }
 
         public GenDataEditor()
         {
@@ -26,8 +27,16 @@ namespace GenEdit.View
 
         private void DataNavigatorTreeView_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
+            if (DataNavigatorTreeView.SelectedNode == null) return;
+
             var data = GenDataEditorViewModel;
             var node = data.SelectedNode;
+            if (node != null && (node.IsNew && !node.Changed))
+            {
+                RemoveNewNode();
+                return;
+            }
+
             if (node == null || !node.Changed) return;
 
             var mr = MessageBox.Show("Data editor - data changed", "Do you wish to save the changes?",
@@ -88,13 +97,15 @@ namespace GenEdit.View
             else if (header == "Name")
             {
                 e.Column.ReadOnly = true;
-                e.Column.Width = 150;
+                e.Column.Width = 120;
+                NameColumnIndex = e.Column.Index;
             }
             else if (header == "Value")
             {
                 e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 e.Column.MinimumWidth = 200;
-            }
+                ValueColumnIndex = e.Column.Index;
+           }
         }
 
         private void GenDataDataGrid_SelectionChanged(object sender, System.EventArgs e)
@@ -247,21 +258,17 @@ namespace GenEdit.View
 
         private void CancelItemChangesButton_Click(object sender, EventArgs e)
         {
-            var data = GenDataEditorViewModel;
-            var node = data.SelectedNode;
+            var node = GenDataEditorViewModel.SelectedNode;
             if (node == null) return;
             if (GenDataDataGrid.CurrentCell.IsInEditMode)
                 GenDataDataGrid.CommitEdit(0);
 
             if (node.IsNew)
             {
-                var selectedNode = DataNavigatorTreeView.SelectedNode;
-                var genObject = data.SelectedNode.GenAttributes.GenObject;
-                genObject.ParentSubClass.Remove(genObject);
-                selectedNode.Parent.Nodes.Remove(selectedNode);
+                RemoveNewNode();
                 return;
             }
-            
+
             if (node.Changed)
                 node.Cancel();
             var save = GenDataDataGrid.DataSource;
@@ -269,20 +276,57 @@ namespace GenEdit.View
             GenDataDataGrid.DataSource = save;
         }
 
+        private void RemoveNewNode()
+        {
+            var selectedNode = DataNavigatorTreeView.SelectedNode;
+            var genObject = GenDataEditorViewModel.SelectedNode.GenAttributes.GenObject;
+            genObject.ParentSubClass.Remove(genObject);
+            selectedNode.Parent.Nodes.Remove(selectedNode);
+        }
+
         private void AddItemButton_Click(object sender, EventArgs e)
         {
+            if (DataNavigatorTreeView.SelectedNode == null)
+                MessageBox.Show("Select a class before adding a new item", "Generator data error", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
             DataEditorTreeViewBuilder.CreateNewChildItem(DataNavigatorTreeView);
         }
 
         private void RemoveItemButton_Click(object sender, EventArgs e)
         {
-            var data = GenDataEditorViewModel;
             var selectedNode = DataNavigatorTreeView.SelectedNode;
+            var data = GenDataEditorViewModel;
             var genObject = data.SelectedNode.GenAttributes.GenObject;
             data.Data.GenData.Context[genObject.ClassId].Delete();
-            //genObject.ParentSubClass.Remove(genObject);
             selectedNode.Parent.Nodes.Remove(selectedNode);
             RaiseDataChanged();
+        }
+
+        private void GenDataDataGrid_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            var cellRowIndex = e.RowIndex;
+            var data = GenDataEditorViewModel;
+            if (data == null) return;
+            var def = data.SelectedNode.Fields[cellRowIndex];
+            var cell = ((DataGridView) sender).Rows[cellRowIndex].Cells[ValueColumnIndex];
+        }
+
+        private void GenDataDataGrid_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            foreach (DataGridViewRow row in GenDataDataGrid.Rows)
+            {
+                var field = row.DataBoundItem as GenObjectFieldViewModel;
+                if (field == null) return;
+                if (field.ComboValues != null)
+                {
+                    row.Cells[ValueColumnIndex] = new DataGridViewComboBoxCell
+                                                      {
+                                                          DataSource=field.ComboValues,
+                                                          DisplayMember = "DisplayValue",
+                                                          ValueMember = "DataValue"
+                                                      };
+                }
+            }
         }
     }
 }

@@ -32,11 +32,13 @@ namespace GenEdit.ViewModel
                     {
                         GenObjectFieldViewModel item = null;
                         if (@class != null)
-                            item = new GenObjectFieldViewModel(GenAttributes, i, @class.PropertyList[i]);
+                            item = new GenObjectFieldViewModel(GenAttributes, i, @class.PropertyList[i], IsNew);
                         else if (subClass != null)
-                            item = new GenObjectFieldViewModel(GenAttributes, i, null);
+                            item = new GenObjectFieldViewModel(GenAttributes, i, null, IsNew);
                         else if (property != null)
-                            item = new GenObjectFieldViewModel(GenAttributes, i, property);
+                        {
+                            item = new GenObjectFieldViewModel(GenAttributes, i, property, IsNew);
+                        }
 
                         if (item == null) continue;
                         item.PropertyChanged += FieldPropertyChanged; 

@@ -245,6 +245,8 @@
             this.GenDataDataGrid.Size = new System.Drawing.Size(406, 238);
             this.GenDataDataGrid.TabIndex = 2;
             this.GenDataDataGrid.ColumnAdded += new System.Windows.Forms.DataGridViewColumnEventHandler(this.GenDataDataGrid_ColumnAdded);
+            this.GenDataDataGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.GenDataDataGrid_DataBindingComplete);
+            this.GenDataDataGrid.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.GenDataDataGrid_RowEnter);
             this.GenDataDataGrid.SelectionChanged += new System.EventHandler(this.GenDataDataGrid_SelectionChanged);
             // 
             // toolStrip2
