@@ -351,6 +351,20 @@ namespace org.xpangen.Generator.Data
             return sc;
         }
 
+        /// <summary>
+        /// Save the specified context.
+        /// </summary>
+        /// <param name="classId">The class ID being saved.</param>
+        /// <returns>The saved context.</returns>
+        public GenSavedContext SaveContext(int classId)
+        {
+            if (classId == 0)
+                return null;
+            if (Context[classId].DefClass.Parent.ClassId == 0)
+                return SaveContext(classId, null);
+            return SaveContext(classId, SaveContext(Context[classId].DefClass.Parent.ClassId));
+        }
+        
         public override string ToString()
         {
             return !string.IsNullOrEmpty(DataName) ? DataName : base.ToString();

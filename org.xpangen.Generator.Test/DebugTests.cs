@@ -51,14 +51,14 @@ namespace org.xpangen.Generator.Test
             var d = data.GenData;
             d.First(1);
             d.Next(2);
-            Assert.AreEqual("GeneratorDataModelBasic", d.Context[2].GenObject.Attributes[0]);
-            Assert.AreEqual("Class", d.Context[3].GenObject.Attributes[0]);
-            var c = d.SaveContext(3, d.SaveContext(2, d.SaveContext(1, null)));
+            Assert.AreEqual("GeneratorEditorModel", d.Context[2].GenObject.Attributes[0]);
+            Assert.AreEqual("GenSettings", d.Context[3].GenObject.Attributes[0]);
+            var c = d.SaveContext(3);
             d.First(1);
-            Assert.AreNotEqual("GeneratorDataModelBasic", d.Context[2].GenObject.Attributes[0]);
+            Assert.AreNotEqual("GeneratorEditorModel", d.Context[2].GenObject.Attributes[0]);
             c.EstablishContext();
-            Assert.AreEqual("GeneratorDataModelBasic", d.Context[2].GenObject.Attributes[0]);
-            Assert.AreEqual("Class", d.Context[3].GenObject.Attributes[0]);
+            Assert.AreEqual("GeneratorEditorModel", d.Context[2].GenObject.Attributes[0]);
+            Assert.AreEqual("GenSettings", d.Context[3].GenObject.Attributes[0]);
         }
 
         /// <summary>
@@ -67,10 +67,7 @@ namespace org.xpangen.Generator.Test
         [TestFixtureSetUp]
         public void SetUp()
         {
-#pragma warning disable 168
-            // Reference to initialize static data
-            var loader = new GenDataLoader();
-#pragma warning restore 168
+            GenDataLoader.Register();
         }
 
         /// <summary>

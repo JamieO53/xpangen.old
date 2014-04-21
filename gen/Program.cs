@@ -104,10 +104,8 @@ namespace gen
                 return -1;
             }
 
-#pragma warning disable 168
-            // Reference to initialize static data
-            var loader = new GenDataLoader();
-#pragma warning restore 168
+            GenDataLoader.Register();
+
             GenParameters d;
             using (var dataStream = new FileStream(data, FileMode.Open))
                 d = new GenParameters(dataStream) {DataName = Path.GetFileNameWithoutExtension(data)};

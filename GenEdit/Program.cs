@@ -18,10 +18,8 @@ namespace GenEdit
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-#pragma warning disable 168
-            // Reference to initialize static data
-            var loader = new GenDataLoader();
-#pragma warning restore 168
+            GenDataLoader.Register();
+
             Application.Run(new GenEditMainForm());
         }
     }

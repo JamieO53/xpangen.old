@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Parameter
@@ -9,11 +8,11 @@ namespace org.xpangen.Generator.Parameter
     /// </summary>
     public class GenDataLoader : IGenDataLoader
     {
-        static GenDataLoader()
+        public static void Register()
         {
             GenData.DataLoader = new GenDataLoader();
         }
-
+        
         /// <summary>
         /// Load the GenData from the specified path.
         /// </summary>

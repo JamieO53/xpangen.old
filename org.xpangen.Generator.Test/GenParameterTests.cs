@@ -349,21 +349,20 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Verifies that the Definition references in GeneratorDefinitionModel are loaded correctly")]
         public void GeneratorDefinitionModelDefinitionLoadTest()
         {
-            GenParameters defData;
-            using (var stream = new FileStream("Data\\ProgramDefinition.dcb", FileMode.Open, FileAccess.Read))
-                defData = new GenParameters(stream) { DataName = "ProgramDefinition" };
+            var defData = GenData.DataLoader.LoadData("ProgramDefinition");
+            //using (var stream = new FileStream("Data\\ProgramDefinition.dcb", FileMode.Open, FileAccess.Read))
+            //    defData = new GenParameters(stream) { DataName = "ProgramDefinition" };
             var def = defData.AsDef();
-            def.Definition = "ProgramDefinition";
-            GenParameters data;
-            using (var stream = new FileStream("Data\\GeneratorDefinitionModel.dcb", FileMode.Open, FileAccess.Read))
-                data = new GenParameters(def, stream) { DataName = "GeneratorDefinitionModel" };
+            //def.Definition = "ProgramDefinition";
+            var data = GenData.DataLoader.LoadData(def, "GeneratorDefinitionModel");
+            //using (var stream = new FileStream("Data\\GeneratorDefinitionModel.dcb", FileMode.Open, FileAccess.Read))
+            //    data = new GenParameters(def, stream) { DataName = "GeneratorDefinitionModel" };
             var definition = data.Cache["definition", "definition"];
             definition.Last(1);
             Assert.AreEqual(4, definition.Context[3].Count);
             Assert.AreEqual("Property", def.Classes[5].Name);
             Assert.AreEqual(4, def.Classes[5].Properties.Count);
-            data.Next(2);
-            data.Next(2);
+            data.First(2);
             Assert.AreEqual("GeneratorDataModelDefinition", data.Context[2].GenObject.Attributes[0]);
             Assert.AreEqual("Definition.Class", data.Context[3].DefClass.ToString());
             Assert.AreEqual("Class", data.Context[3].GenObject.Attributes[0]);
@@ -381,10 +380,7 @@ namespace org.xpangen.Generator.Test
         [TestFixtureSetUp]
         public void SetUp()
         {
-#pragma warning disable 168
-            // Reference to initialize static data
-            var loader = new GenDataLoader();
-#pragma warning restore 168
+            GenDataLoader.Register();
         }
 
         /// <summary>
