@@ -95,7 +95,7 @@ namespace org.xpangen.Generator.Data
                 Reset();
             else
                 Index = 0;
-            if (!string.IsNullOrEmpty(Reference)) ReferenceData.First(RefClassId);
+            if (!string.IsNullOrEmpty(Reference) && ReferenceData != null) ReferenceData.First(RefClassId);
         }
 
         /// <summary>

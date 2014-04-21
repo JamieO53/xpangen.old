@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Definition;
+using org.xpangen.Generator.Editor.Helper;
 
 namespace GenEdit.ViewModel
 {
@@ -15,7 +16,7 @@ namespace GenEdit.ViewModel
         private GenAttributes GenAttributes { get; set; }
         private int PropertyId { get; set; }
         private Property Property { get; set; }
-
+        private readonly GenDataEditorViewModel _genDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
         /// <summary>
         /// The name of the field being edited.
         /// </summary>
@@ -39,7 +40,7 @@ namespace GenEdit.ViewModel
         /// <summary>
         /// An optional list of values
         /// </summary>
-        public List<GenComboItem> ComboValues { get; private set; }
+        public List<GeComboItem> ComboValues { get; private set; }
         
         /// <summary>
         /// The value of the field
@@ -81,51 +82,13 @@ namespace GenEdit.ViewModel
                 GenAttributes.SetString(_name, Default); // Don't raise the Property Raised event
         }
 
-        private List<GenComboItem> SetComboValues()
+        private List<GeComboItem> SetComboValues()
         {
-            List<GenComboItem> combo;
-            if (DataType.Equals("boolean", StringComparison.InvariantCultureIgnoreCase))
-            {
-                combo = new List<GenComboItem>
-                            {
-                                new GenComboItem("Yes", "True"),
-                                new GenComboItem("No", "")
-                            };
-            }
-            else if (Name.Equals("datatype", StringComparison.InvariantCultureIgnoreCase))
-            {
-                combo = new List<GenComboItem>
-                            {
-                                new GenComboItem("String", "String"),
-                                new GenComboItem("Integer", "Integer"),
-                                new GenComboItem("Boolean", "Boolean"),
-                                new GenComboItem("Identifier", "Identifier")
-                            };
-            }
-            else
-            {
-                combo = null;
-            }
-            return combo;
+            return DataType.Equals("boolean", StringComparison.InvariantCultureIgnoreCase)
+                       ? _genDataEditorViewModel.Data.GetCodesCombo("YesNo")
+                       : (Name.Equals("datatype", StringComparison.InvariantCultureIgnoreCase)
+                              ? _genDataEditorViewModel.Data.GetCodesCombo("DataType")
+                              : null);
         }
-    }
-
-    public class GenComboItem
-    {
-        public GenComboItem(string displayValue, string dataValue)
-        {
-            DataValue = dataValue;
-            DisplayValue = displayValue;
-        }
-
-        /// <summary>
-        /// The value to be shown in the combo list
-        /// </summary>
-        public string DisplayValue { get; private set; }
-
-        /// <summary>
-        /// The value to be saved in the field value
-        /// </summary>
-        public string DataValue { get; private set; }
     }
 }

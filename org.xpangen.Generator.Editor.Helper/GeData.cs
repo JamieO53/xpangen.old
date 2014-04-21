@@ -3,6 +3,7 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Definition;
@@ -178,6 +179,7 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             var data = GenData.DataLoader.LoadData("Settings");
             var settings = LoadSettingsFromData(data);
+            settings.Check();
             SaveToDisk = true;
             return settings;
         }
@@ -200,6 +202,30 @@ namespace org.xpangen.Generator.Editor.Helper
                 Settings.GetFileGroups().Add(fileGroup);
             SetFileGroup(fileGroup.Name);
             SaveSettings();
+        }
+
+        /// <summary>
+        /// Get values to populate a data editor combo.
+        /// </summary>
+        /// <param name="name">The name of the combo list.</param>
+        /// <returns>The populated combo list, or null if no such list exists.</returns>
+        public List<GeComboItem> GetCodesCombo(string name)
+        {
+            if (name == "YesNo")
+                return new List<GeComboItem>
+                           {
+                               new GeComboItem("Yes", "True"),
+                               new GeComboItem("No", "")
+                           };
+            if (name == "DataType")
+                return new List<GeComboItem>
+                            {
+                                new GeComboItem("String", "String"),
+                                new GeComboItem("Integer", "Integer"),
+                                new GeComboItem("Boolean", "Boolean"),
+                                new GeComboItem("Identifier", "Identifier")
+                            };
+            return null;
         }
     }
 }

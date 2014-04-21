@@ -15,8 +15,8 @@ namespace `Assembly.Namespace`
         public Root(GenData genData) : base(genData)
         {
         }
-
-`[Class':        public GenNamedApplicationList<`Class.Name`> `Class.Name`List { get; private set; }
+`[Class':
+        public GenNamedApplicationList<`Class.Name`> `Class.Name`List { get; private set; }
 `]`[Class':
         protected override void GenObjectSetNotification()
         {
@@ -33,11 +33,21 @@ namespace `Assembly.Namespace`
                     list.Next();
                 }
             }
+        }
 
+        public `Class.Name` Add`Class.Name`(`[Property/:`{string `Property.Name``], `])
+        {
+            var item = new `Class.Name`(GenData)
+                           {
+                               GenObject = GenData.CreateObject("", "`Class.Name`")`[Property:,
+                               `Property.Name` = `Property.Name``]
+                           };
+            `Class.Name`List.Add(item);
+            return item;
         }
     }
-}
-`]`[Class:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Class.Name`.cs`]`]// This Source Code Form is subject to the terms of the Mozilla Public
+`]}
+`[Class:`@MapSet:`{ClassName`]`{`Class.Name``]`]`@File:`{`Solution.Name`\`Assembly.Namespace`\`Class.Name`.cs`]`]// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -86,8 +96,18 @@ namespace `Assembly.Namespace`
                     list.Next();
                 }
             }
+`]`[SubClass':        }`]`[SubClass:`%Class.Name=SubClass.Name:
 
-`]`[SubClass':        }
-`]    }
+        public `Class.Name` Add`Class.Name`(`[Property/:`{string `Property.Name``], `])
+        {
+            var item = new `Class.Name`(GenData)
+                           {
+                               GenObject = GenData.CreateObject("`@MapGet:'ClassName'`]", "`Class.Name`")`[Property:,
+                               `Property.Name` = `Property.Name``]
+                           };
+            `Class.Name`List.Add(item);
+            return item;
+        }
+`]`]    }
 }
 `]`]`]

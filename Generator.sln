@@ -19,11 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "org.xpangen.Generator.Appli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "org.xpangen.Generator.Editor.Model", "org.xpangen.Generator.Editor.Model\org.xpangen.Generator.Editor.Model.csproj", "{E16E083B-933C-499C-8BD2-0BCAFA98FD16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "org.xpangen.Generator.Data.Model.Minimal", "org.xpangen.Generator.Data.Model.Minimal\org.xpangen.Generator.Data.Model.Minimal.csproj", "{87DE8F4D-F782-452B-B338-929A179E6974}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "org.xpangen.Generator.Editor.Helper", "org.xpangen.Generator.Editor.Helper\org.xpangen.Generator.Editor.Helper.csproj", "{7E0C3F90-F0E4-418E-91F2-4164C40357EF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "org.xpangen.Generator.Data.Model.Basic", "org.xpangen.Generator.Data.Model.Basic\org.xpangen.Generator.Data.Model.Basic.csproj", "{0D0C9BFF-C195-4177-9A62-39759FF2FE02}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "org.xpangen.Generator.Data.Model.Definition", "org.xpangen.Generator.Data.Model.Definition\org.xpangen.Generator.Data.Model.Definition.csproj", "{A07C4F8E-0CC5-4051-93B2-425CAF4E841C}"
 EndProject
@@ -131,16 +127,6 @@ Global
 		{E16E083B-933C-499C-8BD2-0BCAFA98FD16}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E16E083B-933C-499C-8BD2-0BCAFA98FD16}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E16E083B-933C-499C-8BD2-0BCAFA98FD16}.Release|x86.ActiveCfg = Release|Any CPU
-		{87DE8F4D-F782-452B-B338-929A179E6974}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{87DE8F4D-F782-452B-B338-929A179E6974}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{87DE8F4D-F782-452B-B338-929A179E6974}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{87DE8F4D-F782-452B-B338-929A179E6974}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{87DE8F4D-F782-452B-B338-929A179E6974}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{87DE8F4D-F782-452B-B338-929A179E6974}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{87DE8F4D-F782-452B-B338-929A179E6974}.Release|Any CPU.Build.0 = Release|Any CPU
-		{87DE8F4D-F782-452B-B338-929A179E6974}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{87DE8F4D-F782-452B-B338-929A179E6974}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{87DE8F4D-F782-452B-B338-929A179E6974}.Release|x86.ActiveCfg = Release|Any CPU
 		{7E0C3F90-F0E4-418E-91F2-4164C40357EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7E0C3F90-F0E4-418E-91F2-4164C40357EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E0C3F90-F0E4-418E-91F2-4164C40357EF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -151,16 +137,6 @@ Global
 		{7E0C3F90-F0E4-418E-91F2-4164C40357EF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{7E0C3F90-F0E4-418E-91F2-4164C40357EF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7E0C3F90-F0E4-418E-91F2-4164C40357EF}.Release|x86.ActiveCfg = Release|Any CPU
-		{0D0C9BFF-C195-4177-9A62-39759FF2FE02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D0C9BFF-C195-4177-9A62-39759FF2FE02}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D0C9BFF-C195-4177-9A62-39759FF2FE02}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{0D0C9BFF-C195-4177-9A62-39759FF2FE02}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{0D0C9BFF-C195-4177-9A62-39759FF2FE02}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{0D0C9BFF-C195-4177-9A62-39759FF2FE02}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D0C9BFF-C195-4177-9A62-39759FF2FE02}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D0C9BFF-C195-4177-9A62-39759FF2FE02}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{0D0C9BFF-C195-4177-9A62-39759FF2FE02}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{0D0C9BFF-C195-4177-9A62-39759FF2FE02}.Release|x86.ActiveCfg = Release|Any CPU
 		{A07C4F8E-0CC5-4051-93B2-425CAF4E841C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A07C4F8E-0CC5-4051-93B2-425CAF4E841C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A07C4F8E-0CC5-4051-93B2-425CAF4E841C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

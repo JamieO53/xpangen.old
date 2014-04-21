@@ -210,36 +210,35 @@ namespace org.xpangen.Generator.Data
         private void SetSubClasses(int classId)
         {
             var classDef = Context.Classes[classId];
-            for (var i = 0; i < classDef.SubClasses.Count; i++)
-            {
-                var subClass = classDef.SubClasses[i].SubClass;
-                var subClassId = subClass.ClassId;
-                if (Context[classId].GenObject == null)
-                    First(classId);
-                var genObject = Context[classId].GenObject;
-                if (genObject != null)
-                    if (!string.IsNullOrEmpty(classDef.SubClasses[i].Reference))
+            if (Context[classId].GenObject == null)
+                First(classId);
+            var genObject = Context[classId].GenObject;
+            if (genObject != null)
+                for (var i = 0; i < classDef.SubClasses.Count; i++)
+                {
+                    var subClass = classDef.SubClasses[i].SubClass;
+                    var subClassId = subClass.ClassId;
+                    if (!string.IsNullOrEmpty(classDef.SubClasses[i].Reference) &&
+                        classDef.Reference != classDef.SubClasses[i].Reference)
                     {
-                        var referenceData = genObject.SubClass[i] as GenObjectListReference;
-                        if (referenceData != null && !string.IsNullOrEmpty(referenceData.Reference))
-                            SetReferenceSubClasses(classId, i,
-                                                   Cache[
-                                                       referenceData.Definition.ReferenceDefinition,
-                                                       referenceData.Reference],
-                                                   referenceData.Reference);
-                        else
-                            SetReferenceSubClasses(classId, i,
-                                                   Cache[
-                                                       Context.Classes[subClassId].ReferenceDefinition,
-                                                       Context[subClassId].Reference],
-                                                   Context[subClassId].Reference);
+                        SetReferenceSubClasses(classId, i,
+                                               Cache[
+                                                   Context.Classes[subClassId].ReferenceDefinition,
+                                                   genObject.SubClass[i].Reference],
+                                               genObject.SubClass[i].Reference);
+                    }
+                    else if (Context[subClassId].ReferenceData != null)
+                    {
+                        Context[subClassId].GenObjectListBase =
+                            Context[subClassId].ReferenceData.Context[Context[subClassId].RefClassId].GenObjectListBase;
+                        First(subClassId);
                     }
                     else
                     {
                         Context[subClassId].GenObjectListBase = genObject.SubClass[i];
                         First(subClassId);
                     }
-            }
+                }
         }
 
         private void SetReferenceSubClasses(int classId, int subClassIndex, GenData data, string reference)

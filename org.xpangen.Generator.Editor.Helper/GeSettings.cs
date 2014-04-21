@@ -176,6 +176,17 @@ namespace org.xpangen.Generator.Editor.Helper
         }
 
         /// <summary>
+        /// Check that the minimum structure exists in the settings file.
+        /// </summary>
+        public void Check()
+        {
+            if (Model.GenSettingsList.Count == 0)
+            {
+                var settings = Model.AddGenSettings(".");
+            }
+        }
+
+        /// <summary>
         /// Find the specified base file.
         /// </summary>
         /// <param name="name">The name of the sought base file.</param>

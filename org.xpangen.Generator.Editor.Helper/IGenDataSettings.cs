@@ -81,5 +81,10 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <param name="name">The name of the sought file group.</param>
         /// <returns>The requested base file</returns>
         FileGroup FindFileGroup(string name);
+
+        /// <summary>
+        /// Check that the minimum structure exists in the settings file.
+        /// </summary>
+        void Check();
     }
 }
