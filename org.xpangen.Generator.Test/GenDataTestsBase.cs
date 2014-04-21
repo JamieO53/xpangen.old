@@ -386,13 +386,19 @@ Child[Reference='child']
             return d;
         }
 
-        protected static GenData SetUpParentChildReferenceData(string parentClassName, string childClassName, string childDefName, GenData dataChild)
+        protected static GenData SetUpParentChildReferenceData(string parentClassName, string childClassName, string childDefName, string childDataName, GenData dataChild)
         {
             var def = SetUpParentChildReferenceDef(parentClassName, childClassName, childDefName, dataChild.GenDataDef);
             var data = new GenData(def);
-            CreateGenObject(data, "", parentClassName, parentClassName);
-            SetUpParentReference(data, dataChild, childClassName + "Def", parentClassName, childClassName, childClassName);
+            SetUpParentOtherChildReferenceData(parentClassName, childClassName, childDataName, dataChild, data);
             return data;
+        }
+
+        protected static void SetUpParentOtherChildReferenceData(string parentClassName, string childClassName,
+                                                                 string childDataName, GenData dataChild, GenData data)
+        {
+            CreateGenObject(data, "", parentClassName, parentClassName);
+            SetUpParentReference(data, dataChild, childClassName + "Def", parentClassName, childClassName, childDataName);
         }
 
         protected static GenDataDef SetUpParentChildReferenceDef(string parentClassName, string childClassName,
@@ -407,12 +413,12 @@ Child[Reference='child']
             return def;
         }
 
-        protected static GenData SetUpParentChildData(string parentClassName, string childClassName)
+        protected static GenData SetUpParentChildData(string parentClassName, string childClassName, string childDataName)
         {
             var def = SetUpParentChildDef(parentClassName, childClassName);
             var data = new GenData(def);
             CreateGenObject(data, "", parentClassName, parentClassName);
-            CreateGenObject(data, parentClassName, childClassName, childClassName);
+            CreateGenObject(data, parentClassName, childClassName, childDataName);
             //data.First(0);
             return data;
         }
