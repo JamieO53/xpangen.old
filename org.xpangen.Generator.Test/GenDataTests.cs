@@ -3,6 +3,7 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.IO;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Parameter;
@@ -182,7 +183,7 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Verify that the SetUpParentChildData method works as expected")]
         public void VerifySetUpParentChildDataMethod()
         {
-            var d = SetUpParentChildData("Parent", "Child");
+            var d = SetUpParentChildData("Parent", "Child", "Child");
             var f = d.GenDataDef;
             Assert.AreEqual(3, f.Classes.Count);
             Assert.AreEqual("Parent", f.Classes[1].Name);
@@ -197,8 +198,8 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Verify that the SetUpParentChildReferenceData method works as expected")]
         public void VerifySetUpParentChildReferenceDataMethod()
         {
-            var dataChild = SetUpParentChildData("Child", "Grandchild");
-            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", dataChild);
+            var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", "Child", dataChild);
             Assert.AreEqual(1, dataParent.Root.SubClass.Count);
             Assert.AreEqual(4, dataParent.Context.Count);
             Assert.AreEqual("Parent", dataParent.Context[1].GenObject.Attributes[0]);
@@ -215,8 +216,8 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Verify that the SetUpParentChildReferenceData method sets up the data definitions as expected")]
         public void VerifyParentChildReferenceDataDef()
         {
-            var dataChild = SetUpParentChildData("Child", "Grandchild");
-            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", dataChild);
+            var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", "Child", dataChild);
             var p = dataParent.GenDataDef.CreateProfile();
             Assert.AreEqual(ReferenceGenDataSaveProfile, p);
         }
@@ -224,8 +225,8 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Verify that data context works as expected with reference data")]
         public void ContextWithReferenceTests()
         {
-            var dataChild = SetUpParentChildData("Child", "Grandchild");
-            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", dataChild);
+            var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", "Child", dataChild);
             dataParent.First(1);
             for (var i = 0; i < dataParent.GenDataDef.Classes.Count; i++ )
             {
@@ -234,12 +235,36 @@ namespace org.xpangen.Generator.Test
             }
         }
 
+        [TestCase(Description = "Verify that duplicated data context works as expected with reference data")]
+        public void DuplicatedContextWithReferenceTests()
+        {
+            var f = GenData.DataLoader.LoadData("ProgramDefinition").AsDef();
+            var d = GenData.DataLoader.LoadData(f, "GeneratorDefinitionModel");
+            d.Last(2); d.Prior(2);
+            Assert.AreEqual("Definition", d.Context[2].GenObject.SubClass[0].Reference);
+            d.Next(5);
+            Assert.AreEqual("Class", d.Context[3].GenObject.Attributes[0]);
+            Assert.AreEqual("Title", d.Context[5].GenObject.Attributes[0]);
+            var duplicate = d.DuplicateContext();
+            duplicate.Next(2);
+            duplicate.Prior(2);
+            duplicate.Next(3);
+            duplicate.Next(5);
+            Assert.AreEqual("SubClass", duplicate.Context[3].GenObject.Attributes[0]);
+            Assert.AreEqual("Reference", duplicate.Context[5].GenObject.Attributes[0]);
+            d.First(3);
+            d.Next(5);
+            Assert.AreEqual("Class", d.Context[3].GenObject.Attributes[0]);
+            Assert.AreEqual("Title", d.Context[5].GenObject.Attributes[0]);
+
+        }
+
         [TestCase(Description = "Verify that the SetUpParentChildReferenceData method works as expected")]
         public void VerifyNestedSetUpParentChildReferenceDataMethod()
         {
-            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild");
-            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", dataGrandchildhild);
-            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", dataChild);
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "GrandChild", dataGrandchildhild);
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", "Child", dataChild);
             Assert.AreEqual(1, dataParent.Root.SubClass.Count);
             Assert.AreEqual(5, dataParent.Context.Count);
             Assert.AreEqual("Parent", dataParent.Context[1].GenObject.Attributes[0]);

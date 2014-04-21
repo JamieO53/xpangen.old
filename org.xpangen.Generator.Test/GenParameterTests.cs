@@ -178,9 +178,9 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Generator Output Profile for data with a nested reference test")]
         public void ReferenceOutputProfileTest()
         {
-            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild");
-            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", dataGrandchildhild);
-            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", dataChild);
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", dataGrandchildhild);
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", "Child", dataChild);
             var p = GenParameters.CreateProfile(dataParent.GenDataDef);
             Assert.AreEqual("`[:" + dataParent.GenDataDef.CreateProfile() + "`]",
                             p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary)
@@ -191,9 +191,9 @@ namespace org.xpangen.Generator.Test
         [Ignore("Incomplete test")]
         public void VerifyParentChildReferenceDefProfileExpansion()
         {
-            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild");
-            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", dataGrandchildhild);
-            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", dataChild);
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", dataGrandchildhild);
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", "Child", dataChild);
             var seg = new GenSegment(dataParent.GenDataDef, "Parent", GenCardinality.All, null);
             var text = seg.Expand(dataParent);
         }
@@ -276,9 +276,9 @@ namespace org.xpangen.Generator.Test
             const string fileName = "Parent.dcb";
             const string expected = ReferenceParentText;
 
-            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild");
-            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", dataGrandchildhild);
-            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", dataChild);
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", dataGrandchildhild);
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", "Child", dataChild);
 
             var genData = dataParent;
 
@@ -302,8 +302,8 @@ namespace org.xpangen.Generator.Test
             const string fileName = "Child.dcb";
             const string expected = ReferenceChildText;
 
-            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild");
-            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", dataGrandchildhild);
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", dataGrandchildhild);
 
             var genData = dataChild;
             Assert.AreEqual("GrandchildDef", genData.GenDataDef.Classes[1].SubClasses[0].Reference);
@@ -330,7 +330,7 @@ namespace org.xpangen.Generator.Test
             const string fileName = "Grandchild.dcb";
             const string expected = ReferenceGrandchildText;
 
-            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild");
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
 
             var genData = dataGrandchildhild;
 

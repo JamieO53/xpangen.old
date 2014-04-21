@@ -11,7 +11,7 @@ Class=Profile
 Field={Name,FileName,FilePath,Title}
 .
 GenSettings[HomeDir='.']
-FileGroup=GeneratorDefinitionModel[FileName='GeneratorDefinitionModel.dcb',FilePath=Data,BaseFileName=ProgramDefinition]
+FileGroup=GeneratorDefinitionModel[FileName='GeneratorDefinitionModel.dcb',FilePath=Data,BaseFileName=ProgramDefinition,Profile=GenProfileModel]
 FileGroup=GeneratorEditor[FileName='GeneratorEditor.dcb',FilePath=Data,BaseFileName=Definition]
 FileGroup=Definition[FileName='Definition.dcb',FilePath=Data,BaseFileName=Definition]
 FileGroup=ProgramDefinition[FileName='ProgramDefinition.dcb',FilePath=Data,BaseFileName=Definition]
