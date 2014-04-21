@@ -19,6 +19,7 @@ namespace org.xpangen.Generator.Data
         /// Copy the contents of a context to this context.
         /// </summary>
         /// <param name="context">The context being copied.</param>
+        /// <param name="genDataBase">The underlying data.</param>
         public void Duplicate(GenContext context, GenDataBase genDataBase)
         {
             Classes.AddRange(context.Classes);
