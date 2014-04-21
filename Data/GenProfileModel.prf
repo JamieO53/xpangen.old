@@ -96,7 +96,7 @@ namespace `Assembly.Namespace`
                     list.Next();
                 }
             }
-`]`[SubClass':        }`]`]`[SubClass:`%Class.Name=SubClass.Name:
+`]`[SubClass':        }`]`[SubClass:`%Class.Name=SubClass.Name:
 
         public `Class.Name` Add`Class.Name`(`[Property/:`{string `Property.Name``], `])
         {
@@ -108,6 +108,6 @@ namespace `Assembly.Namespace`
             `Class.Name`List.Add(item);
             return item;
         }
-`]    }
+`]`]    }
 }
 `]`]`]
