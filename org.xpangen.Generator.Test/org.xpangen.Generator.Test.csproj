@@ -68,10 +68,6 @@
       <Project>{A07C4F8E-0CC5-4051-93B2-425CAF4E841C}</Project>
       <Name>org.xpangen.Generator.Data.Model.Definition</Name>
     </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Data.Model.Minimal\org.xpangen.Generator.Data.Model.Minimal.csproj">
-      <Project>{87DE8F4D-F782-452B-B338-929A179E6974}</Project>
-      <Name>org.xpangen.Generator.Data.Model.Minimal</Name>
-    </ProjectReference>
     <ProjectReference Include="..\org.xpangen.Generator.Data\org.xpangen.Generator.Data.csproj">
       <Project>{879183A8-0A57-494A-B645-27366F1D912E}</Project>
       <Name>org.xpangen.Generator.Data</Name>

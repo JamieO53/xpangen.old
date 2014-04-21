@@ -36,6 +36,7 @@
     <Compile Include="GeData.cs" />
     <Compile Include="GeGenData.cs" />
     <Compile Include="GeGridDataValidator.cs" />
+    <Compile Include="GeComboItem.cs" />
     <Compile Include="GeSettings.cs" />
     <Compile Include="IGenData.cs" />
     <Compile Include="IGenDataSettings.cs" />

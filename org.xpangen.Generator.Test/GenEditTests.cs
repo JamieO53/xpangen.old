@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Test
 	[TestFixture]
     public class GenEditTests : GenProfileFragmentsTestBase
     {
-        public GeData Data { get; set; }
+        private GeData Data { get; set; }
 
         /// <summary>
         /// Tests that the view model is created correctly
@@ -133,6 +133,21 @@ namespace org.xpangen.Generator.Test
             VerifyDataCreation(d1);
         }
 
+        /// <summary>
+        /// Tests that an empty settings file is correctly initialized
+        /// </summary>
+        [TestCase(Description="Tests that an empty settings file is correctly initialized")]
+        public void EmptySettingsTest()
+        {
+            var f = GenData.DataLoader.LoadData("GeneratorEditor").AsDef();
+            var d = new GenData(f);
+            GenParameters.SaveToFile(d, "Settings.dcb");
+            var data = new GeData();
+            data.Settings = data.GetDefaultSettings();
+            Assert.AreEqual(0, data.Settings.GetFileGroups().Count);
+            Assert.AreEqual(1, data.Settings.GetBaseFiles().Count);
+        }
+        
         private void LoadData(string filePath)
         {
             Data.GenDataStore.SetData(@"Data\" + filePath);
@@ -176,6 +191,8 @@ namespace org.xpangen.Generator.Test
         public void TearDown()
         {
             Data = null;
+            if (File.Exists("Settings.dcb"))
+                File.Delete("Settings.dcb");
         }
     }
 }

@@ -18,6 +18,7 @@ namespace org.xpangen.Generator.Test
             data.Settings = data.GetDefaultSettings();
             data.SetFileGroup("DatabaseDefinition");
             var fileGroup = data.Settings.FileGroup;
+            Assert.IsNotNull(fileGroup);
 
             //var def = GenData.DataLoader.LoadData("Definition");
             var f = data.GenDataDef;

@@ -302,15 +302,6 @@ namespace GenEdit.View
             RaiseDataChanged();
         }
 
-        private void GenDataDataGrid_RowEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            var cellRowIndex = e.RowIndex;
-            var data = GenDataEditorViewModel;
-            if (data == null) return;
-            var def = data.SelectedNode.Fields[cellRowIndex];
-            var cell = ((DataGridView) sender).Rows[cellRowIndex].Cells[ValueColumnIndex];
-        }
-
         private void GenDataDataGrid_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             foreach (DataGridViewRow row in GenDataDataGrid.Rows)
@@ -327,6 +318,11 @@ namespace GenEdit.View
                                                       };
                 }
             }
+        }
+
+        private void GenDataDataGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            // to do
         }
     }
 }
