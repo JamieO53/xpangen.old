@@ -2,6 +2,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Diagnostics;
+
 namespace org.xpangen.Generator.Data
 {
     /// <summary>
@@ -209,6 +211,9 @@ namespace org.xpangen.Generator.Data
 
         private void SetSubClasses(int classId)
         {
+            if (Context[classId].ReferenceData != null)
+                Context[classId].ReferenceData.Context[Context[classId].RefClassId].Index = Context[classId].Index;
+            
             var classDef = Context.Classes[classId];
             if (Context[classId].GenObject == null)
                 First(classId);
@@ -229,8 +234,8 @@ namespace org.xpangen.Generator.Data
                     }
                     else if (Context[subClassId].ReferenceData != null)
                     {
-                        Context[subClassId].GenObjectListBase =
-                            Context[subClassId].ReferenceData.Context[Context[subClassId].RefClassId].GenObjectListBase;
+                        var refContext = Context[subClassId].ReferenceData.Context[Context[subClassId].RefClassId];
+                        Context[subClassId].GenObjectListBase = refContext.GenObjectListBase;
                         First(subClassId);
                     }
                     else
