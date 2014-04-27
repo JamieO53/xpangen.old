@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using GenEdit.ViewModel;
 using org.xpangen.Generator.Editor.Model;
+using org.xpangen.Generator.Profile;
 
 namespace GenEdit.View
 {
@@ -11,6 +12,10 @@ namespace GenEdit.View
         public delegate void DataLoaded();
 
         public DataLoaded OnDataLoaded;
+
+        public delegate void ProfileChanged();
+
+        public ProfileChanged OnProfileChanged;
 
         private FileGroup Selected { get; set; }
 
@@ -27,6 +32,12 @@ namespace GenEdit.View
         {
             if (OnDataLoaded != null)
                 OnDataLoaded();
+        }
+
+        private void RaiseProfileChanged()
+        {
+            if (OnProfileChanged != null)
+                OnProfileChanged();
         }
 
         public void DataChanged()
@@ -230,7 +241,10 @@ namespace GenEdit.View
 
         private void comboBoxProfile_SelectedValueChanged(object sender, EventArgs e)
         {
-            buttonGenerate.Enabled = comboBoxProfile.SelectedIndex != -1;
+            var data = GenDataEditorViewModel.Data;
+            buttonGenerate.Enabled = comboBoxProfile.SelectedItem != null;
+            data.SetProfile((Profile) comboBoxProfile.SelectedItem);
+            RaiseProfileChanged();
         }
     }
 }
