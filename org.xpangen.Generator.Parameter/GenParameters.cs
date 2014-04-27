@@ -338,15 +338,17 @@ namespace org.xpangen.Generator.Parameter
             First(0);
             while (!Scan.Eof)
             {
-                var className = Scan.RecordType;
-                var subClassId = GenDataDef.Classes.IndexOf(className);
+                var subClassId = GenDataDef.Classes.IndexOf(Scan.RecordType);
                 var subClassIdx = GenDataDef.IndexOfSubClass(0, subClassId);
+                var className = Scan.RecordType;
                 if (subClassIdx != -1)
-                    LoadSubClass(Context[0].GenObject, className, subClassId, subClassIdx);
+                    LoadSubClass(Context[0].GenObject, Scan.RecordType, subClassId, subClassIdx);
                 else
                     // Error: Invalid data type at the global level - skip it
-                    while (!Scan.Eof && className == Scan.RecordType)
+                {
+                    while (!Scan.Eof && Scan.RecordType == className)
                         Scan.ScanObject();
+                }
             }
             Cache.Merge();
         }

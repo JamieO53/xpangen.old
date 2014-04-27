@@ -18,6 +18,7 @@ FileGroup=ProgramDefinition[FileName='ProgramDefinition.dcb',FilePath=Data,BaseF
 FileGroup=DatabaseDefinition[FileName='DatabaseDefinition.dcb',FilePath=Data,BaseFileName=Definition]
 FileGroup=Settings[FileName='Settings.dcb',FilePath=Data,BaseFileName=GeneratorEditor]
 FileGroup=JamInvestDatabaseDefinition[FileName='JamInvestDatabaseDefinition.dcb',FilePath=Data,BaseFileName=DatabaseDefinition]
+FileGroup=CapespanDatabaseDefinition[FileName='CapespanDatabaseDefinition.dcb',FilePath=Data,BaseFileName=DatabaseDefinition]
 BaseFile=Minimal[FileName='Minimal.dcb',FilePath=Data,Title='The simplest definition required by the generator',FileExtension='.dcb']
 BaseFile=Definition[FileName='Definition.dcb',FilePath=Data,Title='The definition required by the editor',FileExtension='.dcb']
 BaseFile=ProgramDefinition[FileName='ProgramDefinition.dcb',FilePath=Data,Title='Defines generator editor data models',FileExtension='.dcb']
