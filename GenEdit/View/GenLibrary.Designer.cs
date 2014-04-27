@@ -43,6 +43,7 @@ namespace GenEdit.View
             this.buttonSave = new System.Windows.Forms.ToolStripButton();
             this.buttonSaveAs = new System.Windows.Forms.ToolStripButton();
             this.buttonClose = new System.Windows.Forms.ToolStripButton();
+            this.buttonGenerate = new System.Windows.Forms.ToolStripButton();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxFileGroup = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -119,7 +120,8 @@ namespace GenEdit.View
             this.buttonNew,
             this.buttonSave,
             this.buttonSaveAs,
-            this.buttonClose});
+            this.buttonClose,
+            this.buttonGenerate});
             this.toolStripLibrary.Location = new System.Drawing.Point(0, 67);
             this.toolStripLibrary.Name = "toolStripLibrary";
             this.toolStripLibrary.Size = new System.Drawing.Size(303, 25);
@@ -165,9 +167,20 @@ namespace GenEdit.View
             this.buttonClose.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(23, 22);
-            this.buttonClose.Text = "toolStripButton1";
+            this.buttonClose.Text = "Close";
             this.buttonClose.ToolTipText = "Close the data file";
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
+            // 
+            // buttonGenerate
+            // 
+            this.buttonGenerate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.buttonGenerate.Image = ((System.Drawing.Image)(resources.GetObject("buttonGenerate.Image")));
+            this.buttonGenerate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.buttonGenerate.Name = "buttonGenerate";
+            this.buttonGenerate.Size = new System.Drawing.Size(23, 22);
+            this.buttonGenerate.Text = "Generate";
+            this.buttonGenerate.ToolTipText = "Generate the selected profile";
+            this.buttonGenerate.Click += new System.EventHandler(this.buttonGenerate_Click);
             // 
             // label2
             // 
@@ -203,6 +216,7 @@ namespace GenEdit.View
             this.comboBoxProfile.Name = "comboBoxProfile";
             this.comboBoxProfile.Size = new System.Drawing.Size(252, 21);
             this.comboBoxProfile.TabIndex = 0;
+            this.comboBoxProfile.SelectedValueChanged += new System.EventHandler(this.comboBoxProfile_SelectedValueChanged);
             // 
             // label5
             // 
@@ -312,5 +326,6 @@ namespace GenEdit.View
         private ToolStripButton buttonSave;
         private ToolStripButton buttonSaveAs;
         private ToolStripButton buttonClose;
+        private ToolStripButton buttonGenerate;
     }
 }

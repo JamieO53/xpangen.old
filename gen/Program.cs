@@ -17,7 +17,7 @@ namespace gen
             var output = "";
             var valid = true;
 
-            foreach (string arg in args)
+            foreach (var arg in args)
             {
                 var s = arg.Split(':');
                 //                if (s[0] != "-p" && s[1] == "" || s[0] != "-d" && s[1] == "")

@@ -35,7 +35,7 @@ namespace GenEdit.View
 
             var changed = GenDataEditorViewModel.Data.GenDataStore.Changed;
             EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: changed,
-                           saveAsEnabled: true, fileGroupEnabled: false);
+                           saveAsEnabled: true, fileGroupEnabled: false, generateEnabled: comboBoxProfile.SelectedIndex != -1);
         }
         
         private void splitContainer1_Panel1_Resize(object sender, EventArgs e)
@@ -57,7 +57,7 @@ namespace GenEdit.View
             var data = GenDataEditorViewModel.Data;
 
             EnableControls(newEnabled: true, closeEnabled: false, saveEnabled: false,
-                           saveAsEnabled: false, fileGroupEnabled: true);
+                           saveAsEnabled: false, fileGroupEnabled: true, generateEnabled: false);
             
             comboBoxFileGroup.Items.Clear();
             comboBoxFileGroup.DisplayMember = "Name";
@@ -85,7 +85,7 @@ namespace GenEdit.View
             SetFileGroupFields(Selected);
 
             EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: false,
-                           saveAsEnabled: false, fileGroupEnabled: false);
+                           saveAsEnabled: false, fileGroupEnabled: false, generateEnabled: comboBoxProfile.SelectedIndex != -1);
 
             RaiseDataLoaded();
         }
@@ -120,7 +120,7 @@ namespace GenEdit.View
             var data = GenDataEditorViewModel.Data;
 
             EnableControls(newEnabled: true, closeEnabled: false, saveEnabled: false,
-                           saveAsEnabled: false, fileGroupEnabled: true);
+                           saveAsEnabled: false, fileGroupEnabled: true, generateEnabled: false);
 
             RaiseDataLoaded();
         }
@@ -135,17 +135,18 @@ namespace GenEdit.View
             SetFileGroupFields(Selected);
 
             EnableControls(newEnabled: false, closeEnabled: false, saveEnabled: true,
-                           saveAsEnabled: false, fileGroupEnabled: false);
+                           saveAsEnabled: false, fileGroupEnabled: false, generateEnabled: false);
         }
 
-        private void EnableControls(bool newEnabled, bool closeEnabled, bool saveEnabled,
-                                    bool saveAsEnabled, bool fileGroupEnabled)
+        private void EnableControls(bool newEnabled, bool closeEnabled, bool saveEnabled, bool saveAsEnabled,
+                                    bool fileGroupEnabled, bool generateEnabled)
         {
             comboBoxFileGroup.Enabled = fileGroupEnabled;
             buttonNew.Enabled = newEnabled;
             buttonClose.Enabled = closeEnabled;
             buttonSave.Enabled = saveEnabled;
             buttonSaveAs.Enabled = saveAsEnabled;
+            buttonGenerate.Enabled = generateEnabled;
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
@@ -177,7 +178,7 @@ namespace GenEdit.View
             }
 
             EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: false,
-                            saveAsEnabled: true, fileGroupEnabled: false);
+                            saveAsEnabled: true, fileGroupEnabled: false, generateEnabled: comboBoxProfile.SelectedIndex != -1);
         }
 
         public int SaveOrCreateFile()
@@ -210,6 +211,26 @@ namespace GenEdit.View
                 selected == null || selected.BaseFileName == ""
                     ? comboBoxBaseFile.Items.IndexOf(settings.FindBaseFile("Definition"))
                     : comboBoxBaseFile.Items.IndexOf(settings.FindBaseFile(selected.BaseFileName));
+        }
+
+        private void buttonGenerate_Click(object sender, EventArgs e)
+        {
+            var data = GenDataEditorViewModel.Data;
+            var saveCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                data.Generate();
+            }
+            finally
+            {
+                Cursor.Current = saveCursor;
+            }
+        }
+
+        private void comboBoxProfile_SelectedValueChanged(object sender, EventArgs e)
+        {
+            buttonGenerate.Enabled = comboBoxProfile.SelectedIndex != -1;
         }
     }
 }
