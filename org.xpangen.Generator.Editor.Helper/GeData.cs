@@ -125,6 +125,11 @@ namespace org.xpangen.Generator.Editor.Helper
             }
             GenDataStore.SetBase(Settings.BaseFilePath);
             GenDataStore.SetData(Settings.FilePath);
+            SetProfile();
+        }
+
+        private void SetProfile()
+        {
             Profile = Settings.Profile != "" ? new GenCompactProfileParser(GenData, Settings.Profile, "") : null;
         }
 
@@ -243,6 +248,12 @@ namespace org.xpangen.Generator.Editor.Helper
             var p = new GenCompactProfileParser(d, profileFileName, "");
             using (var writer = new GenWriter(null) {FileName = Settings.FileGroup.Generated})
                 p.Generate(null, d, writer);
+        }
+
+        public void SetProfile(Model.Profile profile)
+        {
+            Settings.Profile = profile.Name;
+            SetProfile();
         }
     }
 }

@@ -1,0 +1,15 @@
+Definition=Definition
+Class=Class
+Field={Name,Title}
+SubClass={SubClass,Property}
+Class=SubClass
+Field={Name,Reference}
+Class=Property
+Field={Name,Title,DataType,Default}
+.
+Class=CodesTable[Title='A table of codes that belong together']
+Property=Name[Title='The name of the code',DataType=Identifier]
+Property=Title[Title='Description of the codes table',DataType=String]
+Class=Code[Title='The code and its description']
+Property=Name[Title='The name of the code',DataType=Identifier]
+Property=Description[Title='The description of the code to be used for dropdowns',DataType=String]

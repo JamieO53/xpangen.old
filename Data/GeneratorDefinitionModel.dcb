@@ -11,3 +11,5 @@ Assembly=GeneratorDataModelDefinition[Title='Classes allowing access to generato
 Class[Reference=Definition]
 Assembly=GeneratorEditorModel[Title='Classes allowing access to generator data for the editor',Namespace='org.xpangen.Generator.Editor.Model']
 Class[Reference=GeneratorEditor]
+Assembly=GeneratorEditorCodes[Title='Classes allowing access to codes tables',Namespace='org.xpangen.Generator.Editor.Codes']
+Class[Reference=CodesDefinition]
