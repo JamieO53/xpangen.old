@@ -229,7 +229,19 @@ namespace GenEdit.View
                 return;
 
             DataEditorTreeViewBuilder = new DataEditorTreeViewBuilder(GenDataEditorViewModel.Data);
-            DataEditorTreeViewBuilder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, null);
+            var saveCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+            DataNavigatorTreeView.BeginUpdate();
+            try
+            {
+                DataEditorTreeViewBuilder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, null);
+            }
+            finally
+            {
+                DataNavigatorTreeView.EndUpdate();
+                Cursor.Current = saveCursor;
+            }
+            
             GenDataEditorViewModel.Data.GenData.First(0);
             GenDataEditorViewModel.Data.GenData.GenDataBase.PropertyChanged += GenData_PropertyChanged;
             RaiseDataChanged();

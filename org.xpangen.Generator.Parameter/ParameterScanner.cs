@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.IO;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Scanner;
@@ -122,6 +123,8 @@ namespace org.xpangen.Generator.Parameter
                 ScanWhile(Spacing);
                 _fields.Add(field);
                 _values.Add(value);
+                if (!CheckChar(',') && !CheckChar(']'))
+                    throw new Exception("Invalid character encountered while scanning attributes (" + this + "): " + Current);
             } while (!Eof && !CheckChar(']'));
             SkipChar();
         }
@@ -129,6 +132,11 @@ namespace org.xpangen.Generator.Parameter
         private string StringOrIdentifier()
         {
             return CheckChar('\'') ? ScanQuotedString() : ScanWhile(Identifier);
+        }
+
+        public override string ToString()
+        {
+            return RecordType + (Attribute("Name") != "" ? "=" + Attribute("Name") : "");
         }
     }
 }
