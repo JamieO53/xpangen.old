@@ -227,5 +227,22 @@ namespace org.xpangen.Generator.Editor.Helper
                             };
             return null;
         }
+
+        public void Generate()
+        {
+            if (Settings.FileGroup.Profile == "") return;
+            
+            GenParameters d;
+            var data = BuildFilePath(Settings.FileGroup.FilePath, Settings.FileGroup.FileName);
+            using (var dataStream = new FileStream(data, FileMode.Open))
+                d = new GenParameters(dataStream) { DataName = Path.GetFileNameWithoutExtension(data) };
+            var baseFile = Settings.GetBaseFiles().Find(Settings.FileGroup.BaseFileName);
+            var profile = baseFile.ProfileList.Find(Settings.FileGroup.Profile);
+            var profileFileName = BuildFilePath(profile.FilePath, profile.FileName);
+            
+            var p = new GenCompactProfileParser(d, profileFileName, "");
+            using (var writer = new GenWriter(null) {FileName = Settings.FileGroup.Generated})
+                p.Generate(null, d, writer);
+        }
     }
 }
