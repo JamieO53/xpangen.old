@@ -111,7 +111,7 @@ namespace org.xpangen.Generator.Test
         /// Ensure that simple named references are correctly cached
         /// </summary>
         [TestCase(Description = "Ensure that the 'self' simple named reference cannot be cached internally")]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "The 'self' generator data cannot be added explicitly to the cache\r\nParameter name: name")]
+        [ExpectedException(exceptionType: typeof(ArgumentException), ExpectedMessage = "The 'self' generator data cannot be added explicitly to the cache\r\nParameter name: name")]
         public void ReferenceCacheSelfLocalPathTest()
         {
             var d = GenDataDef.CreateMinimal().AsGenData();
