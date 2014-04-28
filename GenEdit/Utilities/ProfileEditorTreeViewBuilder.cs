@@ -46,7 +46,7 @@ namespace GenEdit.Utilities
 
         public static GenFragment GetNodeData(object selectedItem)
         {
-            return ((TreeNode)selectedItem).Tag as GenFragment;
+            return selectedItem != null ? ((TreeNode) selectedItem).Tag as GenFragment : null;
         }
 
         private TreeNode CreateFragmentTree(GenFragment fragment)

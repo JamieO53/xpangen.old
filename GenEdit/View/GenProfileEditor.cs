@@ -9,8 +9,6 @@ namespace GenEdit.View
     public partial class GenProfileEditor : UserControl
     {
         public GenDataEditorViewModel GenDataEditorViewModel { get; set; }
-        private object _selectedItem;
-        private GenFragment _fragment;
         private bool IsBuilding { get; set; }
         
         public GenProfileEditor()
@@ -23,8 +21,6 @@ namespace GenEdit.View
             if (IsBuilding) return;
 
             var contextData = GenDataEditorViewModel.Data.GenData.DuplicateContext();
-            _selectedItem = e.Node;
-            _fragment = ProfileEditorTreeViewBuilder.GetNodeData(_selectedItem);
             RefreshProfile(contextData);
         }
 
@@ -35,6 +31,8 @@ namespace GenEdit.View
         public void LoadData()
         {
             ProfileNavigatorTreeView.Nodes.Clear();
+            ProfileExpansionTextBox.Clear();
+            ProfileTextBox.Clear();
             if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null || GenDataEditorViewModel.Data.Profile == null) return;
             
             var builder = new ProfileEditorTreeViewBuilder(GenDataEditorViewModel.Data) { ShowText = false };
@@ -42,14 +40,16 @@ namespace GenEdit.View
             IsBuilding = true;
             builder.CreateBodyChildTrees(ProfileNavigatorTreeView.Nodes, GenDataEditorViewModel.Data.Profile);
             IsBuilding = false;
-            _selectedItem = ProfileNavigatorTreeView.Nodes.Count > 0 ? ProfileNavigatorTreeView.Nodes[0] : null;
             RefreshProfile(GenDataEditorViewModel.Data.GenData);
+            if (ProfileNavigatorTreeView.Nodes.Count > 0)
+                ProfileNavigatorTreeView.SelectedNode = ProfileNavigatorTreeView.Nodes[0];
         }
 
         public void RefreshProfile(GenData genData)
         {
-            var text = _fragment != null
-                           ? ProfileEditorTreeViewBuilder.GetNodeProfileText(_selectedItem, _fragment,
+            var selectedItem = ProfileNavigatorTreeView.SelectedNode;
+            var text = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem) != null
+                           ? ProfileEditorTreeViewBuilder.GetNodeProfileText(selectedItem, ProfileEditorTreeViewBuilder.GetNodeData(selectedItem),
                                                                              ProfileFragmentSyntaxDictionary
                                                                                  .ActiveProfileFragmentSyntaxDictionary)
                            : "";
@@ -62,8 +62,8 @@ namespace GenEdit.View
             }
 
 
-            text = _fragment != null
-                       ? ProfileEditorTreeViewBuilder.GetNodeExpansionText(_selectedItem, _fragment, genData)
+            text = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem) != null
+                       ? ProfileEditorTreeViewBuilder.GetNodeExpansionText(selectedItem, ProfileEditorTreeViewBuilder.GetNodeData(selectedItem), genData)
                        : "";
 
             // Don't change to prevent unnecessary rendering and side effects

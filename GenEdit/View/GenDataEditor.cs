@@ -29,8 +29,7 @@ namespace GenEdit.View
         {
             if (DataNavigatorTreeView.SelectedNode == null) return;
 
-            var data = GenDataEditorViewModel;
-            var node = data.SelectedNode;
+            var node = DataEditorTreeViewBuilder.GetNodeData(DataNavigatorTreeView.SelectedNode);
             if (node != null && (node.IsNew && !node.Changed))
             {
                 RemoveNewNode();
@@ -59,17 +58,17 @@ namespace GenEdit.View
 
         private void DataNavigatorTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            var data = GenDataEditorViewModel;
-            data.SelectedNode = DataEditorTreeViewBuilder.GetNodeData(DataNavigatorTreeView.SelectedNode);
-            GenDataDataGrid.DataSource = data.SelectedNode != null ? data.SelectedNode.Fields : null;
+            var nodeData = DataEditorTreeViewBuilder.GetNodeData(DataNavigatorTreeView.SelectedNode);
+            GenDataDataGrid.DataSource = nodeData != null ? nodeData.Fields : null;
             RaiseFocusChanged();
         }
 
         private void RaiseDataChanged()
         {
-            if (DataNavigatorTreeView.SelectedNode != null && GenDataEditorViewModel.SelectedNode != null)
+            var nodeData = DataEditorTreeViewBuilder.GetNodeData(DataNavigatorTreeView.SelectedNode);
+            if (DataNavigatorTreeView.SelectedNode != null && nodeData != null)
                 DataNavigatorTreeView.SelectedNode.Text =
-                    GenDataEditorViewModel.SelectedNode.GenAttributes.AsString("Name");
+                    nodeData.GenAttributes.AsString("Name");
             if (OnDataChanged != null)
                 OnDataChanged();
         }
@@ -257,32 +256,31 @@ namespace GenEdit.View
 
         public bool SaveEditorChanges()
         {
-            var data = GenDataEditorViewModel;
-            var node = data.SelectedNode;
-            if (node == null) return true;
+            var nodeData = DataEditorTreeViewBuilder.GetNodeData(DataNavigatorTreeView.SelectedNode);
+            if (nodeData == null) return true;
             if (GenDataDataGrid.CurrentCell != null && GenDataDataGrid.CurrentCell.IsInEditMode)
                 GenDataDataGrid.CommitEdit(0);
 
-            if (!node.Changed) return false;
-            node.Save();
+            if (!nodeData.Changed) return false;
+            nodeData.Save();
             return true;
         }
 
         private void CancelItemChangesButton_Click(object sender, EventArgs e)
         {
-            var node = GenDataEditorViewModel.SelectedNode;
-            if (node == null) return;
+            var nodeData = DataEditorTreeViewBuilder.GetNodeData(DataNavigatorTreeView.SelectedNode);
+            if (nodeData == null) return;
             if (GenDataDataGrid.CurrentCell.IsInEditMode)
                 GenDataDataGrid.CommitEdit(0);
 
-            if (node.IsNew)
+            if (nodeData.IsNew)
             {
                 RemoveNewNode();
                 return;
             }
 
-            if (node.Changed)
-                node.Cancel();
+            if (nodeData.Changed)
+                nodeData.Cancel();
             var save = GenDataDataGrid.DataSource;
             GenDataDataGrid.DataSource = null;
             GenDataDataGrid.DataSource = save;
@@ -291,7 +289,8 @@ namespace GenEdit.View
         private void RemoveNewNode()
         {
             var selectedNode = DataNavigatorTreeView.SelectedNode;
-            var genObject = GenDataEditorViewModel.SelectedNode.GenAttributes.GenObject;
+            var nodeData = DataEditorTreeViewBuilder.GetNodeData(selectedNode);
+            var genObject = nodeData.GenAttributes.GenObject;
             genObject.ParentSubClass.Remove(genObject);
             selectedNode.Parent.Nodes.Remove(selectedNode);
         }
@@ -308,7 +307,8 @@ namespace GenEdit.View
         {
             var selectedNode = DataNavigatorTreeView.SelectedNode;
             var data = GenDataEditorViewModel;
-            var genObject = data.SelectedNode.GenAttributes.GenObject;
+            var nodeData = DataEditorTreeViewBuilder.GetNodeData(selectedNode);
+            var genObject = nodeData.GenAttributes.GenObject;
             data.Data.GenData.Context[genObject.ClassId].Delete();
             selectedNode.Parent.Nodes.Remove(selectedNode);
             RaiseDataChanged();

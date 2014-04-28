@@ -60,7 +60,13 @@ namespace GenEdit.Utilities
 
         public static GenObjectViewModel GetNodeData(object selectedItem)
         {
-            return ((TreeNode)selectedItem).Tag as GenObjectViewModel;
+            if (selectedItem == null) return null;
+            var item = (TreeNode) selectedItem;
+            var tag = item.Tag is GenObjectViewModel ? item.Tag : (item.Parent != null ? item.Parent.Tag : null);
+            var nodeData = tag as GenObjectViewModel;
+            if (nodeData != null)
+                nodeData.EstablishContext();
+            return nodeData;
         }
 
         public void CreateNewChildItem(TreeView treeView)
