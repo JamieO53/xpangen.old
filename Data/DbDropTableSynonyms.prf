@@ -1,0 +1,4 @@
+`[Database:`[Table:IF  EXISTS (SELECT * FROM sys.synonyms WHERE name = N'`Table.Name`')
+	DROP SYNONYM dbo.`Table.Name`
+GO
+`]`]
