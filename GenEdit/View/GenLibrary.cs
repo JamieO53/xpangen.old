@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using GenEdit.ViewModel;
+using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Editor.Model;
 
 namespace GenEdit.View
@@ -241,7 +242,37 @@ namespace GenEdit.View
             Cursor.Current = Cursors.WaitCursor;
             try
             {
-                data.Generate();
+                var done = false;
+                while (!done)
+                    try
+                    {
+                        data.Generate();
+                        done = true;
+                    }
+                    catch (GeneratorException exception)
+                    {
+                        if (exception.GenErrorType != GenErrorType.NoOutputFile)
+                            throw;
+                        saveGeneratedFileDialog.InitialDirectory = data.Settings.HomeDir == "."
+                                                                       ? Directory.GetCurrentDirectory()
+                                                                       : data.Settings.HomeDir;
+                        switch (saveGeneratedFileDialog.ShowDialog())
+                        {
+                            case DialogResult.OK:
+                                data.Settings.Generated =
+                                    saveGeneratedFileDialog.FileName
+                                                           .Replace(saveGeneratedFileDialog.InitialDirectory + "\\", "")
+                                                           .Replace('\\', '/');
+                                data.SaveFile(data.Settings.FileGroup);
+                                textBoxGenerated.Text = data.Settings.Generated;
+                                break;
+                            case DialogResult.Cancel:
+                                done = true;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
             }
             finally
             {

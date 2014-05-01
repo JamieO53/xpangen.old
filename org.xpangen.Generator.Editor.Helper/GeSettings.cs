@@ -116,8 +116,14 @@ namespace org.xpangen.Generator.Editor.Helper
         /// </summary>
         public string Generated
         {
-            get { return FileGroup.Generated; }
-            set { FileGroup.Generated = value; }
+            get
+            {
+                return FileGroup != null ? FileGroup.Generated : "";
+            }
+            set
+            {
+                FileGroup.Generated = value;
+            }
         }
         
         /// <summary>

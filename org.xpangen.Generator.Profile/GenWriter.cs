@@ -4,14 +4,25 @@
 
 using System;
 using System.IO;
+using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Profile
 {
     public class GenWriter: IDisposable
     {
         private string _fileName;
+        private StreamWriter _writer;
         public Stream Stream { get; private set; }
-        private StreamWriter Writer { get; set; }
+        private StreamWriter Writer
+        {
+            get
+            {
+                if (_writer == null)
+                    throw new GeneratorException("No generator output has been specified.", GenErrorType.NoOutputFile);
+                return _writer;
+            }
+            set { _writer = value; }
+        }
 
         public string FileName
         {
@@ -23,7 +34,7 @@ namespace org.xpangen.Generator.Profile
                 
                 if (Stream != null && !(Stream is FileStream)) return;
                 
-                if (Writer != null) Writer.Dispose();
+                if (_writer != null) _writer.Dispose();
                 if (Stream != null) Stream.Dispose();
 
                 if (string.IsNullOrEmpty(_fileName)) return;
