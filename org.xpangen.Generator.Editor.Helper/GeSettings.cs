@@ -189,6 +189,8 @@ namespace org.xpangen.Generator.Editor.Helper
             if (Model.GenSettingsList.Count == 0)
             {
                 var settings = Model.AddGenSettings(".");
+                settings.AddBaseFile("Definition", "Definition.dcb", "Data", "The definition required by the editor",
+                                     ".dcb");
             }
         }
 

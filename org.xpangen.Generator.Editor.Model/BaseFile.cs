@@ -103,7 +103,20 @@ namespace org.xpangen.Generator.Editor.Model
                     list.Next();
                 }
             }
+        }
 
+        public Profile AddProfile(string Name, string FileName, string FilePath, string Title)
+        {
+            var item = new Profile(GenData)
+                           {
+                               GenObject = GenData.CreateObject("BaseFile", "Profile"),
+                               Name = Name,
+                               FileName = FileName,
+                               FilePath = FilePath,
+                               Title = Title
+                           };
+            ProfileList.Add(item);
+            return item;
         }
     }
 }

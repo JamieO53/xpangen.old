@@ -12,7 +12,8 @@ namespace org.xpangen.Generator.Editor.Model
     /// </summary>
     public class GenSettings : GenNamedApplicationBase
     {
-        public GenSettings(GenData genData) : base(genData)
+        public GenSettings(GenData genData)
+            : base(genData)
         {
         }
 
@@ -44,11 +45,10 @@ namespace org.xpangen.Generator.Editor.Model
                 list.First();
                 while (!list.Eol)
                 {
-                    FileGroupList.Add(new FileGroup(GenData) {GenObject = list.GenObject});
+                    FileGroupList.Add(new FileGroup(GenData) { GenObject = list.GenObject });
                     list.Next();
                 }
             }
-
             BaseFileList = new GenNamedApplicationList<BaseFile>();
             classId = GenDataDef.Classes.IndexOf("BaseFile");
             classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
@@ -58,11 +58,42 @@ namespace org.xpangen.Generator.Editor.Model
                 list.First();
                 while (!list.Eol)
                 {
-                    BaseFileList.Add(new BaseFile(GenData) {GenObject = list.GenObject});
+                    BaseFileList.Add(new BaseFile(GenData) { GenObject = list.GenObject });
                     list.Next();
                 }
             }
+        }
 
+        public FileGroup AddFileGroup(string Name, string FileName, string FilePath, string BaseFileName, string Generated, string Profile)
+        {
+            var item = new FileGroup(GenData)
+            {
+                GenObject = GenData.CreateObject("GenSettings", "FileGroup"),
+                Name = Name,
+                FileName = FileName,
+                FilePath = FilePath,
+                BaseFileName = BaseFileName,
+                Generated = Generated,
+                Profile = Profile
+            };
+            FileGroupList.Add(item);
+            return item;
+        }
+
+
+        public BaseFile AddBaseFile(string Name, string FileName, string FilePath, string Title, string FileExtension)
+        {
+            var item = new BaseFile(GenData)
+            {
+                GenObject = GenData.CreateObject("GenSettings", "BaseFile"),
+                Name = Name,
+                FileName = FileName,
+                FilePath = FilePath,
+                Title = Title,
+                FileExtension = FileExtension
+            };
+            BaseFileList.Add(item);
+            return item;
         }
     }
 }

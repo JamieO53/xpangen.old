@@ -33,15 +33,14 @@ namespace org.xpangen.Generator.Editor.Model
                     list.Next();
                 }
             }
-
         }
 
-        public GenSettings AddGenSettings(string homeDir)
+        public GenSettings AddGenSettings(string HomeDir)
         {
             var item = new GenSettings(GenData)
                            {
                                GenObject = GenData.CreateObject("", "GenSettings"),
-                               HomeDir = homeDir
+                               HomeDir = HomeDir
                            };
             GenSettingsList.Add(item);
             return item;

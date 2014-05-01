@@ -44,12 +44,12 @@ namespace org.xpangen.Generator.Data.Model.Definition
             }
         }
 
-        public GenApplicationList<SubClass> SubClassList { get; private set; }
-        public GenApplicationList<Property> PropertyList { get; private set; }
+        public GenNamedApplicationList<SubClass> SubClassList { get; private set; }
+        public GenNamedApplicationList<Property> PropertyList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            SubClassList = new GenApplicationList<SubClass>();
+            SubClassList = new GenNamedApplicationList<SubClass>();
             var classId = GenDataDef.Classes.IndexOf("SubClass");
             var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
             if (classIdx != -1)
@@ -62,8 +62,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
                     list.Next();
                 }
             }
-
-            PropertyList = new GenApplicationList<Property>();
+            PropertyList = new GenNamedApplicationList<Property>();
             classId = GenDataDef.Classes.IndexOf("Property");
             classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
             if (classIdx != -1)
@@ -76,7 +75,33 @@ namespace org.xpangen.Generator.Data.Model.Definition
                     list.Next();
                 }
             }
+        }
 
+        public SubClass AddSubClass(string Name, string Reference)
+        {
+            var item = new SubClass(GenData)
+                           {
+                               GenObject = GenData.CreateObject("Class", "SubClass"),
+                               Name = Name,
+                               Reference = Reference
+                           };
+            SubClassList.Add(item);
+            return item;
+        }
+
+
+        public Property AddProperty(string Name, string Title, string DataType, string Default)
+        {
+            var item = new Property(GenData)
+                           {
+                               GenObject = GenData.CreateObject("Class", "Property"),
+                               Name = Name,
+                               Title = Title,
+                               DataType = DataType,
+                               Default = Default
+                           };
+            PropertyList.Add(item);
+            return item;
         }
     }
 }

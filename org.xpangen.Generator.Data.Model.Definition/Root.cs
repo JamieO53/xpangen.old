@@ -33,7 +33,18 @@ namespace org.xpangen.Generator.Data.Model.Definition
                     list.Next();
                 }
             }
+        }
 
+        public Class AddClass(string Name, string Title)
+        {
+            var item = new Class(GenData)
+                           {
+                               GenObject = GenData.CreateObject("", "Class"),
+                               Name = Name,
+                               Title = Title
+                           };
+            ClassList.Add(item);
+            return item;
         }
     }
 }

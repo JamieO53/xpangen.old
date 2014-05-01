@@ -240,7 +240,8 @@ namespace org.xpangen.Generator.Test
         {
             var f = GenData.DataLoader.LoadData("ProgramDefinition").AsDef();
             var d = GenData.DataLoader.LoadData(f, "GeneratorDefinitionModel");
-            d.Last(2); d.Prior(2);
+            d.Context[2].MoveItem(ListMove.Down, 0);
+            d.First(2); d.Next(2);
             Assert.AreEqual("Definition", d.Context[2].GenObject.SubClass[0].Reference);
             d.Next(5);
             Assert.AreEqual("Class", d.Context[3].GenObject.Attributes[0]);

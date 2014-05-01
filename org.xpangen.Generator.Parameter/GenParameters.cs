@@ -395,7 +395,7 @@ namespace org.xpangen.Generator.Parameter
 
         public static FileStream CreateStream(string filePath)
         {
-            var path = filePath + (Path.GetExtension(filePath) == "" ? ".dcb" : "");
+            var path = filePath.Replace('/', '\\') + (Path.GetExtension(filePath) == "" ? ".dcb" : "");
             if (!File.Exists(path) && Path.GetDirectoryName(path) == "" && Directory.Exists("data"))
             {
                 path = "data\\" + Path.GetFileName(path);
