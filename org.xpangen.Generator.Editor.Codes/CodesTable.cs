@@ -44,5 +44,36 @@ namespace org.xpangen.Generator.Editor.Codes
             }
         }
 
+        public GenNamedApplicationList<Code> CodeList { get; private set; }
+
+        protected override void GenObjectSetNotification()
+        {
+            CodeList = new GenNamedApplicationList<Code>();
+            var classId = GenDataDef.Classes.IndexOf("Code");
+            var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
+            if (classIdx != -1)
+            {
+                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase);
+                list.First();
+                while (!list.Eol)
+                {
+                    CodeList.Add(new Code(GenData) {GenObject = list.GenObject});
+                    list.Next();
+                }
+            }
+        }
+
+        public Code AddCode(string Name, string Description, string Value)
+        {
+            var item = new Code(GenData)
+                           {
+                               GenObject = GenData.CreateObject("CodesTable", "Code"),
+                               Name = Name,
+                               Description = Description,
+                               Value = Value
+                           };
+            CodeList.Add(item);
+            return item;
+        }
     }
 }
