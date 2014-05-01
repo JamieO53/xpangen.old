@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ComboServer.cs" />
     <Compile Include="GeComponent.cs" />
     <Compile Include="GeData.cs" />
     <Compile Include="GeGenData.cs" />
@@ -56,6 +57,10 @@
     <ProjectReference Include="..\org.xpangen.Generator.Data\org.xpangen.Generator.Data.csproj">
       <Project>{879183A8-0A57-494A-B645-27366F1D912E}</Project>
       <Name>org.xpangen.Generator.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\org.xpangen.Generator.Editor.Codes\org.xpangen.Generator.Editor.Codes.csproj">
+      <Project>{52EFF954-F9EE-41E2-9A41-5C25158A11B2}</Project>
+      <Name>org.xpangen.Generator.Editor.Codes</Name>
     </ProjectReference>
     <ProjectReference Include="..\org.xpangen.Generator.Editor.Model\org.xpangen.Generator.Editor.Model.csproj">
       <Project>{E16E083B-933C-499C-8BD2-0BCAFA98FD16}</Project>

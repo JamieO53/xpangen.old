@@ -14,6 +14,8 @@ namespace org.xpangen.Generator.Editor.Codes
     {
         public Root(GenData genData) : base(genData)
         {
+            base.GenObject = genData.Root;
+            genData.GenDataBase.RaiseDataChanged("", "");
         }
 
         public GenNamedApplicationList<CodesTable> CodesTableList { get; private set; }

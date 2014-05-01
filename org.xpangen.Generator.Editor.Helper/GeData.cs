@@ -89,6 +89,7 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             GenDataStore = new GeGenData();
             Validator = new GeGridDataValidator(this);
+            ComboServer = new ComboServer();
         }
         public void GridKeyPress()
         {
@@ -209,6 +210,7 @@ namespace org.xpangen.Generator.Editor.Helper
             SaveSettings();
         }
 
+        private ComboServer ComboServer { get; set; }
         /// <summary>
         /// Get values to populate a data editor combo.
         /// </summary>
@@ -216,21 +218,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <returns>The populated combo list, or null if no such list exists.</returns>
         public List<GeComboItem> GetCodesCombo(string name)
         {
-            if (name == "YesNo")
-                return new List<GeComboItem>
-                           {
-                               new GeComboItem("Yes", "True"),
-                               new GeComboItem("No", "")
-                           };
-            if (name == "DataType")
-                return new List<GeComboItem>
-                            {
-                                new GeComboItem("String", "String"),
-                                new GeComboItem("Integer", "Integer"),
-                                new GeComboItem("Boolean", "Boolean"),
-                                new GeComboItem("Identifier", "Identifier")
-                            };
-            return null;
+            return ComboServer.GetComboItems(name);
         }
 
         public void Generate()

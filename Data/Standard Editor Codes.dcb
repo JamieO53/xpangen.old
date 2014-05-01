@@ -1,0 +1,15 @@
+Definition=CodesDefinition
+Class=CodesTable
+Field={Name,Title}
+SubClass=Code
+Class=Code
+Field={Name,Description,Value}
+.
+CodesTable=YesNo[Title='Select True or False values']
+Code=Yes[Description=Yes,Value]
+Code=No[Description=No]
+CodesTable=DataType[Title='Select the editor field data type']
+Code=String[Description=String,Value=String]
+Code=Integer[Description=Integer,Value=Integer]
+Code=Boolean[Description=Boolean,Value=Boolean]
+Code=Identifier[Description=Identifier,Value=Identifier]

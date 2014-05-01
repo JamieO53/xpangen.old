@@ -14,7 +14,8 @@ namespace `Assembly.Namespace`
     {
         public Root(GenData genData) : base(genData)
         {
-        }
+             base.GenObject = genData.Root;
+       }
 `[Class':
         public GenNamedApplicationList<`Class.Name`> `Class.Name`List { get; private set; }
 `]`[Class':

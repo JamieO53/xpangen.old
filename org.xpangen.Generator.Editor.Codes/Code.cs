@@ -44,5 +44,18 @@ namespace org.xpangen.Generator.Editor.Codes
             }
         }
 
+        /// <summary>
+        /// The value to be saved if this item is selected.
+        /// </summary>
+        public string Value
+        {
+            get { return AsString("Value"); }
+            set
+            {
+                if (Value == value) return;
+                SetString("Value", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
     }
 }
