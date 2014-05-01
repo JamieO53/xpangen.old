@@ -1,0 +1,7 @@
+`[Database:`[Table:IF  EXISTS (SELECT * FROM sys.synonyms WHERE name = N'`Table.Name`')
+	DROP SYNONYM dbo.`Table.Name`
+GO
+CREATE SYNONYM dbo.`Table.Name` FOR CSA_Live_QA.dbo.`Table.Name`;
+GO
+
+`]`]

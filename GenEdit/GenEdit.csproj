@@ -114,6 +114,8 @@
     <None Include="Data\DatabaseDefinition.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Data\DbDropTableSynonyms.prf" />
+    <None Include="Data\DbTableSynonyms.prf" />
     <None Include="Data\Definition.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -248,6 +250,7 @@
     <None Include="Resources\list-add-4.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\GetTableParameters.sql" />
     <Content Include="Resources\document-close-4.png" />
     <Content Include="Resources\document-new-5.png" />
     <Content Include="Resources\document-open-5.png" />
