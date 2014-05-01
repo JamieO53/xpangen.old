@@ -144,6 +144,9 @@
     <None Include="Data\Settings.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Data\Standard Editor Codes.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\GeneratorDefinitionModelTest.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
