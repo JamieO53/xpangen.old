@@ -56,6 +56,7 @@ namespace GenEdit.View
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.saveGeneratedFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.panel1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -327,5 +328,6 @@ namespace GenEdit.View
         private ToolStripButton buttonSaveAs;
         private ToolStripButton buttonClose;
         private ToolStripButton buttonGenerate;
+        private SaveFileDialog saveGeneratedFileDialog;
     }
 }

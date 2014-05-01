@@ -53,6 +53,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GenDataToDef.cs" />
+    <Compile Include="GeneratorException.cs" />
+    <Compile Include="GenErrorType.cs" />
     <Compile Include="GenList.cs" />
     <Compile Include="GenObject.cs" />
     <Compile Include="GenObjectList.cs" />
