@@ -41,7 +41,8 @@ namespace org.xpangen.Generator.Editor.Model
             var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
             if (classIdx != -1)
             {
-                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase);
+                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase,
+                                             GenData.Context[ClassId]);
                 list.First();
                 while (!list.Eol)
                 {
@@ -54,7 +55,8 @@ namespace org.xpangen.Generator.Editor.Model
             classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
             if (classIdx != -1)
             {
-                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase);
+                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase,
+                                             GenData.Context[ClassId]);
                 list.First();
                 while (!list.Eol)
                 {

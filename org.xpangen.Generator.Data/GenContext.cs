@@ -26,7 +26,8 @@ namespace org.xpangen.Generator.Data
             for (var i = 0; i < Cache.References.Count; i++)
                 context.Cache.Internal(Cache.References[i].Path, Cache.References[i].GenData);
             for (var i = 0; i < context.Count; i++)
-                this[i] = new GenObjectList(context[i].GenObjectListBase, genDataBase)
+                this[i] = new GenObjectList(context[i].GenObjectListBase, genDataBase,
+                                            context[i].ParentList == null ? null : this[context[i].ParentList.ClassId])
                               {
                                   Index = context[i].Index,
                                   ClassId = Classes[i].ClassId,
@@ -36,7 +37,8 @@ namespace org.xpangen.Generator.Data
                               };
         }
 
-        public void Add(GenObjectList item, GenDataDefClass defClass, GenDataBase genDataBase, string reference, string referenceDefinition)
+        public void Add(GenObjectList item, GenDataDefClass defClass, GenDataBase genDataBase, string reference,
+                        string referenceDefinition)
         {
             GenObjectList myList;
             if (item != null) myList = item;
@@ -48,7 +50,10 @@ namespace org.xpangen.Generator.Data
                                                                          Reference = reference,
                                                                          ReferenceDefinition =
                                                                              referenceDefinition
-                                                                     }), genDataBase)
+                                                                     }), genDataBase,
+                                           Count == 0
+                                               ? null
+                                               : this[defClass.Parent == null ? 0 : defClass.Parent.ClassId])
                              {
                                  RefClassId = defClass.RefClassId,
                                  ClassId = defClass.ClassId,
@@ -56,13 +61,16 @@ namespace org.xpangen.Generator.Data
                              };
             else
                 myList = new GenObjectList(new GenObjectListReference(genDataBase, null, defClass.ClassId,
-                                                                 new GenDataDefSubClass
-                                                                     {
-                                                                         SubClass = defClass,
-                                                                         Reference = reference,
-                                                                         ReferenceDefinition =
-                                                                             referenceDefinition
-                                                                     }), genDataBase)
+                                                                      new GenDataDefSubClass
+                                                                          {
+                                                                              SubClass = defClass,
+                                                                              Reference = reference,
+                                                                              ReferenceDefinition =
+                                                                                  referenceDefinition
+                                                                          }), genDataBase,
+                                           Count == 0
+                                               ? null
+                                               : this[defClass.Parent == null ? 0 : defClass.Parent.ClassId])
                              {
                                  RefClassId = defClass.RefClassId,
                                  ClassId = defClass.ClassId,

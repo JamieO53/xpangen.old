@@ -25,7 +25,8 @@ namespace org.xpangen.Generator.Data.Model.Definition
             var classIdx = GenDataDef.IndexOfSubClass(0, classId);
             if (classIdx != -1)
             {
-                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase);
+                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase,
+                                             GenData.Context[0]);
                 list.First();
                 while (!list.Eol)
                 {
