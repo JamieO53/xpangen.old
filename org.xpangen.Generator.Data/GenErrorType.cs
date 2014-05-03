@@ -3,6 +3,7 @@
     public enum GenErrorType
     {
         Unspecified,
-        NoOutputFile
+        NoOutputFile,
+        Assertion
     }
 }

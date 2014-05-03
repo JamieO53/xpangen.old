@@ -8,19 +8,75 @@ namespace org.xpangen.Generator.Data
 {
     public class GenObjectList
     {
+        private IGenObjectListBase _genObjectListBase;
+
+        public GenObjectList ParentList { get; private set; }
+
         /// <summary>
         /// Create a new <see cref="GenObjectList"/> list.
         /// </summary>
         /// <param name="genObjectListBase"> The underlying generator object list.</param>
         /// <param name="genDataBase">The underlying data container.</param>
-        public GenObjectList(IGenObjectListBase genObjectListBase, GenDataBase genDataBase)
+        /// <param name="parentList">The parent list.</param>
+        public GenObjectList(IGenObjectListBase genObjectListBase, GenDataBase genDataBase, GenObjectList parentList)
         {
+            ParentList = parentList;
+            ClassId = -1;
             GenDataBase = genDataBase;
             GenObjectListBase = genObjectListBase;
             DefClass = GenObjectListBase.Definition.SubClass;
+            ClassId = 0;
         }
 
-        public IGenObjectListBase GenObjectListBase { get; set; }
+        public IGenObjectListBase GenObjectListBase
+        {
+            get { return _genObjectListBase; }
+            set
+            {
+                if (value != null && ClassId != -1)
+                {
+                    if (String.IsNullOrEmpty(Reference))
+                    {
+                        Assert(value.ClassId == ClassId, "Object list assignment error",
+                                     string.Format("The expected class was {0}({1}) but is {2}({3})",
+                                                   GenDataBase.GenDataDef.Classes[ClassId].Name,
+                                                   ClassId, GenDataBase.GenDataDef.Classes[value.ClassId].Name,
+                                                   value.ClassId));
+                        Assert(value.Parent == ParentList.GenObject, "Object list assignment error",
+                               string.Format("The the incorrect subclass is being used for the current parent"));
+                    }
+                    else if (ReferenceData != null)
+                    {
+                        var refClassId = GetBaseReferenceClassId(RefClassId, ReferenceData);
+                        Assert(value.ClassId == refClassId, "Object list assignment error",
+                                     string.Format("The expected class was {0}({1}) but is {2}({3})",
+                                                   ReferenceData.GenDataBase.GenDataDef.Classes[RefClassId].Name,
+                                                   ReferenceData.Context[refClassId].RefClassId,
+                                                   ReferenceData.GenDataBase.GenDataDef.Classes[value.ClassId].Name,
+                                                   value.ClassId));
+                        Assert(value.Parent.ClassId == 0 || value.Parent == ParentList.GenObject,
+                               "Object list assignment error",
+                               "The the incorrect subclass is being used for the current parent");
+                    }
+                }
+                _genObjectListBase = value;
+            }
+        }
+
+        private static void Assert(bool condition, string message, string details)
+        {
+            if (!condition)
+                throw new GeneratorException(message + ": " + details, GenErrorType.Assertion);
+        }
+
+        private int GetBaseReferenceClassId(int refClassId, GenData referenceData)
+        {
+            if (ReferenceData.Context[refClassId].ReferenceData != null &&
+                referenceData != ReferenceData.Context[refClassId].ReferenceData)
+                return GetBaseReferenceClassId(ReferenceData.Context[refClassId].RefClassId,
+                                               ReferenceData.Context[refClassId].ReferenceData);
+            return referenceData.Context[refClassId].RefClassId;
+        }
 
         public int ClassId { get; set; }
 

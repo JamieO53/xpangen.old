@@ -63,7 +63,7 @@ namespace org.xpangen.Generator.Data
 
         public GenDataDef GenDataDef { get; private set; }
 
-        protected int ClassId { get; private set; }
+        public int ClassId { get; private set; }
 
         public GenAttributes(GenDataDef genDataDef)
         {
