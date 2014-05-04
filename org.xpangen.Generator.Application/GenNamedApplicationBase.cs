@@ -1,11 +1,9 @@
-﻿using org.xpangen.Generator.Data;
-
-namespace org.xpangen.Generator.Application
+﻿namespace org.xpangen.Generator.Application
 {
     public class GenNamedApplicationBase: GenApplicationBase
     {
 
-        protected GenNamedApplicationBase(GenData genData) : base(genData)
+        protected GenNamedApplicationBase()
         {
         }
 

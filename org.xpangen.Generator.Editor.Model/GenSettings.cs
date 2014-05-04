@@ -12,9 +12,13 @@ namespace org.xpangen.Generator.Editor.Model
     /// </summary>
     public class GenSettings : GenNamedApplicationBase
     {
-        public GenSettings(GenData genData)
-            : base(genData)
+        public GenSettings()
         {
+        }
+
+        public GenSettings(GenData genData) : this()
+        {
+			GenData = genData;
         }
 
         /// <summary>
@@ -36,48 +40,22 @@ namespace org.xpangen.Generator.Editor.Model
 
         protected override void GenObjectSetNotification()
         {
-            FileGroupList = new GenNamedApplicationList<FileGroup>();
-            var classId = GenDataDef.Classes.IndexOf("FileGroup");
-            var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
-            if (classIdx != -1)
-            {
-                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase,
-                                             GenData.Context[ClassId]);
-                list.First();
-                while (!list.Eol)
-                {
-                    FileGroupList.Add(new FileGroup(GenData) { GenObject = list.GenObject });
-                    list.Next();
-                }
-            }
-            BaseFileList = new GenNamedApplicationList<BaseFile>();
-            classId = GenDataDef.Classes.IndexOf("BaseFile");
-            classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
-            if (classIdx != -1)
-            {
-                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase,
-                                             GenData.Context[ClassId]);
-                list.First();
-                while (!list.Eol)
-                {
-                    BaseFileList.Add(new BaseFile(GenData) { GenObject = list.GenObject });
-                    list.Next();
-                }
-            }
+            FileGroupList = new GenNamedApplicationList<FileGroup>(this);
+            BaseFileList = new GenNamedApplicationList<BaseFile>(this);
         }
 
         public FileGroup AddFileGroup(string Name, string FileName, string FilePath, string BaseFileName, string Generated, string Profile)
         {
             var item = new FileGroup(GenData)
-            {
-                GenObject = GenData.CreateObject("GenSettings", "FileGroup"),
-                Name = Name,
-                FileName = FileName,
-                FilePath = FilePath,
-                BaseFileName = BaseFileName,
-                Generated = Generated,
-                Profile = Profile
-            };
+                           {
+                               GenObject = GenData.CreateObject("GenSettings", "FileGroup"),
+                               Name = Name,
+                               FileName = FileName,
+                               FilePath = FilePath,
+                               BaseFileName = BaseFileName,
+                               Generated = Generated,
+                               Profile = Profile
+                           };
             FileGroupList.Add(item);
             return item;
         }
@@ -86,14 +64,14 @@ namespace org.xpangen.Generator.Editor.Model
         public BaseFile AddBaseFile(string Name, string FileName, string FilePath, string Title, string FileExtension)
         {
             var item = new BaseFile(GenData)
-            {
-                GenObject = GenData.CreateObject("GenSettings", "BaseFile"),
-                Name = Name,
-                FileName = FileName,
-                FilePath = FilePath,
-                Title = Title,
-                FileExtension = FileExtension
-            };
+                           {
+                               GenObject = GenData.CreateObject("GenSettings", "BaseFile"),
+                               Name = Name,
+                               FileName = FileName,
+                               FilePath = FilePath,
+                               Title = Title,
+                               FileExtension = FileExtension
+                           };
             BaseFileList.Add(item);
             return item;
         }

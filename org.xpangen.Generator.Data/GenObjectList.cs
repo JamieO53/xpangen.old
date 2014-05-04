@@ -18,8 +18,9 @@ namespace org.xpangen.Generator.Data
         /// <param name="genObjectListBase"> The underlying generator object list.</param>
         /// <param name="genDataBase">The underlying data container.</param>
         /// <param name="parentList">The parent list.</param>
-        public GenObjectList(IGenObjectListBase genObjectListBase, GenDataBase genDataBase, GenObjectList parentList)
+        public GenObjectList(IGenObjectListBase genObjectListBase, GenDataBase genDataBase, GenObjectList parentList, GenDataDefSubClass defSubClass)
         {
+            DefSubClass = defSubClass;
             ParentList = parentList;
             ClassId = -1;
             GenDataBase = genDataBase;
@@ -57,6 +58,11 @@ namespace org.xpangen.Generator.Data
                         Assert(value.Parent.ClassId == 0 || value.Parent == ParentList.GenObject,
                                "Object list assignment error",
                                "The the incorrect subclass is being used for the current parent");
+                        var refGenDataBase = GetBaseReferenceData(RefClassId, ReferenceData);
+                        Assert(value.GenDataBase == refGenDataBase, "Object list assignment error",
+                               string.Format(
+                                   "The assigned object list does not belong to the context generator data: {0} vs {1}",
+                                   value.GenDataBase, ReferenceData.GenDataBase));
                     }
                 }
                 _genObjectListBase = value;
@@ -78,12 +84,22 @@ namespace org.xpangen.Generator.Data
             return referenceData.Context[refClassId].RefClassId;
         }
 
+        private GenDataBase GetBaseReferenceData(int refClassId, GenData referenceData)
+        {
+            if (ReferenceData.Context[refClassId].ReferenceData != null &&
+                referenceData != ReferenceData.Context[refClassId].ReferenceData)
+                return GetBaseReferenceData(ReferenceData.Context[refClassId].RefClassId,
+                                               ReferenceData.Context[refClassId].ReferenceData);
+            return referenceData.GenDataBase;
+        }
+
         public int ClassId { get; set; }
 
         public int RefClassId { get; set; }
 
         private GenDataBase GenDataBase { get; set; }
         public GenDataDefClass DefClass { get; private set; }
+        public GenDataDefSubClass DefSubClass { get; private set; }
 
         public GenObject this[int index] { get { return GenObjectListBase[index]; } }
         

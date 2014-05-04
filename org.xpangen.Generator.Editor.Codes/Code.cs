@@ -12,8 +12,13 @@ namespace org.xpangen.Generator.Editor.Codes
     /// </summary>
     public class Code : GenNamedApplicationBase
     {
-        public Code(GenData genData) : base(genData)
+        public Code()
         {
+        }
+
+        public Code(GenData genData) : this()
+        {
+			GenData = genData;
         }
 
         /// <summary>
@@ -45,7 +50,7 @@ namespace org.xpangen.Generator.Editor.Codes
         }
 
         /// <summary>
-        /// The value to be saved if this item is selected.
+        /// The value of the code to be used for dropdowns
         /// </summary>
         public string Value
         {
@@ -57,5 +62,6 @@ namespace org.xpangen.Generator.Editor.Codes
                 if (!DelayedSave) SaveFields();
             }
         }
+
     }
 }

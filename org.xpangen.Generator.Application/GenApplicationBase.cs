@@ -8,9 +8,10 @@ namespace org.xpangen.Generator.Application
 {
     public class GenApplicationBase: GenAttributes
     {
-        protected GenApplicationBase(GenData genData) : base(genData.GenDataDef)
+        private GenData _genData;
+
+        protected GenApplicationBase()
         {
-            GenData = genData;
             DelayedSave = false;
         }
 
@@ -19,7 +20,15 @@ namespace org.xpangen.Generator.Application
             
         }
 
-        public GenData GenData { get; private set; }
+        public GenData GenData
+        {
+            get { return _genData; }
+            set
+            {
+                GenDataDef = value.GenDataDef;
+                _genData = value;
+            }
+        }
 
         public bool DelayedSave { get; set; }
         

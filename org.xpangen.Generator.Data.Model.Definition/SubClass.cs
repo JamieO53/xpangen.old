@@ -12,8 +12,13 @@ namespace org.xpangen.Generator.Data.Model.Definition
     /// </summary>
     public class SubClass : GenNamedApplicationBase
     {
-        public SubClass(GenData genData) : base(genData)
+        public SubClass()
         {
+        }
+
+        public SubClass(GenData genData) : this()
+        {
+			GenData = genData;
         }
 
         /// <summary>

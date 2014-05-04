@@ -12,8 +12,13 @@ namespace org.xpangen.Generator.Editor.Model
     /// </summary>
     public class Profile : GenNamedApplicationBase
     {
-        public Profile(GenData genData) : base(genData)
+        public Profile()
         {
+        }
+
+        public Profile(GenData genData) : this()
+        {
+			GenData = genData;
         }
 
         /// <summary>

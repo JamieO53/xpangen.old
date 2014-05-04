@@ -12,8 +12,13 @@ namespace org.xpangen.Generator.Editor.Model
     /// </summary>
     public class FileGroup : GenNamedApplicationBase
     {
-        public FileGroup(GenData genData) : base(genData)
+        public FileGroup()
         {
+        }
+
+        public FileGroup(GenData genData) : this()
+        {
+			GenData = genData;
         }
 
         /// <summary>
@@ -100,6 +105,5 @@ namespace org.xpangen.Generator.Editor.Model
             }
         }
 
-        public bool Changed { get; set; }
     }
 }

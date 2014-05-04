@@ -15,7 +15,8 @@ namespace org.xpangen.Generator.Application
             if (item != null)
             {
                 var genList = new GenObjectList(item.GenObject.ParentSubClass, item.GenObject.GenDataBase,
-                                             item.GenData.Context[item.ClassId]);
+                                                item.GenData.Context[item.ClassId],
+                                                item.GenData.Context[item.ClassId].DefSubClass);
                 genList.MoveItem(move, itemIndex);
             }
 

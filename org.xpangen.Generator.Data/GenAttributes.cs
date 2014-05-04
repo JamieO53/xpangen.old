@@ -3,7 +3,6 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 
 namespace org.xpangen.Generator.Data
@@ -13,6 +12,7 @@ namespace org.xpangen.Generator.Data
         private GenObject _genObject;
         private NameList Fields { get; set; }
         private TextList Values { get; set; }
+        public bool Changed { get; private set; }
         public virtual GenObject GenObject
         {
             get { return _genObject; }
@@ -40,7 +40,6 @@ namespace org.xpangen.Generator.Data
             }
             else
             {
-                var classId = ClassId;
                 try
                 {
                     var props = Definition.Properties;
@@ -54,6 +53,7 @@ namespace org.xpangen.Generator.Data
                         SetString(field, "");
                 }
             }
+            Changed = false;
         }
 
         public GenDataDefClass Definition
@@ -61,15 +61,19 @@ namespace org.xpangen.Generator.Data
             get { return GenDataDef.Classes[ClassId]; }
         }
 
-        public GenDataDef GenDataDef { get; private set; }
+        public GenDataDef GenDataDef { get; protected set; }
 
         public int ClassId { get; private set; }
 
-        public GenAttributes(GenDataDef genDataDef)
+        protected GenAttributes()
         {
-            GenDataDef = genDataDef;
             Fields = new NameList();
             Values = new TextList();
+        }
+
+        public GenAttributes(GenDataDef genDataDef) : this()
+        {
+            GenDataDef = genDataDef;
         }
 
         public string AsString(string name)
@@ -90,11 +94,13 @@ namespace org.xpangen.Generator.Data
             {
                 Fields.Add(name);
                 Values.Add(value);
+                Changed = true;
             }
             else
             {
                 for (var j = Values.Count; j <= i; j++)
                     Values.Add("");
+                Changed |= Values[i] != value;
                 Values[i] = value;
             }
         }
@@ -128,6 +134,7 @@ namespace org.xpangen.Generator.Data
             for (var i = 0; i < n; i++)
                 if (changedProps[i])
                     GenObject.GenDataBase.RaiseDataChanged(className, props[i]);
+            Changed = false;
         }
     }
 }

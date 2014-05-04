@@ -27,7 +27,8 @@ namespace org.xpangen.Generator.Data
                 context.Cache.Internal(Cache.References[i].Path, Cache.References[i].GenData);
             for (var i = 0; i < context.Count; i++)
                 this[i] = new GenObjectList(context[i].GenObjectListBase, genDataBase,
-                                            context[i].ParentList == null ? null : this[context[i].ParentList.ClassId])
+                                            context[i].ParentList == null ? null : this[context[i].ParentList.ClassId],
+                                            context[i].DefSubClass)
                               {
                                   Index = context[i].Index,
                                   ClassId = Classes[i].ClassId,
@@ -38,7 +39,7 @@ namespace org.xpangen.Generator.Data
         }
 
         public void Add(GenObjectList item, GenDataDefClass defClass, GenDataBase genDataBase, string reference,
-                        string referenceDefinition)
+                        string referenceDefinition, GenDataDefSubClass defSubClass)
         {
             GenObjectList myList;
             if (item != null) myList = item;
@@ -53,7 +54,8 @@ namespace org.xpangen.Generator.Data
                                                                      }), genDataBase,
                                            Count == 0
                                                ? null
-                                               : this[defClass.Parent == null ? 0 : defClass.Parent.ClassId])
+                                               : this[defClass.Parent == null ? 0 : defClass.Parent.ClassId],
+                                           defSubClass)
                              {
                                  RefClassId = defClass.RefClassId,
                                  ClassId = defClass.ClassId,
@@ -70,7 +72,8 @@ namespace org.xpangen.Generator.Data
                                                                           }), genDataBase,
                                            Count == 0
                                                ? null
-                                               : this[defClass.Parent == null ? 0 : defClass.Parent.ClassId])
+                                               : this[defClass.Parent == null ? 0 : defClass.Parent.ClassId],
+                                           defSubClass)
                              {
                                  RefClassId = defClass.RefClassId,
                                  ClassId = defClass.ClassId,

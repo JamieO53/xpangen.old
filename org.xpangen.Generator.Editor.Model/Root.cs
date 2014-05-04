@@ -12,28 +12,17 @@ namespace org.xpangen.Generator.Editor.Model
     /// </summary>
     public class Root : GenApplicationBase
     {
-        public Root(GenData genData) : base(genData)
+        public Root(GenData genData) : base()
         {
-        }
+             base.GenData = genData;
+			 base.GenObject = genData.Root;
+		}
 
         public GenNamedApplicationList<GenSettings> GenSettingsList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            GenSettingsList = new GenNamedApplicationList<GenSettings>();
-            var classId = GenDataDef.Classes.IndexOf("GenSettings");
-            var classIdx = GenDataDef.IndexOfSubClass(0, classId);
-            if (classIdx != -1)
-            {
-                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase,
-                                             GenData.Context[0]);
-                list.First();
-                while (!list.Eol)
-                {
-                    GenSettingsList.Add(new GenSettings(GenData) {GenObject = list.GenObject});
-                    list.Next();
-                }
-            }
+            GenSettingsList = new GenNamedApplicationList<GenSettings>(this);
         }
 
         public GenSettings AddGenSettings(string HomeDir)
