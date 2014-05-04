@@ -12,28 +12,17 @@ namespace org.xpangen.Generator.Data.Model.Definition
     /// </summary>
     public class Root : GenApplicationBase
     {
-        public Root(GenData genData) : base(genData)
+        public Root(GenData genData)
         {
-        }
+             GenData = genData;
+			 base.GenObject = genData.Root;
+		}
 
         public GenNamedApplicationList<Class> ClassList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            ClassList = new GenNamedApplicationList<Class>();
-            var classId = GenDataDef.Classes.IndexOf("Class");
-            var classIdx = GenDataDef.IndexOfSubClass(0, classId);
-            if (classIdx != -1)
-            {
-                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase,
-                                             GenData.Context[0]);
-                list.First();
-                while (!list.Eol)
-                {
-                    ClassList.Add(new Class(GenData) {GenObject = list.GenObject});
-                    list.Next();
-                }
-            }
+            ClassList = new GenNamedApplicationList<Class>(this);
         }
 
         public Class AddClass(string Name, string Title)

@@ -12,8 +12,13 @@ namespace org.xpangen.Generator.Data.Model.Definition
     /// </summary>
     public class Class : GenNamedApplicationBase
     {
-        public Class(GenData genData) : base(genData)
+        public Class()
         {
+        }
+
+        public Class(GenData genData) : this()
+        {
+			GenData = genData;
         }
 
         /// <summary>
@@ -49,34 +54,8 @@ namespace org.xpangen.Generator.Data.Model.Definition
 
         protected override void GenObjectSetNotification()
         {
-            SubClassList = new GenNamedApplicationList<SubClass>();
-            var classId = GenDataDef.Classes.IndexOf("SubClass");
-            var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
-            if (classIdx != -1)
-            {
-                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase,
-                                             GenData.Context[ClassId]);
-                list.First();
-                while (!list.Eol)
-                {
-                    SubClassList.Add(new SubClass(GenData) {GenObject = list.GenObject});
-                    list.Next();
-                }
-            }
-            PropertyList = new GenNamedApplicationList<Property>();
-            classId = GenDataDef.Classes.IndexOf("Property");
-            classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
-            if (classIdx != -1)
-            {
-                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase,
-                                             GenData.Context[ClassId]);
-                list.First();
-                while (!list.Eol)
-                {
-                    PropertyList.Add(new Property(GenData) {GenObject = list.GenObject});
-                    list.Next();
-                }
-            }
+            SubClassList = new GenNamedApplicationList<SubClass>(this);
+            PropertyList = new GenNamedApplicationList<Property>(this);
         }
 
         public SubClass AddSubClass(string Name, string Reference)

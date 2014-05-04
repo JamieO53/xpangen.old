@@ -12,8 +12,13 @@ namespace org.xpangen.Generator.Data.Model.Definition
     /// </summary>
     public class Property : GenNamedApplicationBase
     {
-        public Property(GenData genData) : base(genData)
+        public Property()
         {
+        }
+
+        public Property(GenData genData) : this()
+        {
+			GenData = genData;
         }
 
         /// <summary>

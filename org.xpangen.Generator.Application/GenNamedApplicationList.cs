@@ -1,11 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Application
 {
-    public class GenNamedApplicationList<T> : GenApplicationList<T> where T: GenNamedApplicationBase
+    public class GenNamedApplicationList<T> : GenApplicationList<T> where T: GenNamedApplicationBase, new()
     {
+        public GenNamedApplicationList(GenApplicationBase parent)
+        {
+            var className = typeof(T).Name;
+            var classId = parent.GenDataDef.Classes.IndexOf(className);
+            var classIdx = parent.GenDataDef.IndexOfSubClass(parent.ClassId, classId);
+            if (classIdx != -1)
+            {
+                var list = new GenObjectList(parent.GenObject.SubClass[classIdx], parent.GenObject.GenDataBase,
+                                             parent.GenData.Context[parent.ClassId], parent.GenDataDef.Classes[parent.ClassId].SubClasses[classIdx]);
+                list.First();
+                while (!list.Eol)
+                {
+                    Add(new T { GenData = parent.GenData, GenObject = list.GenObject });
+                    list.Next();
+                }
+            }
+        }
+
+        public GenNamedApplicationList()
+        {
+        }
+
         /// <summary>
         /// Find the named object.
         /// </summary>

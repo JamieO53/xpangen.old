@@ -12,8 +12,13 @@ namespace org.xpangen.Generator.Editor.Codes
     /// </summary>
     public class CodesTable : GenNamedApplicationBase
     {
-        public CodesTable(GenData genData) : base(genData)
+        public CodesTable()
         {
+        }
+
+        public CodesTable(GenData genData) : this()
+        {
+			GenData = genData;
         }
 
         /// <summary>
@@ -48,20 +53,7 @@ namespace org.xpangen.Generator.Editor.Codes
 
         protected override void GenObjectSetNotification()
         {
-            CodeList = new GenNamedApplicationList<Code>();
-            var classId = GenDataDef.Classes.IndexOf("Code");
-            var classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
-            if (classIdx != -1)
-            {
-                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase,
-                                             GenData.Context[ClassId]);
-                list.First();
-                while (!list.Eol)
-                {
-                    CodeList.Add(new Code(GenData) {GenObject = list.GenObject});
-                    list.Next();
-                }
-            }
+            CodeList = new GenNamedApplicationList<Code>(this);
         }
 
         public Code AddCode(string Name, string Description, string Value)

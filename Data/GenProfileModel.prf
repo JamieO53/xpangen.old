@@ -12,28 +12,17 @@ namespace `Assembly.Namespace`
     /// </summary>
     public class Root : GenApplicationBase
     {
-        public Root(GenData genData) : base(genData)
+        public Root(GenData genData)
         {
-             base.GenObject = genData.Root;
-       }
+             GenData = genData;
+			 base.GenObject = genData.Root;
+		}
 `[Class':
         public GenNamedApplicationList<`Class.Name`> `Class.Name`List { get; private set; }
 `]`[Class':
         protected override void GenObjectSetNotification()
         {
-            `Class.Name`List = new GenNamedApplicationList<`Class.Name`>();
-            var classId = GenDataDef.Classes.IndexOf("`Class.Name`");
-            var classIdx = GenDataDef.IndexOfSubClass(0, classId);
-            if (classIdx != -1)
-            {
-                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase);
-                list.First();
-                while (!list.Eol)
-                {
-                    `Class.Name`List.Add(new `Class.Name`(GenData) {GenObject = list.GenObject});
-                    list.Next();
-                }
-            }
+            `Class.Name`List = new GenNamedApplicationList<`Class.Name`>(this);
         }
 
         public `Class.Name` Add`Class.Name`(`[Property/:`{string `Property.Name``], `])
@@ -62,8 +51,13 @@ namespace `Assembly.Namespace`
     /// </summary>
     public class `Class.Name` : GenNamedApplicationBase
     {
-        public `Class.Name`(GenData genData) : base(genData)
+        public `Class.Name`()
         {
+        }
+
+        public `Class.Name`(GenData genData) : this()
+        {
+			GenData = genData;
         }
 
 `[Property:        /// <summary>
@@ -84,19 +78,7 @@ namespace `Assembly.Namespace`
 `]`[SubClass':
         protected override void GenObjectSetNotification()
         {
-`]`@MapSet:'var' 'var '`]`[SubClass:            `SubClass.Name`List = new GenNamedApplicationList<`SubClass.Name`>();
-            `@MapGet:'var'`]classId = GenDataDef.Classes.IndexOf("`SubClass.Name`");
-            `@MapGet:'var'`]`@MapSet:'var' ''`]classIdx = GenDataDef.IndexOfSubClass(ClassId, classId);
-            if (classIdx != -1)
-            {
-                var list = new GenObjectList(GenObject.SubClass[classIdx], GenObject.GenDataBase);
-                list.First();
-                while (!list.Eol)
-                {
-                    `SubClass.Name`List.Add(new `SubClass.Name`(GenData) {GenObject = list.GenObject});
-                    list.Next();
-                }
-            }
+`]`[SubClass:            `SubClass.Name`List = new GenNamedApplicationList<`SubClass.Name`>(this);
 `]`[SubClass':        }`]`[SubClass:`%Class.Name=SubClass.Name:
 
         public `Class.Name` Add`Class.Name`(`[Property/:`{string `Property.Name``], `])

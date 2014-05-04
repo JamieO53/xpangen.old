@@ -389,7 +389,7 @@ Child[Reference='child']
         protected static GenData SetUpParentChildReferenceData(string parentClassName, string childClassName, string childDefName, string childDataName, GenData dataChild)
         {
             var def = SetUpParentChildReferenceDef(parentClassName, childClassName, childDefName, dataChild.GenDataDef);
-            var data = new GenData(def);
+            var data = new GenData(def) { DataName = parentClassName };
             SetUpParentOtherChildReferenceData(parentClassName, childClassName, childDataName, dataChild, data);
             return data;
         }
@@ -416,7 +416,7 @@ Child[Reference='child']
         protected static GenData SetUpParentChildData(string parentClassName, string childClassName, string childDataName)
         {
             var def = SetUpParentChildDef(parentClassName, childClassName);
-            var data = new GenData(def);
+            var data = new GenData(def) { DataName = parentClassName};
             CreateGenObject(data, "", parentClassName, parentClassName);
             CreateGenObject(data, parentClassName, childClassName, childDataName);
             //data.First(0);

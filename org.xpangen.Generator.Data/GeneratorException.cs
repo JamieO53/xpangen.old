@@ -4,7 +4,7 @@ namespace org.xpangen.Generator.Data
 {
     public class GeneratorException : ApplicationException
     {
-        public GeneratorException(string message, GenErrorType errorType = GenErrorType.Unspecified)
+        public GeneratorException(string message, GenErrorType errorType = GenErrorType.Unspecified) : base(message)
         {
             GenErrorType = errorType;
         }
