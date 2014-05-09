@@ -20,7 +20,6 @@ namespace org.xpangen.Generator.Profile
             Register(GenFunctionCounters.GetInstance());
             Register(GenFunctionMap.GetInstance());
             Register(GenFunctionGeneral.GetInstance());
-            
         }
         
         /// <summary>
