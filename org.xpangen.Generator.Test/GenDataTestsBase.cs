@@ -513,11 +513,11 @@ Child[Reference='child']
             }
         }
 
-        protected static Root PopulateGenSettings()
+        protected static GeneratorEditor PopulateGenSettings()
         {
             var f = GenData.DataLoader.LoadData("data/GeneratorEditor").AsDef();
             var d = new GenData(f);
-            var model = new Root(d) {GenObject = d.Root};
+            var model = new GeneratorEditor(d) {GenObject = d.Root};
             model.SaveFields();
             var settings = new GenSettings(d) {GenObject = d.CreateObject("", "GenSettings"), HomeDir = "."};
             model.GenSettingsList.Add(settings);
