@@ -31,7 +31,7 @@ namespace org.xpangen.Generator.Profile
         /// <returns>The list of function names.</returns>
         public IEnumerable<string> Implements()
         {
-            return "CutString,Date,File,QuoteString,StringOrName,Time,UnIdentifier".Split(',');
+            return "CutString,Date,File,QuoteString,StringOrName,Time,UnIdentifier,Decapitalize".Split(',');
         }
 
         /// <summary>
@@ -104,6 +104,16 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
+        /// Decapitalize the first character of an identifier.
+        /// </summary>
+        /// <param name="value">The identifier being transformed.</param>
+        /// <returns>The transformed identfier text.</returns>
+        private static string Decapitalize(string value)
+        {
+            return GenUtilities.Decapitalize(value);
+        }
+
+        /// <summary>
         /// Executes the named function with the specified parameters.
         /// </summary>
         /// <param name="function">The name of the function being executed.</param>
@@ -134,6 +144,8 @@ namespace org.xpangen.Generator.Profile
                     return Time();
                 case "unidentifier":
                     return UnIdentifier(name);
+                case "decapitalize":
+                    return Decapitalize(name);
                 default:
                     return "<<<<< General: function " + function + " not implemented >>>>>";
             }
