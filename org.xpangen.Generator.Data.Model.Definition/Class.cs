@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
         {
         }
 
-        public Class(GenData genData) : this()
+        public Class(GenData genData)
         {
 			GenData = genData;
         }
@@ -58,28 +58,28 @@ namespace org.xpangen.Generator.Data.Model.Definition
             PropertyList = new GenNamedApplicationList<Property>(this);
         }
 
-        public SubClass AddSubClass(string Name, string Reference)
+        public SubClass AddSubClass(string name, string reference = "")
         {
             var item = new SubClass(GenData)
                            {
                                GenObject = GenData.CreateObject("Class", "SubClass"),
-                               Name = Name,
-                               Reference = Reference
+                               Name = name,
+                               Reference = reference
                            };
             SubClassList.Add(item);
             return item;
         }
 
 
-        public Property AddProperty(string Name, string Title, string DataType, string Default)
+        public Property AddProperty(string name, string title = "", string dataType = "String", string @default = "")
         {
             var item = new Property(GenData)
                            {
                                GenObject = GenData.CreateObject("Class", "Property"),
-                               Name = Name,
-                               Title = Title,
-                               DataType = DataType,
-                               Default = Default
+                               Name = name,
+                               Title = title,
+                               DataType = dataType,
+                               Default = @default
                            };
             PropertyList.Add(item);
             return item;

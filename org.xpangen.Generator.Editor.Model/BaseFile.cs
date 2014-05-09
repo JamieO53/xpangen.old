@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Editor.Model
         {
         }
 
-        public BaseFile(GenData genData) : this()
+        public BaseFile(GenData genData)
         {
 			GenData = genData;
         }
@@ -98,15 +98,15 @@ namespace org.xpangen.Generator.Editor.Model
             ProfileList = new GenNamedApplicationList<Profile>(this);
         }
 
-        public Profile AddProfile(string Name, string FileName, string FilePath, string Title)
+        public Profile AddProfile(string name, string fileName = "", string filePath = "", string title = "")
         {
             var item = new Profile(GenData)
                            {
                                GenObject = GenData.CreateObject("BaseFile", "Profile"),
-                               Name = Name,
-                               FileName = FileName,
-                               FilePath = FilePath,
-                               Title = Title
+                               Name = name,
+                               FileName = fileName,
+                               FilePath = filePath,
+                               Title = title
                            };
             ProfileList.Add(item);
             return item;

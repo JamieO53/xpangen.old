@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
         {
         }
 
-        public Property(GenData genData) : this()
+        public Property(GenData genData)
         {
 			GenData = genData;
         }

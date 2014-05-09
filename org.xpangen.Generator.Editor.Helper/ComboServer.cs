@@ -10,18 +10,15 @@ namespace org.xpangen.Generator.Editor.Helper
     /// </summary>
     public class ComboServer
     {
-        private readonly Root _codes;
+        private readonly CodesDefinition _codes;
         private readonly Dictionary<string, List<GeComboItem>> _cache;
         
         /// <summary>
         /// Create a new <see cref="ComboServer"/> instance.
         /// </summary>
-        public ComboServer()
+        public ComboServer(GenData data)
         {
-            var data = GenData.DataLoader.LoadData(GenData.DataLoader.LoadData("CodesDefinition").AsDef(),
-                                       "Data/Standard Editor Codes.dcb");
-
-            _codes = new Root(data); // { GenObject = data.Root };
+            _codes = new CodesDefinition(data);
             _cache = new Dictionary<string, List<GeComboItem>>();
         }
 

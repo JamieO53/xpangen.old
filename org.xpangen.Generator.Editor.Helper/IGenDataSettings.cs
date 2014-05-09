@@ -12,7 +12,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <summary>
         /// The Root of the GenData container of the editor's settings.
         /// </summary>
-        Root Model { get; }
+        GeneratorEditor Model { get; }
 
         /// <summary>
         /// The base file information for the selected file group.
