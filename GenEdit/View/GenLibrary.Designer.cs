@@ -46,6 +46,7 @@ namespace GenEdit.View
             this.buttonGenerate = new System.Windows.Forms.ToolStripButton();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxFileGroup = new System.Windows.Forms.ComboBox();
+            this.fileGroupUserControl1 = new GenEdit.View.FileGroupUserControl();
             this.label7 = new System.Windows.Forms.Label();
             this.comboBoxProfile = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -100,6 +101,7 @@ namespace GenEdit.View
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.fileGroupUserControl1);
             this.splitContainer1.Panel2.Controls.Add(this.label7);
             this.splitContainer1.Panel2.Controls.Add(this.comboBoxProfile);
             this.splitContainer1.Panel2.Controls.Add(this.label5);
@@ -200,6 +202,18 @@ namespace GenEdit.View
             this.comboBoxFileGroup.Size = new System.Drawing.Size(252, 21);
             this.comboBoxFileGroup.TabIndex = 0;
             this.comboBoxFileGroup.SelectedValueChanged += new System.EventHandler(this.comboBoxFileGroup_SelectedValueChanged);
+            // 
+            // fileGroupUserControl1
+            // 
+            this.fileGroupUserControl1.AutoSize = true;
+            this.fileGroupUserControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.fileGroupUserControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.fileGroupUserControl1.Location = new System.Drawing.Point(0, 219);
+            this.fileGroupUserControl1.Name = "fileGroupUserControl1";
+            this.fileGroupUserControl1.Profile = null;
+            this.fileGroupUserControl1.Size = new System.Drawing.Size(303, 220);
+            this.fileGroupUserControl1.TabIndex = 2;
+            this.fileGroupUserControl1.ViewModel = null;
             // 
             // label7
             // 
@@ -329,5 +343,6 @@ namespace GenEdit.View
         private ToolStripButton buttonClose;
         private ToolStripButton buttonGenerate;
         private SaveFileDialog saveGeneratedFileDialog;
+        private FileGroupUserControl fileGroupUserControl1;
     }
 }

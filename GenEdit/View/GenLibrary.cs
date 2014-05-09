@@ -22,6 +22,7 @@ namespace GenEdit.View
         public GenLibrary()
         {
             InitializeComponent();
+            fileGroupUserControl1.OnProfileSelected += FileGroupProfileSelected;
         }
 
         public GenDataEditorViewModel GenDataEditorViewModel { get; set; }
@@ -97,7 +98,7 @@ namespace GenEdit.View
 
             EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: false,
                            saveAsEnabled: false, fileGroupEnabled: false, generateEnabled: comboBoxProfile.SelectedIndex != -1);
-
+            fileGroupUserControl1.ViewModel = selected;
             RaiseDataLoaded();
         }
 
@@ -285,6 +286,14 @@ namespace GenEdit.View
             var data = GenDataEditorViewModel.Data;
             buttonGenerate.Enabled = comboBoxProfile.SelectedItem != null;
             data.SetProfile((Profile) comboBoxProfile.SelectedItem);
+            RaiseProfileChanged();
+        }
+
+        private void FileGroupProfileSelected()
+        {
+            var data = GenDataEditorViewModel.Data;
+            buttonGenerate.Enabled = fileGroupUserControl1.Profile != null;
+            data.SetProfile(fileGroupUserControl1.Profile);
             RaiseProfileChanged();
         }
     }

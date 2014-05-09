@@ -61,6 +61,12 @@
     <Compile Include="ViewModel\GenObjectFieldViewModel.cs" />
     <Compile Include="ViewModel\GenObjectViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\FileGroupUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\FileGroupUserControl.Designer.cs">
+      <DependentUpon>FileGroupUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\GenDataEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -92,6 +98,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="View\FileGroupUserControl.resx">
+      <DependentUpon>FileGroupUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\GenDataEditor.resx">
       <DependentUpon>GenDataEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -143,6 +152,10 @@
     <None Include="Data\Standard Editor Codes.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Properties\DataSources\GenEdit.ViewModel.ViewModelLocator.datasource" />
+    <None Include="Properties\DataSources\org.xpangen.Generator.Editor.Model.BaseFile.datasource" />
+    <None Include="Properties\DataSources\org.xpangen.Generator.Editor.Model.FileGroup.datasource" />
+    <None Include="Properties\DataSources\org.xpangen.Generator.Editor.Model.Profile.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
