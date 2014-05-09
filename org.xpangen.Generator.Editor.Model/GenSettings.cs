@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Editor.Model
         {
         }
 
-        public GenSettings(GenData genData) : this()
+        public GenSettings(GenData genData)
         {
 			GenData = genData;
         }
@@ -44,33 +44,33 @@ namespace org.xpangen.Generator.Editor.Model
             BaseFileList = new GenNamedApplicationList<BaseFile>(this);
         }
 
-        public FileGroup AddFileGroup(string Name, string FileName, string FilePath, string BaseFileName, string Generated, string Profile)
+        public FileGroup AddFileGroup(string name, string fileName = "", string filePath = "", string baseFileName = "", string generated = "", string profile = "")
         {
             var item = new FileGroup(GenData)
                            {
                                GenObject = GenData.CreateObject("GenSettings", "FileGroup"),
-                               Name = Name,
-                               FileName = FileName,
-                               FilePath = FilePath,
-                               BaseFileName = BaseFileName,
-                               Generated = Generated,
-                               Profile = Profile
+                               Name = name,
+                               FileName = fileName,
+                               FilePath = filePath,
+                               BaseFileName = baseFileName,
+                               Generated = generated,
+                               Profile = profile
                            };
             FileGroupList.Add(item);
             return item;
         }
 
 
-        public BaseFile AddBaseFile(string Name, string FileName, string FilePath, string Title, string FileExtension)
+        public BaseFile AddBaseFile(string name, string fileName = "", string filePath = "", string title = "", string fileExtension = "")
         {
             var item = new BaseFile(GenData)
                            {
                                GenObject = GenData.CreateObject("GenSettings", "BaseFile"),
-                               Name = Name,
-                               FileName = FileName,
-                               FilePath = FilePath,
-                               Title = Title,
-                               FileExtension = FileExtension
+                               Name = name,
+                               FileName = fileName,
+                               FilePath = filePath,
+                               Title = title,
+                               FileExtension = fileExtension
                            };
             BaseFileList.Add(item);
             return item;

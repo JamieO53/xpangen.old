@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Editor.Model
         {
         }
 
-        public Profile(GenData genData) : this()
+        public Profile(GenData genData)
         {
 			GenData = genData;
         }

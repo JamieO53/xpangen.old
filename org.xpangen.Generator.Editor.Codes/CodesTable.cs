@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Editor.Codes
         {
         }
 
-        public CodesTable(GenData genData) : this()
+        public CodesTable(GenData genData)
         {
 			GenData = genData;
         }
@@ -56,14 +56,14 @@ namespace org.xpangen.Generator.Editor.Codes
             CodeList = new GenNamedApplicationList<Code>(this);
         }
 
-        public Code AddCode(string Name, string Description, string Value)
+        public Code AddCode(string name, string description = "", string value = "")
         {
             var item = new Code(GenData)
                            {
                                GenObject = GenData.CreateObject("CodesTable", "Code"),
-                               Name = Name,
-                               Description = Description,
-                               Value = Value
+                               Name = name,
+                               Description = description,
+                               Value = value
                            };
             CodeList.Add(item);
             return item;

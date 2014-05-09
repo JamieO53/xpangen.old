@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using System.IO;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Definition;
-using org.xpangen.Generator.Editor.Model;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
-using Root = org.xpangen.Generator.Editor.Model.Root;
+using org.xpangen.Generator.Editor.Model;
+using org.xpangen.Generator.Editor.Codes;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
@@ -89,7 +89,6 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             GenDataStore = new GeGenData();
             Validator = new GeGridDataValidator(this);
-            ComboServer = new ComboServer();
         }
         public void GridKeyPress()
         {
@@ -190,11 +189,42 @@ namespace org.xpangen.Generator.Editor.Helper
             return settings;
         }
 
+        public IGenDataSettings GetDesignTimeSettings()
+        {
+            var r = new GeneratorEditor();
+            var settings = new GeSettings(r);
+            settings.Check();
+            r.GenSettingsList[0].AddFileGroup("Definition", "Definition.dcb", "Data", "Definition");
+            settings.FindFileGroup("Definition");
+            return settings;
+        }
+
+        public ComboServer GetDefaultComboServer()
+        {
+            var data = GenData.DataLoader.LoadData(GenData.DataLoader.LoadData("CodesDefinition").AsDef(),
+                                                   "Data/Standard Editor Codes.dcb");
+            return new ComboServer(data);
+        }
+
+        public ComboServer GetDesignTimeComboServer()
+        {
+            var r = new CodesDefinition();
+            var t = r.AddCodesTable("YesNo", "Select True or False values");
+            t.AddCode("Yes", "Yes", "True");
+            t.AddCode("No", "No", "");
+            t = r.AddCodesTable("DataType", "Select the editor field data type");
+            t.AddCode("String", "String", "String");
+            t.AddCode("Integer", "Integer", "Integer");
+            t.AddCode("Boolean", "Boolean", "Boolean");
+            t.AddCode("Identifier", "Identifier", "Identifier");
+            return new ComboServer(r.GenData);
+        }
+
         protected bool SaveToDisk { get; set; }
 
         public IGenDataSettings LoadSettingsFromData(GenData data)
         {
-            var model = new Root(data) {GenObject = data.Root};
+            var model = new GeneratorEditor(data) {GenObject = data.Root};
             SaveToDisk = false;
             return new GeSettings(model);
         }
@@ -210,7 +240,7 @@ namespace org.xpangen.Generator.Editor.Helper
             SaveSettings();
         }
 
-        private ComboServer ComboServer { get; set; }
+        public ComboServer ComboServer { get; set; }
         /// <summary>
         /// Get values to populate a data editor combo.
         /// </summary>
@@ -240,7 +270,7 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public void SetProfile(Model.Profile profile)
         {
-            Settings.Profile = profile.Name;
+            Settings.Profile = profile != null ? profile.Name : "";
             SetProfile();
         }
     }

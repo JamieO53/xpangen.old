@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Editor.Model
         {
         }
 
-        public FileGroup(GenData genData) : this()
+        public FileGroup(GenData genData)
         {
 			GenData = genData;
         }

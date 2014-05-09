@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
         {
         }
 
-        public SubClass(GenData genData) : this()
+        public SubClass(GenData genData)
         {
 			GenData = genData;
         }

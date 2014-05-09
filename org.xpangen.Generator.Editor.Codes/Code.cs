@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Editor.Codes
         {
         }
 
-        public Code(GenData genData) : this()
+        public Code(GenData genData)
         {
 			GenData = genData;
         }

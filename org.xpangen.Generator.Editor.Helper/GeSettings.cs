@@ -15,13 +15,13 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <summary>
         /// The Root of the GenData container of the editor's settings.
         /// </summary>
-        public Root Model { get; private set; }
+        public GeneratorEditor Model { get; private set; }
 
         /// <summary>
         /// Create a new editor settings object
         /// </summary>
         /// <param name="model"></param>
-        public GeSettings(Root model)
+        public GeSettings(GeneratorEditor model)
         {
             Model = model;
         }
