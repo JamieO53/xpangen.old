@@ -5,7 +5,7 @@
 using System.IO;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Editor.Model;
+using org.xpangen.Generator.Data.Model.Settings;
 
 namespace org.xpangen.Generator.Test
 {
@@ -548,7 +548,7 @@ Child[Reference='child']
                                    FilePath = "Data",
                                    FileExtension = ".dcb"
                                };
-            baseFile.ProfileList.Add(new Editor.Model.Profile(d)
+            baseFile.ProfileList.Add(new Data.Model.Settings.Profile(d)
                                          {
                                              GenObject = d.CreateObject("BaseFile", "Profile"),
                                              Name = "GenProfileModel",

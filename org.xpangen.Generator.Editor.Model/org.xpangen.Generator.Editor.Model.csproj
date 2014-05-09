@@ -35,11 +35,6 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseFile.cs" />
-    <Compile Include="FileGroup.cs" />
-    <Compile Include="GeneratorEditor.cs" />
-    <Compile Include="GenSettings.cs" />
-    <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

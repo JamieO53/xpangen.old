@@ -3,26 +3,25 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
-using org.xpangen.Generator.Data;
 
-namespace org.xpangen.Generator.Data.Model.Definition
+namespace org.xpangen.Generator.Data.Model.Database
 {
     /// <summary>
-    /// Class to SubClass link
+    /// Database schema definition
     /// </summary>
-    public class SubClass : GenNamedApplicationBase
+    public class Schema : GenNamedApplicationBase
     {
-        public SubClass()
+        public Schema()
         {
         }
 
-        public SubClass(GenData genData)
+        public Schema(GenData genData)
         {
 			GenData = genData;
         }
 
         /// <summary>
-        /// Subclass name: refers to a class and is used for hierarchical browsing
+        /// Database schema name
         /// </summary>
         public override string Name
         {
@@ -31,20 +30,6 @@ namespace org.xpangen.Generator.Data.Model.Definition
             {
                 if (Name == value) return;
                 SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
-        /// Location of the subclass
-        /// </summary>
-        public string Reference
-        {
-            get { return AsString("Reference"); }
-            set
-            {
-                if (Reference == value) return;
-                SetString("Reference", value);
                 if (!DelayedSave) SaveFields();
             }
         }

@@ -5,7 +5,7 @@
 using System.IO;
 using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Editor.Model;
+using org.xpangen.Generator.Data.Model.Settings;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
@@ -150,7 +150,7 @@ namespace org.xpangen.Generator.Editor.Helper
                            ? ""
                            : (string.IsNullOrEmpty(p.FilePath) ? "" : p.FilePath.Replace('/', '\\') + "/") + p.FileName;
             }
-            set { FileGroup.Profile = value; }
+            set { if (FileGroup != null) FileGroup.Profile = value; }
         }
 
         /// <summary>

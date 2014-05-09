@@ -3,7 +3,6 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
-using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Data.Model.Definition
 {
@@ -71,7 +70,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
         }
 
 
-        public Property AddProperty(string name, string title = "", string dataType = "String", string @default = "")
+        public Property AddProperty(string name, string title = "", string dataType = "String", string @default = "", string lookupTable = "", string lookupPath = "", string lookupType = "")
         {
             var item = new Property(GenData)
                            {
@@ -79,7 +78,10 @@ namespace org.xpangen.Generator.Data.Model.Definition
                                Name = name,
                                Title = title,
                                DataType = dataType,
-                               Default = @default
+                               Default = @default,
+                               LookupTable = lookupTable,
+                               LookupPath = lookupPath,
+                               LookupType = lookupType
                            };
             PropertyList.Add(item);
             return item;

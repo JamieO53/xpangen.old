@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using org.xpangen.Generator.Editor.Model;
 
 namespace GenEdit.View
 {

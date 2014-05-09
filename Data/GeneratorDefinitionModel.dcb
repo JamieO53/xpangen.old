@@ -3,13 +3,17 @@ Class=Solution
 Field={Name,Title,FilePath}
 SubClass=Assembly
 Class=Assembly
-Field={Name,Title,Namespace}
+Field={Name,Title,Namespace,Subfolder}
 SubClass=Class[Reference=Definition]
 .
 Solution=Generator[]
-Assembly=Definition[Title='Classes allowing access to generator data for the Definition definition',Namespace='org.xpangen.Generator.Data.Model.Definition']
+Assembly=Definition[Title='Classes allowing access to generator data for the Definition definition',Namespace='org.xpangen.Generator.Data.Model',Subfolder=Definition]
 Class[Reference=Definition]
-Assembly=GeneratorEditor[Title='Classes allowing access to generator data for the editor',Namespace='org.xpangen.Generator.Editor.Model']
+Assembly=Minimal[Title='Classes allowing access to generator data for the Definition definition',Namespace='org.xpangen.Generator.Data.Model',Subfolder=Minimal]
+Class[Reference=Minimal]
+Assembly=GeneratorEditor[Title='Classes allowing access to generator data for the editor',Namespace='org.xpangen.Generator.Data.Model',Subfolder=Settings]
 Class[Reference=GeneratorEditor]
-Assembly=CodesDefinition[Title='Classes allowing access to codes tables',Namespace='org.xpangen.Generator.Editor.Codes']
+Assembly=CodesDefinition[Title='Classes allowing access to codes tables',Namespace='org.xpangen.Generator.Data.Model',Subfolder=Codes]
 Class[Reference=CodesDefinition]
+Assembly=DatabaseDefinition[Title='Classes allowing access to codes tables',Namespace='org.xpangen.Generator.Data.Model',Subfolder=Database]
+Class[Reference=DatabaseDefinition]

@@ -64,9 +64,9 @@
       <Project>{A6C5CC30-C8D2-4C3E-A57F-7F3C603E67FB}</Project>
       <Name>org.xpangen.Generator.Application</Name>
     </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Data.Model.Definition\org.xpangen.Generator.Data.Model.Definition.csproj">
-      <Project>{A07C4F8E-0CC5-4051-93B2-425CAF4E841C}</Project>
-      <Name>org.xpangen.Generator.Data.Model.Definition</Name>
+    <ProjectReference Include="..\org.xpangen.Generator.Data.Model\org.xpangen.Generator.Data.Model.csproj">
+      <Project>{63E5078F-95AB-44B4-9124-6EFF9A48325A}</Project>
+      <Name>org.xpangen.Generator.Data.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\org.xpangen.Generator.Data\org.xpangen.Generator.Data.csproj">
       <Project>{879183A8-0A57-494A-B645-27366F1D912E}</Project>
@@ -75,10 +75,6 @@
     <ProjectReference Include="..\org.xpangen.Generator.Editor.Helper\org.xpangen.Generator.Editor.Helper.csproj">
       <Project>{7E0C3F90-F0E4-418E-91F2-4164C40357EF}</Project>
       <Name>org.xpangen.Generator.Editor.Helper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Editor.Model\org.xpangen.Generator.Editor.Model.csproj">
-      <Project>{E16E083B-933C-499C-8BD2-0BCAFA98FD16}</Project>
-      <Name>org.xpangen.Generator.Editor.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\org.xpangen.Generator.Parameter\org.xpangen.Generator.Parameter.csproj">
       <Project>{CDF47B32-3EE1-4E90-AA0F-FDA5070C71D9}</Project>

@@ -3,9 +3,8 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
-using org.xpangen.Generator.Data;
 
-namespace org.xpangen.Generator.Editor.Codes
+namespace org.xpangen.Generator.Data.Model.Codes
 {
     /// <summary>
     /// A table of codes that belong together
