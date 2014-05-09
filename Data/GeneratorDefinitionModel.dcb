@@ -7,9 +7,9 @@ Field={Name,Title,Namespace}
 SubClass=Class[Reference=Definition]
 .
 Solution=Generator[]
-Assembly=GeneratorDataModelDefinition[Title='Classes allowing access to generator data for the Definition definition',Namespace='org.xpangen.Generator.Data.Model.Definition']
+Assembly=Definition[Title='Classes allowing access to generator data for the Definition definition',Namespace='org.xpangen.Generator.Data.Model.Definition']
 Class[Reference=Definition]
-Assembly=GeneratorEditorModel[Title='Classes allowing access to generator data for the editor',Namespace='org.xpangen.Generator.Editor.Model']
+Assembly=GeneratorEditor[Title='Classes allowing access to generator data for the editor',Namespace='org.xpangen.Generator.Editor.Model']
 Class[Reference=GeneratorEditor]
-Assembly=GeneratorEditorCodes[Title='Classes allowing access to codes tables',Namespace='org.xpangen.Generator.Editor.Codes']
+Assembly=CodesDefinition[Title='Classes allowing access to codes tables',Namespace='org.xpangen.Generator.Editor.Codes']
 Class[Reference=CodesDefinition]

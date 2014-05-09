@@ -25,7 +25,12 @@ namespace GenEdit
         {
             var vm = ViewModelLocator.GenDataEditorViewModel;
             genDataEditor1.SaveEditorChanges();
-            if (!vm.Data.Changed) return;
+            if (!vm.Data.Changed)
+            {
+                genLibrary1.OnDataLoaded = DoNothing;
+                genLibrary1.OnProfileChanged = DoNothing;
+                return;
+            }
 
             var dr = MessageBox.Show("The data has changed. Save before closing?", "GenEdit closing",
                                      MessageBoxButtons.YesNoCancel);
@@ -35,14 +40,19 @@ namespace GenEdit
                     e.Cancel = true;
                     break;
                 case DialogResult.Yes:
+                    genLibrary1.OnDataLoaded = DoNothing;
+                    genLibrary1.OnProfileChanged = DoNothing;
                     genLibrary1.SaveOrCreateFile();
                     break;
                 case DialogResult.No:
+                    genLibrary1.OnDataLoaded = DoNothing;
+                    genLibrary1.OnProfileChanged = DoNothing;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
+        private void DoNothing(){}
     }
 }

@@ -17,16 +17,16 @@ namespace GenEdit.ViewModel
 
         public static bool IsInDesignMode {
             get {
-                var isInDesignMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime || Debugger.IsAttached;
+                var isInDesignMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime; // || Debugger.IsAttached;
 
-                if (!isInDesignMode) {
-                    using (var process = Process.GetCurrentProcess()) {
-                        return process.ProcessName.ToLowerInvariant().Contains("devenv") ||
-                            process.ProcessName.ToLowerInvariant().Contains(".vshost");
-                    }
-                }
+                //if (!isInDesignMode) {
+                //    using (var process = Process.GetCurrentProcess()) {
+                //        return process.ProcessName.ToLowerInvariant().Contains("devenv") ||
+                //            process.ProcessName.ToLowerInvariant().Contains(".vshost");
+                //    }
+                //}
 
-                return true;
+                return isInDesignMode;
             }
         }
 
@@ -38,7 +38,9 @@ namespace GenEdit.ViewModel
         private static GeData GetDefaultGeData()
         {
             var geData = new GeData();
-            geData.Settings = geData.GetDefaultSettings();
+            geData.Settings = IsInDesignMode ? geData.GetDesignTimeSettings() : geData.GetDefaultSettings();
+            geData.ComboServer = IsInDesignMode ? geData.GetDesignTimeComboServer() : geData.GetDefaultComboServer();
+
             geData.Testing = true;
             return geData;
         }

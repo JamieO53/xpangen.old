@@ -1,4 +1,4 @@
-`[Solution:`[Assembly:`@File:`{`Solution.Name`\`Assembly.Namespace`\Root.cs`]`]// This Source Code Form is subject to the terms of the Mozilla Public
+`[Solution:`[Assembly:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Name`.cs`]`]// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -8,15 +8,29 @@ using org.xpangen.Generator.Data;
 namespace `Assembly.Namespace`
 {
     /// <summary>
-    /// Generator Data Root
+    /// `Assembly.Title`
     /// </summary>
-    public class Root : GenApplicationBase
+    public class `Assembly.Name` : GenApplicationBase
     {
-        public Root(GenData genData)
+        public `Assembly.Name`(): this(new GenData(GetDefinition()))
         {
-             GenData = genData;
-			 base.GenObject = genData.Root;
+        }
+
+        public `Assembly.Name`(GenData genData)
+        {
+            GenData = genData;
+            base.GenObject = genData.Root;
 		}
+
+        public static GenDataDef GetDefinition()
+        {
+            var f = new GenDataDef();
+            f.Definition = "`Assembly.Name`";
+`[Class':            f.AddSubClass("", "`Class.Name`");
+`]`[Class:`[SubClass:            f.AddSubClass("`Class.Name`", "`SubClass.Name`");
+`]`]`@Set:`{ClassId`]0`]`[Class:`@Add:`{ClassId`]`]`[Property:            f.Classes[`@Get:`{ClassId`]`]].Properties.Add("`Property.Name`");
+`]`]            return f;
+        }
 `[Class':
         public GenNamedApplicationList<`Class.Name`> `Class.Name`List { get; private set; }
 `]`[Class':
@@ -25,12 +39,12 @@ namespace `Assembly.Namespace`
             `Class.Name`List = new GenNamedApplicationList<`Class.Name`>(this);
         }
 
-        public `Class.Name` Add`Class.Name`(`[Property/:`{string `Property.Name``], `])
+        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?PropertyName='Default':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])
         {
             var item = new `Class.Name`(GenData)
                            {
                                GenObject = GenData.CreateObject("", "`Class.Name`")`[Property:,
-                               `Property.Name` = `Property.Name``]
+                               `Property.Name` = `?PropertyName='Default':@`]`@Decapitalize:`{`Property.Name``]`]`]
                            };
             `Class.Name`List.Add(item);
             return item;
@@ -55,7 +69,7 @@ namespace `Assembly.Namespace`
         {
         }
 
-        public `Class.Name`(GenData genData) : this()
+        public `Class.Name`(GenData genData)
         {
 			GenData = genData;
         }
@@ -81,12 +95,12 @@ namespace `Assembly.Namespace`
 `]`[SubClass:            `SubClass.Name`List = new GenNamedApplicationList<`SubClass.Name`>(this);
 `]`[SubClass':        }`]`[SubClass:`%Class.Name=SubClass.Name:
 
-        public `Class.Name` Add`Class.Name`(`[Property/:`{string `Property.Name``], `])
+        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])
         {
             var item = new `Class.Name`(GenData)
                            {
                                GenObject = GenData.CreateObject("`@MapGet:'ClassName'`]", "`Class.Name`")`[Property:,
-                               `Property.Name` = `Property.Name``]
+                               `Property.Name` = `?Property.Name='Default':@`]`@Decapitalize:`{`Property.Name``]`]`]
                            };
             `Class.Name`List.Add(item);
             return item;
