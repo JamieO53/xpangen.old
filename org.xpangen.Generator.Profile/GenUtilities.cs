@@ -142,5 +142,16 @@ namespace org.xpangen.Generator.Profile
             }
             return s.ToString();
         }
+
+        /// <summary>
+        /// Decapitalize the first character of an identifier.
+        /// </summary>
+        /// <param name="value">The identifier being transformed.</param>
+        /// <returns>The transformed identfier text.</returns>
+        public static string Decapitalize(string value)
+        {
+            if (value == "") return "";
+            return char.ToLower(value[0]) + value.Substring(1);
+        }
     }
 }
