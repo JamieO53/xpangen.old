@@ -475,6 +475,15 @@ namespace org.xpangen.Generator.Test
         }
 
         /// <summary>
+        /// Tests that the function to convert from camel case is created correctly
+        /// </summary>
+        [TestCase(Description = "Generator Function test - Decapitalize")]
+        public void GenFunctionDecapitalize()
+        {
+            ExecuteFunction(GenData, "Decapitalize", "DeCapitalize", "", "deCapitalize");
+        }
+
+        /// <summary>
         /// Tests that the current date function is created correctly
         /// </summary>
         [TestCase(Description = "Generator Function test - Date")]

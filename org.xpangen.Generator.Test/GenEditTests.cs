@@ -6,6 +6,7 @@ using System.IO;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Editor.Helper;
+using org.xpangen.Generator.Editor.Model;
 using org.xpangen.Generator.Parameter;
 
 namespace org.xpangen.Generator.Test
@@ -147,7 +148,20 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(0, data.Settings.GetFileGroups().Count);
             Assert.AreEqual(1, data.Settings.GetBaseFiles().Count);
         }
-        
+
+        /// <summary>
+        /// Tests that an empty settings file is correctly initialized
+        /// </summary>
+        [TestCase(Description = "Tests that design time settings are correctly initialized")]
+        public void DesignTimeSettingsTest()
+        {
+            var d = Data.GetDesignTimeSettings();
+            var data = new GeData();
+            data.Settings = data.GetDesignTimeSettings();
+            Assert.AreEqual(1, data.Settings.GetFileGroups().Count);
+            Assert.AreEqual(1, data.Settings.GetBaseFiles().Count);
+        }
+
         private void LoadData(string filePath)
         {
             Data.GenDataStore.SetData(@"Data\" + filePath);
