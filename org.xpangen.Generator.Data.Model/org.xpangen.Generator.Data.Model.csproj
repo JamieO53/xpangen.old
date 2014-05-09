@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7E0C3F90-F0E4-418E-91F2-4164C40357EF}</ProjectGuid>
+    <ProjectGuid>{63E5078F-95AB-44B4-9124-6EFF9A48325A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>org.xpangen.Generator.Editor.Helper</RootNamespace>
-    <AssemblyName>Generator.Editor.Helper</AssemblyName>
+    <RootNamespace>org.xpangen.Generator.Data.Model</RootNamespace>
+    <AssemblyName>org.xpangen.Generator.Data.Model</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -32,48 +32,51 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ComboServer.cs" />
-    <Compile Include="GeComponent.cs" />
-    <Compile Include="GeData.cs" />
-    <Compile Include="GeGenData.cs" />
-    <Compile Include="GeGridDataValidator.cs" />
-    <Compile Include="GeComboItem.cs" />
-    <Compile Include="GeSettings.cs" />
-    <Compile Include="IGenData.cs" />
-    <Compile Include="IGenDataSettings.cs" />
-    <Compile Include="IGenTreeNavigator.cs" />
-    <Compile Include="IGenValidator.cs" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Codes\Code.cs" />
+    <Compile Include="Codes\CodesDefinition.cs" />
+    <Compile Include="Codes\CodesTable.cs" />
+    <Compile Include="Database\Column.cs" />
+    <Compile Include="Database\Database.cs" />
+    <Compile Include="Database\DatabaseDefinition.cs" />
+    <Compile Include="Database\DataColumn.cs" />
+    <Compile Include="Database\Default.cs" />
+    <Compile Include="Database\ForeignKey.cs" />
+    <Compile Include="Database\ForeignKeyColumn.cs" />
+    <Compile Include="Database\Index.cs" />
+    <Compile Include="Database\KeyColumn.cs" />
+    <Compile Include="Database\Schema.cs" />
+    <Compile Include="Database\Table.cs" />
+    <Compile Include="Definition\Class.cs" />
+    <Compile Include="Definition\Definition.cs" />
+    <Compile Include="Definition\Property.cs" />
+    <Compile Include="Definition\SubClass.cs" />
+    <Compile Include="Minimal\Class.cs" />
+    <Compile Include="Minimal\Minimal.cs" />
+    <Compile Include="Minimal\Property.cs" />
+    <Compile Include="Minimal\SubClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\BaseFile.cs" />
+    <Compile Include="Settings\FileGroup.cs" />
+    <Compile Include="Settings\GeneratorEditor.cs" />
+    <Compile Include="Settings\GenSettings.cs" />
+    <Compile Include="Settings\Profile.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\org.xpangen.Generator.Application\org.xpangen.Generator.Application.csproj">
       <Project>{A6C5CC30-C8D2-4C3E-A57F-7F3C603E67FB}</Project>
       <Name>org.xpangen.Generator.Application</Name>
     </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Data.Model\org.xpangen.Generator.Data.Model.csproj">
-      <Project>{63E5078F-95AB-44B4-9124-6EFF9A48325A}</Project>
-      <Name>org.xpangen.Generator.Data.Model</Name>
-    </ProjectReference>
     <ProjectReference Include="..\org.xpangen.Generator.Data\org.xpangen.Generator.Data.csproj">
       <Project>{879183A8-0A57-494A-B645-27366F1D912E}</Project>
       <Name>org.xpangen.Generator.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Parameter\org.xpangen.Generator.Parameter.csproj">
-      <Project>{CDF47B32-3EE1-4E90-AA0F-FDA5070C71D9}</Project>
-      <Name>org.xpangen.Generator.Parameter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Profile.Parser.CompactProfileParser\org.xpangen.Generator.Profile.Parser.CompactProfileParser.csproj">
-      <Project>{63F6122C-817E-4476-A11A-5ECC2AFBCA1E}</Project>
-      <Name>org.xpangen.Generator.Profile.Parser.CompactProfileParser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Profile\org.xpangen.Generator.Profile.csproj">
-      <Project>{BC2435D5-863A-4EC4-AB98-6DD124A04179}</Project>
-      <Name>org.xpangen.Generator.Profile</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

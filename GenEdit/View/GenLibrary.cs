@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using GenEdit.ViewModel;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Editor.Model;
+using org.xpangen.Generator.Data.Model.Settings;
 
 namespace GenEdit.View
 {

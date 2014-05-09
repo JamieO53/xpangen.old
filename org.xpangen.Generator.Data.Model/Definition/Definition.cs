@@ -3,7 +3,6 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
-using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Data.Model.Definition
 {
@@ -37,6 +36,9 @@ namespace org.xpangen.Generator.Data.Model.Definition
             f.Classes[3].Properties.Add("Title");
             f.Classes[3].Properties.Add("DataType");
             f.Classes[3].Properties.Add("Default");
+            f.Classes[3].Properties.Add("LookupTable");
+            f.Classes[3].Properties.Add("LookupPath");
+            f.Classes[3].Properties.Add("LookupType");
             return f;
         }
 

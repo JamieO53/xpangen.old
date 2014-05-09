@@ -1,11 +1,10 @@
-`[Solution:`[Assembly:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Name`.cs`]`]// This Source Code Form is subject to the terms of the Mozilla Public
+`[Solution:`[Assembly:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Assembly.Name`.cs`]`]// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
-using org.xpangen.Generator.Data;
 
-namespace `Assembly.Namespace`
+namespace `Assembly.Namespace`.`Assembly.Subfolder`
 {
     /// <summary>
     /// `Assembly.Title`
@@ -51,14 +50,13 @@ namespace `Assembly.Namespace`
         }
     }
 `]}
-`[Class:`@MapSet:`{ClassName`]`{`Class.Name``]`]`@File:`{`Solution.Name`\`Assembly.Namespace`\`Class.Name`.cs`]`]// This Source Code Form is subject to the terms of the Mozilla Public
+`[Class:`@MapSet:`{ClassName`]`{`Class.Name``]`]`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Class.Name`.cs`]`]// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
-using org.xpangen.Generator.Data;
 
-namespace `Assembly.Namespace`
+namespace `Assembly.Namespace`.`Assembly.Subfolder`
 {
     /// <summary>
     /// `Class.Title`

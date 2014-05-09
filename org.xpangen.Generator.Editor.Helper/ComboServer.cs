@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Editor.Codes;
-using org.xpangen.Generator.Parameter;
+using org.xpangen.Generator.Data.Model.Codes;
 
 namespace org.xpangen.Generator.Editor.Helper
 {

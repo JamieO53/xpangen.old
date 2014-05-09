@@ -3,26 +3,25 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
-using org.xpangen.Generator.Data;
 
-namespace org.xpangen.Generator.Editor.Codes
+namespace org.xpangen.Generator.Data.Model.Settings
 {
     /// <summary>
-    /// The code and its description
+    /// 
     /// </summary>
-    public class Code : GenNamedApplicationBase
+    public class Profile : GenNamedApplicationBase
     {
-        public Code()
+        public Profile()
         {
         }
 
-        public Code(GenData genData)
+        public Profile(GenData genData)
         {
 			GenData = genData;
         }
 
         /// <summary>
-        /// The name of the code
+        /// The profile name
         /// </summary>
         public override string Name
         {
@@ -36,29 +35,43 @@ namespace org.xpangen.Generator.Editor.Codes
         }
 
         /// <summary>
-        /// The description of the code to be used for dropdowns
+        /// Profile file name
         /// </summary>
-        public string Description
+        public string FileName
         {
-            get { return AsString("Description"); }
+            get { return AsString("FileName"); }
             set
             {
-                if (Description == value) return;
-                SetString("Description", value);
+                if (FileName == value) return;
+                SetString("FileName", value);
                 if (!DelayedSave) SaveFields();
             }
         }
 
         /// <summary>
-        /// The value of the code to be used for dropdowns
+        /// Full path of profile
         /// </summary>
-        public string Value
+        public string FilePath
         {
-            get { return AsString("Value"); }
+            get { return AsString("FilePath"); }
             set
             {
-                if (Value == value) return;
-                SetString("Value", value);
+                if (FilePath == value) return;
+                SetString("FilePath", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+        /// <summary>
+        /// Description of profile
+        /// </summary>
+        public string Title
+        {
+            get { return AsString("Title"); }
+            set
+            {
+                if (Title == value) return;
+                SetString("Title", value);
                 if (!DelayedSave) SaveFields();
             }
         }

@@ -3,7 +3,6 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
-using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Data.Model.Definition
 {
@@ -73,6 +72,48 @@ namespace org.xpangen.Generator.Data.Model.Definition
             {
                 if (Default == value) return;
                 SetString("Default", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+        /// <summary>
+        /// The lookup table used for the property's values
+        /// </summary>
+        public string LookupTable
+        {
+            get { return AsString("LookupTable"); }
+            set
+            {
+                if (LookupTable == value) return;
+                SetString("LookupTable", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+        /// <summary>
+        /// The location of the lookup table
+        /// </summary>
+        public string LookupPath
+        {
+            get { return AsString("LookupPath"); }
+            set
+            {
+                if (LookupPath == value) return;
+                SetString("LookupPath", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+        /// <summary>
+        /// A standard lookup, a lookup to this data or the root of referenced data
+        /// </summary>
+        public string LookupType
+        {
+            get { return AsString("LookupType"); }
+            set
+            {
+                if (LookupType == value) return;
+                SetString("LookupType", value);
                 if (!DelayedSave) SaveFields();
             }
         }

@@ -6,12 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Data.Model.Codes;
 using org.xpangen.Generator.Data.Model.Definition;
+using org.xpangen.Generator.Data.Model.Settings;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
-using org.xpangen.Generator.Editor.Model;
-using org.xpangen.Generator.Editor.Codes;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
@@ -268,7 +268,7 @@ namespace org.xpangen.Generator.Editor.Helper
                 p.Generate(null, d, writer);
         }
 
-        public void SetProfile(Model.Profile profile)
+        public void SetProfile(Data.Model.Settings.Profile profile)
         {
             Settings.Profile = profile != null ? profile.Name : "";
             SetProfile();

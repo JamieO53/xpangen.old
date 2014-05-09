@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Editor.Helper;
-using org.xpangen.Generator.Editor.Model;
 
 namespace GenEdit.ViewModel
 {
