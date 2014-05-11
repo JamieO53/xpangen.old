@@ -1,6 +1,4 @@
-﻿using org.xpangen.Generator.Data.Model.Settings;
-
-namespace GenEdit.View
+namespace GenEdit.UserControls
 {
     partial class FileGroupUserControl
     {
@@ -78,11 +76,11 @@ namespace GenEdit.View
             // 
             // bindingSourceFileGroup
             // 
-            this.bindingSourceFileGroup.DataSource = typeof(FileGroup);
+            this.bindingSourceFileGroup.DataSource = typeof(org.xpangen.Generator.Data.Model.Settings.FileGroup);
             // 
             // bindingSourceProfile
             // 
-            this.bindingSourceProfile.DataSource = typeof(Profile);
+            this.bindingSourceProfile.DataSource = typeof(org.xpangen.Generator.Data.Model.Settings.Profile);
             // 
             // label5
             // 
@@ -110,7 +108,7 @@ namespace GenEdit.View
             // 
             // bindingSourceBaseFile
             // 
-            this.bindingSourceBaseFile.DataSource = typeof(BaseFile);
+            this.bindingSourceBaseFile.DataSource = typeof(org.xpangen.Generator.Data.Model.Settings.BaseFile);
             // 
             // textBoxFilePath
             // 

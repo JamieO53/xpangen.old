@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using GenEdit.Controls;
 using GenEdit.Utilities;
 using GenEdit.ViewModel;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Data.Model.Definition;
 
 namespace GenEdit.View
 {
@@ -58,8 +60,14 @@ namespace GenEdit.View
 
         private void DataNavigatorTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            var nodeData = DataEditorTreeViewBuilder.GetNodeData(DataNavigatorTreeView.SelectedNode);
-            GenDataDataGrid.DataSource = nodeData != null ? nodeData.Fields : null;
+            var selectedItem = DataNavigatorTreeView.SelectedNode;
+            var nodeData = selectedItem != null ? selectedItem.Tag as GenDataViewModelBase : null;
+            if (nodeData != null)
+            {
+                nodeData.EstablishContext();
+                GenDataDataGrid.DataSource = nodeData.Fields;
+            }
+            else GenDataDataGrid.DataSource = null;
             RaiseFocusChanged();
         }
 
@@ -114,8 +122,10 @@ namespace GenEdit.View
                 DataEditorHintLabel.Text = "";
                 return;
             }
-            var data = (GenObjectFieldViewModel) GenDataDataGrid.CurrentRow.DataBoundItem;
+            var data = (FieldViewModelBase) GenDataDataGrid.CurrentRow.DataBoundItem;
             DataEditorHintLabel.Text = data == null ? "" : data.Hint;
+            var valueCell = GenDataDataGrid.CurrentRow.Cells[ValueColumnIndex];
+            GenDataDataGrid.CurrentCell = valueCell;
         }
 
         private void MoveToTopButton_Click(object sender, System.EventArgs e)
@@ -227,13 +237,16 @@ namespace GenEdit.View
                 GenDataEditorViewModel.Data.GenData == null) 
                 return;
 
-            DataEditorTreeViewBuilder = new DataEditorTreeViewBuilder(GenDataEditorViewModel.Data);
+            //DataEditorTreeViewBuilder = new DataEditorTreeViewBuilder(GenDataEditorViewModel.Data);
             var saveCursor = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
             DataNavigatorTreeView.BeginUpdate();
             try
             {
-                DataEditorTreeViewBuilder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, null);
+                DataNavigatorTreeView.Nodes.Add(
+                    new SubClassTreeNode(null, GenDataEditorViewModel.Data.GenData,
+                                         new Definition(GenDataEditorViewModel.Data.DefGenData), 1));
+                //DataEditorTreeViewBuilder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, null);
             }
             finally
             {
@@ -246,7 +259,7 @@ namespace GenEdit.View
             RaiseDataChanged();
         }
 
-        private DataEditorTreeViewBuilder DataEditorTreeViewBuilder { get; set; }
+        //private DataEditorTreeViewBuilder DataEditorTreeViewBuilder { get; set; }
 
         private void SaveItemChangesButton_Click(object sender, EventArgs e)
         {
@@ -300,7 +313,13 @@ namespace GenEdit.View
             if (DataNavigatorTreeView.SelectedNode == null)
                 MessageBox.Show("Select a class before adding a new item", "Generator data error", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
-            DataEditorTreeViewBuilder.CreateNewChildItem(DataNavigatorTreeView);
+            var node = DataNavigatorTreeView.SelectedNode as DataEditorTreeNodeBase;
+            if (node != null)
+            {
+                ClassTreeNode newNode = node.AddNewNode();
+                DataNavigatorTreeView.SelectedNode = newNode;
+            }
+            //DataEditorTreeViewBuilder.CreateNewChildItem(DataNavigatorTreeView);
         }
 
         private void RemoveItemButton_Click(object sender, EventArgs e)

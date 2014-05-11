@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ClassTreeNode.cs" />
+    <Compile Include="Controls\DataEditorTreeNodeBase.cs" />
+    <Compile Include="Controls\SubClassTreeNode.cs" />
     <Compile Include="GenEditMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -54,19 +57,23 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\FileGroupUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\FileGroupUserControl.Designer.cs">
+      <DependentUpon>FileGroupUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\DataEditorTreeViewBuilder.cs" />
     <Compile Include="Utilities\ProfileEditorTreeViewBuilder.cs" />
     <Compile Include="Utilities\TreeViewBuilderBase.cs" />
+    <Compile Include="ViewModel\FieldViewModelBase.cs" />
     <Compile Include="ViewModel\GenDataEditorViewModel.cs" />
+    <Compile Include="ViewModel\GenDataViewModelBase.cs" />
     <Compile Include="ViewModel\GenObjectFieldViewModel.cs" />
     <Compile Include="ViewModel\GenObjectViewModel.cs" />
+    <Compile Include="ViewModel\SubClassFieldViewModel.cs" />
+    <Compile Include="ViewModel\SubClassViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="View\FileGroupUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="View\FileGroupUserControl.Designer.cs">
-      <DependentUpon>FileGroupUserControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\GenDataEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -98,7 +105,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="View\FileGroupUserControl.resx">
+    <EmbeddedResource Include="UserControls\FileGroupUserControl.resx">
       <DependentUpon>FileGroupUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\GenDataEditor.resx">
@@ -274,9 +281,7 @@
     <Content Include="Resources\xpangen.ico" />
     <Content Include="xpangen.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

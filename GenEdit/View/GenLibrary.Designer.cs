@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using GenEdit.UserControls;
 
 namespace GenEdit.View
 {
@@ -45,7 +46,7 @@ namespace GenEdit.View
             this.buttonGenerate = new System.Windows.Forms.ToolStripButton();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxFileGroup = new System.Windows.Forms.ComboBox();
-            this.fileGroupUserControl1 = new GenEdit.View.FileGroupUserControl();
+            this.fileGroupUserControl1 = new FileGroupUserControl();
             this.label7 = new System.Windows.Forms.Label();
             this.comboBoxProfile = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
