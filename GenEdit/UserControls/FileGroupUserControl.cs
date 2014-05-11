@@ -1,11 +1,10 @@
-﻿using System;
-using System.Windows.Forms;
+using System;
 using GenEdit.ViewModel;
 using org.xpangen.Generator.Data.Model.Settings;
 
-namespace GenEdit.View
+namespace GenEdit.UserControls
 {
-    public partial class FileGroupUserControl : UserControl
+    public partial class FileGroupUserControl : System.Windows.Forms.UserControl
     {
         public delegate void ProfileSelected();
 

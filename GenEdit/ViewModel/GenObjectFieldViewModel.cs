@@ -10,42 +10,14 @@ using org.xpangen.Generator.Editor.Helper;
 
 namespace GenEdit.ViewModel
 {
-    public class GenObjectFieldViewModel: BindableObject
+    public class GenObjectFieldViewModel: FieldViewModelBase
     {
-        private readonly string _name;
         private GenAttributes GenAttributes { get; set; }
-        private int PropertyId { get; set; }
-        private Property Property { get; set; }
-        private readonly GenDataEditorViewModel _genDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
-        /// <summary>
-        /// The name of the field being edited.
-        /// </summary>
-        public string Name { get; private set; }
 
-        /// <summary>
-        /// A hint describing the purpose of the field.
-        /// </summary>
-        public string Hint { get; private set; }
-
-        /// <summary>
-        /// The type of data being edited.
-        /// </summary>
-        public string DataType { get; private set; }
-
-        /// <summary>
-        /// The default value for this field when a new object is created.
-        /// </summary>
-        public string Default { get; private set; }
-
-        /// <summary>
-        /// An optional list of values
-        /// </summary>
-        public List<GeComboItem> ComboValues { get; private set; }
-        
         /// <summary>
         /// The value of the field
         /// </summary>
-        public string Value
+        public override string Value
         {
             get { return GenAttributes.AsString(_name); }
             set
@@ -63,23 +35,35 @@ namespace GenEdit.ViewModel
         /// <param name="propertyId">The ID of the property being edited.</param>
         /// <param name="property">The property definition of the field being edited.</param>
         /// <param name="isNew">Is this field in a new object?</param>
-        public GenObjectFieldViewModel(GenAttributes genAttributes, int propertyId, Property property, bool isNew)
+        /// <param name="isReadOnly">Is this field readonly?</param>
+        public GenObjectFieldViewModel(GenAttributes genAttributes, int propertyId, Property property, bool isNew, bool isReadOnly)
         {
             IgnorePropertyValidation = true;
             GenAttributes = genAttributes;
-            PropertyId = propertyId;
-            Property = property;
             _name = GenAttributes.Definition.Properties[propertyId];
             Name = _name;
-            if (property == null) return;
-            
-            Name = property.Name;
-            Hint = property.Title;
-            DataType = property.DataType;
-            Default = property.Default;
-            ComboValues = SetComboValues();
-            if (isNew)
-                GenAttributes.SetString(_name, Default); // Don't raise the Property Raised event
+            if (property != null)
+            {
+                Name = property.Name;
+                Hint = property.Title;
+                DataType = property.DataType;
+                Default = property.Default;
+                ComboValues = SetComboValues();
+                IsReadOnly = isReadOnly;
+                if (isNew)
+                    GenAttributes.SetString(_name, Default); // Don't raise the Property Raised event
+            }
+            else
+            {
+                Name = _name;
+                Hint = "";
+                DataType = "String";
+                Default = "";
+                ComboValues = null;
+                IsReadOnly = true;
+                if (isNew)
+                    GenAttributes.SetString(_name, Default); // Don't raise the Property Raised event
+            }
         }
 
         private List<GeComboItem> SetComboValues()

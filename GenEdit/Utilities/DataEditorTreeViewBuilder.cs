@@ -41,7 +41,8 @@ namespace GenEdit.Utilities
                 Dat.First(classId);
                 while (!Dat.Eol(classId))
                 {
-                    var obj = new GenObjectViewModel(objectList.GenObject, definition, Data.GenData.SaveContext(classId, parentContext));
+                    var obj = new GenObjectViewModel(objectList.GenObject, definition,
+                                                     Data.GenData.SaveContext(classId, parentContext), false);
                     var childItem = ChildItem(obj, classItem);
                     Dat.Next(classId);
                 }
@@ -94,7 +95,7 @@ namespace GenEdit.Utilities
             o.Attributes[0] = "new";
 
             var obj = new GenObjectViewModel(o, Data.FindClassDefinition(o.ClassId),
-                                             Data.GenData.SaveContext(o.ClassId, parentContext));
+                                             Data.GenData.SaveContext(o.ClassId, parentContext), false);
             obj.IsNew = true;
             var childItem = ChildItem(obj, parentClassNode);
             treeView.SelectedNode = childItem;

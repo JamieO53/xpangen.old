@@ -273,5 +273,11 @@ namespace org.xpangen.Generator.Editor.Helper
             Settings.Profile = profile != null ? profile.Name : "";
             SetProfile();
         }
+
+        public bool CheckIfDataExists(string value)
+        {
+            var fileName = Path.GetExtension(value) == "" ? Path.ChangeExtension(value, ".dcb") : value;
+            return File.Exists(fileName) || File.Exists(Path.Combine("Data", fileName));
+        }
     }
 }
