@@ -31,7 +31,7 @@ namespace GenEdit.View
         {
             if (DataNavigatorTreeView.SelectedNode == null) return;
 
-            var node = DataEditorTreeViewBuilder.GetNodeData(DataNavigatorTreeView.SelectedNode);
+            var node = GetNodeData(DataNavigatorTreeView.SelectedNode);
             if (node != null && (node.IsNew && !node.Changed))
             {
                 RemoveNewNode();
@@ -58,6 +58,17 @@ namespace GenEdit.View
 
         }
 
+        public static GenObjectViewModel GetNodeData(object selectedItem)
+        {
+            if (selectedItem == null) return null;
+            var item = (TreeNode)selectedItem;
+            var tag = item.Tag is GenObjectViewModel ? item.Tag : (item.Parent != null ? item.Parent.Tag : null);
+            var nodeData = tag as GenObjectViewModel;
+            if (nodeData != null)
+                nodeData.EstablishContext();
+            return nodeData;
+        }
+
         private void DataNavigatorTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             var selectedItem = DataNavigatorTreeView.SelectedNode;
@@ -73,7 +84,7 @@ namespace GenEdit.View
 
         private void RaiseDataChanged()
         {
-            var nodeData = DataEditorTreeViewBuilder.GetNodeData(DataNavigatorTreeView.SelectedNode);
+            var nodeData = GetNodeData(DataNavigatorTreeView.SelectedNode);
             if (DataNavigatorTreeView.SelectedNode != null && nodeData != null)
                 DataNavigatorTreeView.SelectedNode.Text =
                     nodeData.GenAttributes.AsString("Name");
@@ -150,83 +161,8 @@ namespace GenEdit.View
 
         private void MoveItem(ListMove move)
         {
-            var myNode = DataNavigatorTreeView.SelectedNode;
-            var nodeData = (GenObjectViewModel) myNode.Tag;
-            if (nodeData == null) return;
-            var index = myNode.Parent.Nodes.IndexOf(myNode);
-            var genData = nodeData.SavedContext.GenData;
-            var classId = nodeData.GenAttributes.GenObject.ClassId;
-            switch (move)
-            {
-                case ListMove.ToTop:
-                    MoveToTop(index, myNode);
-                    break;
-                case ListMove.Up:
-                    MoveUp(index, myNode);
-                    break;
-                case ListMove.Down:
-                    MoveDown(index, myNode);
-                    break;
-                case ListMove.ToBottom:
-                    MoveToBottom(index, myNode);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("move");
-            }
-
-            genData.Context[classId].MoveItem(move, index);
-        }
-
-        private void MoveToTop(int index, TreeNode myNode)
-        {
-            var nodes = myNode.Parent.Nodes;
-            if (index <= 0 || index >= nodes.Count) return;
-            DataNavigatorTreeView.BeginUpdate();
-            var node = nodes[index];
-            nodes.RemoveAt(index);
-            nodes.Insert(0, node);
-            DataNavigatorTreeView.SelectedNode = node;
-            DataNavigatorTreeView.EndUpdate();
-            RaiseFocusChanged();
-        }
-
-        private void MoveUp(int index, TreeNode myNode)
-        {
-            var nodes = myNode.Parent.Nodes;
-            if (index <= 0 || index >= nodes.Count) return;
-            DataNavigatorTreeView.BeginUpdate();
-            var node = nodes[index];
-            nodes.RemoveAt(index);
-            nodes.Insert(index - 1, node);
-            DataNavigatorTreeView.SelectedNode = node;
-            DataNavigatorTreeView.EndUpdate();
-            RaiseFocusChanged();
-        }
-
-        private void MoveDown(int index, TreeNode myNode)
-        {
-            var nodes = myNode.Parent.Nodes;
-            if (index < 0 || index >= nodes.Count - 1) return;
-            DataNavigatorTreeView.BeginUpdate();
-            var node = nodes[index];
-            nodes.RemoveAt(index);
-            nodes.Insert(index + 1, node);
-            DataNavigatorTreeView.SelectedNode = node;
-            DataNavigatorTreeView.EndUpdate();
-            RaiseFocusChanged();
-        }
-
-        private void MoveToBottom(int index, TreeNode myNode)
-        {
-            var nodes = myNode.Parent.Nodes;
-            if (index < 0 || index >= nodes.Count - 1) return;
-            DataNavigatorTreeView.BeginUpdate();
-            var node = nodes[index];
-            nodes.RemoveAt(index);
-            nodes.Add(node);
-            DataNavigatorTreeView.SelectedNode = node;
-            DataNavigatorTreeView.EndUpdate();
-            RaiseFocusChanged();
+            var myNode = DataNavigatorTreeView.SelectedNode as ClassTreeNode;
+            if (myNode != null && myNode.MoveItem(move)) RaiseFocusChanged();
         }
 
         public void LoadData()
@@ -237,7 +173,6 @@ namespace GenEdit.View
                 GenDataEditorViewModel.Data.GenData == null) 
                 return;
 
-            //DataEditorTreeViewBuilder = new DataEditorTreeViewBuilder(GenDataEditorViewModel.Data);
             var saveCursor = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
             DataNavigatorTreeView.BeginUpdate();
@@ -246,7 +181,6 @@ namespace GenEdit.View
                 DataNavigatorTreeView.Nodes.Add(
                     new SubClassTreeNode(null, GenDataEditorViewModel.Data.GenData,
                                          new Definition(GenDataEditorViewModel.Data.DefGenData), 1));
-                //DataEditorTreeViewBuilder.CreateSubClassTrees(DataNavigatorTreeView.Nodes, null);
             }
             finally
             {
@@ -259,8 +193,6 @@ namespace GenEdit.View
             RaiseDataChanged();
         }
 
-        //private DataEditorTreeViewBuilder DataEditorTreeViewBuilder { get; set; }
-
         private void SaveItemChangesButton_Click(object sender, EventArgs e)
         {
             if (!SaveEditorChanges()) return;
@@ -269,7 +201,7 @@ namespace GenEdit.View
 
         public bool SaveEditorChanges()
         {
-            var nodeData = DataEditorTreeViewBuilder.GetNodeData(DataNavigatorTreeView.SelectedNode);
+            var nodeData = GetNodeData(DataNavigatorTreeView.SelectedNode);
             if (nodeData == null) return true;
             if (GenDataDataGrid.CurrentCell != null && GenDataDataGrid.CurrentCell.IsInEditMode)
                 GenDataDataGrid.CommitEdit(0);
@@ -281,7 +213,7 @@ namespace GenEdit.View
 
         private void CancelItemChangesButton_Click(object sender, EventArgs e)
         {
-            var nodeData = DataEditorTreeViewBuilder.GetNodeData(DataNavigatorTreeView.SelectedNode);
+            var nodeData = GetNodeData(DataNavigatorTreeView.SelectedNode);
             if (nodeData == null) return;
             if (GenDataDataGrid.CurrentCell.IsInEditMode)
                 GenDataDataGrid.CommitEdit(0);
@@ -302,7 +234,7 @@ namespace GenEdit.View
         private void RemoveNewNode()
         {
             var selectedNode = DataNavigatorTreeView.SelectedNode;
-            var nodeData = DataEditorTreeViewBuilder.GetNodeData(selectedNode);
+            var nodeData = GetNodeData(selectedNode);
             var genObject = nodeData.GenAttributes.GenObject;
             genObject.ParentSubClass.Remove(genObject);
             selectedNode.Parent.Nodes.Remove(selectedNode);
@@ -319,14 +251,13 @@ namespace GenEdit.View
                 ClassTreeNode newNode = node.AddNewNode();
                 DataNavigatorTreeView.SelectedNode = newNode;
             }
-            //DataEditorTreeViewBuilder.CreateNewChildItem(DataNavigatorTreeView);
         }
 
         private void RemoveItemButton_Click(object sender, EventArgs e)
         {
             var selectedNode = DataNavigatorTreeView.SelectedNode;
             var data = GenDataEditorViewModel;
-            var nodeData = DataEditorTreeViewBuilder.GetNodeData(selectedNode);
+            var nodeData = GetNodeData(selectedNode);
             var genObject = nodeData.GenAttributes.GenObject;
             data.Data.GenData.Context[genObject.ClassId].Delete();
             selectedNode.Parent.Nodes.Remove(selectedNode);

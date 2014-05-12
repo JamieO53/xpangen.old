@@ -36,5 +36,11 @@ namespace GenEdit.Controls
         /// </summary>
         /// <returns>The added tree node.</returns>
         public abstract ClassTreeNode AddNewNode();
+
+        /// <summary>
+        /// Make the specified item move.
+        /// </summary>
+        /// <param name="move">The specified move.</param>
+        public abstract bool MoveItem(ListMove move);
     }
 }
