@@ -18,7 +18,9 @@ namespace org.xpangen.Generator.Data
         /// <param name="genObjectListBase"> The underlying generator object list.</param>
         /// <param name="genDataBase">The underlying data container.</param>
         /// <param name="parentList">The parent list.</param>
-        public GenObjectList(IGenObjectListBase genObjectListBase, GenDataBase genDataBase, GenObjectList parentList, GenDataDefSubClass defSubClass)
+        /// <param name="defSubClass">The subclass definition.</param>
+        public GenObjectList(IGenObjectListBase genObjectListBase, GenDataBase genDataBase, GenObjectList parentList,
+                             GenDataDefSubClass defSubClass)
         {
             DefSubClass = defSubClass;
             ParentList = parentList;
@@ -36,6 +38,7 @@ namespace org.xpangen.Generator.Data
             {
                 if (value != null && ClassId != -1)
                 {
+                    if (ParentList.Eol) ParentList.First();
                     if (String.IsNullOrEmpty(Reference))
                     {
                         Assert(value.ClassId == ClassId, "Object list assignment error",
