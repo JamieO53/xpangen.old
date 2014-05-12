@@ -81,5 +81,14 @@ namespace GenEdit.Controls
         {
             return ParentNode.AddNewNode();
         }
+
+        /// <summary>
+        /// Make the specified item move.
+        /// </summary>
+        /// <param name="move">The specified move.</param>
+        public override bool MoveItem(ListMove move)
+        {
+            return ParentNode.MakeMove(this, move);
+        }
     }
 }

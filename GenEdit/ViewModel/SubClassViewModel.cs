@@ -17,7 +17,7 @@ namespace GenEdit.ViewModel
             IsReadOnly = isReadOnly;
             SavedContext = savedContext;
             GenObjectListBase = genObjectListBase;
-            SavedReference = Parent.Reference;
+            SavedReference = Parent != null ? Parent.Reference : "";
         }
 
         public GenDataDefSubClass SubClassDef { get; private set; }

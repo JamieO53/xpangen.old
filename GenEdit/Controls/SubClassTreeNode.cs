@@ -1,4 +1,6 @@
-﻿using GenEdit.ViewModel;
+﻿using System;
+using System.Windows.Forms;
+using GenEdit.ViewModel;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Definition;
 
@@ -87,5 +89,98 @@ namespace GenEdit.Controls
             Nodes.Add(node);
             return node;
         }
+
+        /// <summary>
+        /// Do nothing. Only Class nodes can be moved.
+        /// </summary>
+        /// <param name="move">The specified move.</param>
+        public override bool MoveItem(ListMove move)
+        {
+            return false;
+        }
+        
+        internal bool MakeMove(ClassTreeNode node, ListMove move)
+        {
+            var nodeData = (GenObjectViewModel) node.Tag;
+            if (nodeData == null) return false;
+            var index = Nodes.IndexOf(node);
+            var genData = nodeData.SavedContext.GenData;
+            var classId = nodeData.GenAttributes.GenObject.ClassId;
+            var result = false;
+            switch (move)
+            {
+                case ListMove.ToTop:
+                    result =  MoveToTop(index, node);
+                    break;
+                case ListMove.Up:
+                    result =  MoveUp(index, node);
+                    break;
+                case ListMove.Down:
+                    result =  MoveDown(index, node);
+                    break;
+                case ListMove.ToBottom:
+                    result =  MoveToBottom(index, node);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("move");
+            }
+
+            genData.Context[classId].MoveItem(move, index);
+            TreeView.SelectedNode = node;
+            return result;
+        }
+
+        private bool MoveToTop(int index, TreeNode myNode)
+        {
+            var nodes = myNode.Parent.Nodes;
+            if (index <= 0 || index >= nodes.Count) return false;
+            TreeView.BeginUpdate();
+            var node = nodes[index];
+            nodes.RemoveAt(index);
+            nodes.Insert(0, node);
+            TreeView.SelectedNode = node;
+            TreeView.EndUpdate();
+            return true;
+        }
+
+        private bool MoveUp(int index, TreeNode myNode)
+        {
+            var nodes = myNode.Parent.Nodes;
+            if (index <= 0 || index >= nodes.Count) return false;
+            TreeView.BeginUpdate();
+            var node = nodes[index];
+            nodes.RemoveAt(index);
+            nodes.Insert(index - 1, node);
+            TreeView.SelectedNode = node;
+            TreeView.EndUpdate();
+            return true;
+        }
+
+        private bool MoveDown(int index, TreeNode myNode)
+        {
+            var nodes = myNode.Parent.Nodes;
+            if (index < 0 || index >= nodes.Count - 1) return false;
+            TreeView.BeginUpdate();
+            var node = nodes[index];
+            nodes.RemoveAt(index);
+            nodes.Insert(index + 1, node);
+            TreeView.SelectedNode = node;
+            TreeView.EndUpdate();
+            return true;
+        }
+
+        private bool MoveToBottom(int index, TreeNode myNode)
+        {
+            var nodes = myNode.Parent.Nodes;
+            if (index < 0 || index >= nodes.Count - 1) return false;
+            TreeView.BeginUpdate();
+            var node = nodes[index];
+            nodes.RemoveAt(index);
+            nodes.Add(node);
+            TreeView.SelectedNode = node;
+            TreeView.EndUpdate();
+            return true;
+        }
+
     }
 }
