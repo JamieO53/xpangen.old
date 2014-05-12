@@ -39,6 +39,7 @@ namespace GenEdit.ViewModel
         public virtual void Save()
         {
             Changed = false;
+            IsNew = false;
         }
 
         /// <summary>

@@ -85,7 +85,14 @@ namespace GenEdit.Controls
         /// <returns>The added tree node.</returns>
         public override ClassTreeNode AddNewNode()
         {
+            var parentClassName = ParentNode == null ? "" : ParentNode.ClassDef.Name;
+            var className = SubClassDef.SubClass.Name;
+            var genObject = GenData.CreateObject(parentClassName, className);
+            var idx = genObject.Definition.Properties.IndexOf("Name");
+            if (idx >= 0)
+                genObject.Attributes[idx] = "new";
             var node = new ClassTreeNode(this, GenData, Definition, ClassId);
+            ((GenObjectViewModel) node.Tag).IsNew = true;
             Nodes.Add(node);
             return node;
         }
