@@ -7,7 +7,7 @@ namespace GenEdit.ViewModel
     public abstract class FieldViewModelBase : BindableObject
     {
         protected string _name;
-        protected readonly GenDataEditorViewModel _genDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
+        protected readonly GenDataEditorViewModel genDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
 
         /// <summary>
         /// The name of the field being edited.

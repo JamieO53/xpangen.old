@@ -3,11 +3,12 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.ComponentModel;
 using System.Globalization;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenAttributes
+    public class GenAttributes : BindableObject
     {
         private GenObject _genObject;
         private NameList Fields { get; set; }
@@ -24,10 +25,16 @@ namespace org.xpangen.Generator.Data
                 {
                     ClassId = value.ClassId;
                     GenDataDef = value.GenDataBase.GenDataDef;
+                    value.GenDataBase.PropertyChanged += OnPropertyChanged;
                 }
 
                 GetFields();
             }
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            RaisePropertyChanged(e.PropertyName);
         }
 
         public void GetFields()
@@ -67,6 +74,7 @@ namespace org.xpangen.Generator.Data
 
         protected GenAttributes()
         {
+            IgnorePropertyValidation = true;
             Fields = new NameList();
             Values = new TextList();
         }

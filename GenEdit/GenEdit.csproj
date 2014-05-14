@@ -63,6 +63,9 @@
     <Compile Include="UserControls\FileGroupUserControl.Designer.cs">
       <DependentUpon>FileGroupUserControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\UserControlBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Utilities\ProfileEditorTreeViewBuilder.cs" />
     <Compile Include="Utilities\TreeViewBuilderBase.cs" />
     <Compile Include="ViewModel\FieldViewModelBase.cs" />
@@ -141,6 +144,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Data\GenProfileModel.prf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\GenProfileUserControl.prf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Data\JamInvestDatabaseDefinition.dcb">

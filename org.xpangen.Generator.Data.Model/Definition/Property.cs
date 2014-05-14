@@ -91,15 +91,15 @@ namespace org.xpangen.Generator.Data.Model.Definition
         }
 
         /// <summary>
-        /// The location of the lookup table
+        /// The table on which this table depends
         /// </summary>
-        public string LookupPath
+        public string LookupDependence
         {
-            get { return AsString("LookupPath"); }
+            get { return AsString("LookupDependence"); }
             set
             {
-                if (LookupPath == value) return;
-                SetString("LookupPath", value);
+                if (LookupDependence == value) return;
+                SetString("LookupDependence", value);
                 if (!DelayedSave) SaveFields();
             }
         }

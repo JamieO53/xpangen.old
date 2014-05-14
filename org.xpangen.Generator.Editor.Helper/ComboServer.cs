@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Codes;
@@ -30,13 +31,26 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             if (_cache.ContainsKey(name)) return _cache[name];
 
-            var table = _codes.CodesTableList.Find(name);
+            CodesTable table;
+            if (name.Equals("lookuptables", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var list = new List<GeComboItem>();
+                for (var i = 0; i < _codes.CodesTableList.Count; i++)
+                {
+                    table = _codes.CodesTableList[i];
+                    var item = new GeComboItem(table.Title, table.Name);
+                    list.Add(item);
+                }
+                return list;
+            }
+            
+            table = _codes.CodesTableList.Find(name);
             if (table != null)
             {
                 var list = new List<GeComboItem>();
                 for (var i = 0; i < table.CodeList.Count; i++)
                 {
-                    var item = new GeComboItem(table.CodeList[i].Name, table.CodeList[i].Value);
+                    var item = new GeComboItem(table.CodeList[i].Description, table.CodeList[i].Value);
                     list.Add(item);
                 }
                 _cache.Add(name, list);

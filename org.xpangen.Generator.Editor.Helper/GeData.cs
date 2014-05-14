@@ -25,9 +25,6 @@ namespace org.xpangen.Generator.Editor.Helper
             }
         }
 
-        public bool Created { get; set; }
-        public bool DataChanged { get; set; }
-        public IGenTreeNavigator DataNavigator { get; set; }
         public GenData DefGenData
         {
             get { return GenDataStore.DefGenData; }
@@ -79,8 +76,8 @@ namespace org.xpangen.Generator.Editor.Helper
             }
         }
 
-        public GenSegment Profile { get; set; } 
-        public IGenData GenDataStore { get; set; }
+        public GenSegment Profile { get; private set; } 
+        public IGenData GenDataStore { get; private set; }
         public IGenDataSettings Settings { get; set; }
         public bool Testing { get; set; }
         public IGenValidator Validator { get; set; }

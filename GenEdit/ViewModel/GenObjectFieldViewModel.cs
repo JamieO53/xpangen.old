@@ -48,7 +48,7 @@ namespace GenEdit.ViewModel
                 Hint = property.Title;
                 DataType = property.DataType;
                 Default = property.Default;
-                ComboValues = SetComboValues();
+                ComboValues = SetComboValues(property.LookupType, property.LookupTable, property.LookupDependence);
                 IsReadOnly = isReadOnly;
                 if (isNew)
                     GenAttributes.SetString(_name, Default); // Don't raise the Property Raised event
@@ -66,13 +66,29 @@ namespace GenEdit.ViewModel
             }
         }
 
-        private List<GeComboItem> SetComboValues()
+        private List<GeComboItem> SetComboValues(string lookupType, string lookupTable, string lookupDependence)
         {
-            return DataType.Equals("boolean", StringComparison.InvariantCultureIgnoreCase)
-                       ? _genDataEditorViewModel.Data.GetCodesCombo("YesNo")
-                       : (Name.Equals("datatype", StringComparison.InvariantCultureIgnoreCase)
-                              ? _genDataEditorViewModel.Data.GetCodesCombo("DataType")
-                              : null);
+            return lookupType.Equals("standard", StringComparison.InvariantCultureIgnoreCase)
+                       ? genDataEditorViewModel.Data.GetCodesCombo(lookupTable)
+                       : (lookupType.Equals("lookup", StringComparison.InvariantCultureIgnoreCase)
+                              ? SetComboValuesFromLookup(lookupTable, lookupDependence)
+                              : (lookupType.Equals("reference", StringComparison.InvariantCultureIgnoreCase)
+                                     ? SetComboValuesFromReference(lookupTable, lookupDependence)
+                                     : (DataType.Equals("boolean", StringComparison.InvariantCultureIgnoreCase)
+                                            ? genDataEditorViewModel.Data.GetCodesCombo("YesNo")
+                                            : (Name.Equals("datatype", StringComparison.InvariantCultureIgnoreCase)
+                                                   ? genDataEditorViewModel.Data.GetCodesCombo("DataType")
+                                                   : null))));
+        }
+
+        private static List<GeComboItem> SetComboValuesFromLookup(string lookupPath, string lookupDependence)
+        {
+            return null;  // Not implemented
+        }
+
+        private static List<GeComboItem> SetComboValuesFromReference(string lookupPath, string lookupDependence)
+        {
+            return null;  // Not implemented
         }
     }
 }

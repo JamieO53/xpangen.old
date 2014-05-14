@@ -22,7 +22,7 @@ namespace GenEdit.View
         public GenLibrary()
         {
             InitializeComponent();
-            fileGroupUserControl1.OnProfileSelected += FileGroupProfileSelected;
+            fileGroupUserControl1.ProfileSelected += FileGroupProfileSelected;
         }
 
         public GenDataEditorViewModel GenDataEditorViewModel { get; set; }
@@ -47,19 +47,19 @@ namespace GenEdit.View
 
             var changed = GenDataEditorViewModel.Data.GenDataStore.Changed;
             EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: changed,
-                           saveAsEnabled: true, fileGroupEnabled: false, generateEnabled: comboBoxProfile.SelectedIndex != -1);
+                           saveAsEnabled: true, fileGroupEnabled: false, generateEnabled: ProfileIsSpecified());
         }
-        
+
+        private bool ProfileIsSpecified()
+        {
+            return Selected != null && Selected.Profile != "";
+        }
+
         private void splitContainer1_Panel1_Resize(object sender, EventArgs e)
         {
             var s = sender as Panel;
             var w = s.Width - 25;
             comboBoxFileGroup.Width = w;
-            comboBoxBaseFile.Width = w;
-            comboBoxProfile.Width = w;
-            textBoxFileName.Width = w;
-            textBoxFilePath.Width = w;
-            textBoxGenerated.Width = w;
         }
 
         private void GenLibrary_Load(object sender, EventArgs e)
@@ -73,62 +73,35 @@ namespace GenEdit.View
             
             comboBoxFileGroup.Items.Clear();
             comboBoxFileGroup.DisplayMember = "Name";
-            comboBoxBaseFile.Items.Clear();
-            comboBoxBaseFile.DisplayMember = "Name";
-            comboBoxProfile.DisplayMember = "Name";
-            
             var fileGroups = data.Settings.GetFileGroups();
             for (var i = 0; i < fileGroups.Count; i++)
                 comboBoxFileGroup.Items.Add(fileGroups[i]);
-            var baseFiles = data.Settings.GetBaseFiles();
-            for (var i = 0; i < baseFiles.Count; i++)
-                comboBoxBaseFile.Items.Add(baseFiles[i]);
         }
 
         private void comboBoxFileGroup_SelectedValueChanged(object sender, EventArgs e)
         {
             if (Background) return;
             var selected = comboBoxFileGroup.SelectedItem as FileGroup;
-            if (selected == null) return;
+
+            if (selected == null)
+            {
+                fileGroupUserControl1.ViewModel = null;
+                return;
+            }
             var data = GenDataEditorViewModel.Data;
             
             data.SetFileGroup(selected.Name);
 
-            SetFileGroupFields(selected);
-
             EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: false,
-                           saveAsEnabled: false, fileGroupEnabled: false, generateEnabled: comboBoxProfile.SelectedIndex != -1);
+                           saveAsEnabled: false, fileGroupEnabled: false, generateEnabled: ProfileIsSpecified());
             fileGroupUserControl1.ViewModel = selected;
             RaiseDataLoaded();
-        }
-
-        private void comboBoxBaseFile_SelectedValueChanged(object sender, EventArgs e)
-        {
-            comboBoxProfile.ResetText();
-            comboBoxProfile.Items.Clear();
-            
-            var fileGroup = comboBoxFileGroup.SelectedItem as FileGroup;
-            if (fileGroup == null) return;
-            var selected = comboBoxBaseFile.SelectedItem as BaseFile;
-            if (selected == null) return;
-
-            var n = -1;
-            for (var i = 0; i < selected.ProfileList.Count; i++)
-            {
-                comboBoxProfile.Items.Add(selected.ProfileList[i]);
-                if (fileGroup.Profile == selected.ProfileList[i].Name)
-                    n = i;
-            }
-            if (n != -1 && n != comboBoxProfile.SelectedIndex)
-                comboBoxProfile.SelectedIndex = n;
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
         {
             GenDataEditorViewModel.Data.SetFileGroup("");
             comboBoxFileGroup.SelectedIndex = -1;
-            ClearFileGroupFields();
-
             EnableControls(newEnabled: true, closeEnabled: false, saveEnabled: false,
                            saveAsEnabled: false, fileGroupEnabled: true, generateEnabled: false);
 
@@ -141,8 +114,7 @@ namespace GenEdit.View
             var data = GenDataEditorViewModel.Data;
 
             Selected = data.NewFileGroup();
-
-            SetFileGroupFields(Selected);
+            fileGroupUserControl1.ViewModel = Selected;
 
             EnableControls(newEnabled: false, closeEnabled: false, saveEnabled: true,
                            saveAsEnabled: false, fileGroupEnabled: false, generateEnabled: false);
@@ -166,7 +138,6 @@ namespace GenEdit.View
             if (i != 0)
             {
                 FileGroup selected;
-
                 if (i > 0)
                 {
                     selected = comboBoxFileGroup.SelectedItem as FileGroup;
@@ -189,7 +160,7 @@ namespace GenEdit.View
             }
 
             EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: false,
-                            saveAsEnabled: true, fileGroupEnabled: false, generateEnabled: comboBoxProfile.SelectedIndex != -1);
+                            saveAsEnabled: true, fileGroupEnabled: false, generateEnabled: ProfileIsSpecified());
         }
 
         public int SaveOrCreateFile()
@@ -197,43 +168,21 @@ namespace GenEdit.View
             var i = comboBoxFileGroup.SelectedIndex;
             if (comboBoxFileGroup.SelectedItem as FileGroup == null)
             {
-                var selected = Selected;
-                selected.Name = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
-                selected.FileName = textBoxFileName.Text +
-                                    (Path.GetExtension(textBoxFileName.Text) == "" ? ".dcb" : "");
-                selected.FilePath = textBoxFilePath.Text;
-                selected.BaseFileName = ((BaseFile) comboBoxBaseFile.SelectedItem).Name;
-                selected.Profile = comboBoxProfile.SelectedText;
-                selected.Generated = textBoxGenerated.Text;
-                GenDataEditorViewModel.Data.CreateFile(selected);
+                if (Selected.Name == "")
+                    Selected.Name = Path.ChangeExtension(Selected.FileName, "").Replace(".", "");
+                if (Path.GetExtension(Selected.FileName) == "")
+                    Selected.FileName = Path.ChangeExtension(Selected.FileName, ".dcb");
+                if (Selected.Name == "")
+                {
+                    MessageBox.Show("Specify the file name before saving the file", "Saving a new file");
+                    return i;
+                }
+
+                GenDataEditorViewModel.Data.CreateFile(Selected);
             }
             else
                 GenDataEditorViewModel.Data.SaveFile(comboBoxFileGroup.SelectedItem as FileGroup);
             return i;
-        }
-
-        private void SetFileGroupFields(FileGroup selected)
-        {
-            comboBoxFileGroup.ResetText();
-            comboBoxFileGroup.SelectedItem = selected;
-            textBoxFileName.Text = selected != null ? selected.FileName : "";
-            textBoxFilePath.Text = selected != null ? selected.FilePath : "";
-            textBoxGenerated.Text = selected != null ? selected.Generated : "";
-            var settings = GenDataEditorViewModel.Data.Settings;
-            comboBoxBaseFile.SelectedIndex =
-                selected == null || selected.BaseFileName == ""
-                    ? comboBoxBaseFile.Items.IndexOf(settings.FindBaseFile("Definition"))
-                    : comboBoxBaseFile.Items.IndexOf(settings.FindBaseFile(selected.BaseFileName));
-        }
-
-        private void ClearFileGroupFields()
-        {
-            comboBoxFileGroup.ResetText();
-            comboBoxFileGroup.SelectedItem = null;
-            textBoxFileName.Text = "";
-            textBoxFilePath.Text = "";
-            textBoxGenerated.Text = "";
-            comboBoxBaseFile.SelectedIndex = -1;
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
@@ -265,7 +214,6 @@ namespace GenEdit.View
                                                            .Replace(saveGeneratedFileDialog.InitialDirectory + "\\", "")
                                                            .Replace('\\', '/');
                                 data.SaveFile(data.Settings.FileGroup);
-                                textBoxGenerated.Text = data.Settings.Generated;
                                 break;
                             case DialogResult.Cancel:
                                 done = true;
@@ -281,15 +229,7 @@ namespace GenEdit.View
             }
         }
 
-        private void comboBoxProfile_SelectedValueChanged(object sender, EventArgs e)
-        {
-            var data = GenDataEditorViewModel.Data;
-            buttonGenerate.Enabled = comboBoxProfile.SelectedItem != null;
-            data.SetProfile((Profile) comboBoxProfile.SelectedItem);
-            RaiseProfileChanged();
-        }
-
-        private void FileGroupProfileSelected()
+        private void FileGroupProfileSelected(object sender, EventArgs eventArgs)
         {
             var data = GenDataEditorViewModel.Data;
             buttonGenerate.Enabled = fileGroupUserControl1.Profile != null;

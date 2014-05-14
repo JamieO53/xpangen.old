@@ -57,9 +57,11 @@ namespace GenEdit.Controls
             
             var genDataDef = GenData.GenDataDef;
             var parentClassId = ParentNode == null ? 0 : ParentNode.ClassId;
+            var parentClassName = genDataDef.Classes[parentClassId].Name;
+            var parentClass = definition == null ? null : definition.ClassList.Find(parentClassName);
             var i = genDataDef.IndexOfSubClass(parentClassId, ClassId);
             SubClassDef = genDataDef.Classes[parentClassId].SubClasses[i];
-            Def = parentClassId == 0 || parentClassId > definition.ClassList.Count ? null : definition.ClassList[parentClassId - 1].SubClassList[i];
+            Def = parentClass == null ? null : parentClass.SubClassList[i];
             
             Text = genDataDef.Classes[ClassId].Name +
                    (!string.IsNullOrEmpty(SubClassDef.Reference) ? ":" + GenData.Context[ClassId].Reference : "");
@@ -113,7 +115,7 @@ namespace GenEdit.Controls
             var index = Nodes.IndexOf(node);
             var genData = nodeData.SavedContext.GenData;
             var classId = nodeData.GenAttributes.GenObject.ClassId;
-            var result = false;
+            bool result;
             switch (move)
             {
                 case ListMove.ToTop:
