@@ -1,14 +1,13 @@
 using System;
+using System.ComponentModel;
 using GenEdit.ViewModel;
 using org.xpangen.Generator.Data.Model.Settings;
 
 namespace GenEdit.UserControls
 {
-    public partial class FileGroupUserControl : System.Windows.Forms.UserControl
+    public partial class FileGroupUserControl : UserControlBase
     {
-        public delegate void ProfileSelected();
-
-        public ProfileSelected OnProfileSelected;
+        public EventHandler ProfileSelected;
 
         public Profile Profile { get; set; }
         private FileGroup _viewModel;
@@ -19,36 +18,55 @@ namespace GenEdit.UserControls
             {
                 if (_viewModel != value)
                 {
-                    bindingSourceFileGroup.DataSource = value;
+                    bindingSourceFileGroup.DataSource = value ?? DefaultDataSource;
                     _viewModel = value;
+                    if (value != null)
+                        value.PropertyChanged += ViewModelPropertyChanged;
                 }
             }
+        }
+
+        private void ViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Split('.')[0] == "FileGroup")
+                bindingSourceFileGroup.ResetBindings(false);
         }
 
         public FileGroupUserControl()
         {
             InitializeComponent();
+            DefaultDataSource = bindingSourceFileGroup.DataSource;
             var settings = ViewModelLocator.GenDataEditorViewModel.Data.Settings;
             bindingSourceBaseFile.DataSource = settings.GetBaseFiles();
+            comboBoxBaseFile.SelectedItem = null;
         }
 
-        private void comboBoxBaseFile_SelectedValueChanged(object sender, EventArgs e)
+        private object DefaultDataSource { get; set; }
+
+        private void ComboBoxBaseFileSelectedValueChanged(object sender, EventArgs e)
         {
-            if (comboBoxBaseFile.SelectedItem != null)
-                bindingSourceProfile.DataSource = ((BaseFile) comboBoxBaseFile.SelectedItem).ProfileList;
+            if (ViewModel != null && comboBoxBaseFile.SelectedItem != null)
+            {
+                var profile = ViewModel.Profile;
+                var profileList = ((BaseFile) comboBoxBaseFile.SelectedItem).ProfileList;
+                bindingSourceProfile.DataSource = profileList;
+                comboBoxProfile.SelectedItem = profileList.Find(profile);
+                ViewModel.BaseFileName = ((BaseFile) comboBoxBaseFile.SelectedItem).Name;
+            }
             else bindingSourceProfile.DataSource = null;
         }
+
         private void RaiseProfileSelected()
         {
-            if (OnProfileSelected != null)
-                OnProfileSelected();
+            var handler = ProfileSelected;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
         }
 
-        private void comboBoxProfile_SelectedValueChanged(object sender, EventArgs e)
+        private void ComboBoxProfileSelectedValueChanged(object sender, EventArgs e)
         {
             Profile = (Profile) comboBoxProfile.SelectedItem;
             RaiseProfileSelected();
         }
-
     }
 }

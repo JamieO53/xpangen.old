@@ -11,9 +11,10 @@ Class=Profile
 Field={Name,FileName,FilePath,Title}
 .
 GenSettings[HomeDir='.']
+FileGroup=Definition[FileName='Definition.dcb',FilePath=Data,BaseFileName=Definition]
+FileGroup=GeneratorDefinitionUserControl[FileName='GeneratorDefinitionUserControl.dcb',FilePath=Data,BaseFileName=ProgramDefinition,Profile=GenProfileUserControl]
 FileGroup=GeneratorDefinitionModel[FileName='GeneratorDefinitionModel.dcb',FilePath=Data,BaseFileName=ProgramDefinition,Profile=GenProfileModel]
 FileGroup=GeneratorEditor[FileName='GeneratorEditor.dcb',FilePath=Data,BaseFileName=Definition]
-FileGroup=Definition[FileName='Definition.dcb',FilePath=Data,BaseFileName=Definition]
 FileGroup=ProgramDefinition[FileName='ProgramDefinition.dcb',FilePath=Data,BaseFileName=Definition]
 FileGroup=DatabaseDefinition[FileName='DatabaseDefinition.dcb',FilePath=Data,BaseFileName=Definition]
 FileGroup=Settings[FileName='Settings.dcb',FilePath=Data,BaseFileName=GeneratorEditor]
@@ -24,6 +25,7 @@ BaseFile=Minimal[FileName='Minimal.dcb',FilePath=Data,Title='The simplest defini
 BaseFile=Definition[FileName='Definition.dcb',FilePath=Data,Title='The definition required by the editor',FileExtension='.dcb']
 BaseFile=ProgramDefinition[FileName='ProgramDefinition.dcb',FilePath=Data,Title='Defines generator editor data models',FileExtension='.dcb']
 Profile=GenProfileModel[FileName='GenProfileModel.prf',FilePath=Data]
+Profile=GenProfileUserControl[FileName='GenProfileUserControl.prf',FilePath=Data]
 BaseFile=GeneratorEditor[FileName='GeneratorEditor.dcb',FilePath=Data,Title='Defines generator editor settings data',FileExtension='.dcb']
 BaseFile=DatabaseDefinition[FileName='DatabaseDefinition.dcb',FilePath=Data,Title='Defines generator database definition data',FileExtension='.dcb']
 Profile=DbTableSynonyms[FileName='DbTableSynonyms.prf',FilePath=Data]

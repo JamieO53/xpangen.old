@@ -54,8 +54,7 @@ namespace org.xpangen.Generator.Data
 		/// <param name="propertyName">
 		/// The name of the property to create event args for.
 		/// </param>		
-		public static PropertyChangedEventArgs 
-			GetPropertyChangedEventArgs(string propertyName)
+		public static PropertyChangedEventArgs GetPropertyChangedEventArgs(string propertyName)
 		{
 			if (String.IsNullOrEmpty(propertyName))
 				throw new ArgumentException(

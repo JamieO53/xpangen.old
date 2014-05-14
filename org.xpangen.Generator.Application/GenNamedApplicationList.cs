@@ -20,6 +20,7 @@ namespace org.xpangen.Generator.Application
                     Add(new T { GenData = parent.GenData, GenObject = list.GenObject });
                     list.Next();
                 }
+                parent.Lists.Add(className, this);
             }
         }
 

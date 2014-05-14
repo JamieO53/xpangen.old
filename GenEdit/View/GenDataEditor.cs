@@ -2,10 +2,8 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using GenEdit.Controls;
-using GenEdit.Utilities;
 using GenEdit.ViewModel;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Model.Definition;
 
 namespace GenEdit.View
 {
@@ -27,11 +25,16 @@ namespace GenEdit.View
             InitializeComponent();
         }
 
+        private GenDataViewModelBase NodeData
+        {
+            get { return GetNodeData(DataNavigatorTreeView.SelectedNode); }
+        }
+
         private void DataNavigatorTreeView_BeforeSelect(object sender, TreeViewCancelEventArgs e)
         {
             if (DataNavigatorTreeView.SelectedNode == null) return;
 
-            var node = GetNodeData(DataNavigatorTreeView.SelectedNode);
+            var node = NodeData;
             if (node != null && (node.IsNew && !node.Changed))
             {
                 RemoveNewNode();
@@ -58,21 +61,14 @@ namespace GenEdit.View
 
         }
 
-        public static GenObjectViewModel GetNodeData(object selectedItem)
+        public static GenDataViewModelBase GetNodeData(TreeNode selectedItem)
         {
-            if (selectedItem == null) return null;
-            var item = (TreeNode)selectedItem;
-            var tag = item.Tag is GenObjectViewModel ? item.Tag : (item.Parent != null ? item.Parent.Tag : null);
-            var nodeData = tag as GenObjectViewModel;
-            if (nodeData != null)
-                nodeData.EstablishContext();
-            return nodeData;
+            return GenDataViewModelBase.GetNodeData(selectedItem);
         }
 
         private void DataNavigatorTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            var selectedItem = DataNavigatorTreeView.SelectedNode;
-            var nodeData = selectedItem != null ? selectedItem.Tag as GenDataViewModelBase : null;
+            var nodeData = NodeData;
             if (nodeData != null)
             {
                 nodeData.EstablishContext();
@@ -84,10 +80,10 @@ namespace GenEdit.View
 
         private void RaiseDataChanged()
         {
-            var nodeData = GetNodeData(DataNavigatorTreeView.SelectedNode);
-            if (DataNavigatorTreeView.SelectedNode != null && nodeData != null)
+            var nodeData = NodeData;
+            if (nodeData != null)
                 DataNavigatorTreeView.SelectedNode.Text =
-                    nodeData.GenAttributes.AsString("Name");
+                    nodeData.Name;
             if (OnDataChanged != null)
                 OnDataChanged();
         }
@@ -178,9 +174,7 @@ namespace GenEdit.View
             DataNavigatorTreeView.BeginUpdate();
             try
             {
-                DataNavigatorTreeView.Nodes.Add(
-                    new SubClassTreeNode(null, GenDataEditorViewModel.Data.GenData,
-                                         new Definition(GenDataEditorViewModel.Data.DefGenData), 1));
+                DataNavigatorTreeView.Nodes.Add(CreateRootNode());
             }
             finally
             {
@@ -193,6 +187,12 @@ namespace GenEdit.View
             RaiseDataChanged();
         }
 
+        private SubClassTreeNode CreateRootNode()
+        {
+            var data = GenDataEditorViewModel.Data;
+            return ClassTreeNode.CreateRootNode(data);
+        }
+
         private void SaveItemChangesButton_Click(object sender, EventArgs e)
         {
             if (!SaveEditorChanges()) return;
@@ -201,7 +201,7 @@ namespace GenEdit.View
 
         public bool SaveEditorChanges()
         {
-            var nodeData = GetNodeData(DataNavigatorTreeView.SelectedNode);
+            var nodeData = NodeData;
             if (nodeData == null) return true;
             if (GenDataDataGrid.CurrentCell != null && GenDataDataGrid.CurrentCell.IsInEditMode)
                 GenDataDataGrid.CommitEdit(0);
@@ -213,7 +213,7 @@ namespace GenEdit.View
 
         private void CancelItemChangesButton_Click(object sender, EventArgs e)
         {
-            var nodeData = GetNodeData(DataNavigatorTreeView.SelectedNode);
+            var nodeData = NodeData;
             if (nodeData == null) return;
             if (GenDataDataGrid.CurrentCell.IsInEditMode)
                 GenDataDataGrid.CommitEdit(0);
@@ -234,7 +234,7 @@ namespace GenEdit.View
         private void RemoveNewNode()
         {
             var selectedNode = DataNavigatorTreeView.SelectedNode;
-            var nodeData = GetNodeData(selectedNode);
+            var nodeData = (GenObjectViewModel)GetNodeData(selectedNode);
             var genObject = nodeData.GenAttributes.GenObject;
             genObject.ParentSubClass.Remove(genObject);
             selectedNode.Parent.Nodes.Remove(selectedNode);
@@ -248,7 +248,7 @@ namespace GenEdit.View
             var node = DataNavigatorTreeView.SelectedNode as DataEditorTreeNodeBase;
             if (node != null)
             {
-                ClassTreeNode newNode = node.AddNewNode();
+                var newNode = node.AddNewNode();
                 DataNavigatorTreeView.SelectedNode = newNode;
             }
         }
@@ -257,7 +257,7 @@ namespace GenEdit.View
         {
             var selectedNode = DataNavigatorTreeView.SelectedNode;
             var data = GenDataEditorViewModel;
-            var nodeData = GetNodeData(selectedNode);
+            var nodeData = (GenObjectViewModel)GetNodeData(selectedNode);
             var genObject = nodeData.GenAttributes.GenObject;
             data.Data.GenData.Context[genObject.ClassId].Delete();
             selectedNode.Parent.Nodes.Remove(selectedNode);

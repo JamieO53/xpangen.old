@@ -46,6 +46,8 @@ namespace GenEdit.ViewModel
 
         public GenAttributes GenAttributes { get; private set; }
 
+        public override string Name { get { return GenAttributes.AsString("Name"); } }
+        
         /// <summary>
         /// Saves the object data
         /// </summary>

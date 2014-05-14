@@ -1,5 +1,6 @@
-using System;
 using System.ComponentModel;
+using System.Windows.Forms;
+using GenEdit.Controls;
 using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data;
 
@@ -23,12 +24,7 @@ namespace GenEdit.ViewModel
         /// <summary>
         /// The heading value of the tree node
         /// </summary>
-        public string Name { get { throw new NotImplementedException(); } }
-
-        /// <summary>
-        /// A hint describing the use of the node data
-        /// </summary>
-        public string Hint { get { throw new NotImplementedException(); } }
+        public abstract string Name { get; }
 
         public GenSavedContext SavedContext { get; protected set; }
         public bool IsNew { get; set; }
@@ -62,6 +58,16 @@ namespace GenEdit.ViewModel
         {
             Changed = true;
             RaisePropertyChanged(e.PropertyName);
+        }
+
+        public static GenDataViewModelBase GetNodeData(TreeNode selectedItem)
+        {
+            var node = selectedItem as DataEditorTreeNodeBase;
+            if (node == null) return null;
+            var tag = node.Tag as GenDataViewModelBase;
+            if (tag != null)
+                tag.EstablishContext();
+            return tag;
         }
     }
 }

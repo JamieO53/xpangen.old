@@ -37,7 +37,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
             f.Classes[3].Properties.Add("DataType");
             f.Classes[3].Properties.Add("Default");
             f.Classes[3].Properties.Add("LookupTable");
-            f.Classes[3].Properties.Add("LookupPath");
+            f.Classes[3].Properties.Add("LookupDependence");
             f.Classes[3].Properties.Add("LookupType");
             return f;
         }

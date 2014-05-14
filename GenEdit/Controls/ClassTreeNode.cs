@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using GenEdit.ViewModel;
+﻿using GenEdit.ViewModel;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Definition;
+using org.xpangen.Generator.Editor.Helper;
 
 namespace GenEdit.Controls
 {
@@ -89,6 +86,16 @@ namespace GenEdit.Controls
         public override bool MoveItem(ListMove move)
         {
             return ParentNode.MakeMove(this, move);
+        }
+
+        /// <summary>
+        /// Create the root node of the data explorer tree view.
+        /// </summary>
+        /// <param name="data">The data to be explored.</param>
+        /// <returns>The root node.</returns>
+        public static SubClassTreeNode CreateRootNode(GeData data)
+        {
+            return new SubClassTreeNode(null, data.GenData, new Definition(data.DefGenData), 1);
         }
     }
 }

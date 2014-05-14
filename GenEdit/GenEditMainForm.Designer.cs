@@ -54,17 +54,17 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.genProfileEditor1);
-            this.splitContainer1.Size = new System.Drawing.Size(720, 614);
+            this.splitContainer1.Size = new System.Drawing.Size(726, 614);
             this.splitContainer1.SplitterDistance = 156;
             this.splitContainer1.TabIndex = 0;
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.splitContainer1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(720, 614);
+            this.panel1.Size = new System.Drawing.Size(726, 614);
             this.panel1.TabIndex = 2;
             // 
             // genDataEditor1
@@ -73,7 +73,7 @@
             this.genDataEditor1.GenDataEditorViewModel = null;
             this.genDataEditor1.Location = new System.Drawing.Point(0, 0);
             this.genDataEditor1.Name = "genDataEditor1";
-            this.genDataEditor1.Size = new System.Drawing.Size(720, 156);
+            this.genDataEditor1.Size = new System.Drawing.Size(726, 156);
             this.genDataEditor1.TabIndex = 0;
             // 
             // genProfileEditor1
@@ -82,11 +82,12 @@
             this.genProfileEditor1.GenDataEditorViewModel = null;
             this.genProfileEditor1.Location = new System.Drawing.Point(0, 0);
             this.genProfileEditor1.Name = "genProfileEditor1";
-            this.genProfileEditor1.Size = new System.Drawing.Size(720, 454);
+            this.genProfileEditor1.Size = new System.Drawing.Size(726, 454);
             this.genProfileEditor1.TabIndex = 0;
             // 
             // genLibrary1
             // 
+            this.genLibrary1.Dock = System.Windows.Forms.DockStyle.Right;
             this.genLibrary1.GenDataEditorViewModel = null;
             this.genLibrary1.Location = new System.Drawing.Point(726, 0);
             this.genLibrary1.Name = "genLibrary1";

@@ -26,9 +26,12 @@ namespace GenEdit.ViewModel
 
         public IGenObjectListBase Parent { get; private set; }
 
-        private string SavedName { get; set; }
-
         private string SavedReference { get; set; }
+
+        public override string Name
+        {
+            get { return SubClassDef.SubClass.Name; }
+        }
 
         public override void Cancel()
         {
