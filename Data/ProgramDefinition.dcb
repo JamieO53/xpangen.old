@@ -1,20 +1,22 @@
 Definition=Definition
 Class=Class
-Field=Name
+Field={Name,Title}
 SubClass={SubClass,Property}
 Class=SubClass
 Field={Name,Reference}
 Class=Property
-Field={Name,Title,DataType,Default}
+Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
 .
 Class=Solution[Title='The solution targeted by the generated code']
-SubClass=Assembly
+SubClass=Assembly[]
 Property=Name[Title='The solution name',DataType=String]
 Property=Title[Title='Description of the solution',DataType=String]
 Property=FilePath[Title='The full path of the solution',DataType=String]
 Class=Assembly[Title='The assembly targeted by the generator']
+SubClass=Class[Reference=Definition]
 Property=Name[Title='The assembly name',DataType=String]
 Property=Title[Title='Description of the assembly',DataType=String]
 Property=Namespace[Title='Namespace of the assembly',DataType=String]
 Property=Subfolder[Title='The subfolder of the namespace for the classes']
-SubClass=Class[Reference=Definition]
+Property=ModelLocator[Title='A static class invocation that finds the assembly data',DataType=String]
+Property=ModelLocatorType[Title='The type of the model locator',DataType=String]
