@@ -1,0 +1,11 @@
+Definition=ProgramDefinition
+Class=Solution
+Field={Name,Title,FilePath}
+SubClass=Assembly
+Class=Assembly
+Field={Name,Title,Namespace,Subfolder,ModelLocator,ModelLocatorType}
+SubClass=Class[Reference='Definition']
+.
+Solution=Generator[]
+Assembly=GeneratorEditor[Title='Classes allowing access to generator data for the editor',Namespace=Generator,Subfolder=UserControls,ModelLocator='ViewModelLocator.GenDataEditorViewModel.Data.Settings',ModelLocatorType=IGenDataSettings]
+Class[Reference='GeneratorEditor']
