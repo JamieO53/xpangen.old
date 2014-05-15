@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Collections;
 using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data.Model.Settings;
 
@@ -86,5 +87,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// Check that the minimum structure exists in the settings file.
         /// </summary>
         void Check();
+
+        IList GetDataSource(object context, string className);
     }
 }

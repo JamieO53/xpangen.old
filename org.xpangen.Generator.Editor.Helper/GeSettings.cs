@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Collections;
 using System.IO;
 using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data;
@@ -192,6 +193,26 @@ namespace org.xpangen.Generator.Editor.Helper
                 settings.AddBaseFile("Definition", "Definition.dcb", "Data", "The definition required by the editor",
                                      ".dcb");
             }
+        }
+
+        /// <summary>
+        /// Get the data source.
+        /// </summary>
+        /// <param name="context">The current object, from which related lists can be found.</param>
+        /// <param name="className">The name of the class list being sought.</param>
+        /// <returns>The identified data source.</returns>
+        public IList GetDataSource(object context, string className)
+        {
+            if (className == "BaseFile")
+                return GetBaseFiles();
+            if (!(context is GenApplicationBase))
+                throw new GeneratorException("The selected data item must be a GenApplicationBase but is " + context.GetType().Name);
+            var contextObject = (GenApplicationBase) context;
+            if (contextObject.Lists.ContainsKey(className))
+                return contextObject.Lists[className];
+            if (contextObject.Parent != null)
+                return GetDataSource(contextObject.Parent, className);
+            return null;
         }
 
         /// <summary>

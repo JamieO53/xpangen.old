@@ -1,30 +1,37 @@
-`[Solution:`[Assembly:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Class.Name`UserControl.cs`]`]// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+`[Solution:`[Assembly:`[Class:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Class.Name`UserControl.cs`]`]// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 using System;
 using System.ComponentModel;
-using GenEdit.ViewModel;
+using `Assembly.Namespace`.ViewModel;
+using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data.Model.Settings;
+using org.xpangen.Generator.Editor.Helper;
 
 namespace `Assembly.Namespace`.`Assembly.Subfolder`
 {
-    public partial class `Class.Name`UserControl : System.Windows.Forms.UserControl
+    public partial class `Class.Name`UserControl : UserControlBase
     {
         public EventHandler ProfileSelected;
 
         public Profile Profile { get; set; }
-        private `Class.Name` _viewModel;
-        public `Class.Name` ViewModel
+        private `Class.Name` _`@Decapitalize:`{`Class.Name``]`];
+
+        public `Class.Name` `Class.Name`
         {
-            get { return _viewModel; }
+            private get { return _`@Decapitalize:`{`Class.Name``]`]; }
             set
             {
-                if (_viewModel != value)
+                if (_`@Decapitalize:`{`Class.Name``]`] != value)
                 {
-                    bindingSource`Class.Name`.DataSource = value;
-                    _viewModel = value;
+                    bindingSource`Class.Name`.DataSource = value ?? DefaultDataSource;
+                    _`@Decapitalize:`{`Class.Name``]`] = value;
                     if (value != null)
+                    {
                         value.PropertyChanged += ViewModelPropertyChanged;
+                        ComboBoxBaseFileSelectedValueChanged(this, EventArgs.Empty);
+                    }
                 }
             }
         }
@@ -35,23 +42,34 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
                 bindingSource`Class.Name`.ResetBindings(false);
         }
 
+        private static `Assembly.ModelLocatorType` ViewModel
+        {
+            get { return `Assembly.ModelLocator`; }
+        }
+
         public `Class.Name`UserControl()
         {
             InitializeComponent();
-            var settings = ViewModelLocator.GenDataEditorViewModel.Data.Settings;
-            bindingSourceBaseFile.DataSource = settings.GetBaseFiles();
+            DefaultDataSource = bindingSource`Class.Name`.DataSource;
+            comboBoxBaseFile.DataSource = ViewModel.GetDataSource(`Class.Name`, "BaseFile");
+            comboBoxBaseFile.SelectedItem = null;
         }
+
+        private object DefaultDataSource { get; set; }
 
         private void ComboBoxBaseFileSelectedValueChanged(object sender, EventArgs e)
         {
-            var profile = ViewModel == null ? "" : ViewModel.Profile;
-            if (comboBoxBaseFile.SelectedItem != null)
+            if (`Class.Name` != null && comboBoxBaseFile.SelectedItem != null)
             {
-                var profileList = ((BaseFile) comboBoxBaseFile.SelectedItem).ProfileList;
-                bindingSourceProfile.DataSource = profileList;
+                var profile = `Class.Name`.Profile;
+                var profileList =
+                    (GenNamedApplicationList<Profile>) ViewModel.GetDataSource(comboBoxBaseFile.SelectedItem, "Profile");
+                comboBoxProfile.DataSource = profileList;
                 comboBoxProfile.SelectedItem = profileList.Find(profile);
+                `Class.Name`.BaseFileName = ((BaseFile) comboBoxBaseFile.SelectedItem).Name;
+                ComboBoxProfileSelectedValueChanged(sender, e);
             }
-            else bindingSourceProfile.DataSource = null;
+            else comboBoxProfile.DataSource = null;
         }
 
         private void RaiseProfileSelected()
@@ -66,12 +84,11 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             Profile = (Profile) comboBoxProfile.SelectedItem;
             RaiseProfileSelected();
         }
-
     }
 }
-`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Class.Name`UserControl.Designer.cs`]`]namespace GenEdit.UserControls
+`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Class.Name`UserControl.Designer.cs`]`]namespace `Assembly.Namespace`.`Assembly.Subfolder`
 {
-    partial class FileGroupUserControl
+    partial class `Class.Name`UserControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -102,11 +119,9 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             this.components = new System.ComponentModel.Container();
             this.label7 = new System.Windows.Forms.Label();
             this.comboBoxProfile = new System.Windows.Forms.ComboBox();
-            this.bindingSourceFileGroup = new System.Windows.Forms.BindingSource(this.components);
-            this.bindingSourceProfile = new System.Windows.Forms.BindingSource(this.components);
+            this.bindingSource`Class.Name` = new System.Windows.Forms.BindingSource(this.components);
             this.label5 = new System.Windows.Forms.Label();
             this.comboBoxBaseFile = new System.Windows.Forms.ComboBox();
-            this.bindingSourceBaseFile = new System.Windows.Forms.BindingSource(this.components);
             this.textBoxFilePath = new System.Windows.Forms.TextBox();
             this.textBoxGenerated = new System.Windows.Forms.TextBox();
             this.textBoxFileName = new System.Windows.Forms.TextBox();
@@ -115,9 +130,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceFileGroup)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceProfile)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceBaseFile)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource`Class.Name`)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -134,8 +147,8 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             // 
             this.comboBoxProfile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxProfile.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bindingSourceFileGroup, "Profile", true));
-            this.comboBoxProfile.DataSource = this.bindingSourceProfile;
+            this.comboBoxProfile.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bindingSource`Class.Name`, "Profile", true));
+            this.comboBoxProfile.DataSource = null;
             this.comboBoxProfile.DisplayMember = "Name";
             this.comboBoxProfile.FormattingEnabled = true;
             this.comboBoxProfile.Location = new System.Drawing.Point(6, 157);
@@ -145,9 +158,9 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             this.comboBoxProfile.ValueMember = "Name";
             this.comboBoxProfile.SelectedValueChanged += new System.EventHandler(this.ComboBoxProfileSelectedValueChanged);
             // 
-            // bindingSourceFileGroup
+            // bindingSource`Class.Name`
             // 
-            this.bindingSourceFileGroup.DataSource = typeof(org.xpangen.Generator.Data.Model.Settings.FileGroup);
+            this.bindingSource`Class.Name`.DataSource = typeof(org.xpangen.Generator.Data.Model.Settings.`Class.Name`);
             // 
             // bindingSourceProfile
             // 
@@ -166,7 +179,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             // 
             this.comboBoxBaseFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxBaseFile.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bindingSourceFileGroup, "BaseFileName", true));
+            this.comboBoxBaseFile.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bindingSource`Class.Name`, "BaseFileName", true));
             this.comboBoxBaseFile.DataSource = this.bindingSourceBaseFile;
             this.comboBoxBaseFile.DisplayMember = "Name";
             this.comboBoxBaseFile.FormattingEnabled = true;
@@ -177,15 +190,11 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             this.comboBoxBaseFile.ValueMember = "Name";
             this.comboBoxBaseFile.SelectedValueChanged += new System.EventHandler(this.ComboBoxBaseFileSelectedValueChanged);
             // 
-            // bindingSourceBaseFile
-            // 
-            this.bindingSourceBaseFile.DataSource = typeof(org.xpangen.Generator.Data.Model.Settings.BaseFile);
-            // 
             // textBoxFilePath
             // 
             this.textBoxFilePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxFilePath.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceFileGroup, "FilePath", true));
+            this.textBoxFilePath.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSource`Class.Name`, "FilePath", true));
             this.textBoxFilePath.Location = new System.Drawing.Point(6, 78);
             this.textBoxFilePath.Name = "textBoxFilePath";
             this.textBoxFilePath.Size = new System.Drawing.Size(250, 20);
@@ -195,7 +204,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             // 
             this.textBoxGenerated.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxGenerated.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceFileGroup, "Generated", true));
+            this.textBoxGenerated.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSource`Class.Name`, "Generated", true));
             this.textBoxGenerated.Location = new System.Drawing.Point(6, 197);
             this.textBoxGenerated.Name = "textBoxGenerated";
             this.textBoxGenerated.Size = new System.Drawing.Size(250, 20);
@@ -205,7 +214,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             // 
             this.textBoxFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxFileName.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceFileGroup, "FileName", true));
+            this.textBoxFileName.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSource`Class.Name`, "FileName", true));
             this.textBoxFileName.Location = new System.Drawing.Point(6, 39);
             this.textBoxFileName.Name = "textBoxFileName";
             this.textBoxFileName.Size = new System.Drawing.Size(250, 20);
@@ -258,7 +267,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             this.label1.TabIndex = 0;
             this.label1.Text = "File Group";
             // 
-            // FileGroupUserControl
+            // `Class.Name`UserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -273,9 +282,9 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label3);
-            this.Name = "FileGroupUserControl";
+            this.Name = "`Class.Name`UserControl";
             this.Size = new System.Drawing.Size(259, 225);
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceFileGroup)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource`Class.Name`)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceProfile)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceBaseFile)).EndInit();
             this.panel1.ResumeLayout(false);
@@ -297,7 +306,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.BindingSource bindingSourceFileGroup;
+        private System.Windows.Forms.BindingSource bindingSource`Class.Name`;
         private System.Windows.Forms.BindingSource bindingSourceBaseFile;
         private System.Windows.Forms.BindingSource bindingSourceProfile;
         private System.Windows.Forms.Panel panel1;
@@ -423,7 +432,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="bindingSourceFileGroup.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="bindingSource`Class.Name`.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
   <metadata name="bindingSourceProfile.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -432,4 +441,4 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
   <metadata name="bindingSourceBaseFile.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>200, 17</value>
   </metadata>
-</root>`]`]
+</root>`]`]`]

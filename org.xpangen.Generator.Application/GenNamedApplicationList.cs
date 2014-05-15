@@ -13,11 +13,12 @@ namespace org.xpangen.Generator.Application
             if (classIdx != -1)
             {
                 var list = new GenObjectList(parent.GenObject.SubClass[classIdx], parent.GenObject.GenDataBase,
-                                             parent.GenData.Context[parent.ClassId], parent.GenDataDef.Classes[parent.ClassId].SubClasses[classIdx]);
+                                             parent.GenData.Context[parent.ClassId],
+                                             parent.GenDataDef.Classes[parent.ClassId].SubClasses[classIdx]);
                 list.First();
                 while (!list.Eol)
                 {
-                    Add(new T { GenData = parent.GenData, GenObject = list.GenObject });
+                    Add(new T { GenData = parent.GenData, GenObject = list.GenObject, Parent = parent });
                     list.Next();
                 }
                 parent.Lists.Add(className, this);
