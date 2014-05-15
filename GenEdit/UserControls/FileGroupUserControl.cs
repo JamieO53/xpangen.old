@@ -1,7 +1,13 @@
+// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 using System;
 using System.ComponentModel;
 using GenEdit.ViewModel;
+using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data.Model.Settings;
+using org.xpangen.Generator.Editor.Helper;
 
 namespace GenEdit.UserControls
 {
@@ -10,18 +16,22 @@ namespace GenEdit.UserControls
         public EventHandler ProfileSelected;
 
         public Profile Profile { get; set; }
-        private FileGroup _viewModel;
-        public FileGroup ViewModel
+        private FileGroup _fileGroup;
+
+        public FileGroup FileGroup
         {
-            get { return _viewModel; }
+            private get { return _fileGroup; }
             set
             {
-                if (_viewModel != value)
+                if (_fileGroup != value)
                 {
                     bindingSourceFileGroup.DataSource = value ?? DefaultDataSource;
-                    _viewModel = value;
+                    _fileGroup = value;
                     if (value != null)
+                    {
                         value.PropertyChanged += ViewModelPropertyChanged;
+                        ComboBoxBaseFileSelectedValueChanged(this, EventArgs.Empty);
+                    }
                 }
             }
         }
@@ -32,12 +42,16 @@ namespace GenEdit.UserControls
                 bindingSourceFileGroup.ResetBindings(false);
         }
 
+        private static IGenDataSettings ViewModel
+        {
+            get { return ViewModelLocator.GenDataEditorViewModel.Data.Settings; }
+        }
+
         public FileGroupUserControl()
         {
             InitializeComponent();
             DefaultDataSource = bindingSourceFileGroup.DataSource;
-            var settings = ViewModelLocator.GenDataEditorViewModel.Data.Settings;
-            bindingSourceBaseFile.DataSource = settings.GetBaseFiles();
+            comboBoxBaseFile.DataSource = ViewModel.GetDataSource(FileGroup, "BaseFile");
             comboBoxBaseFile.SelectedItem = null;
         }
 
@@ -45,15 +59,17 @@ namespace GenEdit.UserControls
 
         private void ComboBoxBaseFileSelectedValueChanged(object sender, EventArgs e)
         {
-            if (ViewModel != null && comboBoxBaseFile.SelectedItem != null)
+            if (FileGroup != null && comboBoxBaseFile.SelectedItem != null)
             {
-                var profile = ViewModel.Profile;
-                var profileList = ((BaseFile) comboBoxBaseFile.SelectedItem).ProfileList;
-                bindingSourceProfile.DataSource = profileList;
+                var profile = FileGroup.Profile;
+                var profileList =
+                    (GenNamedApplicationList<Profile>) ViewModel.GetDataSource(comboBoxBaseFile.SelectedItem, "Profile");
+                comboBoxProfile.DataSource = profileList;
                 comboBoxProfile.SelectedItem = profileList.Find(profile);
-                ViewModel.BaseFileName = ((BaseFile) comboBoxBaseFile.SelectedItem).Name;
+                FileGroup.BaseFileName = ((BaseFile) comboBoxBaseFile.SelectedItem).Name;
+                ComboBoxProfileSelectedValueChanged(sender, e);
             }
-            else bindingSourceProfile.DataSource = null;
+            else comboBoxProfile.DataSource = null;
         }
 
         private void RaiseProfileSelected()

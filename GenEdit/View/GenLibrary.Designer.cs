@@ -184,7 +184,7 @@ namespace GenEdit.View
             this.fileGroupUserControl1.Profile = null;
             this.fileGroupUserControl1.Size = new System.Drawing.Size(303, 220);
             this.fileGroupUserControl1.TabIndex = 2;
-            this.fileGroupUserControl1.ViewModel = null;
+            this.fileGroupUserControl1.FileGroup = null;
             // 
             // GenLibrary
             // 

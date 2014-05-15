@@ -2,8 +2,7 @@
 {
     public class GenNamedApplicationBase: GenApplicationBase
     {
-
-        protected GenNamedApplicationBase()
+        public GenNamedApplicationBase()
         {
         }
 

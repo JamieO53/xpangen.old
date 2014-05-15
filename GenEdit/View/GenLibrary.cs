@@ -85,7 +85,7 @@ namespace GenEdit.View
 
             if (selected == null)
             {
-                fileGroupUserControl1.ViewModel = null;
+                fileGroupUserControl1.FileGroup = null;
                 return;
             }
             var data = GenDataEditorViewModel.Data;
@@ -94,7 +94,7 @@ namespace GenEdit.View
 
             EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: false,
                            saveAsEnabled: false, fileGroupEnabled: false, generateEnabled: ProfileIsSpecified());
-            fileGroupUserControl1.ViewModel = selected;
+            fileGroupUserControl1.FileGroup = selected;
             RaiseDataLoaded();
         }
 
@@ -114,7 +114,7 @@ namespace GenEdit.View
             var data = GenDataEditorViewModel.Data;
 
             Selected = data.NewFileGroup();
-            fileGroupUserControl1.ViewModel = Selected;
+            fileGroupUserControl1.FileGroup = Selected;
 
             EnableControls(newEnabled: false, closeEnabled: false, saveEnabled: true,
                            saveAsEnabled: false, fileGroupEnabled: false, generateEnabled: false);

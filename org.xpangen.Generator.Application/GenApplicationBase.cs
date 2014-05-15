@@ -54,5 +54,7 @@ namespace org.xpangen.Generator.Application
         {
             get { return _lists ?? (_lists = new Dictionary<string, IList>()); }
         }
+
+        public GenApplicationBase Parent { get; set; }
     }
 }
