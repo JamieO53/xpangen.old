@@ -3,6 +3,7 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace org.xpangen.Generator.Profile
@@ -152,6 +153,20 @@ namespace org.xpangen.Generator.Profile
         {
             if (value == "") return "";
             return char.ToLower(value[0]) + value.Substring(1);
+        }
+
+        /// <summary>
+        /// Turns an identifier into a list of words. Words are identified by capitals (Camel Case), numerics and underscores or hyphens.
+        /// Words after the first are decapitalized.
+        /// </summary>
+        /// <param name="value">The identifier being transformed.</param>
+        /// <returns>The transformed identfier text.</returns>
+        public static string UnIdentifierLc(string value)
+        {
+            var sa = UnIdentifier(value).Split(' ');
+            for (var i = 1; i <= sa.GetUpperBound(0); i++)
+                sa[i] = Decapitalize(sa[i]);
+            return string.Join(" ", sa);
         }
     }
 }

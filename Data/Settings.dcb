@@ -11,11 +11,11 @@ Class=Profile
 Field={Name,FileName,FilePath,Title}
 .
 GenSettings[HomeDir='.']
-FileGroup=GeneratorDefinitionUserControl[FileName='GeneratorDefinitionUserControl.dcb',FilePath=Data,BaseFileName=ProgramDefinition,Profile=GenProfileUserControl]
+FileGroup=GeneratorEditor[FileName='GeneratorEditor.dcb',FilePath=Data,BaseFileName=Definition]
+FileGroup=GeneratorDefinitionUserControl[FileName='GeneratorDefinitionUserControl.dcb',FilePath=Data,BaseFileName=ProgramDefinition,Profile=GenProfileUserControlDev]
 FileGroup=ProgramDefinition[FileName='ProgramDefinition.dcb',FilePath=Data,BaseFileName=Definition]
 FileGroup=Definition[FileName='Definition.dcb',FilePath=Data,BaseFileName=Definition]
 FileGroup=GeneratorDefinitionModel[FileName='GeneratorDefinitionModel.dcb',FilePath=Data,BaseFileName=ProgramDefinition,Profile=GenProfileModel]
-FileGroup=GeneratorEditor[FileName='GeneratorEditor.dcb',FilePath=Data,BaseFileName=Definition]
 FileGroup=DatabaseDefinition[FileName='DatabaseDefinition.dcb',FilePath=Data,BaseFileName=Definition]
 FileGroup=Settings[FileName='Settings.dcb',FilePath=Data,BaseFileName=GeneratorEditor]
 FileGroup=JamInvestDatabaseDefinition[FileName='JamInvestDatabaseDefinition.dcb',FilePath=Data,BaseFileName=DatabaseDefinition]
@@ -26,6 +26,7 @@ BaseFile=Definition[FileName='Definition.dcb',FilePath=Data,Title='The definitio
 BaseFile=ProgramDefinition[FileName='ProgramDefinition.dcb',FilePath=Data,Title='Defines generator editor data models',FileExtension='.dcb']
 Profile=GenProfileModel[FileName='GenProfileModel.prf',FilePath=Data]
 Profile=GenProfileUserControl[FileName='GenProfileUserControl.prf',FilePath=Data]
+Profile=GenProfileUserControlDev[FileName='GenProfileUserControlDev.prf',FilePath=Data]
 BaseFile=GeneratorEditor[FileName='GeneratorEditor.dcb',FilePath=Data,Title='Defines generator editor settings data',FileExtension='.dcb']
 BaseFile=DatabaseDefinition[FileName='DatabaseDefinition.dcb',FilePath=Data,Title='Defines generator database definition data',FileExtension='.dcb']
 Profile=DbTableSynonyms[FileName='DbTableSynonyms.prf',FilePath=Data]
