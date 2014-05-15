@@ -3,9 +3,9 @@ Class=Solution
 Field={Name,Title,FilePath}
 SubClass=Assembly
 Class=Assembly
-Field={Name,Title,Namespace,Subfolder,ModelLocator,ModelLocatorType}
+Field={Name,Title,Namespace,Subfolder,ModelLocator,ModelLocatorType,BindingNamespace}
 SubClass=Class[Reference='Definition']
 .
 Solution=Generator[]
-Assembly=GeneratorEditor[Title='Classes allowing access to generator data for the editor',Namespace=GenEdit,Subfolder=UserControls,ModelLocator='ViewModelLocator.GenDataEditorViewModel.Data.Settings',ModelLocatorType=IGenDataSettings]
+Assembly=GeneratorEditor[Title='Classes allowing access to generator data for the editor',Namespace=GenEdit,Subfolder=UserControls,ModelLocator='ViewModelLocator.GenDataEditorViewModel.Data.Settings',ModelLocatorType=IGenDataSettings,BindingNamespace='org.xpangen.Generator.Data.Model.Settings']
 Class[Reference='GeneratorEditor']

@@ -178,16 +178,16 @@ namespace GenEdit.UserControls
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panelUcHeader);
-            this.Controls.Add(this.labelProfile);
-            this.Controls.Add(this.comboBoxProfile);
-            this.Controls.Add(this.labelBaseFile);
-            this.Controls.Add(this.comboBoxBaseFile);
-            this.Controls.Add(this.textBoxFilePath);
-            this.Controls.Add(this.textBoxGenerated);
+            this.Controls.Add(this.labelFileName);
             this.Controls.Add(this.textBoxFileName);
             this.Controls.Add(this.labelFilePath);
+            this.Controls.Add(this.textBoxFilePath);
+            this.Controls.Add(this.labelBaseFile);
+            this.Controls.Add(this.comboBoxBaseFile);
+            this.Controls.Add(this.labelProfile);
+            this.Controls.Add(this.comboBoxProfile);
             this.Controls.Add(this.labelGenerated);
-            this.Controls.Add(this.labelFileName);
+            this.Controls.Add(this.textBoxGenerated);
             this.Name = "FileGroupUserControl";
             this.Size = new System.Drawing.Size(259, 225);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceFileGroup)).EndInit();
@@ -200,18 +200,18 @@ namespace GenEdit.UserControls
 
         #endregion
 
-        private System.Windows.Forms.Label labelProfile;
-        private System.Windows.Forms.ComboBox comboBoxProfile;
-        private System.Windows.Forms.Label labelBaseFile;
-        private System.Windows.Forms.ComboBox comboBoxBaseFile;
-        private System.Windows.Forms.TextBox textBoxFilePath;
-        private System.Windows.Forms.TextBox textBoxGenerated;
-        private System.Windows.Forms.TextBox textBoxFileName;
-        private System.Windows.Forms.Label labelFilePath;
-        private System.Windows.Forms.Label labelGenerated;
-        private System.Windows.Forms.Label labelFileName;
-        private System.Windows.Forms.BindingSource bindingSourceFileGroup;
         private System.Windows.Forms.Panel panelUcHeader;
         private System.Windows.Forms.Label labelUcHeader;
+        private System.Windows.Forms.Label labelFileName;
+        private System.Windows.Forms.TextBox textBoxFileName;
+        private System.Windows.Forms.Label labelFilePath;
+        private System.Windows.Forms.TextBox textBoxFilePath;
+        private System.Windows.Forms.Label labelBaseFile;
+        private System.Windows.Forms.ComboBox comboBoxBaseFile;
+        private System.Windows.Forms.Label labelProfile;
+        private System.Windows.Forms.ComboBox comboBoxProfile;
+        private System.Windows.Forms.Label labelGenerated;
+        private System.Windows.Forms.TextBox textBoxGenerated;
+        private System.Windows.Forms.BindingSource bindingSourceFileGroup;
     }
 }

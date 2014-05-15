@@ -1,25 +1,25 @@
 Definition=Definition
 Class=Class
-Field=Name
+Field={Name,Title}
 SubClass={SubClass,Property}
 Class=SubClass
 Field={Name,Reference}
 Class=Property
-Field={Name,Title,DataType,Default}
+Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
 .
 Class=GenSettings[Title='Container for generator settings']
-SubClass=FileGroup
-SubClass=BaseFile
+SubClass=FileGroup[]
+SubClass=BaseFile[]
 Property=HomeDir[Title='The default location of the base files',DataType=String]
 Class=FileGroup[Title='Related group of files for editing a file']
 Property=Name[Title='The file group name',DataType=String]
 Property=FileName[Title='The name of the file being edited',DataType=String]
 Property=FilePath[Title='The full path of the file being edited',DataType=String]
 Property=BaseFileName[Title='The name of the file''s definitions data file',DataType=String,LookupType=Lookup,LookupTable=BaseFile]
-Property=Generated[Title='The file path of the generated file',DataType=String]
 Property=Profile[Title='The file path of the profile used to generate the file''s output',DataType=String,LookupType=Lookup,LookupDependence=BaseFile,LookupTable=Profile]
+Property=GeneratedFile[Title='The file path of the generated file',DataType=String]
 Class=BaseFile[Title='The base files that can be used for editing generator data']
-SubClass=Profile
+SubClass=Profile[]
 Property=Name[Title='The file name of the base file',DataType=String]
 Property=FileName[Title='The base file name',DataType=String]
 Property=FilePath[Title='The full path of the base file',DataType=String]

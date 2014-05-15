@@ -475,6 +475,15 @@ namespace org.xpangen.Generator.Test
         }
 
         /// <summary>
+        /// Tests that the function to convert from camel case with lowercase words is created correctly
+        /// </summary>
+        [TestCase(Description = "Generator Function test - Un-Identifier Lower case")]
+        public void GenFunctionUnIdentifierLc()
+        {
+            ExecuteFunction(GenData, "UnIdentifierLc", "I-am_anIdentifier IAm", "", "I am an identifier i am");
+        }
+
+        /// <summary>
         /// Tests that the function to convert from camel case is created correctly
         /// </summary>
         [TestCase(Description = "Generator Function test - Decapitalize")]
