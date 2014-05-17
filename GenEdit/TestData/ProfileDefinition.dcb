@@ -1,0 +1,15 @@
+Definition=Definition
+Class=Class
+Field={Name,Title}
+SubClass={SubClass,Property}
+Class=SubClass
+Field={Name,Reference}
+Class=Property
+Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
+.
+Class=Definition[Title='The definition of the data file being generated']
+SubClass=Class[Reference=Definition]
+Property=Name[Title='The name of the definition',DataType=Integer]
+Property=Path[Title='The location of the definition',DataType=String]
+Class=ProfileRoot[Title='The root node of the profile']
+Class=Fragment[Title='The root class of all profile fragments']
