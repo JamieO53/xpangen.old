@@ -84,10 +84,11 @@ namespace org.xpangen.Generator.Test
             if (condOut == "") condOut = condIn;
             if (profileLabel == "") profileLabel = condIn;
 
+            var root = new GenProfileFragment(genDataDef);
             const string r = "Condition holds";
             var exp = expected ? r : "";
 
-            var g = new GenCondition(genDataDef, null);
+            var g = new GenCondition(genDataDef, root);
             ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseCondition(g, genDataDef, condIn);
 
             var t = new GenTextFragment(genDataDef, null) {Text = r};
@@ -198,7 +199,8 @@ namespace org.xpangen.Generator.Test
 
         protected static void ExecuteFunction(GenData genData, string functionName, string variableName, string variableValue, string expected)
         {
-            var g = new GenFunction(genData.GenDataDef){FunctionName = functionName};
+            var r = new GenProfileFragment(genData.GenDataDef);
+            var g = new GenFunction(genData.GenDataDef, r) { FunctionName = functionName };
             var b = SetFunctionParameters(genData, g, variableName, variableValue);
             VerifyFragment(genData, g, "GenFunction", FragmentType.Function, functionName,
                            "`@" + functionName + ':' + b + "`]", expected, false, -1);
