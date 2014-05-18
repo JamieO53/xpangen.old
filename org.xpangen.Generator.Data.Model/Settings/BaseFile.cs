@@ -7,7 +7,7 @@ using org.xpangen.Generator.Application;
 namespace org.xpangen.Generator.Data.Model.Settings
 {
     /// <summary>
-    /// 
+    /// The base files that can be used for editing generator data
     /// </summary>
     public class BaseFile : GenNamedApplicationBase
     {

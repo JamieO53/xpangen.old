@@ -89,6 +89,8 @@ namespace GenEdit.Controls
         {
             var parentClassName = ParentNode == null ? "" : ParentNode.ClassDef.Name;
             var className = SubClassDef.SubClass.Name;
+            if (ParentNode != null) ((GenObjectViewModel) ParentNode.Tag).EstablishContext();
+            else GenData.First(0);
             var genObject = GenData.CreateObject(parentClassName, className);
             var idx = genObject.Definition.Properties.IndexOf("Name");
             if (idx >= 0)

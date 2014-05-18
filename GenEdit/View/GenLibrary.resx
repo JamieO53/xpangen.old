@@ -179,17 +179,17 @@
   <data name="buttonClose.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI9SURBVDhPfZPNaxNBGMZfY1JTlB4ULwXLlB6EghCIgl4i
-        5FD8B9Q/QG8eRG8eRNLQQ8WiORSK9aRWGi8RC/Yjph6MEHqwSA/i1iwaiEm6m2y+dpNtPh5nNpsQS+ID
-        D7s7M7/nfWdnl2y5udkw3yK69sTh2Iv5fHrC5zNWXa6tANEVPtcT07QiFEWFmi+gUNCgFYsolUr4FY8j
-        PD6OH8Eg5IUFy9LsLJbHxozXRBdsnpiiqshks8gdKBD3+QIP0jS89HgQvXwRZXkf34L38fXhPZT2JUS9
-        XoSIEjZPTAAHisI7yPMOClYHuVwOy+4T+DLhQOzODOpFFWZJxdbtGWyedeDFMdJtnm+BAxbMqxZ56+Vy
-        GbIs4+3oKKKThI93/TDLCsyKgvgjP3a8hFfHqW7zxMR+e3Clgmq1ij+ZDMLT04iccUKTdrEX8kN+40c1
-        tYuN8048J/pu88QE1A8bhoF6vY74ygre822snXbi0yXCzg1CzONExEW1m0TXbZ5YhUOi7X748PDQel5f
-        WkJkagrvRkbw4ZQba4zhKtEDzp3s4DxALBQh/XCj0bBsmibS6TQSiYTlLD8tzkx20I6YzkFd11Gr1Syg
-        G9BsNtFqtSx3w9rttggQH1lPzODg0epdWADCYkzMx7a325yZ6KAdMVG5v/pRWHSXTCbxO5XC08XFsM31
-        1AsYVF2MSZLEryYC8/OfbeYfWQHD2q/wo/3Jqwfm5gbCQmzYixNa39hsP34WWrXXDtR/f2fuc9wDRPQX
-        dqdUhqiUrU4AAAAASUVORK5CYII=
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI9SURBVDhPfZNPaxNBGMZfY1JTlB4ULwXLlB6EghCIgl4i
+        5FD8AuoH0JsH0ZsHkTT0ULFoDoVie1IrjZeIhbY2DR6MEHqwSA/i1iwaiEm6m2z+7SabJnmc2WxCLIkP
+        POzuzPye952dXbLl5mbDfIfoxjOHYz/m8+kJn89Yc7m2A0TX+FxPTNOKUBQVar6AQkGDViyiVCrhVzyO
+        8Pg4fgSDkBcWLEuzs1geGzPeEF2yeWKKqiKTzSJ3qEDc5ws8SNPwyuNB9OpllOUDfAs+xNfHD1A6kBD1
+        ehEiStg8MQEcKgrvIM87KFgd5HI5LLtP4cuEA7F7M6gXVZglFdt3Z/DxvAMrJ0i3eb4FDlgwr1rkrZfL
+        ZciyjHejo4hOEnbu+2GWFZgVBfEnfux6Ca9PUt3miYn99uBKBdVqFX8yGYSnpxE554Qm7WE/5If81o9q
+        ag9bF514SfTd5okJqB82DAP1eh3x1VV84NtYP+vEpyuE3VuEmMeJiItqt4lu2jyxCodE2/1wo9GwnjeX
+        lhCZmsL7kRFsnHFjnTFcJ3rEudMdnAeIhSKkHz46OrJsmibS6TQSiYTlLD8tzkx20I6YzkFd11Gr1Syg
+        G9BsNtFqtSx3w9rttggQH1lPzODg8epdWADCYkzM78Ribc5MdNCOmKjcX/04LLpLJpP4nUrh+eJi2OZ6
+        6gUMqi7GJEniVxOB+fnPNvOPrIBh7Vf40f7k1QNzcwNhITbsxQltbG61n74IrdlrB+q/vzP3Be4BIvoL
+        caNUgFndbC4AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="buttonGenerate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

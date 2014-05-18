@@ -11,7 +11,6 @@ namespace GenEdit.Utilities
 {
     public class ProfileEditorTreeViewBuilder: TreeViewBuilderBase
     {
-        public bool ShowText { get; set; }
         public ProfileEditorTreeViewBuilder(GeData data) : base(data)
         {
         }
@@ -22,22 +21,7 @@ namespace GenEdit.Utilities
             while (i < container.Body.Count)
             {
                 var fragment = container.Body.Fragment[i];
-                TreeNode node;
-                if (!ShowText && fragment.IsTextFragment && i + 1 < container.Body.Count &&
-                    container.Body.Fragment[i + 1].IsTextFragment)
-                {
-                    var block = new GenBlock(container.GenDataDef, container);
-                    block.Body.Add(fragment);
-
-                    while (i + 1 < container.Body.Count && container.Body.Fragment[i + 1].IsTextFragment)
-                    {
-                        block.Body.Add(container.Body.Fragment[i + 1]);
-                        i++;
-                    }
-                    node = CreateTreeNode((int) FragmentType.Text, "Text", null, block);
-                }
-                else
-                    node = CreateFragmentTree(fragment);
+                var node = CreateFragmentTree(fragment);
                 items.Add(node);
                 i++;
             }

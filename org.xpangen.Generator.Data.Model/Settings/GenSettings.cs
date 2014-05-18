@@ -7,7 +7,7 @@ using org.xpangen.Generator.Application;
 namespace org.xpangen.Generator.Data.Model.Settings
 {
     /// <summary>
-    /// 
+    /// Container for generator settings
     /// </summary>
     public class GenSettings : GenNamedApplicationBase
     {
@@ -43,7 +43,7 @@ namespace org.xpangen.Generator.Data.Model.Settings
             BaseFileList = new GenNamedApplicationList<BaseFile>(this);
         }
 
-        public FileGroup AddFileGroup(string name, string fileName = "", string filePath = "", string baseFileName = "", string generated = "", string profile = "")
+        public FileGroup AddFileGroup(string name, string fileName = "", string filePath = "", string baseFileName = "", string profile = "", string generatedFile = "")
         {
             var item = new FileGroup(GenData)
                            {
@@ -52,8 +52,8 @@ namespace org.xpangen.Generator.Data.Model.Settings
                                FileName = fileName,
                                FilePath = filePath,
                                BaseFileName = baseFileName,
-                               Generated = generated,
-                               Profile = profile
+                               Profile = profile,
+                               GeneratedFile = generatedFile
                            };
             FileGroupList.Add(item);
             return item;

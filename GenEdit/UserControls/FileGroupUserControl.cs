@@ -16,7 +16,7 @@ namespace GenEdit.UserControls
         public EventHandler ProfileSelected;
 
         public Profile Profile { get; set; }
-        private FileGroup _fileGroup;
+        public FileGroup _fileGroup;
 
         public FileGroup FileGroup
         {
@@ -30,7 +30,7 @@ namespace GenEdit.UserControls
                     if (value != null)
                     {
                         value.PropertyChanged += ViewModelPropertyChanged;
-                        ComboBoxBaseFileSelectedValueChanged(this, EventArgs.Empty);
+                        ComboBoxBaseFileNameSelectedValueChanged(this, EventArgs.Empty);
                     }
                 }
             }
@@ -51,22 +51,22 @@ namespace GenEdit.UserControls
         {
             InitializeComponent();
             DefaultDataSource = bindingSourceFileGroup.DataSource;
-            comboBoxBaseFile.DataSource = ViewModel.GetDataSource(FileGroup, "BaseFile");
-            comboBoxBaseFile.SelectedItem = null;
+            comboBoxBaseFileName.DataSource = ViewModel.GetDataSource(FileGroup, "BaseFile");
+            comboBoxBaseFileName.SelectedItem = null;
         }
 
         private object DefaultDataSource { get; set; }
 
-        private void ComboBoxBaseFileSelectedValueChanged(object sender, EventArgs e)
+        private void ComboBoxBaseFileNameSelectedValueChanged(object sender, EventArgs e)
         {
-            if (FileGroup != null && comboBoxBaseFile.SelectedItem != null)
+            if (FileGroup != null && comboBoxBaseFileName.SelectedItem != null)
             {
                 var profile = FileGroup.Profile;
                 var profileList =
-                    (GenNamedApplicationList<Profile>) ViewModel.GetDataSource(comboBoxBaseFile.SelectedItem, "Profile");
+                    (GenNamedApplicationList<Profile>) ViewModel.GetDataSource(comboBoxBaseFileName.SelectedItem, "Profile");
                 comboBoxProfile.DataSource = profileList;
                 comboBoxProfile.SelectedItem = profileList.Find(profile);
-                FileGroup.BaseFileName = ((BaseFile) comboBoxBaseFile.SelectedItem).Name;
+                FileGroup.BaseFileName = ((BaseFile) comboBoxBaseFileName.SelectedItem).Name;
                 ComboBoxProfileSelectedValueChanged(sender, e);
             }
             else comboBoxProfile.DataSource = null;

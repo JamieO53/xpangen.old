@@ -359,19 +359,19 @@ namespace org.xpangen.Generator.Test
             //    data = new GenParameters(def, stream) { DataName = "GeneratorDefinitionModel" };
             var definition = data.Cache["definition", "definition"];
             definition.Last(1);
-            Assert.AreEqual(4, definition.Context[3].Count);
+            Assert.AreEqual(7, definition.Context[3].Count);
             Assert.AreEqual("Property", def.Classes[5].Name);
-            Assert.AreEqual(4, def.Classes[5].Properties.Count);
+            Assert.AreEqual(7, def.Classes[5].Properties.Count);
             data.First(2);
-            Assert.AreEqual("GeneratorDataModelDefinition", data.Context[2].GenObject.Attributes[0]);
+            Assert.AreEqual("Definition", data.Context[2].GenObject.Attributes[0]);
             Assert.AreEqual("Definition.Class", data.Context[3].DefClass.ToString());
             Assert.AreEqual("Class", data.Context[3].GenObject.Attributes[0]);
             data.Next(3);
             Assert.AreEqual("SubClass", data.Context[3].GenObject.Attributes[0]);
             data.Next(3);
             Assert.AreEqual("Property", data.Context[3].GenObject.Attributes[0]);
-            Assert.AreEqual(4, data.Context[3].GenObject.SubClass[1].Count);
-            Assert.AreEqual(4, data.Context[5].Count);
+            Assert.AreEqual(7, data.Context[3].GenObject.SubClass[1].Count);
+            Assert.AreEqual(7, data.Context[5].Count);
         }
 
         /// <summary>

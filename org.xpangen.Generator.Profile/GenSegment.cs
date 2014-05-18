@@ -238,11 +238,23 @@ namespace org.xpangen.Generator.Profile
             if (Separator != null) return;
             
             // Optimization: This is done once when this method is first called
-            Separator = Body.Count > 0 ? Body.Fragment[Body.Count - 1] : new GenNullFragment(GenDataDef, this);
             ItemBody = new GenBlock(GenDataDef, this);
 
             for (var i = 0; i < Body.Count - 1; i++)
                 ItemBody.Body.Add(Body.Fragment[i]);
+            
+            var last = Body.Count > 0 ? Body.Fragment[Body.Count - 1] : null;
+            var lastText = last as GenTextBlock;
+            if (last is GenTextBlock && lastText.Body.Count > 1)
+            {
+                var newText = new GenTextBlock(GenDataDef, this);
+                for (var i = 0; i < lastText.Body.Count - 1; i++)
+                    newText.Body.Add(lastText.Body.Fragment[i]);
+                Separator = lastText.Body.Fragment[lastText.Body.Count - 1];
+                ItemBody.Body.Add(newText);
+            }
+            else
+                Separator = Body.Count > 0 ? last : new GenNullFragment(GenDataDef, this);
         }
     }
 }

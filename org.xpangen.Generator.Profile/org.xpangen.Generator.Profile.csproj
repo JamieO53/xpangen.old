@@ -52,6 +52,7 @@
     <Compile Include="GenPlaceholderFragment.cs" />
     <Compile Include="GenSegment.cs" />
     <Compile Include="GenSegBody.cs" />
+    <Compile Include="GenTextBlock.cs" />
     <Compile Include="GenTextFragment.cs" />
     <Compile Include="GenUtilities.cs" />
     <Compile Include="GenWriter.cs" />

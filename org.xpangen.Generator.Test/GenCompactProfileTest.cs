@@ -29,7 +29,7 @@ namespace org.xpangen.Generator.Test
             var d = new GenData(f);
             var profile = new GenCompactProfileParser(d, "", txt);
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
-            Assert.AreEqual(FragmentType.Text, profile.Body.Fragment[0].FragmentType);
+            Assert.AreEqual(FragmentType.TextBlock, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt, profile.Body.Expand(d), "Original text expected");
         }
 
@@ -64,9 +64,9 @@ namespace org.xpangen.Generator.Test
             SetUpData(d);
             var profile = new GenCompactProfileParser(d, "", txt);
             Assert.AreEqual(3, profile.Body.Count, "Three fragments expected");
-            Assert.AreEqual(FragmentType.Text, profile.Body.Fragment[0].FragmentType);
+            Assert.AreEqual(FragmentType.TextBlock, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[1].FragmentType);
-            Assert.AreEqual(FragmentType.Text, profile.Body.Fragment[2].FragmentType);
+            Assert.AreEqual(FragmentType.TextBlock, profile.Body.Fragment[2].FragmentType);
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
@@ -126,16 +126,15 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
             var nestedClass = ((GenSegment) profile.Body.Fragment[0]);
-            Assert.AreEqual(5, nestedClass.Body.Count, "Five nested fragments expected");
-            Assert.AreEqual(FragmentType.Placeholder, nestedClass.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(FragmentType.Text, nestedClass.Body.Fragment[1].FragmentType);
-            Assert.AreEqual(FragmentType.Segment, nestedClass.Body.Fragment[2].FragmentType);
-            var nestedSubClass = ((GenSegment) nestedClass.Body.Fragment[2]);
+            Assert.AreEqual(4, nestedClass.Body.Count, "Four nested fragments expected");
+            Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.Fragment[0].FragmentType);
+            Assert.AreEqual(FragmentType.Segment, nestedClass.Body.Fragment[1].FragmentType);
+            var nestedSubClass = ((GenSegment) nestedClass.Body.Fragment[1]);
             Assert.AreEqual(2, nestedSubClass.Body.Count, "Two nested fragments expected");
             Assert.AreEqual(FragmentType.Lookup, nestedSubClass.Body.Fragment[0].FragmentType);
             Assert.IsFalse(((GenLookup) nestedSubClass.Body.Fragment[0]).NoMatch, "No match property for lookup");
-            Assert.AreEqual(FragmentType.Text, nestedClass.Body.Fragment[3].FragmentType);
-            Assert.AreEqual(FragmentType.Block, nestedClass.Body.Fragment[4].FragmentType);
+            Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.Fragment[2].FragmentType);
+            Assert.AreEqual(FragmentType.Block, nestedClass.Body.Fragment[3].FragmentType);
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
@@ -156,16 +155,15 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
             var nestedClass = ((GenSegment)profile.Body.Fragment[0]);
-            Assert.AreEqual(5, nestedClass.Body.Count, "Five nested fragments expected");
-            Assert.AreEqual(FragmentType.Placeholder, nestedClass.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(FragmentType.Text, nestedClass.Body.Fragment[1].FragmentType);
-            Assert.AreEqual(FragmentType.Segment, nestedClass.Body.Fragment[2].FragmentType);
-            var nestedSubClass = ((GenSegment)nestedClass.Body.Fragment[2]);
+            Assert.AreEqual(4, nestedClass.Body.Count, "Four nested fragments expected");
+            Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.Fragment[0].FragmentType);
+            Assert.AreEqual(FragmentType.Segment, nestedClass.Body.Fragment[1].FragmentType);
+            var nestedSubClass = ((GenSegment)nestedClass.Body.Fragment[1]);
             Assert.AreEqual(2, nestedSubClass.Body.Count, "Two nested fragments expected");
             Assert.AreEqual(FragmentType.Lookup, nestedSubClass.Body.Fragment[0].FragmentType);
             Assert.IsTrue(((GenLookup)nestedSubClass.Body.Fragment[0]).NoMatch, "No match property for no match lookup");
-            Assert.AreEqual(FragmentType.Text, nestedClass.Body.Fragment[3].FragmentType);
-            Assert.AreEqual(FragmentType.Block, nestedClass.Body.Fragment[4].FragmentType);
+            Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.Fragment[2].FragmentType);
+            Assert.AreEqual(FragmentType.Block, nestedClass.Body.Fragment[3].FragmentType);
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));

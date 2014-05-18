@@ -261,7 +261,7 @@ namespace org.xpangen.Generator.Editor.Helper
             var profileFileName = BuildFilePath(profile.FilePath, profile.FileName);
             
             var p = new GenCompactProfileParser(d, profileFileName, "");
-            using (var writer = new GenWriter(null) {FileName = Settings.Generated.Replace('/', '\\')})
+            using (var writer = new GenWriter(null) {FileName = Settings.GeneratedFile.Replace('/', '\\')})
                 p.Generate(null, d, writer);
         }
 
