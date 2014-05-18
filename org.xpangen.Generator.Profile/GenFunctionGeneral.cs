@@ -1,6 +1,6 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
 using System.Collections.Generic;
@@ -13,11 +13,10 @@ namespace org.xpangen.Generator.Profile
 
         private GenFunctionGeneral()
         {
-            
         }
 
         /// <summary>
-        /// Returns the singleton instance.
+        ///     Returns the singleton instance.
         /// </summary>
         /// <returns>The library instance.</returns>
         public static GenFunctionGeneral GetInstance()
@@ -26,16 +25,17 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Returns a list of functions implemented by this class.
+        ///     Returns a list of functions implemented by this class.
         /// </summary>
         /// <returns>The list of function names.</returns>
         public IEnumerable<string> Implements()
         {
-            return "CutString,Date,File,QuoteString,StringOrName,Time,UnIdentifier,UnIdentifierLC,Decapitalize".Split(',');
+            return
+                "CutString,Date,File,QuoteString,StringOrName,Time,UnIdentifier,UnIdentifierLC,Decapitalize".Split(',');
         }
 
         /// <summary>
-        /// Cust the specified substring out of the given string.
+        ///     Cust the specified substring out of the given string.
         /// </summary>
         /// <param name="value1">The original string.</param>
         /// <param name="value2">The string being cut out.</param>
@@ -46,16 +46,16 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Returns the current long format date.
+        ///     Returns the current long format date.
         /// </summary>
         /// <returns>Today.</returns>
         private static string Date()
         {
             return DateTime.Today.ToString("D");
         }
-        
+
         /// <summary>
-        /// This method is a stub, simply returning the file name on a new line.
+        ///     This method is a stub, simply returning the file name on a new line.
         /// </summary>
         /// <param name="fileName">The file name.</param>
         /// <returns>The formatted file name.</returns>
@@ -63,9 +63,9 @@ namespace org.xpangen.Generator.Profile
         {
             return "\r\n //File: " + fileName;
         }
-        
+
         /// <summary>
-        /// Surrounds the given string with single quotes. Embedded quotes are doubled.
+        ///     Surrounds the given string with single quotes. Embedded quotes are doubled.
         /// </summary>
         /// <param name="value">The string being quoted.</param>
         /// <returns>The quoted string.</returns>
@@ -75,7 +75,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Determines if the given string is a valid identifier, and if not to surround it with quotes.
+        ///     Determines if the given string is a valid identifier, and if not to surround it with quotes.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -85,7 +85,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Returns the current short format time.
+        ///     Returns the current short format time.
         /// </summary>
         /// <returns>Now.</returns>
         private static string Time()
@@ -94,7 +94,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Turns an identifier into a list of words. Words are identified by capitals (Camel Case), numerics and underscores or hyphens.
+        ///     Turns an identifier into a list of words. Words are identified by capitals (Camel Case), numerics and underscores or hyphens.
         /// </summary>
         /// <param name="value">The identifier being transformed.</param>
         /// <returns>The transformed identfier text.</returns>
@@ -104,8 +104,8 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Turns an identifier into a list of words. Words are identified by capitals (Camel Case), numerics and underscores or hyphens.
-        /// Words after the first are decapitalized.
+        ///     Turns an identifier into a list of words. Words are identified by capitals (Camel Case), numerics and underscores or hyphens.
+        ///     Words after the first are decapitalized.
         /// </summary>
         /// <param name="value">The identifier being transformed.</param>
         /// <returns>The transformed identfier text.</returns>
@@ -115,7 +115,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Decapitalize the first character of an identifier.
+        ///     Decapitalize the first character of an identifier.
         /// </summary>
         /// <param name="value">The identifier being transformed.</param>
         /// <returns>The transformed identfier text.</returns>
@@ -125,7 +125,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Executes the named function with the specified parameters.
+        ///     Executes the named function with the specified parameters.
         /// </summary>
         /// <param name="function">The name of the function being executed.</param>
         /// <param name="param">The parameters being passed to the function.</param>

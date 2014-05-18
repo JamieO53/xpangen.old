@@ -1,6 +1,6 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
 using System.Text;
@@ -13,11 +13,11 @@ namespace org.xpangen.Generator.Profile
         private GenBlock ItemBody { get; set; }
         private GenFragment Separator { get; set; }
 
-        public GenSegment(GenDataDef genDataDef, string className, GenCardinality cardinality, GenContainerFragmentBase parentSegment)
-            : base(genDataDef, parentSegment)
+        public GenSegment(GenDataDef genDataDef, string className, GenCardinality cardinality,
+                          GenContainerFragmentBase parentSegment)
+            : base(genDataDef, parentSegment, FragmentType.Segment)
         {
             Body.ParentSegement = this;
-            FragmentType = FragmentType.Segment;
             ClassId = GenDataDef.Classes.IndexOf(className);
             GenCardinality = cardinality;
         }
@@ -44,7 +44,7 @@ namespace org.xpangen.Generator.Profile
         public override string Expand(GenData genData)
         {
             var s = new StringBuilder();
-            bool isEmpty = true;
+            var isEmpty = true;
             string expanded;
             switch (GenCardinality)
             {
@@ -230,19 +230,18 @@ namespace org.xpangen.Generator.Profile
                     throw new ArgumentOutOfRangeException();
             }
             return generated;
-
         }
 
         private void CheckDelimiter()
         {
             if (Separator != null) return;
-            
+
             // Optimization: This is done once when this method is first called
             ItemBody = new GenBlock(GenDataDef, this);
 
             for (var i = 0; i < Body.Count - 1; i++)
                 ItemBody.Body.Add(Body.Fragment[i]);
-            
+
             var last = Body.Count > 0 ? Body.Fragment[Body.Count - 1] : null;
             var lastText = last as GenTextBlock;
             if (last is GenTextBlock && lastText.Body.Count > 1)

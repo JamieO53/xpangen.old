@@ -13,9 +13,8 @@ namespace org.xpangen.Generator.Test
     internal class GenFragmentTest : GenFragment
     {
         public GenFragmentTest(GenDataDef genDataDef, GenContainerFragmentBase parentSegment)
-            : base(genDataDef, parentSegment)
+            : base(genDataDef, parentSegment, FragmentType.Null) // Default for testing
         {
-            FragmentType = FragmentType.Null; // Default for testing
         }
 
         public override string ProfileLabel()

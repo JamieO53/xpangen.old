@@ -1,6 +1,6 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
 using org.xpangen.Generator.Data;
@@ -8,12 +8,12 @@ using org.xpangen.Generator.Data;
 namespace org.xpangen.Generator.Profile
 {
     /// <summary>
-    /// An abstract definition of the profile fragment syntax.
+    ///     An abstract definition of the profile fragment syntax.
     /// </summary>
     public abstract class ProfileFragmentSyntaxDictionary : Dictionary<string, ProfileFragmentSyntax>
     {
         /// <summary>
-        /// Parses the generator condition for this syntax.
+        ///     Parses the generator condition for this syntax.
         /// </summary>
         /// <param name="genCondition">The condition fragment being created.</param>
         /// <param name="genDataDef">The generator data definition.</param>
@@ -21,21 +21,25 @@ namespace org.xpangen.Generator.Profile
         public abstract void ParseCondition(GenCondition genCondition, GenDataDef genDataDef, string condition);
 
         /// <summary>
-        /// Text for each item in the <see cref="GenCardinality"/> enumeration.
+        ///     Text for each item in the <see cref="GenCardinality" /> enumeration.
         /// </summary>
         public string[] GenCardinalityText;
 
         /// <summary>
-        /// Text for each item in the <see cref="GenComparison"/> enumeration.
+        ///     Text for each item in the <see cref="GenComparison" /> enumeration.
         /// </summary>
         public string[] GenComparisonText;
 
         /// <summary>
-        /// The currently active <see cref="ProfileFragmentSyntaxDictionary"/>. By default this is <see cref="CompactProfileFragmentSyntaxDictionary"/>.
+        ///     The currently active <see cref="ProfileFragmentSyntaxDictionary" />. By default this is
+        ///     <see
+        ///         cref="CompactProfileFragmentSyntaxDictionary" />
+        ///     .
         /// </summary>
         public static ProfileFragmentSyntaxDictionary ActiveProfileFragmentSyntaxDictionary
         {
-            get {
+            get
+            {
                 return _activeProfileFragmentSyntaxDictionary ??
                        (_activeProfileFragmentSyntaxDictionary = new CompactProfileFragmentSyntaxDictionary());
             }
@@ -45,7 +49,7 @@ namespace org.xpangen.Generator.Profile
         private static ProfileFragmentSyntaxDictionary _activeProfileFragmentSyntaxDictionary;
 
         /// <summary>
-        /// Get the operand from the beginning of the string being parsed.
+        ///     Get the operand from the beginning of the string being parsed.
         /// </summary>
         /// <param name="s">The string being parsed. The operand is removed from the string.</param>
         /// <returns>The parsed operand.</returns>
@@ -69,7 +73,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Get the comparison operator from the beginning of the string being parsed.
+        ///     Get the comparison operator from the beginning of the string being parsed.
         /// </summary>
         /// <param name="s">The string being parsed. The operator is removed from the string.</param>
         /// <returns>The parsed operator.</returns>
@@ -95,23 +99,23 @@ namespace org.xpangen.Generator.Profile
                             if (GenComparisonText[j] == t)
                             {
                                 s = s.Substring(length);
-                                return (GenComparison)j;
+                                return (GenComparison) j;
                             }
                         }
                     }
-                    
                 }
             }
             return GenComparison.Exists;
         }
 
         /// <summary>
-        /// Parses the segment class text and returns an empty segment profile fragment
+        ///     Parses the segment class text and returns an empty segment profile fragment
         /// </summary>
         /// <param name="genDataDef">The generator data definition.</param>
         /// <param name="segmentClass">The segment class text to be parsed.</param>
         /// <param name="parentSegment"></param>
         /// <returns></returns>
-        public abstract GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass, GenContainerFragmentBase parentSegment);
+        public abstract GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass,
+                                                       GenContainerFragmentBase parentSegment);
     }
 }

@@ -1,6 +1,6 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
 using org.xpangen.Generator.Data;
@@ -8,16 +8,16 @@ using org.xpangen.Generator.Data;
 namespace org.xpangen.Generator.Profile
 {
     /// <summary>
-    /// Contains specific syntax data and parsers for the compact profile fragment syntax.
+    ///     Contains specific syntax data and parsers for the compact profile fragment syntax.
     /// </summary>
     public class CompactProfileFragmentSyntaxDictionary : ProfileFragmentSyntaxDictionary
     {
         /// <summary>
-        /// Create a new <see cref="ProfileFragmentSyntaxDictionary"/> object for the compact syntax.
+        ///     Create a new <see cref="ProfileFragmentSyntaxDictionary" /> object for the compact syntax.
         /// </summary>
         public CompactProfileFragmentSyntaxDictionary()
         {
-            GenCardinalityText = new[] { ">", "/", "<", "\\", "'", "+", ".", "-", "@"};
+            GenCardinalityText = new[] {">", "/", "<", "\\", "'", "+", ".", "-", "@"};
             GenComparisonText = new[] {"", "~", "=", "<>", "<", "<=", ">", ">="};
             Dlm = "=<>~";
 
@@ -32,10 +32,10 @@ namespace org.xpangen.Generator.Profile
                         Format = "`?{0}{1}{2}:{3}`]"
                     });
             Add(new ProfileFragmentSyntax
-            {
-                FragmentType = FragmentType.Function,
-                Format = "`@{0}:{1}`]"
-            });
+                    {
+                        FragmentType = FragmentType.Function,
+                        Format = "`@{0}:{1}`]"
+                    });
             Add(new ProfileFragmentSyntax
                     {
                         FragmentType = FragmentType.Lookup,
@@ -59,10 +59,10 @@ namespace org.xpangen.Generator.Profile
                         Format = "`[{0}{2}:{1}`]"
                     });
             Add(new ProfileFragmentSyntax
-            {
-                FragmentType = FragmentType.TextBlock,
-                Format = "{0}"
-            });
+                    {
+                        FragmentType = FragmentType.TextBlock,
+                        Format = "{0}"
+                    });
         }
 
         private void Add(ProfileFragmentSyntax item)
@@ -71,7 +71,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Parses the generator condition for this syntax.
+        ///     Parses the generator condition for this syntax.
         /// </summary>
         /// <param name="genCondition">The condition fragment being created.</param>
         /// <param name="genDataDef">The generator data definition.</param>
@@ -106,7 +106,7 @@ namespace org.xpangen.Generator.Profile
                             }
                             catch (Exception)
                             {
-                                genCondition.Var2 = new GenDataId { ClassId = -1, PropertyId = -1 };
+                                genCondition.Var2 = new GenDataId {ClassId = -1, PropertyId = -1};
                             }
                         if (genCondition.UseLit || genCondition.Var2.ClassId == -1 || genCondition.Var2.PropertyId == -1)
                         {
@@ -131,7 +131,8 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
-        public override GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass, GenContainerFragmentBase parentSegment)
+        public override GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass,
+                                                       GenContainerFragmentBase parentSegment)
         {
             var s = segmentClass.Substring(segmentClass.Length - 1);
             var c = segmentClass;
@@ -139,7 +140,7 @@ namespace org.xpangen.Generator.Profile
             for (var i = 0; i < ActiveProfileFragmentSyntaxDictionary.GenCardinalityText.Length; i++)
             {
                 if (s != ActiveProfileFragmentSyntaxDictionary.GenCardinalityText[i]) continue;
-                cardinality = (GenCardinality)i;
+                cardinality = (GenCardinality) i;
                 c = segmentClass.Substring(0, segmentClass.Length - 1);
                 break;
             }

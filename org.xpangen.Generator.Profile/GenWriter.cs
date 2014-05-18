@@ -1,6 +1,6 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
 using System.IO;
@@ -8,11 +8,12 @@ using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class GenWriter: IDisposable
+    public class GenWriter : IDisposable
     {
         private string _fileName;
         private StreamWriter _writer;
         public Stream Stream { get; private set; }
+
         private StreamWriter Writer
         {
             get
@@ -31,14 +32,14 @@ namespace org.xpangen.Generator.Profile
             {
                 if (_fileName == value) return;
                 _fileName = value;
-                
+
                 if (Stream != null && !(Stream is FileStream)) return;
-                
+
                 if (_writer != null) _writer.Dispose();
                 if (Stream != null) Stream.Dispose();
 
                 if (string.IsNullOrEmpty(_fileName)) return;
-                
+
                 EnsurePathExists(_fileName);
                 Stream = new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite);
                 Writer = new StreamWriter(Stream);
@@ -81,11 +82,10 @@ namespace org.xpangen.Generator.Profile
                 if (Stream != null) Stream.Dispose();
             }
         }
-        
+
         ~GenWriter()
         {
             Dispose(false);
         }
-
     }
 }

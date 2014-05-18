@@ -1,6 +1,6 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
 
@@ -8,12 +8,13 @@ namespace org.xpangen.Generator.Profile
 {
     public class LibraryManager : IGeneratorLibrary
     {
-        private readonly Dictionary<string,IGeneratorLibrary> _map =
+        private readonly Dictionary<string, IGeneratorLibrary> _map =
             new Dictionary<string, IGeneratorLibrary>();
+
         private static LibraryManager _instance;
 
         /// <summary>
-        /// Create a new library manager and registers the standard libraries.
+        ///     Create a new library manager and registers the standard libraries.
         /// </summary>
         private LibraryManager()
         {
@@ -21,9 +22,9 @@ namespace org.xpangen.Generator.Profile
             Register(GenFunctionMap.GetInstance());
             Register(GenFunctionGeneral.GetInstance());
         }
-        
+
         /// <summary>
-        /// Registers the functions implemented by the library. Previously registered functions are overridden.
+        ///     Registers the functions implemented by the library. Previously registered functions are overridden.
         /// </summary>
         /// <param name="library">The library instance.</param>
         public void Register(IGeneratorLibrary library)
@@ -38,7 +39,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Returns the singleton instance.
+        ///     Returns the singleton instance.
         /// </summary>
         /// <returns>The library instance.</returns>
         public static IGeneratorLibrary GetInstance()
@@ -47,19 +48,19 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Returns a list of functions implemented by this class.
+        ///     Returns a list of functions implemented by this class.
         /// </summary>
         /// <returns>The list of function names.</returns>
         public IEnumerable<string> Implements()
         {
             var list = new List<string>();
-            foreach (string key in _map.Keys)
+            foreach (var key in _map.Keys)
                 list.Add(key);
             return list.ToArray();
         }
 
         /// <summary>
-        /// Executes the named function with the specified parameters.
+        ///     Executes the named function with the specified parameters.
         /// </summary>
         /// <param name="function">The name of the function being executed. This is case insensitive.</param>
         /// <param name="param">The parameters being passed to the function.</param>
