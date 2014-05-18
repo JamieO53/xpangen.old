@@ -1,6 +1,6 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
 using System.Text;
@@ -10,11 +10,10 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenCondition : GenContainerFragmentBase
     {
-        public GenCondition(GenDataDef genDataDef, GenContainerFragmentBase parentSegment) : base(genDataDef, parentSegment)
+        public GenCondition(GenDataDef genDataDef, GenContainerFragmentBase parentSegment)
+            : base(genDataDef, parentSegment, FragmentType.Condition)
         {
-            FragmentType = FragmentType.Condition;
         }
-
 
         public GenDataId Var1 { get; set; }
         public GenDataId Var2 { get; set; }
@@ -71,7 +70,9 @@ namespace org.xpangen.Generator.Profile
                                                  (GenComparison == GenComparison.Exists ||
                                                   GenComparison == GenComparison.NotExists)
                                                      ? ""
-                                                     : (UseLit ? GenUtilities.StringOrName(Lit) : GenDataDef.GetIdentifier(Var2)),
+                                                     : (UseLit
+                                                            ? GenUtilities.StringOrName(Lit)
+                                                            : GenDataDef.GetIdentifier(Var2)),
                                                  Body.ProfileText(syntaxDictionary)
                                              }
                 );

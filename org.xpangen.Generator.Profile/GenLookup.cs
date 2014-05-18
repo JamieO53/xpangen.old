@@ -1,8 +1,7 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System.Diagnostics;
 using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Profile
@@ -17,10 +16,9 @@ namespace org.xpangen.Generator.Profile
         protected GenDataId Var1 { get; set; }
 
         public GenLookup(GenDataDef genDataDef, string condition, GenContainerFragmentBase parentSegment)
-            : base(genDataDef, parentSegment)
+            : base(genDataDef, parentSegment, FragmentType.Lookup)
         {
             Body.ParentSegement = this;
-            FragmentType = FragmentType.Lookup;
             Condition = condition;
             var sa = condition.Split('=');
             Var1 = genDataDef.GetId(sa[0]);

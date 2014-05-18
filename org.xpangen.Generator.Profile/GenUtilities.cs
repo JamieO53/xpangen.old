@@ -1,9 +1,8 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace org.xpangen.Generator.Profile
@@ -11,7 +10,7 @@ namespace org.xpangen.Generator.Profile
     public static class GenUtilities
     {
         /// <summary>
-        /// Cust the specified substring out of the given string.
+        ///     Cust the specified substring out of the given string.
         /// </summary>
         /// <param name="value1">The original string.</param>
         /// <param name="value2">The string being cut out.</param>
@@ -26,7 +25,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Tests if the given string is numeric.
+        ///     Tests if the given string is numeric.
         /// </summary>
         /// <param name="value">The string being tested.</param>
         /// <returns></returns>
@@ -41,7 +40,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Lengthens the shorter string to the same length as the longer one by padding it with leading zeros.
+        ///     Lengthens the shorter string to the same length as the longer one by padding it with leading zeros.
         /// </summary>
         /// <param name="value1">The first number.</param>
         /// <param name="value2">The second number.</param>
@@ -64,7 +63,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Surrounds the given string with single quotes. Embedded quotes are doubled.
+        ///     Surrounds the given string with single quotes. Embedded quotes are doubled.
         /// </summary>
         /// <param name="value">The string being quoted.</param>
         /// <returns>The quoted string.</returns>
@@ -97,7 +96,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Determines if the given string is a valid identifier, and if not to surround it with quotes.
+        ///     Determines if the given string is a valid identifier, and if not to surround it with quotes.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -114,7 +113,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Turns an identifier into a list of words. Words are identified by capitals (Camel Case), numerics and underscores or hyphens.
+        ///     Turns an identifier into a list of words. Words are identified by capitals (Camel Case), numerics and underscores or hyphens.
         /// </summary>
         /// <param name="value">The identifier being transformed.</param>
         /// <returns>The transformed identfier text.</returns>
@@ -145,7 +144,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Decapitalize the first character of an identifier.
+        ///     Decapitalize the first character of an identifier.
         /// </summary>
         /// <param name="value">The identifier being transformed.</param>
         /// <returns>The transformed identfier text.</returns>
@@ -156,8 +155,8 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Turns an identifier into a list of words. Words are identified by capitals (Camel Case), numerics and underscores or hyphens.
-        /// Words after the first are decapitalized.
+        ///     Turns an identifier into a list of words. Words are identified by capitals (Camel Case), numerics and underscores or hyphens.
+        ///     Words after the first are decapitalized.
         /// </summary>
         /// <param name="value">The identifier being transformed.</param>
         /// <returns>The transformed identfier text.</returns>

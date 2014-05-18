@@ -1,6 +1,6 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,11 +14,10 @@ namespace org.xpangen.Generator.Profile
 
         private GenFunctionCounters()
         {
-            
         }
 
         /// <summary>
-        /// Sets the value of the counter to the given value or zero.
+        ///     Sets the value of the counter to the given value or zero.
         /// </summary>
         /// <param name="name">The counter.</param>
         /// <param name="value">The value being set, or zero.</param>
@@ -34,7 +33,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Gets the value of the counter.
+        ///     Gets the value of the counter.
         /// </summary>
         /// <param name="name">The counter.</param>
         /// <returns>The value of the counter or an error message.</returns>
@@ -46,7 +45,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Adds the value or 1 to the named counter.
+        ///     Adds the value or 1 to the named counter.
         /// </summary>
         /// <param name="name">The counter.</param>
         /// <param name="value">The amount being added or 1.</param>
@@ -65,7 +64,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Subtracts the value or 1 from the named counter.
+        ///     Subtracts the value or 1 from the named counter.
         /// </summary>
         /// <param name="name">The counter.</param>
         /// <param name="value">The amount being subtracted - 1 if blank.</param>
@@ -84,7 +83,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Returns the singleton instance.
+        ///     Returns the singleton instance.
         /// </summary>
         /// <returns>The library instance.</returns>
         public static GenFunctionCounters GetInstance()
@@ -93,7 +92,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Returns a list of functions implemented by this class.
+        ///     Returns a list of functions implemented by this class.
         /// </summary>
         /// <returns>The list of function names.</returns>
         public IEnumerable<string> Implements()
@@ -102,7 +101,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// Executes the named function with the specified parameters.
+        ///     Executes the named function with the specified parameters.
         /// </summary>
         /// <param name="function">The name of the function being executed.</param>
         /// <param name="param">The parameters being passed to the function.</param>
@@ -111,10 +110,10 @@ namespace org.xpangen.Generator.Profile
         {
             if (param.Length < 0)
                 return "<<<<< " + function + " Counter name missing >>>>>";
-            
+
             var name = param[0];
             var value = param.Length >= 2 ? param[1] : "";
-            
+
             switch (function.ToLowerInvariant())
             {
                 case "set":
