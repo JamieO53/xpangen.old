@@ -86,6 +86,7 @@
             this.splitContainer1.Size = new System.Drawing.Size(614, 283);
             this.splitContainer1.SplitterDistance = 204;
             this.splitContainer1.TabIndex = 0;
+            this.splitContainer1.TabStop = false;
             // 
             // panel3
             // 
@@ -244,7 +245,6 @@
             this.GenDataDataGrid.Name = "GenDataDataGrid";
             this.GenDataDataGrid.Size = new System.Drawing.Size(406, 238);
             this.GenDataDataGrid.TabIndex = 2;
-            this.GenDataDataGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.GenDataDataGrid_CellValidating);
             this.GenDataDataGrid.ColumnAdded += new System.Windows.Forms.DataGridViewColumnEventHandler(this.GenDataDataGrid_ColumnAdded);
             this.GenDataDataGrid.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.GenDataDataGrid_DataBindingComplete);
             this.GenDataDataGrid.SelectionChanged += new System.EventHandler(this.GenDataDataGrid_SelectionChanged);
