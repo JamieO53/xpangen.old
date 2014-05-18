@@ -68,11 +68,18 @@ namespace GenEdit.View
 
         private void DataNavigatorTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            // See http://stackoverflow.com/questions/569673/treeview-re-grabs-focus-on-ctrlclick for this trick
+            BeginInvoke(new TreeViewEventHandler(delayedClick), sender, e);
+        }
+
+        private void delayedClick(object sender, TreeViewEventArgs e)
+        {
             var nodeData = NodeData;
             if (nodeData != null)
             {
                 nodeData.EstablishContext();
                 GenDataDataGrid.DataSource = nodeData.Fields;
+                splitContainer1.ActiveControl = GenDataDataGrid;
             }
             else GenDataDataGrid.DataSource = null;
             RaiseFocusChanged();
@@ -133,6 +140,7 @@ namespace GenEdit.View
             DataEditorHintLabel.Text = data == null ? "" : data.Hint;
             var valueCell = GenDataDataGrid.CurrentRow.Cells[ValueColumnIndex];
             GenDataDataGrid.CurrentCell = valueCell;
+            GenDataDataGrid.CurrentCell.Selected = true;
         }
 
         private void MoveToTopButton_Click(object sender, System.EventArgs e)
@@ -280,11 +288,6 @@ namespace GenEdit.View
                                                       };
                 }
             }
-        }
-
-        private void GenDataDataGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
-            // to do
         }
     }
 }

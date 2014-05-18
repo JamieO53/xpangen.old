@@ -89,14 +89,16 @@ namespace GenEdit.Controls
         {
             var parentClassName = ParentNode == null ? "" : ParentNode.ClassDef.Name;
             var className = SubClassDef.SubClass.Name;
-            if (ParentNode != null) ((GenObjectViewModel) ParentNode.Tag).EstablishContext();
+            if (ParentNode != null && ParentNode.ViewModel != null) ParentNode.ViewModel.EstablishContext();
             else GenData.First(0);
             var genObject = GenData.CreateObject(parentClassName, className);
             var idx = genObject.Definition.Properties.IndexOf("Name");
             if (idx >= 0)
                 genObject.Attributes[idx] = "new";
+            GenData.Last(ClassId);
             var node = new ClassTreeNode(this, GenData, Definition, ClassId);
-            ((GenObjectViewModel) node.Tag).IsNew = true;
+            node.ViewModel.IsNew = true;
+            node.ViewModel.Save();
             Nodes.Add(node);
             return node;
         }
@@ -112,7 +114,7 @@ namespace GenEdit.Controls
         
         internal bool MakeMove(ClassTreeNode node, ListMove move)
         {
-            var nodeData = (GenObjectViewModel) node.Tag;
+            var nodeData = node.ViewModel;
             if (nodeData == null) return false;
             var index = Nodes.IndexOf(node);
             var genData = nodeData.SavedContext.GenData;

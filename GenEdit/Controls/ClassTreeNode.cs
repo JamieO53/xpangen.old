@@ -40,6 +40,11 @@ namespace GenEdit.Controls
         /// </summary>
         public GenAttributes GenAttributes { get; private set; }
 
+        public GenObjectViewModel ViewModel
+        {
+            get { return (GenObjectViewModel) Tag; }
+        }
+
         /// <summary>
         /// Create a new <see cref="ClassTreeNode"/> for the selected class
         /// </summary>
