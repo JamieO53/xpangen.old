@@ -52,7 +52,7 @@ namespace GenEdit.View
 
         private bool ProfileIsSpecified()
         {
-            return Selected != null && Selected.Profile != "";
+            return fileGroupUserControl1.Profile != null;
         }
 
         private void splitContainer1_Panel1_Resize(object sender, EventArgs e)
@@ -209,7 +209,7 @@ namespace GenEdit.View
                         switch (saveGeneratedFileDialog.ShowDialog())
                         {
                             case DialogResult.OK:
-                                data.Settings.Generated =
+                                data.Settings.GeneratedFile =
                                     saveGeneratedFileDialog.FileName
                                                            .Replace(saveGeneratedFileDialog.InitialDirectory + "\\", "")
                                                            .Replace('\\', '/');
@@ -232,7 +232,7 @@ namespace GenEdit.View
         private void FileGroupProfileSelected(object sender, EventArgs eventArgs)
         {
             var data = GenDataEditorViewModel.Data;
-            buttonGenerate.Enabled = fileGroupUserControl1.Profile != null;
+            buttonGenerate.Enabled = ProfileIsSpecified();
             data.SetProfile(fileGroupUserControl1.Profile);
             RaiseProfileChanged();
         }

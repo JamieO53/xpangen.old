@@ -58,6 +58,11 @@ namespace org.xpangen.Generator.Profile
                         FragmentType = FragmentType.Segment,
                         Format = "`[{0}{2}:{1}`]"
                     });
+            Add(new ProfileFragmentSyntax
+            {
+                FragmentType = FragmentType.TextBlock,
+                Format = "{0}"
+            });
         }
 
         private void Add(ProfileFragmentSyntax item)

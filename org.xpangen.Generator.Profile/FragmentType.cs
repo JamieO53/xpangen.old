@@ -14,6 +14,7 @@ namespace org.xpangen.Generator.Profile
         Block,
         Lookup,
         Condition,
-        Function
+        Function,
+        TextBlock
     }
 }

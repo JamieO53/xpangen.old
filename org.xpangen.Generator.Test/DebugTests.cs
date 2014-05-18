@@ -44,20 +44,18 @@ namespace org.xpangen.Generator.Test
             var data = new GeData();
             data.Settings = data.GetDefaultSettings();
             data.SetFileGroup("GeneratorDefinitionModel");
-            var fileGroup = data.Settings.FileGroup;
 
-            //var def = GenData.DataLoader.LoadData("Definition");
-            var f = data.GenDataDef;
             var d = data.GenData;
             d.First(1);
             d.Next(2);
-            Assert.AreEqual("GeneratorEditorModel", d.Context[2].GenObject.Attributes[0]);
+            d.Next(2);
+            Assert.AreEqual("GeneratorEditor", d.Context[2].GenObject.Attributes[0]);
             Assert.AreEqual("GenSettings", d.Context[3].GenObject.Attributes[0]);
             var c = d.SaveContext(3);
             d.First(1);
-            Assert.AreNotEqual("GeneratorEditorModel", d.Context[2].GenObject.Attributes[0]);
+            Assert.AreNotEqual("GeneratorEditor", d.Context[2].GenObject.Attributes[0]);
             c.EstablishContext();
-            Assert.AreEqual("GeneratorEditorModel", d.Context[2].GenObject.Attributes[0]);
+            Assert.AreEqual("GeneratorEditor", d.Context[2].GenObject.Attributes[0]);
             Assert.AreEqual("GenSettings", d.Context[3].GenObject.Attributes[0]);
         }
 

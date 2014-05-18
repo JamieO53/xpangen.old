@@ -47,17 +47,39 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             var saveClassId = GenDataDef.CurrentClassId;
             GenDataDef.CurrentClassId = classId;
             var s = Scan.ScanText();
+            GenTextBlock textBlock = null;
             if (s.Length > 0)
-                body.Add(new GenTextFragment(GenDataDef, parentSegment) {Text = s});
+            {
+                textBlock = new GenTextBlock(GenDataDef, parentSegment);
+                textBlock.Body.Add(new GenTextFragment(GenDataDef, parentSegment) {Text = s});
+            }
             if (!Scan.Eof)
             {
                 var t = Scan.ScanTokenType();
                 while (!Scan.Eof && t != TokenType.Close && t != TokenType.Unknown)
                 {
+                    if (t != TokenType.Name && textBlock != null)
+                    {
+                        body.Add(textBlock);
+                        textBlock = null;
+                    }
                     var frag = ScanFragment(classId, ref t, out s, parentSegment);
-                    body.Add(frag);
-                    if (s.Length > 0)
-                        body.Add(new GenTextFragment(GenDataDef, parentSegment) {Text = s});
+                    if (t == TokenType.Name)
+                    {
+                        if (textBlock == null) textBlock = new GenTextBlock(GenDataDef, parentSegment);
+                        textBlock.Body.Add(frag);
+                        if (s.Length > 0)
+                            textBlock.Body.Add(new GenTextFragment(GenDataDef, parentSegment) {Text = s});
+                    }
+                    else
+                    {
+                        body.Add(frag);
+                        if (s.Length > 0)
+                        {
+                            textBlock = new GenTextBlock(GenDataDef, parentSegment);
+                            textBlock.Body.Add(new GenTextFragment(GenDataDef, parentSegment) { Text = s });
+                        }
+                    }
                     t = Scan.ScanTokenType();
                 }
 
@@ -73,10 +95,14 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                     if (Scan.CheckChar(']'))
                         Scan.SkipChar();
                 }
+                if (textBlock != null)
+                    body.Add(textBlock);
             }
             else
                 if (classId != 0)
                     throw new Exception("<<<<<Missing Segment end bracket>>>>>");
+                else if (textBlock != null)
+                    body.Add(textBlock);
             GenDataDef.CurrentClassId = saveClassId;
         }
 

@@ -7,7 +7,7 @@ using org.xpangen.Generator.Application;
 namespace org.xpangen.Generator.Data.Model.Settings
 {
     /// <summary>
-    /// 
+    /// Profile compatible with a Base File
     /// </summary>
     public class Profile : GenNamedApplicationBase
     {

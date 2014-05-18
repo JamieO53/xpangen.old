@@ -70,7 +70,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
         }
 
 
-        public Property AddProperty(string name, string title = "", string dataType = "String", string @default = "", string lookupTable = "", string lookupDependence = "", string lookupType = "")
+        public Property AddProperty(string name, string title = "", string dataType = "String", string @default = "", string lookupType = "", string lookupDependence = "", string lookupTable = "")
         {
             var item = new Property(GenData)
                            {
@@ -79,9 +79,9 @@ namespace org.xpangen.Generator.Data.Model.Definition
                                Title = title,
                                DataType = dataType,
                                Default = @default,
-                               LookupTable = lookupTable,
+                               LookupType = lookupType,
                                LookupDependence = lookupDependence,
-                               LookupType = lookupType
+                               LookupTable = lookupTable
                            };
             PropertyList.Add(item);
             return item;

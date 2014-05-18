@@ -77,21 +77,21 @@ namespace org.xpangen.Generator.Data.Model.Definition
         }
 
         /// <summary>
-        /// The lookup table used for the property's values
+        /// A standard lookup, a lookup to this data or the root of referenced data
         /// </summary>
-        public string LookupTable
+        public string LookupType
         {
-            get { return AsString("LookupTable"); }
+            get { return AsString("LookupType"); }
             set
             {
-                if (LookupTable == value) return;
-                SetString("LookupTable", value);
+                if (LookupType == value) return;
+                SetString("LookupType", value);
                 if (!DelayedSave) SaveFields();
             }
         }
 
         /// <summary>
-        /// The table on which this table depends
+        /// The lookup on which this one depends
         /// </summary>
         public string LookupDependence
         {
@@ -105,15 +105,15 @@ namespace org.xpangen.Generator.Data.Model.Definition
         }
 
         /// <summary>
-        /// A standard lookup, a lookup to this data or the root of referenced data
+        /// The lookup table used for the property's values
         /// </summary>
-        public string LookupType
+        public string LookupTable
         {
-            get { return AsString("LookupType"); }
+            get { return AsString("LookupTable"); }
             set
             {
-                if (LookupType == value) return;
-                SetString("LookupType", value);
+                if (LookupTable == value) return;
+                SetString("LookupTable", value);
                 if (!DelayedSave) SaveFields();
             }
         }

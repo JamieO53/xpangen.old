@@ -33,7 +33,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(0, model.ClassList[2].SubClassList.Count);
             Assert.AreEqual(2, model.ClassList[0].PropertyList.Count);
             Assert.AreEqual(2, model.ClassList[1].PropertyList.Count);
-            Assert.AreEqual(4, model.ClassList[2].PropertyList.Count);
+            Assert.AreEqual(7, model.ClassList[2].PropertyList.Count);
             Assert.AreEqual("Name", model.ClassList[0].PropertyList[0].Name);
             Assert.AreEqual("Title", model.ClassList[0].PropertyList[1].Name);
             Assert.AreEqual("Name", model.ClassList[1].PropertyList[0].Name);
@@ -42,6 +42,9 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Title", model.ClassList[2].PropertyList[1].Name);
             Assert.AreEqual("DataType", model.ClassList[2].PropertyList[2].Name);
             Assert.AreEqual("Default", model.ClassList[2].PropertyList[3].Name);
+            Assert.AreEqual("LookupType", model.ClassList[2].PropertyList[4].Name);
+            Assert.AreEqual("LookupDependence", model.ClassList[2].PropertyList[5].Name);
+            Assert.AreEqual("LookupTable", model.ClassList[2].PropertyList[6].Name);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace org.xpangen.Generator.Test
             var definition = GenData.DataLoader.LoadData("Definition");
             definition.Last(1);
             Assert.AreEqual("Property", definition.Context[1].GenObject.Attributes[0]);
-            Assert.AreEqual(4, definition.Context[3].Count);
+            Assert.AreEqual(7, definition.Context[3].Count);
             Assert.AreSame(minimal, d.Cache.Internal("definition", "Minimal", minimal));
             Assert.AreSame(basic, d.Cache.Internal("definition", "Basic", basic));
             var newDefinition = d.Cache.Internal("definition", "Definition", definition);
@@ -70,7 +70,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreSame(newDefinition.GenDataBase, d.Context[2].GenObject.GenDataBase);
             d.Last(2);
             Assert.AreEqual("Property", d.Context[2].GenObject.Attributes[0]);
-            Assert.AreEqual(4, d.Context[4].Count);
+            Assert.AreEqual(7, d.Context[4].Count);
             d.First(0);
         }
 

@@ -35,7 +35,7 @@ namespace GenEdit.View
             ProfileTextBox.Clear();
             if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null || GenDataEditorViewModel.Data.Profile == null) return;
             
-            var builder = new ProfileEditorTreeViewBuilder(GenDataEditorViewModel.Data) { ShowText = false };
+            var builder = new ProfileEditorTreeViewBuilder(GenDataEditorViewModel.Data);
 
             IsBuilding = true;
             builder.CreateBodyChildTrees(ProfileNavigatorTreeView.Nodes, GenDataEditorViewModel.Data.Profile);

@@ -115,15 +115,15 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <summary>
         /// The full path of the generated file.
         /// </summary>
-        public string Generated
+        public string GeneratedFile
         {
             get
             {
-                return FileGroup != null ? FileGroup.Generated : "";
+                return FileGroup != null ? FileGroup.GeneratedFile : "";
             }
             set
             {
-                FileGroup.Generated = value;
+                FileGroup.GeneratedFile = value;
             }
         }
         

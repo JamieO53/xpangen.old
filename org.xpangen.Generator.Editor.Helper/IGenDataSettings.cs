@@ -33,7 +33,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <summary>
         /// The full path of the generated file.
         /// </summary>
-        string Generated { get; set; }
+        string GeneratedFile { get; set; }
 
         /// <summary>
         /// The home directory of the generator data
