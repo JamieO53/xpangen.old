@@ -139,7 +139,7 @@ namespace org.xpangen.Generator.Parameter
                                                       Lit = "True",
                                                       UseLit = true
                                                   };
-                            var functionQuote = new GenFunction(genDataDef) {FunctionName = "StringOrName"};
+                            var functionQuote = new GenFunction(genDataDef, parentSegment) {FunctionName = "StringOrName"};
                             var param = new GenBlock(genDataDef, parentSegment);
                             param.Body.Add(new GenPlaceholderFragment(genDataDef, parentSegment)
                                                {

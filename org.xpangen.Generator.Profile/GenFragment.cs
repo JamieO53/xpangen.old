@@ -2,11 +2,12 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Profile
 {
-    public abstract class GenFragment
+    public abstract class GenFragment : GenNamedApplicationBase
     {
         /// <summary>
         /// The generator data definition.
@@ -70,6 +71,8 @@ namespace org.xpangen.Generator.Profile
         /// <returns>The generated fragment was not empty.</returns>
         public virtual bool Generate(GenFragment prefix, GenData genData, GenWriter writer)
         {
+            if (!(this is GenProfileFragment) && ParentSegement == null)
+                throw new GeneratorException("Parent segment is not specified", GenErrorType.Assertion);
             var expanded = Expand(genData);
             if (expanded != "" && prefix != null)
                 prefix.Generate(null, genData, writer);

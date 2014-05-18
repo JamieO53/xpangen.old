@@ -76,7 +76,7 @@ namespace org.xpangen.Generator.Editor.Helper
             }
         }
 
-        public GenSegment Profile { get; private set; } 
+        public GenCompactProfileParser Profile { get; private set; } 
         public IGenData GenDataStore { get; private set; }
         public IGenDataSettings Settings { get; set; }
         public bool Testing { get; set; }

@@ -25,7 +25,8 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Generator Fragment test")]
         public void GenFragmentTest()
         {
-            var g = new GenFragmentTest(GenDataDef, null);
+            var r = new GenProfileFragment(GenData.GenDataDef);
+            var g = new GenFragmentTest(GenDataDef, r);
             VerifyFragment(GenData, g, "GenFragmentTest", FragmentType.Null, "Label", "Text", "Generate", true, -1);
         }
 
@@ -35,7 +36,8 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Generator segment body test")]
         public void GenSegmentBodyTest()
         {
-            var g = new GenSegBody(GenDataDef, null);
+            var r = new GenProfileFragment(GenData.GenDataDef);
+            var g = new GenSegBody(GenDataDef, r);
             var t = new GenTextFragment(GenDataDef, g.ParentSegement) { Text = "Text piece" };
             g.Add(t);
             VerifyFragment(GenData, g, "GenSegBody", FragmentType.Body, "Body", "Text piece", "Text piece", false, -1);
@@ -101,7 +103,8 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Generator null fragment test")]
         public void GenNullFragmentTest()
         {
-            var g = new GenNullFragment(GenDataDef, null);
+            var r = new GenProfileFragment(GenData.GenDataDef);
+            var g = new GenNullFragment(GenDataDef, r);
             VerifyFragment(GenData, g, "GenNullFragment", FragmentType.Null, "", "", "", true, -1);
         }
 
@@ -166,7 +169,8 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Generator text fragment test")]
         public void GenTextFragmentTest()
         {
-            var g = new GenTextFragment(GenDataDef, null) {Text = "Text fragment"};
+            var r = new GenProfileFragment(GenData.GenDataDef);
+            var g = new GenTextFragment(GenDataDef, r) { Text = "Text fragment" };
             VerifyFragment(GenData, g, "GenTextFragment", FragmentType.Text, "Text", "Text fragment", "Text fragment", true, -1);
         }
 
@@ -176,7 +180,8 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Generator placeholder test")]
         public void GenPlaceholderTest()
         {
-            var g = new GenPlaceholderFragment(GenDataDef, null) {Id = GenDataDef.GetId("Property.Name")};
+            var r = new GenProfileFragment(GenData.GenDataDef);
+            var g = new GenPlaceholderFragment(GenDataDef, r) { Id = GenDataDef.GetId("Property.Name") };
             VerifyFragment(GenData, g, "GenPlaceholderFragment", FragmentType.Placeholder, "Property.Name", "`Property.Name`",
                            "Property2", true, -1);
         }
@@ -187,10 +192,11 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Generator Block test")]
         public void GenBlockTest()
         {
+            var r = new GenProfileFragment(GenData.GenDataDef);
             var p = new GenPlaceholderFragment(GenDataDef, null) {Id = GenDataDef.GetId("Property.Name")};
             var t = new GenTextFragment(GenData.GenDataDef, null) {Text = ","};
 
-            var g = new GenBlock(GenDataDef, null);
+            var g = new GenBlock(GenDataDef, r);
             g.Body.Add(p);
             g.Body.Add(t);
             VerifyFragment(GenData, g, "GenBlock", FragmentType.Block, "Block", "`{`Property.Name`,`]", "Property2,", false, -1);
@@ -204,10 +210,11 @@ namespace org.xpangen.Generator.Test
         {
             var d = SetUpLookupData();
             var f = d.GenDataDef;
+            var r = new GenProfileFragment(GenData.GenDataDef);
             var p = new GenPlaceholderFragment(f, null) { Id = f.GetId("Class.Name") };
             var t = new GenTextFragment(d.GenDataDef, null) { Text = "," };
 
-            var g = new GenLookup(f, "Class.Name=SubClass.Name", null);
+            var g = new GenLookup(f, "Class.Name=SubClass.Name", r);
             g.Body.Add(p);
             g.Body.Add(t);
             Assert.IsFalse(g.NoMatch);
@@ -232,11 +239,12 @@ namespace org.xpangen.Generator.Test
         public void GenLookupNoMatchTest()
         {
             const string txt = "SubClass does not exist";
+            var r = new GenProfileFragment(GenData.GenDataDef);
             var d = SetUpLookupData();
             var f = d.GenDataDef;
             var t = new GenTextFragment(f, null) { Text = txt };
 
-            var g = new GenLookup(f, "Class.Name=SubClass.Name", null) {NoMatch = true};
+            var g = new GenLookup(f, "Class.Name=SubClass.Name", r) {NoMatch = true};
             g.Body.Add(t);
             Assert.AreEqual(FragmentType.Lookup, g.FragmentType);
             Assert.IsFalse(g.IsTextFragment);
@@ -267,11 +275,12 @@ namespace org.xpangen.Generator.Test
         {
             var d = SetUpLookupContextData();
             var f = d.GenDataDef;
-            var p0 = new GenPlaceholderFragment(f, null) {Id = f.GetId("Parent.Name")};
+            var r = new GenProfileFragment(GenData.GenDataDef);
+            var p0 = new GenPlaceholderFragment(f, null) { Id = f.GetId("Parent.Name") };
             var p1 = new GenPlaceholderFragment(f, null) {Id = f.GetId("Lookup.Name")};
             var t = new GenTextFragment(f, null) {Text = ","};
 
-            var b = new GenBlock(f, null);
+            var b = new GenBlock(f, r);
             b.Body.Add(p0);
             b.Body.Add(t);
 

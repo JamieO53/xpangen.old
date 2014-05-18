@@ -13,7 +13,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
     /// <summary>
     /// The compact profile parser
     /// </summary>
-    public class GenCompactProfileParser : GenSegment
+    public class GenCompactProfileParser : GenProfileFragment
     {
         public readonly CharSet ParameterSeparator;
         private CompactProfileScanner Scan { get; set; }
@@ -28,7 +28,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
         {
         }
 
-        private GenCompactProfileParser(GenData genData, CompactProfileScanner scan) : base(genData.GenDataDef, "", GenCardinality.All, null)
+        private GenCompactProfileParser(GenData genData, CompactProfileScanner scan) : base(genData.GenDataDef)
         {
             Scan = scan;
             try
@@ -146,7 +146,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                         break;
                     case TokenType.Function:
                         s = Scan.ScanFunctionName();
-                        var func = new GenFunction(GenDataDef) {FunctionName = s};
+                        var func = new GenFunction(GenDataDef, parentSegment) {FunctionName = s};
                         frag = func;
                         ScanBlockParams(func.Body, parentSegment);
                         break;
