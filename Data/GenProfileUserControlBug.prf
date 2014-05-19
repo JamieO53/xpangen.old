@@ -1,0 +1,28 @@
+`[Solution:`[Assembly:`[Class:`?Class.Name='FileGroup':`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Class.Name`UserControl.cs`]`]
+`[Property:`?Property.LookupTable:        private void Raise`Property.Name`Selected()
+        {
+            var handler = `Property.Name`Selected;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        private void ComboBox`Property.Name`SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (`Class.Name` != null && comboBox`Property.Name`.SelectedItem != null)
+            {
+                var item = (`Property.Name`) comboBox`Property.Name`.SelectedItem;
+                `Class.Name`.`Property.Name` = item.Name;`%Property.LookupDependence=Property.LookupTable:`?Property.LookupDependence:
+                var `@Decapitalize:`{`Property.Name``]`] = `Class.Name`.`Property.Name`;
+                var `@Decapitalize:`{`Property.LookupTable``]`]List =
+                    (GenNamedApplicationList<`Property.LookupTable`>) ViewModel.GetDataSource(item, "`Property.LookupTable`");
+                comboBox`Property.Name`.DataSource = `@Decapitalize:`{`Property.LookupTable``]`]List;
+                comboBox`Property.Name`.SelectedItem = `@Decapitalize:`{`Property.LookupTable``]`]List.Find(`@Decapitalize:`{`Property.Name``]`]);
+                ComboBox`Property.Name`SelectedValueChanged(sender, e);`]`]
+                Raise`Property.Name`Selected();
+                return;
+            }`%Property.LookupDependence=Property.LookupTable:`?Property.LookupDependence:
+            comboBox`Property.Name`.DataSource = null;
+            ComboBox`Property.Name`SelectedValueChanged(sender, e);`]`]
+            Raise`Property.Name`Selected();
+        }
+`]`]`]`]`]`]

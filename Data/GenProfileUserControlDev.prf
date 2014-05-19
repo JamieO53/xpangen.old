@@ -1,0 +1,12 @@
+`[Solution:`[Assembly:`[Class:`?Class.Name='FileGroup':`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Class.Name`UserControl.cs`]`]
+    public partial class `Class.Name`UserControl : UserControlBase
+    {`[Property:`?Property.LookupTable:
+@Property.Name=Property.LookupDependence:
+                var `@Decapitalize:`{`Property.Name``]`] = `Class.Name`.`Property.Name`;
+                var `@Decapitalize:`{`Property.Name``]`]List =
+                    (GenNamedApplicationList<`Property.Name`>) ViewModel.GetDataSource(item, "`Property.Name`");
+                comboBoxProfile.DataSource = `@Decapitalize:`{`Property.Name``]`]List;
+                comboBoxProfile.SelectedItem = `@Decapitalize:`{`Property.Name``]`]List.Find(`@Decapitalize:`{`Property.Name``]`]);
+                ComboBox`Property.Name`SelectedValueChanged(sender, e);`]`]`]    }
+}
+`]`]`]]
