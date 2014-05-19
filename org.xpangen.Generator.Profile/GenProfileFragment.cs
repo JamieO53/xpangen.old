@@ -28,5 +28,10 @@ namespace org.xpangen.Generator.Profile
         {
             return Body.Expand(genData);
         }
+
+        public override bool Generate(GenFragment prefix, GenData genData, GenWriter writer)
+        {
+            return Body.Generate(prefix, genData, writer);
+        }
     }
 }

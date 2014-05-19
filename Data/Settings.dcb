@@ -30,6 +30,7 @@ BaseFile=ProgramDefinition[FileName='ProgramDefinition.dcb',FilePath=Data,Title=
 Profile=GenProfileModel[FileName='GenProfileModel.prf',FilePath=Data]
 Profile=GenProfileUserControl[FileName='GenProfileUserControl.prf',FilePath=Data]
 Profile=GenProfileUserControlDev[FileName='GenProfileUserControlDev.prf',FilePath=Data]
+Profile=GenProfileUserControlBug[FileName='GenProfileUserControlBug.prf',FilePath=Data]
 BaseFile=GeneratorEditor[FileName='GeneratorEditor.dcb',FilePath=Data,Title='Defines generator editor settings data',FileExtension='.dcb']
 BaseFile=DatabaseDefinition[FileName='DatabaseDefinition.dcb',FilePath=Data,Title='Defines generator database definition data',FileExtension='.dcb']
 Profile=DbTableSynonyms[FileName='DbTableSynonyms.prf',FilePath=Data]
