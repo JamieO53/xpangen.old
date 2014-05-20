@@ -33,6 +33,7 @@ namespace GenEdit.UserControls
             this.labelUcHeader = new System.Windows.Forms.Label();
             this.labelName = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
+            this.bindingSourceFileGroup = new System.Windows.Forms.BindingSource(this.components);
             this.labelFileName = new System.Windows.Forms.Label();
             this.textBoxFileName = new System.Windows.Forms.TextBox();
             this.labelFilePath = new System.Windows.Forms.Label();
@@ -43,9 +44,8 @@ namespace GenEdit.UserControls
             this.comboBoxProfile = new System.Windows.Forms.ComboBox();
             this.labelGeneratedFile = new System.Windows.Forms.Label();
             this.textBoxGeneratedFile = new System.Windows.Forms.TextBox();
-            this.bindingSourceFileGroup = new System.Windows.Forms.BindingSource(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceFileGroup)).BeginInit();
             this.panelUcHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceFileGroup)).BeginInit();
             this.SuspendLayout();
             // 
             // panelUcHeader
@@ -64,7 +64,7 @@ namespace GenEdit.UserControls
             this.labelUcHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelUcHeader.Location = new System.Drawing.Point(0, 0);
             this.labelUcHeader.Name = "labelUcHeader";
-            this.labelUcHeader.Size = new System.Drawing.Size(250, 17);
+            this.labelUcHeader.Size = new System.Drawing.Size(71, 17);
             this.labelUcHeader.TabIndex = 0;
             this.labelUcHeader.Text = "File group";
             // 
@@ -73,13 +73,13 @@ namespace GenEdit.UserControls
             this.labelName.AutoSize = true;
             this.labelName.Location = new System.Drawing.Point(3, 23);
             this.labelName.Name = "labelName";
-            this.labelName.Size = new System.Drawing.Size(250, 13);
+            this.labelName.Size = new System.Drawing.Size(35, 13);
             this.labelName.TabIndex = 2;
             this.labelName.Text = "Name";
             // 
             // textBoxName
             // 
-            this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxName.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceFileGroup, "Name", true));
             this.textBoxName.Location = new System.Drawing.Point(6, 39);
@@ -89,18 +89,22 @@ namespace GenEdit.UserControls
             this.textBoxName.MouseEnter += new System.EventHandler(this.TextBoxNameMouseEnter);
             this.textBoxName.MouseLeave += new System.EventHandler(this.TextBoxNameMouseLeave);
             // 
+            // bindingSourceFileGroup
+            // 
+            this.bindingSourceFileGroup.DataSource = typeof(org.xpangen.Generator.Data.Model.Settings.FileGroup);
+            // 
             // labelFileName
             // 
             this.labelFileName.AutoSize = true;
             this.labelFileName.Location = new System.Drawing.Point(3, 62);
             this.labelFileName.Name = "labelFileName";
-            this.labelFileName.Size = new System.Drawing.Size(250, 13);
+            this.labelFileName.Size = new System.Drawing.Size(52, 13);
             this.labelFileName.TabIndex = 4;
             this.labelFileName.Text = "File name";
             // 
             // textBoxFileName
             // 
-            this.textBoxFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.textBoxFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxFileName.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceFileGroup, "FileName", true));
             this.textBoxFileName.Location = new System.Drawing.Point(6, 78);
@@ -115,13 +119,13 @@ namespace GenEdit.UserControls
             this.labelFilePath.AutoSize = true;
             this.labelFilePath.Location = new System.Drawing.Point(3, 101);
             this.labelFilePath.Name = "labelFilePath";
-            this.labelFilePath.Size = new System.Drawing.Size(250, 13);
+            this.labelFilePath.Size = new System.Drawing.Size(47, 13);
             this.labelFilePath.TabIndex = 6;
             this.labelFilePath.Text = "File path";
             // 
             // textBoxFilePath
             // 
-            this.textBoxFilePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.textBoxFilePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxFilePath.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceFileGroup, "FilePath", true));
             this.textBoxFilePath.Location = new System.Drawing.Point(6, 117);
@@ -136,13 +140,13 @@ namespace GenEdit.UserControls
             this.labelBaseFileName.AutoSize = true;
             this.labelBaseFileName.Location = new System.Drawing.Point(3, 140);
             this.labelBaseFileName.Name = "labelBaseFileName";
-            this.labelBaseFileName.Size = new System.Drawing.Size(250, 13);
+            this.labelBaseFileName.Size = new System.Drawing.Size(76, 13);
             this.labelBaseFileName.TabIndex = 8;
             this.labelBaseFileName.Text = "Base file name";
             // 
             // comboBoxBaseFileName
             // 
-            this.comboBoxBaseFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.comboBoxBaseFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxBaseFileName.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bindingSourceFileGroup, "BaseFileName", true));
             this.comboBoxBaseFileName.DisplayMember = "Name";
@@ -161,13 +165,13 @@ namespace GenEdit.UserControls
             this.labelProfile.AutoSize = true;
             this.labelProfile.Location = new System.Drawing.Point(3, 180);
             this.labelProfile.Name = "labelProfile";
-            this.labelProfile.Size = new System.Drawing.Size(250, 13);
+            this.labelProfile.Size = new System.Drawing.Size(36, 13);
             this.labelProfile.TabIndex = 10;
             this.labelProfile.Text = "Profile";
             // 
             // comboBoxProfile
             // 
-            this.comboBoxProfile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.comboBoxProfile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxProfile.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bindingSourceFileGroup, "Profile", true));
             this.comboBoxProfile.DisplayMember = "Name";
@@ -186,13 +190,13 @@ namespace GenEdit.UserControls
             this.labelGeneratedFile.AutoSize = true;
             this.labelGeneratedFile.Location = new System.Drawing.Point(3, 220);
             this.labelGeneratedFile.Name = "labelGeneratedFile";
-            this.labelGeneratedFile.Size = new System.Drawing.Size(250, 13);
+            this.labelGeneratedFile.Size = new System.Drawing.Size(73, 13);
             this.labelGeneratedFile.TabIndex = 12;
             this.labelGeneratedFile.Text = "Generated file";
             // 
             // textBoxGeneratedFile
             // 
-            this.textBoxGeneratedFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.textBoxGeneratedFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxGeneratedFile.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceFileGroup, "GeneratedFile", true));
             this.textBoxGeneratedFile.Location = new System.Drawing.Point(6, 236);
@@ -201,17 +205,12 @@ namespace GenEdit.UserControls
             this.textBoxGeneratedFile.TabIndex = 13;
             this.textBoxGeneratedFile.MouseEnter += new System.EventHandler(this.TextBoxGeneratedFileMouseEnter);
             this.textBoxGeneratedFile.MouseLeave += new System.EventHandler(this.TextBoxGeneratedFileMouseLeave);
-            //
-            // bindingSourceFileGroup
-            // 
-            this.bindingSourceFileGroup.DataSource = typeof(org.xpangen.Generator.Data.Model.Settings.FileGroup);
             // 
             // FileGroupUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panelUcHeader);
-            this.Controls.Add(this.labelFileName);
             this.Controls.Add(this.labelName);
             this.Controls.Add(this.textBoxName);
             this.Controls.Add(this.labelFileName);
@@ -226,9 +225,9 @@ namespace GenEdit.UserControls
             this.Controls.Add(this.textBoxGeneratedFile);
             this.Name = "FileGroupUserControl";
             this.Size = new System.Drawing.Size(259, 264);
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceFileGroup)).EndInit();
             this.panelUcHeader.ResumeLayout(false);
             this.panelUcHeader.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceFileGroup)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

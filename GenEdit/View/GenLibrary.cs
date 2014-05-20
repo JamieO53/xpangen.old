@@ -168,10 +168,20 @@ namespace GenEdit.View
             var i = comboBoxFileGroup.SelectedIndex;
             if (comboBoxFileGroup.SelectedItem as FileGroup == null)
             {
+
+                fileGroupUserControl1.SaveChanges();
+                var data = GenDataEditorViewModel.Data;
+                var extension = data.Settings.FindBaseFile(Selected.BaseFileName).FileExtension;
+                if (extension == "")
+                    extension = ".dcb";
+                else if (extension[0] != '.')
+                    extension = "." + extension;
                 if (Selected.Name == "")
                     Selected.Name = Path.ChangeExtension(Selected.FileName, "").Replace(".", "");
+                if (Selected.FileName == "")
+                    Selected.FileName = Path.ChangeExtension(Selected.Name, ".");
                 if (Path.GetExtension(Selected.FileName) == "")
-                    Selected.FileName = Path.ChangeExtension(Selected.FileName, ".dcb");
+                    Selected.FileName = Path.ChangeExtension(Selected.FileName, extension);
                 if (Selected.Name == "")
                 {
                     MessageBox.Show("Specify the file name before saving the file", "Saving a new file");

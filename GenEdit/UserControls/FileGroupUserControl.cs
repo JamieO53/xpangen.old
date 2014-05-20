@@ -28,10 +28,13 @@ namespace GenEdit.UserControls
             {
                 if (_fileGroup != value)
                 {
+                    if (_fileGroup != null)
+                        _fileGroup.PropertyChanged -= ViewModelPropertyChanged;
                     bindingSourceFileGroup.DataSource = value ?? DefaultDataSource;
                     _fileGroup = value;
                     if (value != null)
                     {
+                        value.DelayedSave = false;
                         value.PropertyChanged += ViewModelPropertyChanged;
                         ComboBoxBaseFileNameSelectedValueChanged(this, EventArgs.Empty);
                     }
@@ -39,26 +42,19 @@ namespace GenEdit.UserControls
             }
         }
 
-        private void ViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName.Split('.')[0] == "FileGroup")
-                bindingSourceFileGroup.ResetBindings(false);
-        }
-
         private static IGenDataSettings ViewModel
         {
             get { return ViewModelLocator.GenDataEditorViewModel.Data.Settings; }
         }
 
-        public FileGroupUserControl()
+        public FileGroupUserControl() : base("FileGroup")
         {
             InitializeComponent();
-            DefaultDataSource = bindingSourceFileGroup.DataSource;
+            BindingSource = bindingSourceFileGroup;
             comboBoxBaseFileName.DataSource = ViewModel.GetDataSource(FileGroup, "BaseFile");
             comboBoxBaseFileName.SelectedItem = null;
         }
 
-        private object DefaultDataSource { get; set; }
         private void RaiseBaseFileNameSelected()
         {
             var handler = BaseFileNameSelected;

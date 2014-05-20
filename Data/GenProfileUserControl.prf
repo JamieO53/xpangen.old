@@ -26,10 +26,13 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             {
                 if (_`@Decapitalize:`{`Class.Name``]`] != value)
                 {
+                    if (_`@Decapitalize:`{`Class.Name``]`] != null)
+                        _`@Decapitalize:`{`Class.Name``]`].PropertyChanged -= ViewModelPropertyChanged;
                     bindingSource`Class.Name`.DataSource = value ?? DefaultDataSource;
                     _`@Decapitalize:`{`Class.Name``]`] = value;
                     if (value != null)
                     {
+                        value.DelayedSave = false;
                         value.PropertyChanged += ViewModelPropertyChanged;`[Property:`?Property.LookupTable:`?Property.LookupDependence~:
                         ComboBox`Property.Name`SelectedValueChanged(this, EventArgs.Empty);`]`]`]
                     }
@@ -37,26 +40,19 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             }
         }
 
-        private void ViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName.Split('.')[0] == "`Class.Name`")
-                bindingSource`Class.Name`.ResetBindings(false);
-        }
-
         private static `Assembly.ModelLocatorType` ViewModel
         {
             get { return `Assembly.ModelLocator`; }
         }
 
-        public `Class.Name`UserControl()
+        public `Class.Name`UserControl() : base("`Class.Name`")
         {
             InitializeComponent();
-            DefaultDataSource = bindingSource`Class.Name`.DataSource;`[Property:`?Property.LookupTable:`?Property.LookupDependence~:
+            BindingSource = bindingSource`Class.Name`;`[Property:`?Property.LookupTable:`?Property.LookupDependence~:
             comboBox`Property.Name`.DataSource = ViewModel.GetDataSource(`Class.Name`, "`Property.LookupTable`");
             comboBox`Property.Name`.SelectedItem = null;`]`]`]
         }
-
-        private object DefaultDataSource { get; set; }`[Property:`?Property.LookupTable:
+`[Property:`?Property.LookupTable:
         private void Raise`Property.Name`Selected()
         {
             var handler = `Property.Name`Selected;
@@ -206,8 +202,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panelUcHeader);
-            this.Controls.Add(this.labelFileName);`[Property:
+            this.Controls.Add(this.panelUcHeader);`[Property:
             this.Controls.Add(this.label`Property.Name`);`?Property.LookupType~:
             this.Controls.Add(this.textBox`Property.Name`);`]`?Property.LookupType:
             this.Controls.Add(this.comboBox`Property.Name`);`]`]
