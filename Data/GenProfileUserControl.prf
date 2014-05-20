@@ -4,9 +4,10 @@
 
 using System;
 using System.ComponentModel;
+using System.Windows.Forms;
 using `Assembly.Namespace`.ViewModel;
 using org.xpangen.Generator.Application;
-using org.xpangen.Generator.Data.Model.Settings;
+using `Assembly.BindingNamespace`;
 using org.xpangen.Generator.Editor.Helper;
 
 namespace `Assembly.Namespace`.`Assembly.Subfolder`
@@ -14,8 +15,9 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
     public partial class `Class.Name`UserControl : UserControlBase
     {`[Property:`?Property.LookupTable:
         public EventHandler `Property.Name`Selected;
-        public `Property.Name` `Property.Name` { get; set; }`]`]
+        public `Property.LookupTable` `Property.LookupTable` { get; set; }`]`]
         private `Class.Name` _`@Decapitalize:`{`Class.Name``]`];
+        private readonly ToolTip _toolTip = new ToolTip();
 
         public `Class.Name` `Class.Name`
         {
@@ -50,7 +52,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
         {
             InitializeComponent();
             DefaultDataSource = bindingSource`Class.Name`.DataSource;`[Property:`?Property.LookupTable:`?Property.LookupDependence~:
-            comboBox`Property.Name`.DataSource = ViewModel.GetDataSource(`Class.Name`, "`Property.Name`");
+            comboBox`Property.Name`.DataSource = ViewModel.GetDataSource(`Class.Name`, "`Property.LookupTable`");
             comboBox`Property.Name`.SelectedItem = null;`]`]`]
         }
 
@@ -66,22 +68,37 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
         {
             if (`Class.Name` != null && comboBox`Property.Name`.SelectedItem != null)
             {
-                var item = (`Property.Name`) comboBox`Property.Name`.SelectedItem;
-                `Class.Name`.`Property.Name` = item.Name;`%Property.LookupDependence=Property.LookupTable:`?Property.LookupDependence:
+                var item = (`Property.LookupTable`) comboBox`Property.Name`.SelectedItem;
+                `Class.Name`.`Property.Name` = item.Name;
+                `Property.LookupTable` = item;`%Property.LookupDependence=Property.LookupTable:`?Property.LookupDependence:
                 var `@Decapitalize:`{`Property.Name``]`] = `Class.Name`.`Property.Name`;
                 var `@Decapitalize:`{`Property.LookupTable``]`]List =
                     (GenNamedApplicationList<`Property.LookupTable`>) ViewModel.GetDataSource(item, "`Property.LookupTable`");
                 comboBox`Property.Name`.DataSource = `@Decapitalize:`{`Property.LookupTable``]`]List;
-                comboBox`Property.Name`.SelectedItem = `@Decapitalize:`{`Property.LookupTable``]`]List.Find(`@Decapitalize:`{`Property.Name``]`]);
-                ComboBox`Property.Name`SelectedValueChanged(sender, e);`]`]
+                comboBox`Property.Name`.SelectedItem = `@Decapitalize:`{`Property.LookupTable``]`]List.Find(`@Decapitalize:`{`Property.Name``]`]);`]`]
                 Raise`Property.Name`Selected();
                 return;
             }`%Property.LookupDependence=Property.LookupTable:`?Property.LookupDependence:
-            comboBox`Property.Name`.DataSource = null;
-            ComboBox`Property.Name`SelectedValueChanged(sender, e);`]`]
+            comboBox`Property.Name`.DataSource = null;`]`]
+            `Property.LookupTable` = null;
             Raise`Property.Name`Selected();
+        }`]`]`[Property:
+
+        public void Set`Property.Name`ReadOnly(bool value)
+        {
+            `?Property.LookupType~:textBox`Property.Name`.ReadOnly`]`?Property.LookupType:comboBox`Property.Name`.Enabled`] = value;
+        }`?Property.Title:
+        
+        private void `?Property.LookupType~:TextBox`]`?Property.LookupType:ComboBox`]`Property.Name`MouseEnter(object sender, EventArgs e)
+        {
+            _toolTip.Show("`Property.Title`", `?Property.LookupType~:textBox`]`?Property.LookupType:comboBox`]`Property.Name`);
         }
-`]`]    }
+
+        private void `?Property.LookupType~:TextBox`]`?Property.LookupType:ComboBox`]`Property.Name`MouseLeave(object sender, EventArgs e)
+        {
+            _toolTip.Hide(`?Property.LookupType~:textBox`]`?Property.LookupType:comboBox`]`Property.Name`);
+        }`]`]
+    }
 }
 `@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Class.Name`UserControl.Designer.cs`]`]namespace `Assembly.Namespace`.`Assembly.Subfolder`
 {
@@ -161,7 +178,9 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             this.textBox`Property.Name`.Location = new System.Drawing.Point(6, `@Get:`{LocationTop`]`]`@Add:`{LocationTop`]`{23`]`]);
             this.textBox`Property.Name`.Name = "textBox`Property.Name`";
             this.textBox`Property.Name`.Size = new System.Drawing.Size(250, 20);
-            this.textBox`Property.Name`.TabIndex = `@Get:`{TabIndex`]`]`@Add:`{TabIndex`]`{1`]`];`]`?Property.LookupType:
+            this.textBox`Property.Name`.TabIndex = `@Get:`{TabIndex`]`]`@Add:`{TabIndex`]`{1`]`];
+            this.textBox`Property.Name`.MouseEnter += new System.EventHandler(this.TextBox`Property.Name`MouseEnter);
+            this.textBox`Property.Name`.MouseLeave += new System.EventHandler(this.TextBox`Property.Name`MouseLeave);`]`?Property.LookupType:
             // 
             // comboBox`Property.Name`
             // 
@@ -175,7 +194,9 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             this.comboBox`Property.Name`.Size = new System.Drawing.Size(250, 21);
             this.comboBox`Property.Name`.TabIndex = `@Get:`{TabIndex`]`]`@Add:`{TabIndex`]`{1`]`];
             this.comboBox`Property.Name`.ValueMember = "Name";
-            this.comboBox`Property.Name`.SelectedValueChanged += new System.EventHandler(this.ComboBox`Property.Name`SelectedValueChanged);`]`]
+            this.comboBox`Property.Name`.SelectedValueChanged += new System.EventHandler(this.ComboBox`Property.Name`SelectedValueChanged);
+            this.comboBox`Property.Name`.MouseEnter += new System.EventHandler(this.ComboBox`Property.Name`MouseEnter);
+            this.comboBox`Property.Name`.MouseLeave += new System.EventHandler(this.ComboBox`Property.Name`MouseLeave);`]`]
             //
             // bindingSource`Class.Name`
             // 

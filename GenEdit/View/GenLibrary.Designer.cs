@@ -178,7 +178,9 @@ namespace GenEdit.View
             // 
             this.fileGroupUserControl1.AutoSize = true;
             this.fileGroupUserControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.fileGroupUserControl1.BaseFile = null;
             this.fileGroupUserControl1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.fileGroupUserControl1.FileGroup = null;
             this.fileGroupUserControl1.Location = new System.Drawing.Point(0, 92);
             this.fileGroupUserControl1.Name = "fileGroupUserControl1";
             this.fileGroupUserControl1.Profile = null;
