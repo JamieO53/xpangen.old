@@ -179,17 +179,17 @@
   <data name="buttonClose.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI9SURBVDhPfZNPaxNBGMZfY1JTlB4ULwXLlB6EghCIgl4i
-        5FD8AuoH0JsH0ZsHkTT0ULFoDoVie1IrjZeIhbY2DR6MEHqwSA/i1iwaiEm6m2z+7SabJnmc2WxCLIkP
-        POzuzPye952dXbLl5mbDfIfoxjOHYz/m8+kJn89Yc7m2A0TX+FxPTNOKUBQVar6AQkGDViyiVCrhVzyO
-        8Pg4fgSDkBcWLEuzs1geGzPeEF2yeWKKqiKTzSJ3qEDc5ws8SNPwyuNB9OpllOUDfAs+xNfHD1A6kBD1
-        ehEiStg8MQEcKgrvIM87KFgd5HI5LLtP4cuEA7F7M6gXVZglFdt3Z/DxvAMrJ0i3eb4FDlgwr1rkrZfL
-        ZciyjHejo4hOEnbu+2GWFZgVBfEnfux6Ca9PUt3miYn99uBKBdVqFX8yGYSnpxE554Qm7WE/5If81o9q
-        ag9bF514SfTd5okJqB82DAP1eh3x1VV84NtYP+vEpyuE3VuEmMeJiItqt4lu2jyxCodE2/1wo9GwnjeX
-        lhCZmsL7kRFsnHFjnTFcJ3rEudMdnAeIhSKkHz46OrJsmibS6TQSiYTlLD8tzkx20I6YzkFd11Gr1Syg
-        G9BsNtFqtSx3w9rttggQH1lPzODg8epdWADCYkzM78Ribc5MdNCOmKjcX/04LLpLJpP4nUrh+eJi2OZ6
-        6gUMqi7GJEniVxOB+fnPNvOPrIBh7Vf40f7k1QNzcwNhITbsxQltbG61n74IrdlrB+q/vzP3Be4BIvoL
-        caNUgFndbC4AAAAASUVORK5CYII=
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI9SURBVDhPfZPNaxNBGMZfY1JTlB4ULwXLlB6EghCIgl4i
+        5FD8B9Q/QG8eRG8eRNLQQ8WiORSK7UmtNF4iFlttEjwYIfRgkR7ErVk0EJN0N9l8bZLN1+PMZhNiSXzg
+        YXdn5ve87+zskiUnNxvlW0TXnths+1GPR497PNUNh2PHR3SFz/XFNK0ARVGh5vLI5zVohQKKxSJ+xWII
+        Tk7ih98PeWnJtDQ/j9WJieorogsWT0xRVaQzGWQPFYj7XJ4HaRpeuFwIX76IknyAb/77+PrwHooHEsJu
+        NwJEcYsnJoBDReEd5HgHebODbDaLVecJfJmyIXpnDvWCCqOoYuf2HD6etWHtGOkWz7fAARPmVQu89VKp
+        BFmW8WZ8HOFpQuSuF0ZJgVFWEHvkxa6b8PI41S2emNhvHy6XUalU8CedRnB2FqEzdmjSHvYDXsivvagk
+        9/DhvB3Pib5bPDEBDcLVahX1eh2x9XW849vYPG3Hp0uE3RuEqMuOkINqN4muWzyxModE24Nwo9Ewn7dX
+        VhCamcHbsTFsnXJikzFcJXrAuZNdnAeIhSJkEG42m6YNw0AqlUI8Hjed4afFmeku2hXTOajrOmq1mgn0
+        AlqtFtrttuleWKfTEQHiI+uLVTl4tHoPFoCwGBPz4Uikw5mpLtoVE5UHqx+FRXeJRAK/k0k8XV4OWlxf
+        /YBh1cWYJEn8asC3uPjZYv6RGTCq/TI/2p+8um9hYSgsxEa9OKH3W9udx88CG9baofrv78x9jnuIiP4C
+        bJ9UejuVRJgAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="buttonGenerate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

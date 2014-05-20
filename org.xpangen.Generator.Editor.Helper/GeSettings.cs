@@ -203,8 +203,8 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <returns>The identified data source.</returns>
         public IList GetDataSource(object context, string className)
         {
-            if (className == "BaseFile")
-                return GetBaseFiles();
+            if (className == "BaseFile") return GetBaseFiles();
+            if (context == null) return null;
             if (!(context is GenApplicationBase))
                 throw new GeneratorException("The selected data item must be a GenApplicationBase but is " + context.GetType().Name);
             var contextObject = (GenApplicationBase) context;
