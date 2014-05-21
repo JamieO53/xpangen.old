@@ -3,13 +3,15 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Data.Model.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
     public class GenNullFragment : GenFragment
     {
-        public GenNullFragment(GenDataDef genDataDef, GenContainerFragmentBase parentSegment)
-            : base(genDataDef, parentSegment, FragmentType.Null)
+        public GenNullFragment(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
+            GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
+            : base(genDataDef, parentSegment, FragmentType.Null, genData, profileRoot, genObject)
         {
         }
 

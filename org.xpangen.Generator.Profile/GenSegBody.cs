@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Text;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Data.Model.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
@@ -12,8 +13,9 @@ namespace org.xpangen.Generator.Profile
     {
         private readonly List<GenFragment> _fragment;
 
-        public GenSegBody(GenDataDef genDataDef, GenContainerFragmentBase parentSegment)
-            : base(genDataDef, parentSegment, FragmentType.Body)
+        public GenSegBody(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
+            GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
+            : base(genDataDef, parentSegment, FragmentType.Body, genData, profileRoot, genObject)
         {
             _fragment = new List<GenFragment>();
         }
@@ -51,6 +53,7 @@ namespace org.xpangen.Generator.Profile
 
         public void Add(GenFragment fragment)
         {
+            
             _fragment.Add(fragment);
             fragment.ParentSegement = ParentSegement;
         }

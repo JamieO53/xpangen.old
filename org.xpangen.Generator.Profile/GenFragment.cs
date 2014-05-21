@@ -2,7 +2,6 @@
 // // License, v. 2.0. If a copy of the MPL was not distributed with this
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Profile;
 
@@ -26,6 +25,16 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
+        public new GenObject GenObject
+        {
+            get { return base.GenObject; }
+            set
+            {
+                base.GenObject = value;
+                base.FragmentType = _fragmentType.ToString();
+            }
+        }
+        
         /// <summary>
         ///     Is this a text fragment?
         /// </summary>
@@ -47,17 +56,22 @@ namespace org.xpangen.Generator.Profile
         /// <param name="genDataDef">The definition of the data being generated.</param>
         /// <param name="parentSegment">The class segment this fragment belongs to.</param>
         /// <param name="fragmentType">The type of fragment.</param>
-        /// <param name="genObject">The profile data object.</param>
         /// <param name="genData">The profile data.</param>
+        /// <param name="profileRoot">The parent of all the profile fragments in the profile data.</param>
+        /// <param name="genObject">The data for this fragment.</param>
         protected GenFragment(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, 
-            FragmentType fragmentType, GenObject genObject = null, GenData genData = null) 
+            FragmentType fragmentType, GenData genData = null, ProfileRoot profileRoot = null, 
+            GenObject genObject = null) 
             : base(parentSegment != null ? parentSegment.GenData : genData)
         {
             GenDataDef = genDataDef;
             ParentSegement = parentSegment;
             FragmentType = fragmentType;
             base.GenObject = genObject;
+            ProfileRoot = profileRoot;
         }
+
+        protected ProfileRoot ProfileRoot { get; set; }
 
         /// <summary>
         ///     A label identifying the fragment for browsing.
