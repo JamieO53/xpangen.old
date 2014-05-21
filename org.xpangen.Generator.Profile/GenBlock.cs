@@ -3,6 +3,7 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Data.Model.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
@@ -10,8 +11,9 @@ namespace org.xpangen.Generator.Profile
     {
         public GenSegBody Body { get; private set; }
 
-        public GenBlock(GenDataDef genDataDef, GenContainerFragmentBase parentSegment)
-            : base(genDataDef, parentSegment, FragmentType.Block)
+        public GenBlock(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
+            GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
+            : base(genDataDef, parentSegment, FragmentType.Block, genData, profileRoot, genObject)
         {
             Body = new GenSegBody(genDataDef, parentSegment);
         }
