@@ -64,7 +64,7 @@ namespace GenEdit.ViewModel
         {
             var node = selectedItem as DataEditorTreeNodeBase;
             if (node == null) return null;
-            var tag = node.Tag as GenDataViewModelBase;
+            var tag = node.ViewModel;
             if (tag != null)
                 tag.EstablishContext();
             return tag;

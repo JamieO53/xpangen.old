@@ -43,6 +43,9 @@ namespace GenEdit.View
 
             if (node == null || !node.Changed) return;
 
+            if (node.IsNew) node.SavedContext.GenData.GenDataBase.Changed = true;
+
+
             var mr = MessageBox.Show("Data editor - data changed", "Do you wish to save the changes?",
                          MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
                          MessageBoxDefaultButton.Button1);
@@ -69,10 +72,10 @@ namespace GenEdit.View
         private void DataNavigatorTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             // See http://stackoverflow.com/questions/569673/treeview-re-grabs-focus-on-ctrlclick for this trick
-            BeginInvoke(new TreeViewEventHandler(delayedClick), sender, e);
+            BeginInvoke(new TreeViewEventHandler(DelayedClick), sender, e);
         }
 
-        private void delayedClick(object sender, TreeViewEventArgs e)
+        private void DelayedClick(object sender, TreeViewEventArgs e)
         {
             var nodeData = NodeData;
             if (nodeData != null)
@@ -257,7 +260,8 @@ namespace GenEdit.View
             if (node != null)
             {
                 var newNode = node.AddNewNode();
-                DataNavigatorTreeView.SelectedNode = newNode;
+                if (newNode != null)
+                    DataNavigatorTreeView.SelectedNode = newNode;
             }
         }
 

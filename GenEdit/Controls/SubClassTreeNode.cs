@@ -68,7 +68,7 @@ namespace GenEdit.Controls
             ImageIndex = 2;
             ToolTipText = Text;
             var genObject = GenData.Context[ClassId].GenObject;
-            if (genObject != null)
+            //if (genObject != null)
                 Tag = new SubClassViewModel(ParentNode == null ? null : ParentNode.GenObject.SubClass[i], GenObjectListBase, Def,
                                             SubClassDef,
                                             SavedContext, !string.IsNullOrEmpty(SubClassDef.Reference));
@@ -82,6 +82,14 @@ namespace GenEdit.Controls
         }
 
         /// <summary>
+        /// The editor view model for this node
+        /// </summary>
+        public new SubClassViewModel ViewModel
+        {
+            get { return (SubClassViewModel)base.ViewModel; }
+        }
+
+        /// <summary>
         /// Add a new tree node of the current class.
         /// </summary>
         /// <returns>The added tree node.</returns>
@@ -91,16 +99,20 @@ namespace GenEdit.Controls
             var className = SubClassDef.SubClass.Name;
             if (ParentNode != null && ParentNode.ViewModel != null) ParentNode.ViewModel.EstablishContext();
             else GenData.First(0);
-            var genObject = GenData.CreateObject(parentClassName, className);
-            var idx = genObject.Definition.Properties.IndexOf("Name");
-            if (idx >= 0)
-                genObject.Attributes[idx] = "new";
-            GenData.Last(ClassId);
-            var node = new ClassTreeNode(this, GenData, Definition, ClassId);
-            node.ViewModel.IsNew = true;
-            node.ViewModel.Save();
-            Nodes.Add(node);
-            return node;
+            if (string.IsNullOrEmpty(SubClassDef.ReferenceDefinition))
+            {
+                var genObject = GenData.CreateObject(parentClassName, className);
+                var idx = genObject.Definition.Properties.IndexOf("Name");
+                if (idx >= 0)
+                    genObject.Attributes[idx] = "new";
+                GenData.Last(ClassId);
+                var node = new ClassTreeNode(this, GenData, Definition, ClassId);
+                node.ViewModel.IsNew = true;
+                node.ViewModel.Save();
+                Nodes.Add(node);
+                return node;
+            }
+            return null;
         }
 
         /// <summary>

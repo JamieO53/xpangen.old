@@ -100,7 +100,6 @@ namespace org.xpangen.Generator.Data
 
             Context[0].GenObjectListBase.Add(GenDataBase.Root);
             First(0);
-            GenDataBase.Changed = false;
         }
         
         /// <summary>

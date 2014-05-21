@@ -35,6 +35,8 @@ namespace org.xpangen.Generator.Data
             {
                 _reference = value;
                 GenDataBase.References.Add(value, Definition.Reference);
+                GenDataBase.Changed = true;
+                GenDataBase.RaiseDataChanged(Parent.ParentSubClass.Definition.SubClass.Name, "Reference");
             }
         }
     }

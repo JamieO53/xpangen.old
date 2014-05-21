@@ -33,12 +33,24 @@ namespace GenEdit.ViewModel
             get { return SubClassDef.SubClass.Name; }
         }
 
+        /// <summary>
+        /// Cancels changes to the object data
+        /// </summary>
         public override void Cancel()
         {
             Parent.Reference = SavedReference;
             base.Cancel();
         }
 
+        /// <summary>
+        /// Saves the object data
+        /// </summary>
+        public override void Save()
+        {
+            SavedReference = "";
+            base.Save();
+        }
+        
         /// <summary>
         /// The list of fields belonging to the <see cref="GenObject"/> being edited.
         /// </summary>

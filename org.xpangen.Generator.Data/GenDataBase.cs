@@ -52,6 +52,7 @@
             {
                 var o = new GenObject(l.Parent, l, classId);
                 l.Add(o);
+                Changed = true;
                 return o;
             }
             return null;

@@ -56,6 +56,7 @@ namespace org.xpangen.Generator.Test
             CreateNamedClass(d, "Class", "SubClass", "SubClass2");
             CreateNamedClass(d, "Class", "SubClass", "SubClass3");
             d.First(ClassClassId);
+            d.GenDataBase.Changed = false;
             return d;
         }
 
