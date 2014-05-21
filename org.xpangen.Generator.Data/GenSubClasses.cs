@@ -18,9 +18,7 @@ namespace org.xpangen.Generator.Data
                 if (string.IsNullOrEmpty(subClassDef.ReferenceDefinition))
                     Add(new GenObjectListBase(parent.GenDataBase, Parent, subClassClassDef.ClassId, subClassDef));
                 else
-                {
                     Add(new GenObjectListReference(parent.GenDataBase, Parent, subClassClassDef.ClassId, subClassDef));
-                }
             }
         }
     }

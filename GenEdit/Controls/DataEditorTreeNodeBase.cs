@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using GenEdit.ViewModel;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Definition;
 
@@ -30,6 +31,14 @@ namespace GenEdit.Controls
         /// The saved context.
         /// </summary>
         public GenSavedContext SavedContext { get; set; }
+
+        /// <summary>
+        /// The editor view model for this node
+        /// </summary>
+        public virtual GenDataViewModelBase ViewModel
+        {
+            get { return Tag as GenDataViewModelBase; }
+        }
 
         /// <summary>
         /// Add a new tree node of the current class.

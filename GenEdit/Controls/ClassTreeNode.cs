@@ -40,9 +40,12 @@ namespace GenEdit.Controls
         /// </summary>
         public GenAttributes GenAttributes { get; private set; }
 
-        public GenObjectViewModel ViewModel
+        /// <summary>
+        /// The editor view model for this node
+        /// </summary>
+        public new GenObjectViewModel ViewModel
         {
-            get { return (GenObjectViewModel) Tag; }
+            get { return (GenObjectViewModel) base.ViewModel; }
         }
 
         /// <summary>

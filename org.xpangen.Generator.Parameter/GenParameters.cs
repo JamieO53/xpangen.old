@@ -50,6 +50,7 @@ namespace org.xpangen.Generator.Parameter
             Scan = new ParameterScanner(stream);
             Parse();
             First(1);
+            GenDataBase.Changed = false;
         }
 
         /// <summary>
