@@ -29,7 +29,8 @@ namespace org.xpangen.Generator.Application
             get { return _genData; }
             set
             {
-                GenDataDef = value.GenDataDef;
+                if (value != null)
+                    GenDataDef = value.GenDataDef;
                 _genData = value;
             }
         }

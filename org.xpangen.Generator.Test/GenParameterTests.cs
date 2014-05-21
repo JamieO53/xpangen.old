@@ -167,7 +167,7 @@ namespace org.xpangen.Generator.Test
         {
             var f0 = GenDataDef.CreateMinimal();
             var p = GenParameters.CreateProfile(f0);
-            Assert.AreEqual("`[:" + f0.CreateProfile() + "`]",
+            Assert.AreEqual(f0.CreateProfile(),
                             p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary)
                              .Replace(">:", ":"));
         }
@@ -182,7 +182,7 @@ namespace org.xpangen.Generator.Test
             var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", dataGrandchildhild);
             var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", "Child", dataChild);
             var p = GenParameters.CreateProfile(dataParent.GenDataDef);
-            Assert.AreEqual("`[:" + dataParent.GenDataDef.CreateProfile() + "`]",
+            Assert.AreEqual(dataParent.GenDataDef.CreateProfile(),
                             p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary)
                              .Replace(">:", ":"));
         }

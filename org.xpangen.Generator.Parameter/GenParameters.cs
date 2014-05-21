@@ -67,12 +67,12 @@ namespace org.xpangen.Generator.Parameter
             }
         }
 
-        public static GenSegment CreateProfile(GenDataDef genDataDef)
+        public static GenProfileFragment CreateProfile(GenDataDef genDataDef)
         {
             var def = new StringBuilder();
             def.Append("Definition=");
             def.AppendLine(genDataDef.Definition);
-            var profile = new GenSegment(genDataDef, "", GenCardinality.All, null);
+            var profile = new GenProfileFragment(genDataDef);
             profile.Body.Add(new GenTextFragment(genDataDef, profile));
 
             ClassProfile(genDataDef, 0, def, profile, null);
@@ -80,7 +80,7 @@ namespace org.xpangen.Generator.Parameter
             return profile;
         }
 
-        private static void ClassProfile(GenDataDef genDataDef, int classId, StringBuilder def, GenSegment profile, GenContainerFragmentBase parentSegment)
+        private static void ClassProfile(GenDataDef genDataDef, int classId, StringBuilder def, GenContainerFragmentBase profile, GenContainerFragmentBase parentSegment)
         {
             GenSegment classProfile = null;
             if (classId != 0)

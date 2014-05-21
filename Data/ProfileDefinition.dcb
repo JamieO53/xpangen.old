@@ -7,14 +7,15 @@ Field={Name,Reference}
 Class=Property
 Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
 .
+Class=ProfileRoot[Title='The root node of the profile']
+SubClass=Fragment[]
+SubClass=Definition[]
+Property=Name[Title='The name of the profile root property',DataType=Identifier]
+Property=Title[Title='The description of the profile root for the data editor hint',DataType=String]
 Class=Definition[Title='The definition of the data file being generated']
 SubClass=Class[Reference=Definition]
 Property=Name[Title='The name of the definition',DataType=Integer]
 Property=Path[Title='The location of the definition',DataType=String]
-Class=ProfileRoot[Title='The root node of the profile']
-SubClass=Fragment[]
-Property=Name[Title='The name of the profile root property',DataType=Identifier]
-Property=Title[Title='The description of the profile root for the data editor hint',DataType=String]
 Class=Fragment[Title='The root class of all profile fragments']
 SubClass=BodyFragment[]
 Property=Name[Title='Generated name of the fragment',DataType=Identifier]

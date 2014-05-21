@@ -32,10 +32,6 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Database schema definition", o.AsString("Title"));
             o.GenObject = d.Context[1].GenObject;
             Assert.AreEqual("Database schema definition", o.AsString("Title"));
-            //d.First(1);
-            //o.SetString("Title", "Database schema definition test");
-            //o.SaveFields();
-            //data.SaveFile(fileGroup);
         }
 
         [TestCase(Description = "The GeneratorDefintionModel data crashes the editor when expanding referenced data.")]
