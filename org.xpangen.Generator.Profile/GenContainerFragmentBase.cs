@@ -11,8 +11,8 @@ namespace org.xpangen.Generator.Profile
         private int _classId = -1;
 
         protected GenContainerFragmentBase(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
-                                           FragmentType fragmentType)
-            : base(genDataDef, parentSegment, fragmentType)
+            FragmentType fragmentType, GenObject genObject = null, GenData genData = null)
+            : base(genDataDef, parentSegment, fragmentType, genObject, genData)
         {
             GenDataDef = genDataDef;
             ParentSegement = parentSegment;
