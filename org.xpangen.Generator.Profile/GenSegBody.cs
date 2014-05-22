@@ -56,6 +56,13 @@ namespace org.xpangen.Generator.Profile
             
             _fragment.Add(fragment);
             fragment.ParentSegement = ParentSegement;
+            if (fragment.GenObject == null && ParentSegement != null && ParentSegement.GenObject != null)
+            {
+                fragment.GenObject = GenData.CreateObject("ProfileRoot", "Fragment");
+                fragment.Name = fragment.FragmentType.ToString() + ProfileRoot.FragmentList.Count;
+                ProfileRoot.FragmentList.Add(fragment);
+                AddBodyFragment(fragment.Name);
+            }
         }
 
         public int IndexOf(GenFragment fragment)
