@@ -276,15 +276,30 @@ namespace org.xpangen.Generator.Test
             var d = SetUpLookupContextData();
             var f = d.GenDataDef;
             var r = new GenProfileFragment(GenData.GenDataDef);
-            var p0 = new GenPlaceholderFragment(f, null) { Id = f.GetId("Parent.Name") };
-            var p1 = new GenPlaceholderFragment(f, null) {Id = f.GetId("Lookup.Name")};
-            var t = new GenTextFragment(f, null) {Text = ","};
+            var p0 = new GenPlaceholderFragment(f, r, r.GenData, r.ProfileRoot,
+                                                r.ProfileRoot.AddFragment("Text" +
+                                                                          r.ProfileRoot.FragmentList.Count)
+                                                 .GenObject) {Id = f.GetId("Parent.Name")};
+            var p1 = new GenPlaceholderFragment(f, r, r.GenData, r.ProfileRoot,
+                                                r.ProfileRoot.AddFragment("Text" +
+                                                                          r.ProfileRoot.FragmentList.Count)
+                                                 .GenObject) {Id = f.GetId("Lookup.Name")};
+            var t = new GenTextFragment(f, r, r.GenData, r.ProfileRoot,
+                                        r.ProfileRoot.AddFragment("Text" +
+                                                                  r.ProfileRoot.FragmentList.Count)
+                                         .GenObject) {Text = ","};
 
-            var b = new GenBlock(f, r);
+            var b = new GenBlock(f, r, r.GenData, r.ProfileRoot,
+                                 r.ProfileRoot.AddFragment("Text" +
+                                                           r.ProfileRoot.FragmentList.Count)
+                                  .GenObject);
             b.Body.Add(p0);
             b.Body.Add(t);
 
-            var g = new GenLookup(f, "Lookup.Name=Child.Lookup", null);
+            var g = new GenLookup(f, "Lookup.Name=Child.Lookup", r, r.GenData, r.ProfileRoot,
+                                  r.ProfileRoot.AddFragment("Text" +
+                                                            r.ProfileRoot.FragmentList.Count)
+                                   .GenObject);
             g.Body.Add(p1);
             g.Body.Add(t);
             Assert.IsFalse(g.NoMatch);

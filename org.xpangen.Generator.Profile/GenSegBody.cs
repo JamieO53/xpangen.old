@@ -14,8 +14,10 @@ namespace org.xpangen.Generator.Profile
         private readonly List<GenFragment> _fragment;
 
         public GenSegBody(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
-            GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
-            : base(genDataDef, parentSegment, FragmentType.Body, genData, profileRoot, genObject)
+                          GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
+            : base(
+                genDataDef, parentSegment, FragmentType.Body, genData ?? parentSegment.GenData,
+                profileRoot ?? parentSegment.ProfileRoot, genObject ?? parentSegment.GenObject)
         {
             _fragment = new List<GenFragment>();
         }
@@ -53,11 +55,11 @@ namespace org.xpangen.Generator.Profile
 
         public void Add(GenFragment fragment)
         {
-            
             _fragment.Add(fragment);
             fragment.ParentSegement = ParentSegement;
             if (fragment.GenObject == null && ParentSegement != null && ParentSegement.GenObject != null)
             {
+                if (fragment.GenData == null) fragment.GenData = GenData;
                 fragment.GenObject = GenData.CreateObject("ProfileRoot", "Fragment");
                 fragment.Name = fragment.FragmentType.ToString() + ProfileRoot.FragmentList.Count;
                 ProfileRoot.FragmentList.Add(fragment);

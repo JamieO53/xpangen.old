@@ -25,6 +25,9 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
+        /// <summary>
+        /// The profile data object
+        /// </summary>
         public new GenObject GenObject
         {
             get { return base.GenObject; }
@@ -34,7 +37,8 @@ namespace org.xpangen.Generator.Profile
                 base.FragmentType = _fragmentType.ToString();
             }
         }
-        
+
+        public new GenDataDef GenDataDef { get; private set; }
         /// <summary>
         ///     Is this a text fragment?
         /// </summary>
@@ -71,7 +75,7 @@ namespace org.xpangen.Generator.Profile
             ProfileRoot = profileRoot;
         }
 
-        protected ProfileRoot ProfileRoot { get; set; }
+        public ProfileRoot ProfileRoot { get; set; }
 
         /// <summary>
         ///     A label identifying the fragment for browsing.
