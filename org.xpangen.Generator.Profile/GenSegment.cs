@@ -19,7 +19,7 @@ namespace org.xpangen.Generator.Profile
                           ProfileRoot profileRoot = null, GenObject genObject = null)
             : base(genDataDef, parentSegment, FragmentType.Segment, genData, profileRoot, genObject)
         {
-            Body.ParentSegement = this;
+            Body.ParentSegment = this;
             ClassId = GenDataDef.Classes.IndexOf(className);
             GenCardinality = cardinality;
         }
@@ -239,8 +239,7 @@ namespace org.xpangen.Generator.Profile
             if (Separator != null) return;
 
             // Optimization: This is done once when this method is first called
-            ItemBody = new GenBlock(GenDataDef, this, GenData, ProfileRoot,
-                                    ProfileRoot.AddFragment("Text" + ProfileRoot.FragmentList.Count).GenObject);
+            ItemBody = new GenBlock(GenDataDef, this);
 
             for (var i = 0; i < Body.Count - 1; i++)
                 ItemBody.Body.Add(Body.Fragment[i]);

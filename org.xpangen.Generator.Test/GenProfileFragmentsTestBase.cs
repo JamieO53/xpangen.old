@@ -91,7 +91,7 @@ namespace org.xpangen.Generator.Test
             var g = new GenCondition(genDataDef, root);
             ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseCondition(g, genDataDef, condIn);
 
-            var t = new GenTextFragment(genDataDef, null) {Text = r};
+            var t = new GenTextFragment(genDataDef, root) {Text = r};
             g.Body.Add(t);
             VerifyFragment(genData, g, "GenCondition", FragmentType.Condition, profileLabel,
                            String.Format("`?{0}:{1}`]", condOut, r), exp, false, -1);
@@ -135,7 +135,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(profileLabel, fragment.ProfileLabel(), "Profile label");
             Assert.AreEqual(profileText, fragment.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary), "Profile text");
             if (parentClassId >= 0)
-                Assert.AreEqual(parentClassId, fragment.ParentSegement.ClassId, "Parent Class ID");
+                Assert.AreEqual(parentClassId, fragment.ParentSegment.ClassId, "Parent Class ID");
             var str = GenerateFragment(genData, fragment);
             Assert.AreEqual(expected, str);
         }
@@ -166,14 +166,8 @@ namespace org.xpangen.Generator.Test
             var root = new GenProfileFragment(genData.GenDataDef);
             var fa = new List<GenFragment>
                          {
-                             new GenPlaceholderFragment(genData.GenDataDef, root, root.GenData, root.ProfileRoot,
-                                                        root.ProfileRoot.AddFragment("Text" +
-                                                                                     root.ProfileRoot.FragmentList.Count)
-                                                            .GenObject) {Id = genData.GenDataDef.GetId("Property.Name")},
-                             new GenTextFragment(genData.GenDataDef, root, root.GenData, root.ProfileRoot,
-                                                        root.ProfileRoot.AddFragment("Text" +
-                                                                                     root.ProfileRoot.FragmentList.Count)
-                                                            .GenObject) {Text = ","}
+                             new GenPlaceholderFragment(genData.GenDataDef, root) {Id = genData.GenDataDef.GetId("Property.Name")},
+                             new GenTextFragment(genData.GenDataDef, root) {Text = ","}
                          };
 
             var cardinality = GenCardinality.All;
@@ -188,19 +182,16 @@ namespace org.xpangen.Generator.Test
                     break;
                 }
             }
-            var g = new GenSegment(genData.GenDataDef, "Property", cardinality, root, root.GenData, root.ProfileRoot,
-                                                        root.ProfileRoot.AddFragment("Segment" +
-                                                                                     root.ProfileRoot.FragmentList.Count)
-                                                            .GenObject);
+            var g = new GenSegment(genData.GenDataDef, "Property", cardinality, root);
             root.Body.Add(g);
             Assert.AreEqual(genCardinality, g.GenCardinality);
             Assert.AreEqual("Property", g.Definition.Name);
-            Assert.AreSame(root, g.ParentSegement);
+            Assert.AreSame(root, g.ParentSegment);
             foreach (var t in fa)
                 g.Body.Add(t);
             foreach (var t in fa)
             {
-                Assert.AreSame(g, t.ParentSegement);
+                Assert.AreSame(g, t.ParentSegment);
             }
             VerifyFragment(genData, g, "GenSegment", FragmentType.Segment, "Property",
                            "`[Property" + dictionary.GenCardinalityText[(int)g.GenCardinality] + ":`Property.Name`,`]", expected, false, -1);
@@ -270,41 +261,15 @@ namespace org.xpangen.Generator.Test
 
         protected static GenSegment SetUpSegmentSeparatorFragment(GenDataDef f, GenCardinality cardinality, GenContainerFragmentBase parentSegment)
         {
-            var g = new GenSegment(f, "TestData", cardinality, parentSegment, parentSegment.GenData,
-                                   parentSegment.ProfileRoot,
-                                   parentSegment.ProfileRoot.AddFragment("Segment" +
-                                                                         parentSegment.ProfileRoot.FragmentList.Count)
-                                                .GenObject);
-            var cond = new GenCondition(f, g, parentSegment.GenData, parentSegment.ProfileRoot,
-                                        parentSegment.ProfileRoot.AddFragment("Comparison" +
-                                                                              parentSegment.ProfileRoot.FragmentList
-                                                                                           .Count).GenObject)
+            var g = new GenSegment(f, "TestData", cardinality, parentSegment);
+            var cond = new GenCondition(f, g)
                            {
-                               GenComparison
-                                   =
-                                   GenComparison
-                                   .Exists,
-                               Var1 =
-                                   f
-                                   .GetId
-                                   ("TestData.Display")
+                               GenComparison = GenComparison.Exists,
+                               Var1 = f.GetId("TestData.Display")
                            };
             g.Body.Add(cond);
-            cond.Body.Add(new GenPlaceholderFragment(f, g, parentSegment.GenData, parentSegment.ProfileRoot,
-                                                     parentSegment.ProfileRoot.AddFragment("Comparison" +
-                                                                                           parentSegment.ProfileRoot
-                                                                                                        .FragmentList
-                                                                                                        .Count)
-                                                                  .GenObject) {Id = f.GetId("TestData.Name")});
-            g.Body.Add(new GenTextFragment(f, g, parentSegment.GenData, parentSegment.ProfileRoot,
-                                           parentSegment.ProfileRoot.AddFragment("Comparison" +
-                                                                                 parentSegment.ProfileRoot.FragmentList
-                                                                                              .Count).GenObject)
-                           {
-                               Text
-                                   =
-                                   ", "
-                           });
+            cond.Body.Add(new GenPlaceholderFragment(f, g) {Id = f.GetId("TestData.Name")});
+            g.Body.Add(new GenTextFragment(f, g) {Text = ", "});
             return g;
         }
 

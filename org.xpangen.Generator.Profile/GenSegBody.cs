@@ -15,9 +15,7 @@ namespace org.xpangen.Generator.Profile
 
         public GenSegBody(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
                           GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
-            : base(
-                genDataDef, parentSegment, FragmentType.Body, genData ?? parentSegment.GenData,
-                profileRoot ?? parentSegment.ProfileRoot, genObject ?? parentSegment.GenObject)
+            : base(genDataDef, parentSegment, FragmentType.Body, genData, profileRoot, genObject)
         {
             _fragment = new List<GenFragment>();
         }
@@ -56,8 +54,8 @@ namespace org.xpangen.Generator.Profile
         public void Add(GenFragment fragment)
         {
             _fragment.Add(fragment);
-            fragment.ParentSegement = ParentSegement;
-            if (fragment.GenObject == null && ParentSegement != null && ParentSegement.GenObject != null)
+            fragment.ParentSegment = ParentSegment;
+            if (fragment.GenObject == null && ParentSegment != null && ParentSegment.GenObject != null)
             {
                 if (fragment.GenData == null) fragment.GenData = GenData;
                 fragment.GenObject = GenData.CreateObject("ProfileRoot", "Fragment");

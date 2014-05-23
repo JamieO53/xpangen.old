@@ -21,7 +21,7 @@ namespace org.xpangen.Generator.Profile
         {
             Model = model;
             ClassId = 0;
-            Body.ParentSegement = this;
+            Body.ParentSegment = this;
         }
 
         public ProfileDefinition Model { get; private set; }

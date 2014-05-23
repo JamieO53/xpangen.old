@@ -16,8 +16,7 @@ namespace org.xpangen.Generator.Profile
             GenObject genObject = null)
             : base(genDataDef, parentSegment, fragmentType, genData, profileRoot, genObject)
         {
-            //GenDataDef = genDataDef;
-            ParentSegement = parentSegment;
+            ParentSegment = parentSegment;
             Body = new GenSegBody(genDataDef, parentSegment, genData, profileRoot, genObject);
         }
 
@@ -29,9 +28,9 @@ namespace org.xpangen.Generator.Profile
             {
                 if (_classId != -1)
                     return _classId;
-                return ParentSegement is GenSegment
-                           ? (ParentSegement).ClassId
-                           : (ParentSegement is GenLookup ? ((GenLookup) ParentSegement).ClassId : -1);
+                return ParentSegment is GenSegment
+                           ? (ParentSegment).ClassId
+                           : (ParentSegment is GenLookup ? ((GenLookup) ParentSegment).ClassId : -1);
             }
             protected set { _classId = value; }
         }

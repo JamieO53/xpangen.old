@@ -90,17 +90,8 @@ namespace org.xpangen.Generator.Parameter
             {
                 def.AppendLine("Class=" + genDataDef.Classes[classId].Name);
                 classProfile = new GenSegment(genDataDef, genDataDef.Classes[classId].Name, GenCardinality.All,
-                                              parentSegment, genData, profileRoot,
-                                              profileRoot.AddFragment("Class" + profileRoot.FragmentList.Count)
-                                                         .GenObject);
-                classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment, parentSegment.GenData,
-                                                          parentSegment.ProfileRoot,
-                                                          parentSegment.ProfileRoot.AddFragment("Text" +
-                                                                                                parentSegment
-                                                                                                    .ProfileRoot
-                                                                                                    .FragmentList
-                                                                                                    .Count)
-                                                                       .GenObject)
+                                              parentSegment);
+                classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment)
                                           {
                                               Text =
                                                   genDataDef.Classes[classId]
@@ -126,15 +117,7 @@ namespace org.xpangen.Generator.Parameter
                         0)
                     {
                         ((GenTextFragment) classProfile.Body.Fragment[0]).Text += "=";
-                        classProfile.Body.Add(new GenPlaceholderFragment(genDataDef, parentSegment,
-                                                                         parentSegment.GenData,
-                                                                         parentSegment.ProfileRoot,
-                                                                         parentSegment.ProfileRoot.AddFragment("Text" +
-                                                                                                               parentSegment
-                                                                                                                   .ProfileRoot
-                                                                                                                   .FragmentList
-                                                                                                                   .Count)
-                                                                                      .GenObject)
+                        classProfile.Body.Add(new GenPlaceholderFragment(genDataDef, parentSegment)
                                                   {
                                                       Id =
                                                           genDataDef.GetId(
@@ -144,51 +127,23 @@ namespace org.xpangen.Generator.Parameter
                     }
                     if (genDataDef.Classes[classId].Properties.Count > j)
                     {
-                        classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment, parentSegment.GenData,
-                                                                  parentSegment.ProfileRoot,
-                                                                  parentSegment.ProfileRoot.AddFragment("Text" +
-                                                                                                        parentSegment
-                                                                                                            .ProfileRoot
-                                                                                                            .FragmentList
-                                                                                                            .Count)
-                                                                               .GenObject) {Text = "["});
+                        classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment) {Text = "["});
                         var sep = "";
                         for (var i = j; i < genDataDef.Classes[classId].Properties.Count; i++)
                         {
-                            var condExists = new GenCondition(genDataDef, classProfile, parentSegment.GenData,
-                                                              parentSegment.ProfileRoot,
-                                                              parentSegment.ProfileRoot.AddFragment("Condition" +
-                                                                                                    parentSegment
-                                                                                                        .ProfileRoot
-                                                                                                        .FragmentList
-                                                                                                        .Count)
-                                                                           .GenObject)
+                            var condExists = new GenCondition(genDataDef, classProfile)
                                                  {
                                                      GenComparison = GenComparison.Exists,
                                                      Var1 = genDataDef.GetId(genDataDef.Classes[classId].Name + "." +
                                                                              genDataDef.Classes[classId].Properties[i])
                                                  };
-                            condExists.Body.Add(new GenTextFragment(genDataDef, parentSegment, parentSegment.GenData,
-                                                                    parentSegment.ProfileRoot,
-                                                                    parentSegment.ProfileRoot.AddFragment("Condition" +
-                                                                                                          parentSegment
-                                                                                                              .ProfileRoot
-                                                                                                              .FragmentList
-                                                                                                              .Count)
-                                                                                 .GenObject)
+                            condExists.Body.Add(new GenTextFragment(genDataDef, parentSegment)
                                                     {
                                                         Text =
                                                             sep +
                                                             genDataDef.Classes[classId].Properties[i]
                                                     });
-                            var condNotTrue = new GenCondition(genDataDef, classProfile, parentSegment.GenData,
-                                                               parentSegment.ProfileRoot,
-                                                               parentSegment.ProfileRoot.AddFragment("Condition" +
-                                                                                                     parentSegment
-                                                                                                         .ProfileRoot
-                                                                                                         .FragmentList
-                                                                                                         .Count)
-                                                                            .GenObject)
+                            var condNotTrue = new GenCondition(genDataDef, classProfile)
                                                   {
                                                       GenComparison = GenComparison.Ne,
                                                       Var1 = genDataDef.GetId(genDataDef.Classes[classId].Name + "." +
@@ -196,30 +151,9 @@ namespace org.xpangen.Generator.Parameter
                                                       Lit = "True",
                                                       UseLit = true
                                                   };
-                            var functionQuote = new GenFunction(genDataDef, parentSegment, parentSegment.GenData,
-                                                                parentSegment.ProfileRoot,
-                                                                parentSegment.ProfileRoot.AddFragment("Function" +
-                                                                                                      parentSegment
-                                                                                                          .ProfileRoot
-                                                                                                          .FragmentList
-                                                                                                          .Count)
-                                                                             .GenObject) {FunctionName = "StringOrName"};
-                            var param = new GenBlock(genDataDef, parentSegment, parentSegment.GenData,
-                                                     parentSegment.ProfileRoot,
-                                                     parentSegment.ProfileRoot.AddFragment("Block" +
-                                                                                           parentSegment
-                                                                                               .ProfileRoot
-                                                                                               .FragmentList
-                                                                                               .Count)
-                                                                  .GenObject);
-                            param.Body.Add(new GenPlaceholderFragment(genDataDef, parentSegment, parentSegment.GenData,
-                                                                      parentSegment.ProfileRoot,
-                                                                      parentSegment.ProfileRoot.AddFragment("Text" +
-                                                                                                            parentSegment
-                                                                                                                .ProfileRoot
-                                                                                                                .FragmentList
-                                                                                                                .Count)
-                                                                                   .GenObject)
+                            var functionQuote = new GenFunction(genDataDef, parentSegment) {FunctionName = "StringOrName"};
+                            var param = new GenBlock(genDataDef, parentSegment);
+                            param.Body.Add(new GenPlaceholderFragment(genDataDef, parentSegment)
                                                {
                                                    Id =
                                                        genDataDef.GetId(
@@ -227,43 +161,21 @@ namespace org.xpangen.Generator.Parameter
                                                            genDataDef.Classes[classId].Properties[i])
                                                });
                             functionQuote.Body.Add(param);
-                            condNotTrue.Body.Add(new GenTextFragment(genDataDef, parentSegment, parentSegment.GenData,
-                                                                     parentSegment.ProfileRoot,
-                                                                     parentSegment.ProfileRoot.AddFragment("Text" +
-                                                                                                           parentSegment
-                                                                                                               .ProfileRoot
-                                                                                                               .FragmentList
-                                                                                                               .Count)
-                                                                                  .GenObject) {Text = "="});
+                            condNotTrue.Body.Add(new GenTextFragment(genDataDef, parentSegment) {Text = "="});
                             condNotTrue.Body.Add(functionQuote);
                             condExists.Body.Add(condNotTrue);
 
                             classProfile.Body.Add(condExists);
                             sep = ",";
                         }
-                        classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment, parentSegment.GenData,
-                                                                  parentSegment.ProfileRoot,
-                                                                  parentSegment.ProfileRoot.AddFragment("Text" +
-                                                                                                        parentSegment
-                                                                                                            .ProfileRoot
-                                                                                                            .FragmentList
-                                                                                                            .Count)
-                                                                               .GenObject) {Text = "]\r\n"});
+                        classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment) {Text = "]\r\n"});
                     }
                     else
-                        classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment, parentSegment.GenData,
-                                                                  parentSegment.ProfileRoot,
-                                                                  parentSegment.ProfileRoot.AddFragment("Text" +
-                                                                                                        parentSegment
-                                                                                                            .ProfileRoot
-                                                                                                            .FragmentList
-                                                                                                            .Count)
-                                                                               .GenObject) {Text = "\r\n"});
+                        classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment) {Text = "\r\n"});
                 }
 
                 if (genDataDef.Classes[classId].SubClasses.Count == 1)
                 {
-                    //def.AppendLine("SubClass=" + genDataDef.Classes[classId].SubClasses[0].SubClass.Name);
                     def.Append("SubClass=" + genDataDef.Classes[classId].SubClasses[0].SubClass.Name);
                     if (!String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[0].SubClass.Reference))
                         def.AppendLine("[Reference='" + genDataDef.Classes[classId].SubClasses[0].SubClass.Reference +
@@ -297,9 +209,7 @@ namespace org.xpangen.Generator.Parameter
                 else
                 {
                     var refClass = new GenSegment(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.Name,
-                                                  GenCardinality.Reference, parentSegment, genData, profileRoot,
-                                                  profileRoot.AddFragment("Class" + profileRoot.FragmentList.Count)
-                                                             .GenObject);
+                                                  GenCardinality.Reference, parentSegment);
                     (classProfile ?? profile).Body.Add(refClass);
                 }
         }
