@@ -52,7 +52,7 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
-        public GenContainerFragmentBase ParentSegement { get; set; }
+        public GenContainerFragmentBase ParentSegment { get; set; }
 
         /// <summary>
         ///     Create a new <see cref="GenFragment" /> object.
@@ -69,10 +69,10 @@ namespace org.xpangen.Generator.Profile
             : base(parentSegment != null ? parentSegment.GenData : genData)
         {
             GenDataDef = genDataDef;
-            ParentSegement = parentSegment;
+            ParentSegment = parentSegment;
+            ProfileRoot = profileRoot ?? (ParentSegment != null ? ParentSegment.ProfileRoot : null);
             FragmentType = fragmentType;
-            base.GenObject = genObject;
-            ProfileRoot = profileRoot;
+            GenObject = genObject ?? (ProfileRoot != null ? ProfileRoot.AddFragment(FragmentType.ToString() + ProfileRoot.FragmentList.Count).GenObject : null);
         }
 
         public ProfileRoot ProfileRoot { get; set; }

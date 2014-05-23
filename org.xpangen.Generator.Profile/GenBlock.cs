@@ -13,8 +13,7 @@ namespace org.xpangen.Generator.Profile
 
         public GenBlock(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
             GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
-            : base(genDataDef, parentSegment, FragmentType.Block, genData ?? parentSegment.GenData,
-                profileRoot ?? parentSegment.ProfileRoot, genObject ?? parentSegment.GenObject)
+            :base(genDataDef, parentSegment, FragmentType.Block, genData, profileRoot, genObject)
         {
             Body = new GenSegBody(genDataDef, parentSegment);
         }

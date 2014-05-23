@@ -115,6 +115,7 @@ namespace org.xpangen.Generator.Data
 
         public void SaveFields()
         {
+            if (GenObject == null) throw new GeneratorException("Attempting to save to a null generator object");
             var props = GenObject.Definition.Properties;
             var className = GenObject.Definition.Name;
             var n = props.Count;

@@ -20,7 +20,7 @@ namespace org.xpangen.Generator.Profile
             GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
             : base(genDataDef, parentSegment, FragmentType.Lookup, genData, profileRoot, genObject)
         {
-            Body.ParentSegement = this;
+            Body.ParentSegment = this;
             Condition = condition;
             var sa = condition.Split('=');
             Var1 = genDataDef.GetId(sa[0]);
