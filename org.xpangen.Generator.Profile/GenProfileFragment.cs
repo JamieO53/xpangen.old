@@ -15,10 +15,13 @@ namespace org.xpangen.Generator.Profile
         }
 
         private GenProfileFragment(GenDataDef genDataDef, ProfileDefinition model)
-            : base(genDataDef, null, FragmentType.Profile)
+            : base(
+                genDataDef, null, FragmentType.Profile, model.GenData, model.ProfileRootList[0],
+                model.ProfileRootList[0].FragmentList[0].GenObject)
         {
             Model = model;
             ClassId = 0;
+            Body.ParentSegement = this;
         }
 
         public ProfileDefinition Model { get; private set; }

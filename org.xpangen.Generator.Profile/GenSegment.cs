@@ -239,7 +239,8 @@ namespace org.xpangen.Generator.Profile
             if (Separator != null) return;
 
             // Optimization: This is done once when this method is first called
-            ItemBody = new GenBlock(GenDataDef, this);
+            ItemBody = new GenBlock(GenDataDef, this, GenData, ProfileRoot,
+                                    ProfileRoot.AddFragment("Text" + ProfileRoot.FragmentList.Count).GenObject);
 
             for (var i = 0; i < Body.Count - 1; i++)
                 ItemBody.Body.Add(Body.Fragment[i]);

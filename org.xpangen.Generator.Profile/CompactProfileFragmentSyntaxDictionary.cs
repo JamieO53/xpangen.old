@@ -144,7 +144,11 @@ namespace org.xpangen.Generator.Profile
                 c = segmentClass.Substring(0, segmentClass.Length - 1);
                 break;
             }
-            return new GenSegment(genDataDef, c, cardinality, parentSegment);
+            return new GenSegment(genDataDef, c, cardinality, parentSegment, parentSegment.GenData,
+                                  parentSegment.ProfileRoot,
+                                  parentSegment.ProfileRoot.AddFragment("Text" +
+                                                                        parentSegment.ProfileRoot.FragmentList.Count)
+                                               .GenObject);
         }
     }
 }

@@ -163,11 +163,17 @@ namespace org.xpangen.Generator.Test
 
         protected static void ProcessSegment(GenData genData, string cardinalityText, GenCardinality genCardinality, string expected)
         {
-            var root = new GenSegment(genData.GenDataDef, "", GenCardinality.All, null);
+            var root = new GenProfileFragment(genData.GenDataDef);
             var fa = new List<GenFragment>
                          {
-                             new GenPlaceholderFragment(genData.GenDataDef, root) {Id = genData.GenDataDef.GetId("Property.Name")},
-                             new GenTextFragment(genData.GenDataDef, root) {Text = ","}
+                             new GenPlaceholderFragment(genData.GenDataDef, root, root.GenData, root.ProfileRoot,
+                                                        root.ProfileRoot.AddFragment("Text" +
+                                                                                     root.ProfileRoot.FragmentList.Count)
+                                                            .GenObject) {Id = genData.GenDataDef.GetId("Property.Name")},
+                             new GenTextFragment(genData.GenDataDef, root, root.GenData, root.ProfileRoot,
+                                                        root.ProfileRoot.AddFragment("Text" +
+                                                                                     root.ProfileRoot.FragmentList.Count)
+                                                            .GenObject) {Text = ","}
                          };
 
             var cardinality = GenCardinality.All;
@@ -182,10 +188,13 @@ namespace org.xpangen.Generator.Test
                     break;
                 }
             }
-            var g = new GenSegment(genData.GenDataDef, "Property", cardinality, root);
+            var g = new GenSegment(genData.GenDataDef, "Property", cardinality, root, root.GenData, root.ProfileRoot,
+                                                        root.ProfileRoot.AddFragment("Segment" +
+                                                                                     root.ProfileRoot.FragmentList.Count)
+                                                            .GenObject);
             root.Body.Add(g);
             Assert.AreEqual(genCardinality, g.GenCardinality);
-            Assert.AreEqual("Property", g.Definition.Name);//genData.GenDataDef.Classes[g.ClassId].Name);
+            Assert.AreEqual("Property", g.Definition.Name);
             Assert.AreSame(root, g.ParentSegement);
             foreach (var t in fa)
                 g.Body.Add(t);
@@ -261,11 +270,41 @@ namespace org.xpangen.Generator.Test
 
         protected static GenSegment SetUpSegmentSeparatorFragment(GenDataDef f, GenCardinality cardinality, GenContainerFragmentBase parentSegment)
         {
-            var g = new GenSegment(f, "TestData", cardinality, parentSegment);
-            var cond = new GenCondition(f, null) {GenComparison = GenComparison.Exists, Var1 = f.GetId("TestData.Display")};
+            var g = new GenSegment(f, "TestData", cardinality, parentSegment, parentSegment.GenData,
+                                   parentSegment.ProfileRoot,
+                                   parentSegment.ProfileRoot.AddFragment("Segment" +
+                                                                         parentSegment.ProfileRoot.FragmentList.Count)
+                                                .GenObject);
+            var cond = new GenCondition(f, g, parentSegment.GenData, parentSegment.ProfileRoot,
+                                        parentSegment.ProfileRoot.AddFragment("Comparison" +
+                                                                              parentSegment.ProfileRoot.FragmentList
+                                                                                           .Count).GenObject)
+                           {
+                               GenComparison
+                                   =
+                                   GenComparison
+                                   .Exists,
+                               Var1 =
+                                   f
+                                   .GetId
+                                   ("TestData.Display")
+                           };
             g.Body.Add(cond);
-            cond.Body.Add(new GenPlaceholderFragment(f, parentSegment) {Id = f.GetId("TestData.Name")});
-            g.Body.Add(new GenTextFragment(f, parentSegment) {Text = ", "});
+            cond.Body.Add(new GenPlaceholderFragment(f, g, parentSegment.GenData, parentSegment.ProfileRoot,
+                                                     parentSegment.ProfileRoot.AddFragment("Comparison" +
+                                                                                           parentSegment.ProfileRoot
+                                                                                                        .FragmentList
+                                                                                                        .Count)
+                                                                  .GenObject) {Id = f.GetId("TestData.Name")});
+            g.Body.Add(new GenTextFragment(f, g, parentSegment.GenData, parentSegment.ProfileRoot,
+                                           parentSegment.ProfileRoot.AddFragment("Comparison" +
+                                                                                 parentSegment.ProfileRoot.FragmentList
+                                                                                              .Count).GenObject)
+                           {
+                               Text
+                                   =
+                                   ", "
+                           });
             return g;
         }
 
@@ -279,7 +318,8 @@ namespace org.xpangen.Generator.Test
         protected static void VerifySegmentSeparator(string display, string expected, GenCardinality cardinality, GenContainerFragmentBase parentSegment)
         {
             var d = SetUpSegmentSeparatorData(display);
-            var g = SetUpSegmentSeparatorFragment(d.GenDataDef, cardinality, parentSegment);
+            var p = parentSegment ?? new GenProfileFragment(d.GenDataDef);
+            var g = SetUpSegmentSeparatorFragment(d.GenDataDef, cardinality, p);
             Assert.AreEqual(expected, g.Expand(d));
             var str = GenerateFragment(d, g);
             Assert.AreEqual(expected, str);

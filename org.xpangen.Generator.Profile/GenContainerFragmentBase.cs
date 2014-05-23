@@ -16,9 +16,9 @@ namespace org.xpangen.Generator.Profile
             GenObject genObject = null)
             : base(genDataDef, parentSegment, fragmentType, genData, profileRoot, genObject)
         {
-            GenDataDef = genDataDef;
+            //GenDataDef = genDataDef;
             ParentSegement = parentSegment;
-            Body = new GenSegBody(genDataDef, parentSegment);
+            Body = new GenSegBody(genDataDef, parentSegment, genData, profileRoot, genObject);
         }
 
         public GenSegBody Body { get; private set; }

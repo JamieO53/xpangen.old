@@ -11,8 +11,7 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenCondition : GenContainerFragmentBase
     {
-        public GenCondition(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
-            GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
+        public GenCondition(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
             : base(genDataDef, parentSegment, FragmentType.Condition, genData, profileRoot, genObject)
         {
         }
