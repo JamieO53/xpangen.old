@@ -6,7 +6,6 @@ using System;
 using System.IO;
 using System.Text;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Model.Profile;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Scanner;
 
@@ -76,14 +75,13 @@ namespace org.xpangen.Generator.Parameter
             var profile = new GenProfileFragment(genDataDef);
             profile.Body.Add(new GenTextFragment(genDataDef, profile));
 
-            ClassProfile(genDataDef, 0, def, profile, profile, profile.GenData, profile.ProfileRoot);
+            ClassProfile(genDataDef, 0, def, profile, profile);
             ((GenTextFragment) profile.Body.Fragment[0]).Text = def + ".\r\n";
             return profile;
         }
 
         private static void ClassProfile(GenDataDef genDataDef, int classId, StringBuilder def,
-                                         GenContainerFragmentBase profile, GenContainerFragmentBase parentSegment,
-                                         GenData genData, ProfileRoot profileRoot)
+                                         GenContainerFragmentBase profile, GenContainerFragmentBase parentSegment)
         {
             GenSegment classProfile = null;
             if (classId != 0)
@@ -205,7 +203,7 @@ namespace org.xpangen.Generator.Parameter
             for (var i = 0; i < genDataDef.Classes[classId].SubClasses.Count; i++)
                 if (String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[i].SubClass.Reference))
                     ClassProfile(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.ClassId, def,
-                                 classProfile ?? profile, parentSegment, genData, profileRoot);
+                                 classProfile ?? profile, parentSegment);
                 else
                 {
                     var refClass = new GenSegment(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.Name,

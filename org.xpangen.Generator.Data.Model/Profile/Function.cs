@@ -3,26 +3,25 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
-using org.xpangen.Generator.Data.Model.Definition;
 
 namespace org.xpangen.Generator.Data.Model.Profile
 {
     /// <summary>
-    /// The definition of the data file being generated
+    /// The Function fragment data
     /// </summary>
-    public class Definition : GenNamedApplicationBase
+    public class Function : GenNamedApplicationBase
     {
-        public Definition()
+        public Function()
         {
         }
 
-        public Definition(GenData genData)
+        public Function(GenData genData)
         {
 			GenData = genData;
         }
 
         /// <summary>
-        /// The name of the definition
+        /// Generated name of the fragment
         /// </summary>
         public override string Name
         {
@@ -36,23 +35,18 @@ namespace org.xpangen.Generator.Data.Model.Profile
         }
 
         /// <summary>
-        /// The location of the definition
+        /// The name of the function
         /// </summary>
-        public string Path
+        public string FunctionName
         {
-            get { return AsString("Path"); }
+            get { return AsString("FunctionName"); }
             set
             {
-                if (Path == value) return;
-                SetString("Path", value);
+                if (FunctionName == value) return;
+                SetString("FunctionName", value);
                 if (!DelayedSave) SaveFields();
             }
         }
 
-        public GenNamedApplicationList<Class> ClassList { get; private set; }
-
-        protected override void GenObjectSetNotification()
-        {
-            ClassList = new GenNamedApplicationList<Class>(this);
-        }    }
+    }
 }
