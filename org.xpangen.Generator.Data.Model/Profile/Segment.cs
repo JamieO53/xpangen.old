@@ -3,26 +3,25 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
-using org.xpangen.Generator.Data.Model.Definition;
 
 namespace org.xpangen.Generator.Data.Model.Profile
 {
     /// <summary>
-    /// The definition of the data file being generated
+    /// The Segment fragment data
     /// </summary>
-    public class Definition : GenNamedApplicationBase
+    public class Segment : GenNamedApplicationBase
     {
-        public Definition()
+        public Segment()
         {
         }
 
-        public Definition(GenData genData)
+        public Segment(GenData genData)
         {
 			GenData = genData;
         }
 
         /// <summary>
-        /// The name of the definition
+        /// Generated name of the fragment
         /// </summary>
         public override string Name
         {
@@ -36,23 +35,32 @@ namespace org.xpangen.Generator.Data.Model.Profile
         }
 
         /// <summary>
-        /// The location of the definition
+        /// The class of the fragment
         /// </summary>
-        public string Path
+        public string Class
         {
-            get { return AsString("Path"); }
+            get { return AsString("Class"); }
             set
             {
-                if (Path == value) return;
-                SetString("Path", value);
+                if (Class == value) return;
+                SetString("Class", value);
                 if (!DelayedSave) SaveFields();
             }
         }
 
-        public GenNamedApplicationList<Class> ClassList { get; private set; }
-
-        protected override void GenObjectSetNotification()
+        /// <summary>
+        /// How the class objects are to be generated
+        /// </summary>
+        public string Cardinality
         {
-            ClassList = new GenNamedApplicationList<Class>(this);
-        }    }
+            get { return AsString("Cardinality"); }
+            set
+            {
+                if (Cardinality == value) return;
+                SetString("Cardinality", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+    }
 }

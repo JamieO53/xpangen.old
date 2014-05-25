@@ -38,12 +38,12 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             `Class.Name`List = new GenNamedApplicationList<`Class.Name`>(this);
         }
 
-        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?PropertyName='Default':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])
+        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])
         {
             var item = new `Class.Name`(GenData)
                            {
                                GenObject = GenData.CreateObject("", "`Class.Name`")`[Property:,
-                               `Property.Name` = `?PropertyName='Default':@`]`@Decapitalize:`{`Property.Name``]`]`]
+                               `Property.Name` = `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`]
                            };
             `Class.Name`List.Add(item);
             return item;
@@ -93,12 +93,12 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
 `]`[SubClass:            `SubClass.Name`List = new GenNamedApplicationList<`SubClass.Name`>(this);
 `]`[SubClass':        }`]`[SubClass:`%Class.Name=SubClass.Name:
 
-        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])
+        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])
         {
             var item = new `Class.Name`(GenData)
                            {
                                GenObject = GenData.CreateObject("`@MapGet:'ClassName'`]", "`Class.Name`")`[Property:,
-                               `Property.Name` = `?Property.Name='Default':@`]`@Decapitalize:`{`Property.Name``]`]`]
+                               `Property.Name` = `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`]
                            };
             `Class.Name`List.Add(item);
             return item;
