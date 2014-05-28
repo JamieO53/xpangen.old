@@ -57,13 +57,14 @@ namespace org.xpangen.Generator.Data.Model.Definition
             PropertyList = new GenNamedApplicationList<Property>(this);
         }
 
-        public SubClass AddSubClass(string name, string reference = "")
+        public SubClass AddSubClass(string name, string reference = "", string relationship = "")
         {
             var item = new SubClass(GenData)
                            {
                                GenObject = GenData.CreateObject("Class", "SubClass"),
                                Name = name,
-                               Reference = reference
+                               Reference = reference,
+                               Relationship = relationship
                            };
             SubClassList.Add(item);
             return item;
