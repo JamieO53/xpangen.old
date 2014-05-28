@@ -13,30 +13,31 @@ insert  @lines
 values  ('', 0, 1, 0, 'Definition=DatabaseDefinition'),
         ('', 0, 2, 0, 'Class=Database'),
         ('', 0, 3, 0, 'Field=Name'),
-        ('', 0, 4, 0, 'SubClass={Schema,Table}'),
+        ('', 0, 4, 0, 'SubClass=Schema'),
         ('', 0, 5, 0, 'Class=Schema'),
         ('', 0, 6, 0, 'Field=Name'),
-        ('', 0, 7, 0, 'Class=Table'),
-        ('', 0, 8, 0, 'Field={Name,Schema}'),
-        ('', 0, 9, 0, 'SubClass={Column,Index,ForeignKey}'),
-        ('', 0, 10, 0, 'Class=Column'),
-        ('', 0, 11, 0, 'Field={Name,NativeDataType,ODBCDataType,Length,Precison,Scale,IsNullable,IsKey}'),
-        ('', 0, 12, 0, 'SubClass=Default'),
-        ('', 0, 13, 0, 'Class=Default'),
-        ('', 0, 14, 0, 'Field={Name,Value}'),
-        ('', 0, 15, 0, 'Class=Index'),
-        ('', 0, 16, 0, 'Field={Name,IsPrimaryKey,IsUnique,IsClusterKey}'),
-        ('', 0, 17, 0, 'SubClass={KeyColumn,DataColumn}'),
-        ('', 0, 18, 0, 'Class=KeyColumn'),
-        ('', 0, 19, 0, 'Field={Name,Order}'),
-        ('', 0, 20, 0, 'Class=DataColumn'),
-        ('', 0, 21, 0, 'Field=Name'),
-        ('', 0, 22, 0, 'Class=ForeignKey'),
-        ('', 0, 23, 0, 'Field={Name,ReferenceTable,DeleteAction,UpdateAction}'),
-        ('', 0, 24, 0, 'SubClass=ForeignKeyColumn'),
-        ('', 0, 25, 0, 'Class=ForeignKeyColumn'),
-        ('', 0, 26, 0, 'Field={Name,RelatedColumn}'),
-        ('', 0, 27, 0, '.')
+        ('', 0, 7, 0, 'SubClass=Table'),
+        ('', 0, 8, 0, 'Class=Table'),
+        ('', 0, 9, 0, 'Field={Name,Schema}'),
+        ('', 0, 10, 0, 'SubClass={Column,Index,ForeignKey}'),
+        ('', 0, 11, 0, 'Class=Column'),
+        ('', 0, 12, 0, 'Field={Name,NativeDataType,ODBCDataType,Length,Precison,Scale,IsNullable,IsKey}'),
+        ('', 0, 13, 0, 'SubClass=Default'),
+        ('', 0, 14, 0, 'Class=Default'),
+        ('', 0, 15, 0, 'Field={Name,Value}'),
+        ('', 0, 16, 0, 'Class=Index'),
+        ('', 0, 17, 0, 'Field={Name,IsPrimaryKey,IsUnique,IsClusterKey}'),
+        ('', 0, 18, 0, 'SubClass={KeyColumn,DataColumn}'),
+        ('', 0, 19, 0, 'Class=KeyColumn'),
+        ('', 0, 20, 0, 'Field={Name,Order}'),
+        ('', 0, 21, 0, 'Class=DataColumn'),
+        ('', 0, 22, 0, 'Field=Name'),
+        ('', 0, 23, 0, 'Class=ForeignKey'),
+        ('', 0, 24, 0, 'Field={Name,ReferenceTable,DeleteAction,UpdateAction}'),
+        ('', 0, 25, 0, 'SubClass=ForeignKeyColumn'),
+        ('', 0, 26, 0, 'Class=ForeignKeyColumn'),
+        ('', 0, 27, 0, 'Field={Name,RelatedColumn}'),
+        ('', 0, 28, 0, '.')
 
 -- Database definition
 insert	@lines
@@ -44,7 +45,7 @@ values	('', 1, 1, 0, 'Database=' + DB_NAME())
 
 -- Schema definition
 insert	@lines
-select	s.name, 1, 2, 0, 'Schema=' + s.name
+select	s.name, 2, 0, 0, 'Schema=' + replace(s.name,' ', '') + '[SchemaName=''' + s.name + ''']'
 from	sys.schemas s
 where	exists(
 			select	*
@@ -55,7 +56,7 @@ where	exists(
 
 -- Table definition
 insert	@lines
-select	s.name + t.name, 2, 1, 0, 'Table=' + t.name + '[Schema=' + s.name + ']'
+select	s.name + t.name, 2, 1, 0, 'Table=' + replace(t.name,' ', '') + '[TableName=' + t.name + ']'
 from	sys.schemas s
 join	sys.tables t
     on	t.schema_id = s.schema_id
@@ -83,16 +84,16 @@ from	(
 			on  c.object_id = t.object_id
         join	sys.systypes y
 			on  y.xtype = c.system_type_id
-        where	s.name = 'dbo'
-		   and	t.name <> 'sysdiagrams'
+        where	t.name <> 'sysdiagrams'
+		   and	y.name <> 'sysname'
         ) cTarget
  order  by cTarget.TableName, cTarget.column_id
 
 -- Index definition	
 insert	@lines
 select	s.name + t.name, 2, 3, x.index_id * 1000,
-		'Index=' + x.name +
-		'[IsPrimaryKey' + case when x.is_primary_key = 1 then '' else '=''''' end +
+		'Index=' + coalesce(x.name, s.name + '_Idx' + cast(x.index_id as varchar(10))) +
+		'[' + case when x.is_primary_key = 1 then 'IsPrimaryKey' else '' end +
 		case when x.is_unique = 1 then ',IsUnique' else '' end +
 		case when x.type = 1 then ',IsClustered' else '' end +
 		']'
@@ -183,6 +184,13 @@ join	sys.columns cr
 	on	cr.object_id = tr.object_id
    and	cr.column_id = fc.referenced_column_id
 where	t.name <> 'sysdiagrams'
+
+update	@lines
+	set	Line = replace(Line, '[,', '[')
+update	@lines
+	set	Line = replace(Line, '[]', '')
+update	@lines
+	set	Line = replace(Line, 'Length=-1', 'Length=''-1''')
 
 select  Line
   from	@lines
