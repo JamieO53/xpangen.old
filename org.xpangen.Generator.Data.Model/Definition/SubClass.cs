@@ -48,5 +48,19 @@ namespace org.xpangen.Generator.Data.Model.Definition
             }
         }
 
+        /// <summary>
+        /// SubClass relationship between parent and child
+        /// </summary>
+        public string Relationship
+        {
+            get { return AsString("Relationship"); }
+            set
+            {
+                if (Relationship == value) return;
+                SetString("Relationship", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
     }
 }

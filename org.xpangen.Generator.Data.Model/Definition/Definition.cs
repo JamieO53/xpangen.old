@@ -32,6 +32,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
             f.Classes[1].Properties.Add("Title");
             f.Classes[2].Properties.Add("Name");
             f.Classes[2].Properties.Add("Reference");
+            f.Classes[2].Properties.Add("Relationship");
             f.Classes[3].Properties.Add("Name");
             f.Classes[3].Properties.Add("Title");
             f.Classes[3].Properties.Add("DataType");

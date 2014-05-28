@@ -1,24 +1,25 @@
 Definition=Definition
 Class=Class
-Field={Name,Title}
+Field={Name,Title,Inheritance}
 SubClass={SubClass,Property}
 Class=SubClass
-Field={Name,Reference}
+Field={Name,Reference,Relationship}
 Class=Property
-Field={Name,Title,DataType,Default}
+Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
 .
 Class=Database[Title='Database definition']
 SubClass=Schema[]
-SubClass=Table[]
 Property=Name[Title='Database name',DataType=String]
 Class=Schema[Title='Database schema definition']
+SubClass=Table[]
 Property=Name[Title='Database schema name',DataType=String]
+Property=SchemaName[Title='The schema name as on the database']
 Class=Table[Title='Database table']
 SubClass=Column[]
 SubClass=Index[]
 SubClass=ForeignKey[]
 Property=Name[Title='Database table name',DataType=String]
-Property=Schema[Title='The database table schema reference',DataType=String]
+Property=TableName[Title='The table name as on the database',DataType=String]
 Class=Column[Title='Table column definition']
 SubClass=Default[]
 Property=Name[Title='Column name',DataType=String]
