@@ -10,14 +10,17 @@ namespace org.xpangen.Generator.Application
     {
         public override void Move(ListMove move, int itemIndex)
         {
-
             var item = this[itemIndex] as GenApplicationBase;
             if (item != null)
             {
-                var genList = new GenObjectList(item.GenObject.ParentSubClass, item.GenObject.GenDataBase,
-                                                item.GenData.Context[item.ClassId],
-                                                item.GenData.Context[item.ClassId].DefSubClass);
-                genList.MoveItem(move, itemIndex);
+                var genObject = item.GenObject as GenObject;
+                if (genObject != null)
+                {
+                    var genList = new GenObjectList(genObject.ParentSubClass, item.GenObject.GenDataBase,
+                                                    item.GenData.Context[item.ClassId],
+                                                    item.GenData.Context[item.ClassId].DefSubClass);
+                    genList.MoveItem(move, itemIndex);
+                }
             }
 
             base.Move(move, itemIndex);

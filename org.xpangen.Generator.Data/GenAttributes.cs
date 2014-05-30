@@ -10,11 +10,11 @@ namespace org.xpangen.Generator.Data
 {
     public class GenAttributes : BindableObject
     {
-        private GenObject _genObject;
+        private IGenObject _genObject;
         private NameList Fields { get; set; }
         private TextList Values { get; set; }
         public bool Changed { get; private set; }
-        public virtual GenObject GenObject
+        public virtual IGenObject GenObject
         {
             get { return _genObject; }
             set 
@@ -41,7 +41,7 @@ namespace org.xpangen.Generator.Data
         {
             if (GenObject != null)
             {
-                var props = GenObject.Definition.Properties;
+                var props = GenObject.Properties;
                 for (var i = 0; i < props.Count; i++)
                     SetString(props[i], i < GenObject.Attributes.Count ? GenObject.Attributes[i] : "");
             }
@@ -116,8 +116,8 @@ namespace org.xpangen.Generator.Data
         public void SaveFields()
         {
             if (GenObject == null) throw new GeneratorException("Attempting to save to a null generator object");
-            var props = GenObject.Definition.Properties;
-            var className = GenObject.Definition.Name;
+            var props = GenObject.Properties;
+            var className = GenObject.ClassName;
             var n = props.Count;
             var changed = false;
             var changedProps = new bool[n];

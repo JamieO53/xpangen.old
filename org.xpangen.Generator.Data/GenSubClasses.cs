@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Data
                 var subClassDef = parentDef.SubClasses[i];
                 var subClassClassDef = subClassDef.SubClass;
                 if (string.IsNullOrEmpty(subClassDef.ReferenceDefinition))
-                    Add(new GenObjectListBase(parent.GenDataBase, Parent, subClassClassDef.ClassId, subClassDef));
+                    Add(new GenSubClass(parent.GenDataBase, Parent, subClassClassDef.ClassId, subClassDef));
                 else
                     Add(new GenObjectListReference(parent.GenDataBase, Parent, subClassClassDef.ClassId, subClassDef));
             }

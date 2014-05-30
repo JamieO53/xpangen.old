@@ -291,7 +291,7 @@ namespace org.xpangen.Generator.Data
         /// <returns>The new object.</returns>
         public GenObject CreateObject()
         {
-            var genObjectListBase = GenObjectListBase as GenObjectListBase;
+            var genObjectListBase = GenObjectListBase as GenSubClass;
             return genObjectListBase != null ? genObjectListBase.CreateObject() : null;
         }
 

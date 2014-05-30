@@ -4,7 +4,7 @@
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenObject
+    public class GenObject : IGenObject
     {
         private GenDataBase _genDataBase;
 
@@ -38,9 +38,12 @@ namespace org.xpangen.Generator.Data
         public GenObject Parent { get; private set; }
         public GenSubClasses SubClass { get; private set; }
         public GenDataDefClass Definition { get { return GenDataBase.GenDataDef.Classes[ClassId]; } }
+        public NameList Properties { get { return Definition.Properties; } }
+        public string ClassName { get { return Definition.Name; } }
+
         public override string ToString()
         {
-            return GenDataBase.ToString() + "." + Definition.Name + "." + Attributes[0];
+            return GenDataBase + "." + Definition.Name + "." + Attributes[0];
         }
     }
 }

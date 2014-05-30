@@ -37,7 +37,7 @@ namespace org.xpangen.Generator.Application
 
         public bool DelayedSave { get; set; }
         
-        public override GenObject GenObject
+        public override IGenObject GenObject
         {
             get
             {

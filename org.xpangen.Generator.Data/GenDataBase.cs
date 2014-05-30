@@ -47,7 +47,7 @@
         {
             var classId = GenDataDef.Classes.IndexOf(className);
             var k = GenDataDef.IndexOfSubClass(parent.ClassId, classId);
-            var l = parent.SubClass[k] as GenObjectListBase;
+            var l = parent.SubClass[k] as GenSubClass;
             if (l != null)
             {
                 var o = new GenObject(l.Parent, l, classId);

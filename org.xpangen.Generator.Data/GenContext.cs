@@ -45,7 +45,7 @@ namespace org.xpangen.Generator.Data
             GenObjectList myList;
             if (item != null) myList = item;
             else if (reference == "")
-                myList = new GenObjectList(new GenObjectListBase(genDataBase, null, defClass.ClassId,
+                myList = new GenObjectList(new GenSubClass(genDataBase, null, defClass.ClassId,
                                                                  new GenDataDefSubClass
                                                                      {
                                                                          SubClass = defClass,
