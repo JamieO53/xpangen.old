@@ -28,9 +28,9 @@ namespace org.xpangen.Generator.Profile
         /// <summary>
         /// The profile data object
         /// </summary>
-        public new GenObject GenObject
+        public new IGenObject GenObject
         {
-            get { return base.GenObject; }
+            get { return (GenObject) base.GenObject; }
             set
             {
                 base.GenObject = value;

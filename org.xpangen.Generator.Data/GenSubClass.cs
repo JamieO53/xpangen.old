@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenObjectListBase : List<GenObject>, IGenObjectListBase
+    public class GenSubClass : List<GenObject>, IGenObjectListBase, IGenObject
     {
         /// <summary>
         /// Create a new <see cref="GenObjectList"/> list.
@@ -12,8 +12,10 @@ namespace org.xpangen.Generator.Data
         /// <param name="parent">The generator object owning the list.</param>
         /// <param name="classId">The ID of objects in the list.</param>
         /// <param name="subClassDef">The definition of the subclass</param>
-        public GenObjectListBase(GenDataBase data, GenObject parent, int classId, GenDataDefSubClass subClassDef)
+        public GenSubClass(GenDataBase data, GenObject parent, int classId, GenDataDefSubClass subClassDef)
         {
+            Properties = new NameList {"Reference", "Relationship"};
+            Attributes = new TextList {"", ""};
             Reference = "";
             Definition = subClassDef;
             GenDataBase = data;
@@ -21,6 +23,9 @@ namespace org.xpangen.Generator.Data
             ClassId = classId;
             IsReset = false;
         }
+
+        private const int ReferenceIdx = 0;
+        private const int RelationshipIdx = 1;
 
         /// <summary>
         /// The generator data containing the list.
@@ -32,12 +37,27 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         public GenObject Parent { get; private set; }
 
+        public TextList Attributes { get; private set; }
+
+        public NameList Properties { get; private set; }
+        public string ClassName { get { return Parent.Definition.Name + "_" + Definition.SubClass.Name; } }
+
         /// <summary>
         /// The ID of objects in the list.
         /// </summary>
         public int ClassId { get; private set; }
 
-        public string Reference { get; set; }
+        public string Reference
+        {
+            get { return Attributes[ReferenceIdx]; }
+            set { Attributes[ReferenceIdx] = value; }
+        }
+
+        public string Relationship
+        {
+            get { return Attributes[RelationshipIdx]; }
+            set { Attributes[RelationshipIdx] = value; }
+        }
 
         public GenDataDefSubClass Definition { get; private set; }
         public bool IsReset { get; set; }
@@ -57,6 +77,11 @@ namespace org.xpangen.Generator.Data
             Add(o);
             return o;
 
+        }
+
+        public override string ToString()
+        {
+            return GenDataBase + "." + Parent.Definition.Name + "_" + Definition.SubClass.Name;
         }
     }
 }

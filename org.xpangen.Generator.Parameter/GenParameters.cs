@@ -373,7 +373,7 @@ namespace org.xpangen.Generator.Parameter
             {
                 if (Scan.Attribute("Name") != "" || Scan.Attribute("Reference") == "")
                 {
-                    var child = new GenObject(parent, parent.SubClass[subClassIdx] as GenObjectListBase, subClassId);
+                    var child = new GenObject(parent, parent.SubClass[subClassIdx] as GenSubClass, subClassId);
                     for (var i = 0; i < GenDataDef.Classes[subClassId].Properties.Count; i++)
                     {
                         var s = Scan.Attribute(GenDataDef.Classes[subClassId].Properties[i]);

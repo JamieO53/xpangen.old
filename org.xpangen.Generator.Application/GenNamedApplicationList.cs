@@ -7,21 +7,25 @@ namespace org.xpangen.Generator.Application
     {
         public GenNamedApplicationList(GenApplicationBase parent)
         {
-            var className = typeof(T).Name;
-            var classId = parent.GenDataDef.Classes.IndexOf(className);
-            var classIdx = parent.GenDataDef.IndexOfSubClass(parent.ClassId, classId);
-            if (classIdx != -1)
+            var parentObject = parent.GenObject as GenObject;
+            if (parentObject != null)
             {
-                var list = new GenObjectList(parent.GenObject.SubClass[classIdx], parent.GenObject.GenDataBase,
-                                             parent.GenData.Context[parent.ClassId],
-                                             parent.GenDataDef.Classes[parent.ClassId].SubClasses[classIdx]);
-                list.First();
-                while (!list.Eol)
+                var className = typeof(T).Name;
+                var classId = parent.GenDataDef.Classes.IndexOf(className);
+                var classIdx = parent.GenDataDef.IndexOfSubClass(parent.ClassId, classId);
+                if (classIdx != -1)
                 {
-                    Add(new T { GenData = parent.GenData, GenObject = list.GenObject, Parent = parent });
-                    list.Next();
+                    var list = new GenObjectList(parentObject.SubClass[classIdx], parentObject.GenDataBase,
+                                                 parent.GenData.Context[parent.ClassId],
+                                                 parent.GenDataDef.Classes[parent.ClassId].SubClasses[classIdx]);
+                    list.First();
+                    while (!list.Eol)
+                    {
+                        Add(new T { GenData = parent.GenData, GenObject = list.GenObject, Parent = parent });
+                        list.Next();
+                    }
+                    parent.Lists.Add(className, this);
                 }
-                parent.Lists.Add(className, this);
             }
         }
 

@@ -31,8 +31,8 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Property", model.ClassList[0].SubClassList[1].Name);
             Assert.AreEqual(0, model.ClassList[1].SubClassList.Count);
             Assert.AreEqual(0, model.ClassList[2].SubClassList.Count);
-            Assert.AreEqual(2, model.ClassList[0].PropertyList.Count);
-            Assert.AreEqual(2, model.ClassList[1].PropertyList.Count);
+            Assert.AreEqual(3, model.ClassList[0].PropertyList.Count);
+            Assert.AreEqual(3, model.ClassList[1].PropertyList.Count);
             Assert.AreEqual(7, model.ClassList[2].PropertyList.Count);
             Assert.AreEqual("Name", model.ClassList[0].PropertyList[0].Name);
             Assert.AreEqual("Title", model.ClassList[0].PropertyList[1].Name);

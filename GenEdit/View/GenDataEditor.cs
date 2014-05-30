@@ -246,7 +246,7 @@ namespace GenEdit.View
         {
             var selectedNode = DataNavigatorTreeView.SelectedNode;
             var nodeData = (GenObjectViewModel)GetNodeData(selectedNode);
-            var genObject = nodeData.GenAttributes.GenObject;
+            var genObject = (GenObject) nodeData.GenAttributes.GenObject;
             genObject.ParentSubClass.Remove(genObject);
             selectedNode.Parent.Nodes.Remove(selectedNode);
         }
