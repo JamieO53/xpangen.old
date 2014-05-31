@@ -1,6 +1,6 @@
 Definition=Definition
 Class=Class
-Field={Name,Title}
+Field={Name,Title,Inheritance}
 SubClass={SubClass,Property}
 Class=SubClass
 Field={Name,Reference,Relationship}
@@ -12,7 +12,7 @@ SubClass=SubClass[]
 SubClass=Property[]
 Property=Name[Title='Class name: must be well formed',DataType=String]
 Property=Title[Title='Class description: used as a hint when editing',DataType=String]
-Property=Inheritance[Title='What kind of inheritance do extended subclasses have',DataType=String]
+Property=Inheritance[Title='What kind of inheritance do extended subclasses have',DataType=String,LookupType=Standard,LookupTable=Inheritance]
 Class=SubClass[Title='Class to SubClass link']
 Property=Name[Title='Subclass name: refers to a class and is used for hierarchical browsing',DataType=String]
 Property=Reference[Title='Location of the subclass',DataType=String]
