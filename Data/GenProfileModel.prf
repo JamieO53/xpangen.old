@@ -1,4 +1,4 @@
-`[Solution:`[Assembly:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Assembly.Name`.cs`]`]`[Class:`@MapSet:`{`Class.Name``]`{ : GenNamedApplicationBase`]`]`]`[Class:`@MapSet:`{ClassName`]`{`Class.Name``]`]`[SubClass:`@MapSet:`{SubClassName`]`{`SubClass.Name``]`]`%Class.Name=SubClass.Name:`?Class.Inheritance:`@MapSet:`@MapGet:'SubClassName'`]`{ : `@MapGet:'ClassName'`]`]`]`]`]`]`]// This Source Code Form is subject to the terms of the Mozilla Public
+`[Solution:`[Assembly:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Assembly.Name`.cs`]`]`@MapClear:`]`[Class:`@MapSet:`{`Class.Name`Inheritance`]`{ : GenNamedApplicationBase`]`]`]`[Class:`@MapSet:`{ClassName`]`{`Class.Name``]`]`[SubClass:`@MapSet:`{SubClassName`]`{`SubClass.Name``]`]`%Class.Name=SubClass.Name:`?Class.Inheritance~:`@MapSet:`{`@MapGet:`{SubClassName`]`]Inheritance`]`{ : `@MapGet:'ClassName'`]`]`]`]`]`]`]// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -61,7 +61,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
     /// <summary>
     /// `Class.Title`
     /// </summary>
-    public class `Class.Name``@MapGet:`{`Class.Name``]`]
+    public class `Class.Name``@MapGet:`{`Class.Name`Inheritance`]`]
     {
         public `Class.Name`()
         {
@@ -72,7 +72,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
 			GenData = genData;
         }
 
-`[Property:        /// <summary>
+`[Property:`?Class.Inheritance~:        /// <summary>
         /// `Property.Title`
         /// </summary>
         public`?Property.Name='Name': override`] string `Property.Name`
@@ -86,12 +86,40 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             }
         }
 
-`]`[SubClass:        public GenNamedApplicationList<`SubClass.Name`> `SubClass.Name`List { get; private set; }
-`]`[SubClass':
+`]`?Class.Inheritance=Virtual:        /// <summary>
+        /// `Property.Title`
+        /// </summary>
+        public`?Property.Name='Name': override`] string `Property.Name`
+        {
+            get { return AsString("`Property.Name`"); }
+            set
+            {
+                if (`Property.Name` == value) return;
+                SetString("`Property.Name`", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+`]`?Class.Inheritance=Abstract:`?Property.Name<>'Name':        /// <summary>
+        /// `Property.Title`
+        /// </summary>
+        public`?Property.Name='Name': override`] string `Property.Name`
+        {
+            get { return AsString("`Property.Name`"); }
+            set
+            {
+                if (`Property.Name` == value) return;
+                SetString("`Property.Name`", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+`]`]`]`[SubClass:`%Class.Name=SubClass.Name:`?Class.Inheritance<>Virtual:        public GenNamedApplicationList<`Class.Name`> `Class.Name`List { get; private set; }
+`]`]`]`[SubClass':
         protected override void GenObjectSetNotification()
         {
-`]`[SubClass:            `SubClass.Name`List = new GenNamedApplicationList<`SubClass.Name`>(this);
-`]`[SubClass':        }`]`[SubClass:`%Class.Name=SubClass.Name:
+`]`[SubClass:`%Class.Name=SubClass.Name:`?Class.Inheritance<>Virtual:            `Class.Name`List = new GenNamedApplicationList<`Class.Name`>(this);
+`]`]`]`[SubClass':        }`]`[SubClass:`@MapSet:`{SubClassName`]`{`SubClass.Name``]`]`%Class.Name=SubClass.Name:`?Class.Inheritance~:
 
         public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])
         {
@@ -103,6 +131,17 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             `Class.Name`List.Add(item);
             return item;
         }
-`]`]    }
+`]`?Class.Inheritance=Abstract:`[Subclass:`%Class.Name=SubClass.Name:`?Class.Inheritance=Virtual:
+        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])
+        {
+            var item = new `Class.Name`(GenData)
+                           {
+                               GenObject = GenData.CreateObject("`@MapGet:'ClassName'`]", "`Class.Name`")`[Property:,
+                               `Property.Name` = `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`]
+                           };
+            `@MapGet:`{SubClassName`]`]List.Add(item);
+            return item;
+        }
+`]`]`]`]`]`]    }
 }
 `]`]`]
