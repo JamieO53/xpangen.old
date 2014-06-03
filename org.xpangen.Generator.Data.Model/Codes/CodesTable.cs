@@ -67,5 +67,6 @@ namespace org.xpangen.Generator.Data.Model.Codes
             CodeList.Add(item);
             return item;
         }
+
     }
 }
