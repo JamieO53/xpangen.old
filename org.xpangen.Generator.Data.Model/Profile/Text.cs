@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
     /// <summary>
     /// The Text fragment data
     /// </summary>
-    public class Text : GenNamedApplicationBase
+    public class Text : Fragment
     {
         public Text()
         {
@@ -47,6 +47,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
                 if (!DelayedSave) SaveFields();
             }
         }
+
 
     }
 }

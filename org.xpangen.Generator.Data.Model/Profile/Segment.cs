@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
     /// <summary>
     /// The Segment fragment data
     /// </summary>
-    public class Segment : GenNamedApplicationBase
+    public class Segment : Fragment
     {
         public Segment()
         {
@@ -61,6 +61,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
                 if (!DelayedSave) SaveFields();
             }
         }
+
 
     }
 }

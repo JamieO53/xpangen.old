@@ -94,5 +94,6 @@ namespace org.xpangen.Generator.Data.Model.Database
             ForeignKeyColumnList.Add(item);
             return item;
         }
+
     }
 }

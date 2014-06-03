@@ -34,5 +34,6 @@ namespace org.xpangen.Generator.Data.Model.Database
             }
         }
 
+
     }
 }

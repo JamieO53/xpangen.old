@@ -110,5 +110,6 @@ namespace org.xpangen.Generator.Data.Model.Settings
             ProfileList.Add(item);
             return item;
         }
+
     }
 }

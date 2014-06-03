@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
     /// <summary>
     /// The Placeholder fragment data
     /// </summary>
-    public class Placeholder : GenNamedApplicationBase
+    public class Placeholder : Fragment
     {
         public Placeholder()
         {
@@ -61,6 +61,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
                 if (!DelayedSave) SaveFields();
             }
         }
+
 
     }
 }

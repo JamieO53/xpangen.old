@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
     /// <summary>
     /// The data content of the Null fragment
     /// </summary>
-    public class Null : GenNamedApplicationBase
+    public class Null : Fragment
     {
         public Null()
         {
@@ -33,6 +33,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
                 if (!DelayedSave) SaveFields();
             }
         }
+
 
     }
 }

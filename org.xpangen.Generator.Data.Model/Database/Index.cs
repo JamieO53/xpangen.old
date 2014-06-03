@@ -108,5 +108,6 @@ namespace org.xpangen.Generator.Data.Model.Database
             DataColumnList.Add(item);
             return item;
         }
+
     }
 }

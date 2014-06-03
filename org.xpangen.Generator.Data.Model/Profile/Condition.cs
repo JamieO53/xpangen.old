@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
     /// <summary>
     /// The Condition fragment data
     /// </summary>
-    public class Condition : GenNamedApplicationBase
+    public class Condition : Fragment
     {
         public Condition()
         {
@@ -117,6 +117,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
                 if (!DelayedSave) SaveFields();
             }
         }
+
 
     }
 }
