@@ -1,4 +1,4 @@
-`[Solution:`[Assembly:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Assembly.Name`.cs`]`]`@MapClear:`]`[Class:`@MapSet:`{`Class.Name`Inheritance`]`{ : GenNamedApplicationBase`]`]`]`[Class:`@MapSet:`{ClassName`]`{`Class.Name``]`]`[SubClass:`@MapSet:`{SubClassName`]`{`SubClass.Name``]`]`%Class.Name=SubClass.Name:`?Class.Inheritance~:`@MapSet:`{`@MapGet:`{SubClassName`]`]Inheritance`]`{ : `@MapGet:'ClassName'`]`]`]`]`]`]`]// This Source Code Form is subject to the terms of the Mozilla Public
+`[Solution:`[Assembly:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Assembly.Name`.cs`]`]`@MapClear:`]`[Class:`@MapSet:`{`Class.Name`Inheritance`]`{ : GenNamedApplicationBase`]`]`]`[Class:`@MapSet:`{ClassName`]`{`Class.Name``]`]`[SubClass:`@MapSet:`{SubClassName`]`{`SubClass.Name``]`]`%Class.Name=SubClass.Name:`?Class.Inheritance=Virtual:`@MapSet:`{`@MapGet:`{SubClassName`]`]Inheritance`]`{ : `@MapGet:'ClassName'`]`]`]`]`]`]`]// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -141,7 +141,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
                            };
             `@MapGet:`{SubClassName`]`]List.Add(item);
             return item;
-        }
-`]`]`]`]`]`]    }
+        }`]`]`]`]`]`]
+    }
 }
 `]`]`]
