@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
     /// <summary>
     /// The Block fragment data
     /// </summary>
-    public class Block : GenNamedApplicationBase
+    public class Block : Fragment
     {
         public Block()
         {
@@ -33,6 +33,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
                 if (!DelayedSave) SaveFields();
             }
         }
+
 
     }
 }

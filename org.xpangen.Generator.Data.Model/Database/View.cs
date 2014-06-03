@@ -7,21 +7,21 @@ using org.xpangen.Generator.Application;
 namespace org.xpangen.Generator.Data.Model.Database
 {
     /// <summary>
-    /// Database table
+    /// View definition
     /// </summary>
-    public class Table : GenNamedApplicationBase
+    public class View : GenNamedApplicationBase
     {
-        public Table()
+        public View()
         {
         }
 
-        public Table(GenData genData)
+        public View(GenData genData)
         {
 			GenData = genData;
         }
 
         /// <summary>
-        /// Database table name
+        /// View name
         /// </summary>
         public override string Name
         {
@@ -35,35 +35,31 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         /// <summary>
-        /// The table name as on the database
+        /// The view name as on the database
         /// </summary>
-        public string TableName
+        public string ViewName
         {
-            get { return AsString("TableName"); }
+            get { return AsString("ViewName"); }
             set
             {
-                if (TableName == value) return;
-                SetString("TableName", value);
+                if (ViewName == value) return;
+                SetString("ViewName", value);
                 if (!DelayedSave) SaveFields();
             }
         }
 
         public GenNamedApplicationList<Column> ColumnList { get; private set; }
-        public GenNamedApplicationList<Index> IndexList { get; private set; }
-        public GenNamedApplicationList<ForeignKey> ForeignKeyList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
             ColumnList = new GenNamedApplicationList<Column>(this);
-            IndexList = new GenNamedApplicationList<Index>(this);
-            ForeignKeyList = new GenNamedApplicationList<ForeignKey>(this);
         }
 
         public Column AddColumn(string name, string columnName = "", string nativeDataType = "", string oDBCDataType = "", string length = "", string precision = "", string scale = "", string isNullable = "", string isKey = "")
         {
             var item = new Column(GenData)
                            {
-                               GenObject = GenData.CreateObject("Table", "Column"),
+                               GenObject = GenData.CreateObject("View", "Column"),
                                Name = name,
                                ColumnName = columnName,
                                NativeDataType = nativeDataType,
@@ -75,36 +71,6 @@ namespace org.xpangen.Generator.Data.Model.Database
                                IsKey = isKey
                            };
             ColumnList.Add(item);
-            return item;
-        }
-
-
-        public Index AddIndex(string name, string isPrimaryKey = "", string isUnique = "", string isClusterKey = "")
-        {
-            var item = new Index(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Table", "Index"),
-                               Name = name,
-                               IsPrimaryKey = isPrimaryKey,
-                               IsUnique = isUnique,
-                               IsClusterKey = isClusterKey
-                           };
-            IndexList.Add(item);
-            return item;
-        }
-
-
-        public ForeignKey AddForeignKey(string name, string referenceTable = "", string deleteAction = "", string updateAction = "")
-        {
-            var item = new ForeignKey(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Table", "ForeignKey"),
-                               Name = name,
-                               ReferenceTable = referenceTable,
-                               DeleteAction = deleteAction,
-                               UpdateAction = updateAction
-                           };
-            ForeignKeyList.Add(item);
             return item;
         }
 

@@ -48,6 +48,20 @@ namespace org.xpangen.Generator.Data.Model.Definition
             }
         }
 
+        /// <summary>
+        /// What kind of inheritance do extended subclasses have
+        /// </summary>
+        public string Inheritance
+        {
+            get { return AsString("Inheritance"); }
+            set
+            {
+                if (Inheritance == value) return;
+                SetString("Inheritance", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
         public GenNamedApplicationList<SubClass> SubClassList { get; private set; }
         public GenNamedApplicationList<Property> PropertyList { get; private set; }
 
@@ -87,5 +101,6 @@ namespace org.xpangen.Generator.Data.Model.Definition
             PropertyList.Add(item);
             return item;
         }
+
     }
 }

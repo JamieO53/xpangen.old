@@ -74,5 +74,6 @@ namespace org.xpangen.Generator.Data.Model.Settings
             BaseFileList.Add(item);
             return item;
         }
+
     }
 }

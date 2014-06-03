@@ -9,13 +9,13 @@ namespace org.xpangen.Generator.Data.Model.Profile
     /// <summary>
     /// A fragment that forms part of the body of a container fragment
     /// </summary>
-    public class BodyFragment : GenNamedApplicationBase
+    public class FragmentBody : GenNamedApplicationBase
     {
-        public BodyFragment()
+        public FragmentBody()
         {
         }
 
-        public BodyFragment(GenData genData)
+        public FragmentBody(GenData genData)
         {
 			GenData = genData;
         }
@@ -34,113 +34,131 @@ namespace org.xpangen.Generator.Data.Model.Profile
             }
         }
 
-        public GenNamedApplicationList<Null> NullList { get; private set; }
-        public GenNamedApplicationList<Text> TextList { get; private set; }
-        public GenNamedApplicationList<Placeholder> PlaceholderList { get; private set; }
-        public GenNamedApplicationList<Body> BodyList { get; private set; }
-        public GenNamedApplicationList<Segment> SegmentList { get; private set; }
-        public GenNamedApplicationList<Block> BlockList { get; private set; }
-        public GenNamedApplicationList<Lookup> LookupList { get; private set; }
-        public GenNamedApplicationList<Condition> ConditionList { get; private set; }
-        public GenNamedApplicationList<Function> FunctionList { get; private set; }
-        public GenNamedApplicationList<TextBlock> TextBlockList { get; private set; }
+        public GenNamedApplicationList<Fragment> FragmentList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            NullList = new GenNamedApplicationList<Null>(this);
-            TextList = new GenNamedApplicationList<Text>(this);
-            PlaceholderList = new GenNamedApplicationList<Placeholder>(this);
-            BodyList = new GenNamedApplicationList<Body>(this);
-            SegmentList = new GenNamedApplicationList<Segment>(this);
-            BlockList = new GenNamedApplicationList<Block>(this);
-            LookupList = new GenNamedApplicationList<Lookup>(this);
-            ConditionList = new GenNamedApplicationList<Condition>(this);
-            FunctionList = new GenNamedApplicationList<Function>(this);
-            TextBlockList = new GenNamedApplicationList<TextBlock>(this);
+            FragmentList = new GenNamedApplicationList<Fragment>(this);
         }
-
         public Null AddNull(string name)
         {
+            new Fragment(GenData)
+            {
+                GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                Name = name,
+                FragmentType = "Null"
+            };
+
             var item = new Null(GenData)
                            {
-                               GenObject = GenData.CreateObject("BodyFragment", "Null"),
+                               GenObject = GenData.CreateObject("Fragment", "Null"),
                                Name = name
                            };
-            NullList.Add(item);
+            FragmentList.Add(item);
             return item;
         }
-
-
         public Text AddText(string name, string textValue = "")
         {
+            new Fragment(GenData)
+            {
+                GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                Name = name,
+                FragmentType = "Text"
+            };
+
             var item = new Text(GenData)
                            {
-                               GenObject = GenData.CreateObject("BodyFragment", "Text"),
+                               GenObject = GenData.CreateObject("Fragment", "Text"),
                                Name = name,
                                TextValue = textValue
                            };
-            TextList.Add(item);
+            FragmentList.Add(item);
             return item;
         }
-
-
         public Placeholder AddPlaceholder(string name, string @class = "", string property = "")
         {
+            new Fragment(GenData)
+            {
+                GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                Name = name,
+                FragmentType = "Placeholder"
+            };
+
             var item = new Placeholder(GenData)
                            {
-                               GenObject = GenData.CreateObject("BodyFragment", "Placeholder"),
+                               GenObject = GenData.CreateObject("Fragment", "Placeholder"),
                                Name = name,
                                Class = @class,
                                Property = property
                            };
-            PlaceholderList.Add(item);
+            FragmentList.Add(item);
             return item;
         }
-
-
         public Body AddBody(string name)
         {
+            new Fragment(GenData)
+            {
+                GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                Name = name,
+                FragmentType = "Body"
+            };
+
             var item = new Body(GenData)
                            {
-                               GenObject = GenData.CreateObject("BodyFragment", "Body"),
+                               GenObject = GenData.CreateObject("Fragment", "Body"),
                                Name = name
                            };
-            BodyList.Add(item);
+            FragmentList.Add(item);
             return item;
         }
-
-
         public Segment AddSegment(string name, string @class = "", string cardinality = "")
         {
+            new Fragment(GenData)
+            {
+                GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                Name = name,
+                FragmentType = "Segment"
+            };
+
             var item = new Segment(GenData)
                            {
-                               GenObject = GenData.CreateObject("BodyFragment", "Segment"),
+                               GenObject = GenData.CreateObject("Fragment", "Segment"),
                                Name = name,
                                Class = @class,
                                Cardinality = cardinality
                            };
-            SegmentList.Add(item);
+            FragmentList.Add(item);
             return item;
         }
-
-
         public Block AddBlock(string name)
         {
+            new Fragment(GenData)
+            {
+                GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                Name = name,
+                FragmentType = "Block"
+            };
+
             var item = new Block(GenData)
                            {
-                               GenObject = GenData.CreateObject("BodyFragment", "Block"),
+                               GenObject = GenData.CreateObject("Fragment", "Block"),
                                Name = name
                            };
-            BlockList.Add(item);
+            FragmentList.Add(item);
             return item;
         }
-
-
         public Lookup AddLookup(string name, string noMatch = "", string class1 = "", string property1 = "", string class2 = "", string property2 = "")
         {
+            new Fragment(GenData)
+            {
+                GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                Name = name,
+                FragmentType = "Lookup"
+            };
+
             var item = new Lookup(GenData)
                            {
-                               GenObject = GenData.CreateObject("BodyFragment", "Lookup"),
+                               GenObject = GenData.CreateObject("Fragment", "Lookup"),
                                Name = name,
                                NoMatch = noMatch,
                                Class1 = class1,
@@ -148,16 +166,21 @@ namespace org.xpangen.Generator.Data.Model.Profile
                                Class2 = class2,
                                Property2 = property2
                            };
-            LookupList.Add(item);
+            FragmentList.Add(item);
             return item;
         }
-
-
         public Condition AddCondition(string name, string class1 = "", string property1 = "", string class2 = "", string property2 = "", string lit = "", string useLit = "")
         {
+            new Fragment(GenData)
+            {
+                GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                Name = name,
+                FragmentType = "Condition"
+            };
+
             var item = new Condition(GenData)
                            {
-                               GenObject = GenData.CreateObject("BodyFragment", "Condition"),
+                               GenObject = GenData.CreateObject("Fragment", "Condition"),
                                Name = name,
                                Class1 = class1,
                                Property1 = property1,
@@ -166,32 +189,59 @@ namespace org.xpangen.Generator.Data.Model.Profile
                                Lit = lit,
                                UseLit = useLit
                            };
-            ConditionList.Add(item);
+            FragmentList.Add(item);
             return item;
         }
-
-
         public Function AddFunction(string name, string functionName = "")
         {
+            new Fragment(GenData)
+            {
+                GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                Name = name,
+                FragmentType = "Function"
+            };
+
             var item = new Function(GenData)
                            {
-                               GenObject = GenData.CreateObject("BodyFragment", "Function"),
+                               GenObject = GenData.CreateObject("Fragment", "Function"),
                                Name = name,
                                FunctionName = functionName
                            };
-            FunctionList.Add(item);
+            FragmentList.Add(item);
             return item;
         }
-
-
         public TextBlock AddTextBlock(string name)
         {
+            new Fragment(GenData)
+            {
+                GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                Name = name,
+                FragmentType = "TextBlock"
+            };
+
             var item = new TextBlock(GenData)
                            {
-                               GenObject = GenData.CreateObject("BodyFragment", "TextBlock"),
+                               GenObject = GenData.CreateObject("Fragment", "TextBlock"),
                                Name = name
                            };
-            TextBlockList.Add(item);
+            FragmentList.Add(item);
+            return item;
+        }
+        public Profile AddProfile(string name)
+        {
+            new Fragment(GenData)
+                {
+                    GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                    Name = name,
+                    FragmentType = "Profile"
+                };
+
+            var item = new Profile(GenData)
+                           {
+                               GenObject = GenData.CreateObject("Fragment", "Profile"),
+                               Name = name
+                           };
+            FragmentList.Add(item);
             return item;
         }
     }

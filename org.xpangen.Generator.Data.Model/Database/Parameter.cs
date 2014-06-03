@@ -7,21 +7,21 @@ using org.xpangen.Generator.Application;
 namespace org.xpangen.Generator.Data.Model.Database
 {
     /// <summary>
-    /// Table column definition
+    /// 
     /// </summary>
-    public class Column : GenNamedApplicationBase
+    public class Parameter : GenNamedApplicationBase
     {
-        public Column()
+        public Parameter()
         {
         }
 
-        public Column(GenData genData)
+        public Parameter(GenData genData)
         {
 			GenData = genData;
         }
 
         /// <summary>
-        /// Column name
+        /// Parameter name
         /// </summary>
         public override string Name
         {
@@ -35,21 +35,21 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         /// <summary>
-        /// Column name as on the database
+        /// Parameter name as on the database
         /// </summary>
-        public string ColumnName
+        public string ParameterName
         {
-            get { return AsString("ColumnName"); }
+            get { return AsString("ParameterName"); }
             set
             {
-                if (ColumnName == value) return;
-                SetString("ColumnName", value);
+                if (ParameterName == value) return;
+                SetString("ParameterName", value);
                 if (!DelayedSave) SaveFields();
             }
         }
 
         /// <summary>
-        /// The native database type of the column
+        /// The native database type of the parameter
         /// </summary>
         public string NativeDataType
         {
@@ -63,7 +63,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         /// <summary>
-        /// The ODBC data type of the column
+        /// The ODBC data type of the parameter
         /// </summary>
         public string ODBCDataType
         {
@@ -77,7 +77,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         /// <summary>
-        /// The length of the data column
+        /// The length of the data parameter
         /// </summary>
         public string Length
         {
@@ -91,7 +91,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         /// <summary>
-        /// The precision of the data column
+        /// The precision of the data parameter
         /// </summary>
         public string Precision
         {
@@ -119,7 +119,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         /// <summary>
-        /// Is the data column nullable?
+        /// Is the parameter nullable?
         /// </summary>
         public string IsNullable
         {
@@ -133,37 +133,19 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         /// <summary>
-        /// Is this column part of the primary key
+        /// The direction of the parameter data
         /// </summary>
-        public string IsKey
+        public string Direction
         {
-            get { return AsString("IsKey"); }
+            get { return AsString("Direction"); }
             set
             {
-                if (IsKey == value) return;
-                SetString("IsKey", value);
+                if (Direction == value) return;
+                SetString("Direction", value);
                 if (!DelayedSave) SaveFields();
             }
         }
 
-        public GenNamedApplicationList<Default> DefaultList { get; private set; }
-
-        protected override void GenObjectSetNotification()
-        {
-            DefaultList = new GenNamedApplicationList<Default>(this);
-        }
-
-        public Default AddDefault(string name, string value = "")
-        {
-            var item = new Default(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Column", "Default"),
-                               Name = name,
-                               Value = value
-                           };
-            DefaultList.Add(item);
-            return item;
-        }
 
     }
 }

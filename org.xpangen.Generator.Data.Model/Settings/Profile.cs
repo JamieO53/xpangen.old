@@ -76,5 +76,6 @@ namespace org.xpangen.Generator.Data.Model.Settings
             }
         }
 
+
     }
 }

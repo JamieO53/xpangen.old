@@ -66,5 +66,6 @@ namespace org.xpangen.Generator.Data.Model.Minimal
             PropertyList.Add(item);
             return item;
         }
+
     }
 }

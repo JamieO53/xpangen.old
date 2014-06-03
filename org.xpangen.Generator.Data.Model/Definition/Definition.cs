@@ -30,6 +30,7 @@ namespace org.xpangen.Generator.Data.Model.Definition
             f.AddSubClass("Class", "Property");
             f.Classes[1].Properties.Add("Name");
             f.Classes[1].Properties.Add("Title");
+            f.Classes[1].Properties.Add("Inheritance");
             f.Classes[2].Properties.Add("Name");
             f.Classes[2].Properties.Add("Reference");
             f.Classes[2].Properties.Add("Relationship");
@@ -50,13 +51,14 @@ namespace org.xpangen.Generator.Data.Model.Definition
             ClassList = new GenNamedApplicationList<Class>(this);
         }
 
-        public Class AddClass(string name, string title = "")
+        public Class AddClass(string name, string title = "", string inheritance = "")
         {
             var item = new Class(GenData)
                            {
                                GenObject = GenData.CreateObject("", "Class"),
                                Name = name,
-                               Title = title
+                               Title = title,
+                               Inheritance = inheritance
                            };
             ClassList.Add(item);
             return item;

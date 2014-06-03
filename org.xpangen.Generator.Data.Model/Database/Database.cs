@@ -35,36 +35,23 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         public GenNamedApplicationList<Schema> SchemaList { get; private set; }
-        public GenNamedApplicationList<Table> TableList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
             SchemaList = new GenNamedApplicationList<Schema>(this);
-            TableList = new GenNamedApplicationList<Table>(this);
         }
 
-        public Schema AddSchema(string name)
+        public Schema AddSchema(string name, string schemaName = "")
         {
             var item = new Schema(GenData)
                            {
                                GenObject = GenData.CreateObject("Database", "Schema"),
-                               Name = name
+                               Name = name,
+                               SchemaName = schemaName
                            };
             SchemaList.Add(item);
             return item;
         }
 
-
-        public Table AddTable(string name, string schema = "")
-        {
-            var item = new Table(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Database", "Table"),
-                               Name = name,
-                               Schema = schema
-                           };
-            TableList.Add(item);
-            return item;
-        }
     }
 }

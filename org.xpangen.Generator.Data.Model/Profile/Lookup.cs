@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
     /// <summary>
     /// The Lookup fragment data
     /// </summary>
-    public class Lookup : GenNamedApplicationBase
+    public class Lookup : Fragment
     {
         public Lookup()
         {
@@ -103,6 +103,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
                 if (!DelayedSave) SaveFields();
             }
         }
+
 
     }
 }

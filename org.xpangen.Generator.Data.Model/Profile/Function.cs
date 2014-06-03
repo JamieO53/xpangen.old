@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
     /// <summary>
     /// The Function fragment data
     /// </summary>
-    public class Function : GenNamedApplicationBase
+    public class Function : Fragment
     {
         public Function()
         {
@@ -47,6 +47,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
                 if (!DelayedSave) SaveFields();
             }
         }
+
 
     }
 }

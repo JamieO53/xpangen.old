@@ -7,21 +7,21 @@ using org.xpangen.Generator.Application;
 namespace org.xpangen.Generator.Data.Model.Profile
 {
     /// <summary>
-    /// The TextBlock fragment data
+    /// The container fragment for the profile
     /// </summary>
-    public class TextBlock : Fragment
+    public class Profile : Fragment
     {
-        public TextBlock()
+        public Profile()
         {
         }
 
-        public TextBlock(GenData genData)
+        public Profile(GenData genData)
         {
 			GenData = genData;
         }
 
         /// <summary>
-        /// Generated name of the fragment
+        /// The name of the profile fragment
         /// </summary>
         public override string Name
         {
