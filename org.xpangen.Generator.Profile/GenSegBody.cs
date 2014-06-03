@@ -61,7 +61,6 @@ namespace org.xpangen.Generator.Profile
                 fragment.GenObject = GenData.CreateObject("ProfileRoot", "Fragment");
                 fragment.Name = fragment.FragmentType.ToString() + ProfileRoot.FragmentList.Count;
                 ProfileRoot.FragmentList.Add(fragment);
-                AddBodyFragment(fragment.Name);
             }
         }
 

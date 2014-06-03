@@ -21,6 +21,20 @@ namespace org.xpangen.Generator.Data.Model.Profile
         }
 
         /// <summary>
+        /// Generated name of the fragment
+        /// </summary>
+        public override string Name
+        {
+            get { return AsString("Name"); }
+            set
+            {
+                if (Name == value) return;
+                SetString("Name", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+        /// <summary>
         /// The type of the fragment
         /// </summary>
         public string FragmentType
@@ -34,23 +48,9 @@ namespace org.xpangen.Generator.Data.Model.Profile
             }
         }
 
-        /// <summary>
-        /// The body that contains the container fragment's fragments
-        /// </summary>
-        public string Body
-        {
-            get { return AsString("Body"); }
-            set
-            {
-                if (Body == value) return;
-                SetString("Body", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-
         protected override void GenObjectSetNotification()
         {
         }
+
     }
 }
