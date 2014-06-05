@@ -31,34 +31,57 @@ declare @lines table(
 
 -- Definition prefix lines
 insert	@lines
-values  ('', '', '', 0, 0, 1, 0, 'Definition=DatabaseDefinition'),
-        ('', '', '', 0, 0, 2, 0, 'Class=Database'),
-        ('', '', '', 0, 0, 3, 0, 'Field=Name'),
-        ('', '', '', 0, 0, 4, 0, 'SubClass=Schema'),
-        ('', '', '', 0, 0, 5, 0, 'Class=Schema'),
-        ('', '', '', 0, 0, 6, 0, 'Field={Name,SchemaName'),
-        ('', '', '', 0, 0, 7, 0, 'SubClass=Table'),
-        ('', '', '', 0, 0, 8, 0, 'Class=Table'),
-        ('', '', '', 0, 0, 9, 0, 'Field={Name,TableName}'),
-        ('', '', '', 0, 0, 10, 0, 'SubClass={Column,Index,ForeignKey}'),
-        ('', '', '', 0, 0, 11, 0, 'Class=Column'),
-        ('', '', '', 0, 0, 12, 0, 'Field={Name,ColumnName,NativeDataType,ODBCDataType,Length,Precison,Scale,IsNullable,IsKey}'),
-        ('', '', '', 0, 0, 13, 0, 'SubClass=Default'),
-        ('', '', '', 0, 0, 14, 0, 'Class=Default'),
-        ('', '', '', 0, 0, 15, 0, 'Field={Name,Value}'),
-        ('', '', '', 0, 0, 16, 0, 'Class=Index'),
-        ('', '', '', 0, 0, 17, 0, 'Field={Name,FieldName,IsPrimaryKey,IsUnique,IsClusterKey}'),
-        ('', '', '', 0, 0, 18, 0, 'SubClass={KeyColumn,DataColumn}'),
-        ('', '', '', 0, 0, 19, 0, 'Class=KeyColumn'),
-        ('', '', '', 0, 0, 20, 0, 'Field={Name,Order}'),
-        ('', '', '', 0, 0, 21, 0, 'Class=DataColumn'),
-        ('', '', '', 0, 0, 22, 0, 'Field=Name'),
-        ('', '', '', 0, 0, 23, 0, 'Class=ForeignKey'),
-        ('', '', '', 0, 0, 24, 0, 'Field={Name,ReferenceTable,DeleteAction,UpdateAction}'),
-        ('', '', '', 0, 0, 25, 0, 'SubClass=ForeignKeyColumn'),
-        ('', '', '', 0, 0, 26, 0, 'Class=ForeignKeyColumn'),
-        ('', '', '', 0, 0, 27, 0, 'Field={Name,RelatedColumn}'),
-        ('', '', '', 0, 0, 28, 0, '.')
+values	('', '', '', 0, 0, 1, 0, 'Definition=DatabaseDefinition'),
+		('', '', '', 0, 0, 2, 0, 'Class=Database'),
+		('', '', '', 0, 0, 3, 0, 'Field=Name'),
+		('', '', '', 0, 0, 4, 0, 'SubClass=Schema'),
+		('', '', '', 0, 0, 5, 0, 'Class=Schema'),
+		('', '', '', 0, 0, 6, 0, 'Field={Name,SchemaName}'),
+		('', '', '', 0, 0, 7, 0, 'SubClass={Table,Procedure,Function,View}'),
+		('', '', '', 0, 0, 8, 0, 'Class=Table'),
+		('', '', '', 0, 0, 9, 0, 'Field={Name,TableName}'),
+		('', '', '', 0, 0, 10, 0, 'SubClass={Column,Index,ForeignKey}'),
+		('', '', '', 0, 0, 11, 0, 'Class=Column'),
+		('', '', '', 0, 0, 12, 0, 'Field={Name,ColumnName,NativeDataType,ODBCDataType,Length,Precision,Scale,IsNullable,IsKey}'),
+		('', '', '', 0, 0, 13, 0, 'SubClass=Default'),
+		('', '', '', 0, 0, 14, 0, 'Class=Default'),
+		('', '', '', 0, 0, 15, 0, 'Field={Name,Value}'),
+		('', '', '', 0, 0, 16, 0, 'Class=Index'),
+		('', '', '', 0, 0, 17, 0, 'Field={Name,IsPrimaryKey,IsUnique,IsClusterKey}'),
+		('', '', '', 0, 0, 18, 0, 'SubClass={KeyColumn,DataColumn}'),
+		('', '', '', 0, 0, 19, 0, 'Class=KeyColumn'),
+		('', '', '', 0, 0, 20, 0, 'Field={Name,Order}'),
+		('', '', '', 0, 0, 21, 0, 'Class=DataColumn'),
+		('', '', '', 0, 0, 22, 0, 'Field=Name'),
+		('', '', '', 0, 0, 23, 0, 'Class=ForeignKey'),
+		('', '', '', 0, 0, 24, 0, 'Field={Name,ReferenceTable,DeleteAction,UpdateAction}'),
+		('', '', '', 0, 0, 25, 0, 'SubClass=ForeignKeyColumn'),
+		('', '', '', 0, 0, 26, 0, 'Class=ForeignKeyColumn'),
+		('', '', '', 0, 0, 27, 0, 'Field={Name,RelatedColumn}'),
+		('', '', '', 0, 0, 28, 0, 'Class=Procedure'),
+		('', '', '', 0, 0, 29, 0, 'Field={Name,ProcedureName}'),
+		('', '', '', 0, 0, 30, 0, 'SubClass=Parameter'),
+		('', '', '', 0, 0, 31, 0, 'Class=Parameter'),
+		('', '', '', 0, 0, 32, 0, 'Field={Name,ParameterName,NativeDataType,ODBCDataType,Length,Precision,Scale,IsNullable,Direction}'),
+		('', '', '', 0, 0, 33, 0, 'Class=Function'),
+		('', '', '', 0, 0, 34, 0, 'Field={Name,FunctionName}'),
+		('', '', '', 0, 0, 35, 0, 'SubClass={Parameter,Column}'),
+		('', '', '', 0, 0, 36, 0, 'Class=Parameter'),
+		('', '', '', 0, 0, 37, 0, 'Field={Name,ParameterName,NativeDataType,ODBCDataType,Length,Precision,Scale,IsNullable,Direction}'),
+		('', '', '', 0, 0, 38, 0, 'Class=Column'),
+		('', '', '', 0, 0, 39, 0, 'Field={Name,ColumnName,NativeDataType,ODBCDataType,Length,Precision,Scale,IsNullable,IsKey}'),
+		('', '', '', 0, 0, 40, 0, 'SubClass=Default'),
+		('', '', '', 0, 0, 41, 0, 'Class=Default'),
+		('', '', '', 0, 0, 42, 0, 'Field={Name,Value}'),
+		('', '', '', 0, 0, 43, 0, 'Class=View'),
+		('', '', '', 0, 0, 44, 0, 'Field={Name,ViewName}'),
+		('', '', '', 0, 0, 45, 0, 'SubClass=Column'),
+		('', '', '', 0, 0, 46, 0, 'Class=Column'),
+		('', '', '', 0, 0, 47, 0, 'Field={Name,ColumnName,NativeDataType,ODBCDataType,Length,Precision,Scale,IsNullable,IsKey}'),
+		('', '', '', 0, 0, 48, 0, 'SubClass=Default'),
+		('', '', '', 0, 0, 49, 0, 'Class=Default'),
+		('', '', '', 0, 0, 50, 0, 'Field={Name,Value}'),
+		('', '', '', 0, 0, 51, 0, '.')
 
 -- Database definition
 insert	@lines
@@ -74,6 +97,7 @@ where	exists(
 			where	o.schema_id = s.schema_id
 			   and	o.name <> 'sysdiagrams'
 			)
+	and	s.name <> 'sys'
 
 -- Object definition
 insert	@lines
@@ -93,18 +117,19 @@ join	sys.objects o
 join	@objectType z
 	on	z.type = o.type
 where	o.name <> 'sysdiagrams'
+	and	s.name <> 'sys'
 
 -- Column definition
 insert	@lines
-select  cTarget.SchemaName, cTarget.ObjectName, cTarget.ObjectType, cTarget.SortOrder, 2, 2, cTarget.column_id,
-        'Column=' + cTarget.ColumnName +
-        '[NativeDataType=' + cTarget.NativeDataType +
-        ',ODBCDataType=' + cast(cTarget.ODBCDataType as varchar(10)) +
-        ',Length=' + cast(cTarget.Length as varchar(10)) +
-        ',Precision=' + cast(cTarget.Precision as varchar(10)) +
-        ',Scale=' + cast(cTarget.Scale as varchar(10)) +
-        case when cTarget.is_nullable = 1 then ',IsNullable' else '' end +
-        case when cTarget.ColumnName is null then ',IsAdded' else '' end +
+select  col.SchemaName, col.ObjectName, col.ObjectType, col.SortOrder, 2, 2, col.column_id,
+        'Column=' + col.ColumnName +
+        '[NativeDataType=' + col.NativeDataType +
+        ',ODBCDataType=' + cast(col.ODBCDataType as varchar(10)) +
+        ',Length=' + cast(col.Length as varchar(10)) +
+        ',Precision=' + cast(col.Precision as varchar(10)) +
+        ',Scale=' + cast(col.Scale as varchar(10)) +
+        case when col.is_nullable = 1 then ',IsNullable' else '' end +
+        case when col.ColumnName is null then ',IsAdded' else '' end +
         ']'
 from	(
         select  distinct s.name SchemaName, o.name ObjectName, z.ObjectType, z.SortOrder, c.column_id, c.name ColumnName, y.name NativeDataType,
@@ -119,9 +144,10 @@ from	(
 		join	@objectType z
 			on	z.type = o.type
         where	o.name <> 'sysdiagrams'
-		   and	y.name <> 'sysname'
-        ) cTarget
- order  by cTarget.ObjectName, cTarget.column_id
+			and	y.name <> 'sysname'
+			and	s.name <> 'sys'
+        ) col
+ order  by col.ObjectName, col.column_id
 
 -- Index definition	
 insert	@lines
@@ -140,6 +166,7 @@ join	@objectType z
 	on	z.type = o.type
 where	o.name <> 'sysdiagrams'
 	and	x.name is not null
+	and	s.name <> 'sys'
 
 -- Key Column definition	
 insert	@lines
@@ -163,6 +190,7 @@ join	@objectType z
 where	o.name <> 'sysdiagrams'
 	and	xc.is_included_column = 0
 	and	x.name is not null
+	and	s.name <> 'sys'
 
 -- Data Column definition	
 insert	@lines
@@ -186,6 +214,7 @@ join	@objectType z
 where	o.name <> 'sysdiagrams'
 	and	xc.is_included_column = 1
 	and	x.name is not null
+	and	s.name <> 'sys'
 
 -- Foreign Key definition	
 insert	@lines
@@ -205,6 +234,7 @@ join	sys.objects [or]
 join	@objectType z
 	on	z.type = o.type
 where	o.name <> 'sysdiagrams'
+	and	s.name <> 'sys'
 
 -- Foreign Key Column definition	
 insert	@lines
@@ -231,6 +261,7 @@ join	sys.columns cr
 join	@objectType z
 	on	z.type = o.type
 where	o.name <> 'sysdiagrams'
+	and	s.name <> 'sys'
 
 update	@lines
 	set	Line = replace(Line, '[,', '[')
