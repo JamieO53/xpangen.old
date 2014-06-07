@@ -48,9 +48,22 @@ namespace org.xpangen.Generator.Data.Model.Profile
             }
         }
 
+        public GenNamedApplicationList<BodyFragment> BodyFragmentList { get; private set; }
+
         protected override void GenObjectSetNotification()
         {
+            BodyFragmentList = new GenNamedApplicationList<BodyFragment>(this);
         }
 
+        public BodyFragment AddBodyFragment(string name)
+        {
+            var item = new BodyFragment(GenData)
+                           {
+                               GenObject = GenData.CreateObject("Fragment", "BodyFragment"),
+                               Name = name
+                           };
+            BodyFragmentList.Add(item);
+            return item;
+        }
     }
 }

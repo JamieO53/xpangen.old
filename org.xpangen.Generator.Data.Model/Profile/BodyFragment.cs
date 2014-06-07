@@ -7,21 +7,21 @@ using org.xpangen.Generator.Application;
 namespace org.xpangen.Generator.Data.Model.Profile
 {
     /// <summary>
-    /// The TextBlock fragment data
+    /// A fragment that forms part of the body of a container fragment
     /// </summary>
-    public class TextBlock : Fragment
+    public class BodyFragment : GenNamedApplicationBase
     {
-        public TextBlock()
+        public BodyFragment()
         {
         }
 
-        public TextBlock(GenData genData)
+        public BodyFragment(GenData genData)
         {
 			GenData = genData;
         }
 
         /// <summary>
-        /// Generated name of the fragment
+        /// The name of the body fragment
         /// </summary>
         public override string Name
         {
@@ -33,7 +33,6 @@ namespace org.xpangen.Generator.Data.Model.Profile
                 if (!DelayedSave) SaveFields();
             }
         }
-
 
     }
 }
