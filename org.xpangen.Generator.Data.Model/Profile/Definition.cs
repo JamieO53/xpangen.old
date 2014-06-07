@@ -3,6 +3,7 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Application;
+using org.xpangen.Generator.Data.Model.Definition;
 
 namespace org.xpangen.Generator.Data.Model.Profile
 {
@@ -48,9 +49,11 @@ namespace org.xpangen.Generator.Data.Model.Profile
             }
         }
 
+        public GenNamedApplicationList<Class> ClassList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
+            ClassList = new GenNamedApplicationList<Class>(this);
         }
     }
 }
