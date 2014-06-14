@@ -2,7 +2,7 @@
 
 namespace org.xpangen.Generator.Data
 {
-    public interface IGenObjectListBase : IList<GenObject>
+    public interface ISubClassBase : IList<GenObject>
     {
         /// <summary>
         /// The generator data containing the list.
@@ -24,8 +24,15 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         string Reference { get; set; }
         
+        /// <summary>
+        /// The definition of the subclass
+        /// </summary>
         GenDataDefSubClass Definition { get; }
-        bool IsReset { get; set; }
+
+        /// <summary>
+        /// The relationship between the subclass and the class
+        /// </summary>
+        string Relationship { get; set; }
 
         /// <summary>
         /// Reset the underlying data to force it to be reinitialized.

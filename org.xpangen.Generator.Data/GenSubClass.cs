@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenSubClass : List<GenObject>, IGenObjectListBase, IGenObject
+    public class GenSubClass : List<GenObject>, ISubClassBase, IGenObject
     {
         /// <summary>
         /// Create a new <see cref="GenObjectList"/> list.

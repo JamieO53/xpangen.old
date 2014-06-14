@@ -54,14 +54,21 @@ namespace org.xpangen.Generator.Data
 
         public string Reference { get; set; }
 
-        public GenDataDefSubClassList SubClasses;
+        public readonly GenDataDefSubClassList SubClasses;
+
+        public readonly GenDataDefClassList Inheritors;
+
         private NameList _properties;
 
         private IndexList Pseudos { get; set; }
 
+        public bool IsInherited { get; set; }
+
         public GenDataDefClass()
         {
             SubClasses = new GenDataDefSubClassList();
+            Inheritors = new GenDataDefClassList();
+            IsInherited = false;
             IsReference = false;
             RefClassId = 0;
             Reference = "";

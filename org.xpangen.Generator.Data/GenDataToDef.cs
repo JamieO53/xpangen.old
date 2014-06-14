@@ -2,6 +2,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
+
 namespace org.xpangen.Generator.Data
 {
     /// <summary>
@@ -62,15 +64,23 @@ namespace org.xpangen.Generator.Data
             if (first)
                 data.AddSubClass("", sName);
             var iClass = data.AddClass(sName);
+
+            // todo: properties not to be added for an extension class if it belongs to the superclass
+            var pAttributes = new GenAttributes(GenDataDef);
             for (var i = 0; i < classObject.SubClass[_xProperty].Count; i++)
             {
-                attributes.GenObject = classObject.SubClass[_xProperty][i];
-                data.Classes[iClass].Properties.Add(attributes.AsString("Name"));
+                pAttributes.GenObject = classObject.SubClass[_xProperty][i];
+                data.Classes[iClass].Properties.Add(pAttributes.AsString("Name"));
             }
+
+            var scAttributes = new GenAttributes(GenDataDef);
             for (var i = 0; i < classObject.SubClass[_xSubClass].Count; i++)
             {
-                attributes.GenObject = classObject.SubClass[_xSubClass][i];
-                data.AddSubClass(sName, attributes.AsString("Name"), attributes.AsString("Reference"));
+                scAttributes.GenObject = classObject.SubClass[_xSubClass][i];
+                if (scAttributes.AsString("Relationship").Equals("Extends", StringComparison.InvariantCultureIgnoreCase))
+                    data.AddInheritor(sName, scAttributes.AsString("Name"));
+                else
+                    data.AddSubClass(sName, scAttributes.AsString("Name"), scAttributes.AsString("Reference"));
             }
         }
     }

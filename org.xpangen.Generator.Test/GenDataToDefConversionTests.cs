@@ -72,7 +72,9 @@ namespace org.xpangen.Generator.Test
         public void ReferenceGenDataAsDefTest()
         {
             var fGrandchild = SetUpParentChildDef("Grandchild", "Greatgrandchild");
+            fGrandchild.Definition = "GrandchildDef";
             var fChild = SetUpParentChildReferenceDef("Child", "Grandchild", "GrandchildDef", fGrandchild);
+            fChild.Definition = "ChildDef";
             var fParent = SetUpParentChildReferenceDef("Parent", "Child", "ChildDef", fChild);
             var f = fParent.AsGenData().AsDef();
             f.Definition = "Parent";

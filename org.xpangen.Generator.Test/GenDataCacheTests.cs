@@ -47,11 +47,11 @@ namespace org.xpangen.Generator.Test
             d.Cache.Merge();
 
             CreateGenObject(d, "", "Parent", "Minimal");
-            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Minimal";
+            ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Minimal";
             CreateGenObject(d, "", "Parent", "Basic");
-            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Basic";
+            ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Basic";
             CreateGenObject(d, "", "Parent", "Definition");
-            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Definition";
+            ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Definition";
 
             d.First(1);
             Assert.AreEqual("Minimal", d.Context[2].Reference);
@@ -85,11 +85,11 @@ namespace org.xpangen.Generator.Test
             var d = new GenData(f);
 
             CreateGenObject(d, "", "Parent", "Minimal");
-            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Minimal";
+            ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Minimal";
             CreateGenObject(d, "", "Parent", "Basic");
-            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Basic";
+            ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Basic";
             CreateGenObject(d, "", "Parent", "Definition");
-            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Definition";
+            ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Definition";
             //d.Cache.Merge();
 
             //var minimal = d.Cache["definition", "Minimal"];
@@ -112,11 +112,11 @@ namespace org.xpangen.Generator.Test
             var d = new GenData(f);
 
             CreateGenObject(d, "", "Parent", "Minimal");
-            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Minimal";
+            ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Minimal";
             CreateGenObject(d, "", "Parent", "Basic");
-            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Basic";
+            ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Basic";
             CreateGenObject(d, "", "Parent", "Definition");
-            ((GenObjectListReference)d.Context[1].GenObject.SubClass[0]).Reference = "Definition";
+            ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Definition";
             
             d.First(1);
             var o = d.Context[4].GenObject;

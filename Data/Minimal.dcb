@@ -1,18 +1,21 @@
 Definition=Definition
 Class=Class
-Field={Name,Title}
+Field={Name,Title,Inheritance}
 SubClass={SubClass,Property}
 Class=SubClass
-Field={Name,Reference}
+Field={Name,Reference,Relationship}
 Class=Property
-Field={Name,Title,DataType,Default}
+Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
 .
 Class=Class[Title='Class Definition']
 SubClass=SubClass[]
 SubClass=Property[]
-Property=Name[Title='Class name: must be well formed',DataType=String]
-Class=SubClass[]
-Property=Name[Title='Subclass name: refers to a class and is used for hierarchical browsing',DataType=String]
+Property=Name[Title='Class name: must be well formed',DataType=Identifier]
+Property=Inheritance[Title='What kind of inheritance do extended subclasses have',DataType=String,LookupType=Standard,LookupTable=Inheritance]
+Class=Property[Title='Property definition']
+Property=Name[Title='Subclass name: refers to a class and is used for hierarchical browsing',DataType=Identifier]
+Property=Reference[Title='Location of the subclass',DataType=String]
+Property=Relationship[Title='SubClass relationship between parent and child',DataType=String,LookupType=Standard,LookupTable=Relationship]
 Property=Reference[Title='Location of the subclass',DataType=String]
 Class=Property[Title='Property definition']
-Property=Name[Title='Property name: must be well formed',DataType=String]
+Property=Name[Title='Property name: must be well formed',DataType=Identifier]

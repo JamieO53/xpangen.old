@@ -7,7 +7,7 @@ namespace GenEdit.ViewModel
     {
         private ObservableCollection<FieldViewModelBase> _fields;
 
-        public SubClassViewModel(IGenObjectListBase parent, IGenObjectListBase genObjectListBase,
+        public SubClassViewModel(ISubClassBase parent, ISubClassBase subClassBase,
                                  GenNamedApplicationBase def, GenDataDefSubClass subClassDef,
                                  GenSavedContext savedContext, bool isReadOnly)
         {
@@ -16,15 +16,15 @@ namespace GenEdit.ViewModel
             SubClassDef = subClassDef;
             IsReadOnly = isReadOnly;
             SavedContext = savedContext;
-            GenObjectListBase = genObjectListBase;
+            SubClassBase = subClassBase;
             SavedReference = Parent != null ? Parent.Reference : "";
         }
 
         public GenDataDefSubClass SubClassDef { get; private set; }
 
-        public IGenObjectListBase GenObjectListBase { get; private set; }
+        public ISubClassBase SubClassBase { get; private set; }
 
-        public IGenObjectListBase Parent { get; private set; }
+        public ISubClassBase Parent { get; private set; }
 
         private string SavedReference { get; set; }
 
@@ -62,10 +62,10 @@ namespace GenEdit.ViewModel
                 {
                     _fields = new ObservableCollection<FieldViewModelBase>();
 
-                    var item = new SubClassFieldViewModel(Parent, SubClassDef, GenObjectListBase, SubClassField.Name,
+                    var item = new SubClassFieldViewModel(Parent, SubClassDef, SubClassBase, SubClassField.Name,
                                                           true);
                     _fields.Add(item);
-                    item = new SubClassFieldViewModel(Parent, SubClassDef, GenObjectListBase, SubClassField.Reference,
+                    item = new SubClassFieldViewModel(Parent, SubClassDef, SubClassBase, SubClassField.Reference,
                                                       IsReadOnly);
                     _fields.Add(item);
                 }

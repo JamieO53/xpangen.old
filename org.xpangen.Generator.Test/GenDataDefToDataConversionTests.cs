@@ -54,7 +54,7 @@ namespace org.xpangen.Generator.Test
             d.First(ClassClassId);
             Assert.AreEqual(1, d.Context[ClassClassId].Count);
             Assert.AreEqual(2, d.Context[ClassClassId].GenObject.SubClass.Count);
-            Assert.AreEqual(1, d.Context[ClassClassId].GenObject.Attributes.Count);
+            Assert.AreEqual(2, d.Context[ClassClassId].GenObject.Attributes.Count);
 
             Assert.IsNull(d.Context[SubClassClassId].GenObject);
             Assert.IsNull(d.Context[PropertyClassId].GenObject);
@@ -78,7 +78,7 @@ namespace org.xpangen.Generator.Test
             d.First(ClassClassId);
             Assert.AreEqual(2, d.Context[ClassClassId].Count);
             Assert.AreEqual(2, d.Context[ClassClassId].GenObject.SubClass.Count);
-            Assert.AreEqual(1, d.Context[ClassClassId].GenObject.Attributes.Count);
+            Assert.AreEqual(2, d.Context[ClassClassId].GenObject.Attributes.Count);
             Assert.AreEqual(ClassClassId, d.Context[ClassClassId].GenObject.ClassId);
 
             Assert.AreEqual(1, d.Context[SubClassClassId].Count);

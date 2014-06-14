@@ -59,12 +59,12 @@
     <Compile Include="GenObject.cs" />
     <Compile Include="GenObjectList.cs" />
     <Compile Include="GenSubClass.cs" />
-    <Compile Include="GenObjectListReference.cs" />
+    <Compile Include="SubClassReference.cs" />
     <Compile Include="GenSavedContext.cs" />
     <Compile Include="GenSubClasses.cs" />
     <Compile Include="IGenDataLoader.cs" />
     <Compile Include="IGenObject.cs" />
-    <Compile Include="IGenObjectListBase.cs" />
+    <Compile Include="ISubClassBase.cs" />
     <Compile Include="ListMove.cs" />
     <Compile Include="IndexList.cs" />
     <Compile Include="NameList.cs" />
