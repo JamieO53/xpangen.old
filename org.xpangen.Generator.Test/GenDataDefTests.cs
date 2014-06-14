@@ -83,8 +83,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(0, d.IndexOfSubClass(0, i));
             var j = d.Classes[i].Properties.Add("Id");
             Assert.AreEqual(j, d.Classes[i].Properties.IndexOf("Id"));
-            var s = d.CreateProfile();
-            Assert.AreEqual(rootProfile, s);
+            Assert.AreEqual(rootProfile, GenDataDefProfile.CreateProfile(d));
 
             var id = d.GetId("Root.Id");
             Assert.AreEqual(i, id.ClassId);
@@ -168,8 +167,7 @@ SubClass=Child[Reference='ChildDef']
         {
             var fChild = SetUpParentChildDef("Child", "Grandchild");
             var fParent = SetUpParentChildReferenceDef("Parent", "Child", "ChildDef", fChild);
-            var p = fParent.CreateProfile();
-            Assert.AreEqual(Profile, p);
+            Assert.AreEqual(Profile, GenDataDefProfile.CreateProfile(fParent));
         }
 
         [TestCase(Description = "Verify that the SetUpParentChildReferenceDef method works as expected when nested")]

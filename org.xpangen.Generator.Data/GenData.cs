@@ -98,7 +98,7 @@ namespace org.xpangen.Generator.Data
                 Context.Add(null, GenDataDef.Classes[i], GenDataBase, reference, referenceDefinition, defSubClass);
             }
 
-            Context[0].GenObjectListBase.Add(GenDataBase.Root);
+            Context[0].SubClassBase.Add(GenDataBase.Root);
             First(0);
         }
         
@@ -113,7 +113,7 @@ namespace org.xpangen.Generator.Data
         {
             var parent = Context[GenDataDef.Classes.IndexOf(parentClassName)].GenObject;
             var o = GenDataBase.CreateGenObject(className, parent);
-            Context[o.ClassId].GenObjectListBase = o.ParentSubClass;
+            Context[o.ClassId].SubClassBase = o.ParentSubClass;
             Context[o.ClassId].Index = Context[o.ClassId].IndexOf(o);
             return o;
         }
@@ -239,12 +239,12 @@ namespace org.xpangen.Generator.Data
                     {
                         var refContext = Context[subClassId].ReferenceData.Context[Context[subClassId].RefClassId];
                         //refContext.Index = Context[subClassId].Index;
-                        Context[subClassId].GenObjectListBase = refContext.GenObjectListBase;
+                        Context[subClassId].SubClassBase = refContext.SubClassBase;
                         First(subClassId);
                     }
                     else
                     {
-                        Context[subClassId].GenObjectListBase = genObject.SubClass[i];
+                        Context[subClassId].SubClassBase = genObject.SubClass[i];
                         First(subClassId);
                     }
                 }
@@ -259,7 +259,7 @@ namespace org.xpangen.Generator.Data
             Context[subClassId].RefClassId = subRefClassId;
             Context[subClassId].Reference = reference;
             Context[subClassId].ReferenceData = data;
-            Context[subClassId].GenObjectListBase = data.Context[subRefClassId].GenObjectListBase;
+            Context[subClassId].SubClassBase = data.Context[subRefClassId].SubClassBase;
             data.First(subRefClassId);
             Context[subClassId].First();
             if (!data.Eol(subRefClassId))
@@ -329,11 +329,11 @@ namespace org.xpangen.Generator.Data
         {
             if (savedContext.ParentContext != null)
                 savedContext.ParentContext.EstablishContext();
-            Context[savedContext.ClassId].GenObjectListBase = savedContext.GenObjectListBase;
+            Context[savedContext.ClassId].SubClassBase = savedContext.SubClassBase;
             Context[savedContext.ClassId].RefClassId = savedContext.RefClassId;
             Context[savedContext.ClassId].Reference = savedContext.Reference;
             Context[savedContext.ClassId].ReferenceData = savedContext.ReferenceData;
-            Context[savedContext.ClassId].Index = savedContext.GenObjectListBase.IndexOf(savedContext.GenObject);
+            Context[savedContext.ClassId].Index = savedContext.SubClassBase.IndexOf(savedContext.GenObject);
 
             SetSubClasses(savedContext.ClassId);
         }
@@ -352,7 +352,7 @@ namespace org.xpangen.Generator.Data
                              GenData = this,
                              ClassId = classId,
                              GenObject = Context[classId].GenObject,
-                             GenObjectListBase = Context[classId].GenObjectListBase,
+                             SubClassBase = Context[classId].SubClassBase,
                              Reference = Context[classId].Reference,
                              RefClassId = Context[classId].RefClassId,
                              ReferenceData = Context[classId].ReferenceData ?? this

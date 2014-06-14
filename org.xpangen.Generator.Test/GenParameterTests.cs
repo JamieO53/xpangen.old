@@ -167,7 +167,7 @@ namespace org.xpangen.Generator.Test
         {
             var f0 = GenDataDef.CreateMinimal();
             var p = GenParameters.CreateProfile(f0);
-            Assert.AreEqual(f0.CreateProfile(),
+            Assert.AreEqual(GenDataDefProfile.CreateProfile(f0),
                             p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary)
                              .Replace(">:", ":"));
         }
@@ -182,20 +182,9 @@ namespace org.xpangen.Generator.Test
             var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", dataGrandchildhild);
             var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", "Child", dataChild);
             var p = GenParameters.CreateProfile(dataParent.GenDataDef);
-            Assert.AreEqual(dataParent.GenDataDef.CreateProfile(),
+            Assert.AreEqual(GenDataDefProfile.CreateProfile(dataParent.GenDataDef),
                             p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary)
                              .Replace(">:", ":"));
-        }
-
-        [TestCase(Description = "Verify that the data expansion profile works correctly for references")]
-        [Ignore("Incomplete test")]
-        public void VerifyParentChildReferenceDefProfileExpansion()
-        {
-            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
-            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", dataGrandchildhild);
-            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", "Child", dataChild);
-            var seg = new GenSegment(dataParent.GenDataDef, "Parent", GenCardinality.All, null);
-            var text = seg.Expand(dataParent);
         }
 
         /// <summary>

@@ -7,7 +7,7 @@
 
         public int ClassId { get; set; }
 
-        public IGenObjectListBase GenObjectListBase { get; set; }
+        public ISubClassBase SubClassBase { get; set; }
 
         public string Reference { get; set; }
 

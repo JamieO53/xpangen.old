@@ -42,8 +42,10 @@
     <Compile Include="EditorHelperTests.cs" />
     <Compile Include="GenDataCacheTests.cs" />
     <Compile Include="DataModelTests.cs" />
+    <Compile Include="GenDataDefProfile.cs" />
     <Compile Include="GenDataDefToDataConversionTests.cs" />
     <Compile Include="GenDataDefTests.cs" />
+    <Compile Include="GenDataInheritanceTests.cs" />
     <Compile Include="GenDataTests.cs" />
     <Compile Include="GenDataTestsBase.cs" />
     <Compile Include="GenDataToDefConversionTests.cs" />

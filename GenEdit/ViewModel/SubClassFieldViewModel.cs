@@ -21,12 +21,12 @@ namespace GenEdit.ViewModel
         /// <summary>
         /// The subclass being updated
         /// </summary>
-        public IGenObjectListBase SubClass { get; private set; }
+        public ISubClassBase SubClass { get; private set; }
         /// <summary>
         /// The value of the field
         /// </summary>
 
-        public IGenObjectListBase Parent { get; private set; }
+        public ISubClassBase Parent { get; private set; }
         public override string Value
         {
             get{
@@ -62,7 +62,7 @@ namespace GenEdit.ViewModel
             }
         }
 
-        public SubClassFieldViewModel(IGenObjectListBase parent, GenDataDefSubClass genDataDefSubClass, IGenObjectListBase subClass,
+        public SubClassFieldViewModel(ISubClassBase parent, GenDataDefSubClass genDataDefSubClass, ISubClassBase subClass,
                                       SubClassField subClassField, bool isReadOnly)
         {
             IgnorePropertyValidation = true;

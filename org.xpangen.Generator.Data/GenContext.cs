@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Data
             for (var i = 0; i < Cache.References.Count; i++)
                 context.Cache.Internal(Cache.References[i].Path, Cache.References[i].GenData);
             for (var i = 0; i < context.Count; i++)
-                this[i] = new GenObjectList(context[i].GenObjectListBase, genDataBase,
+                this[i] = new GenObjectList(context[i].SubClassBase, genDataBase,
                                             context[i].ParentList == null ? null : this[context[i].ParentList.ClassId],
                                             context[i].DefSubClass)
                               {
@@ -63,7 +63,7 @@ namespace org.xpangen.Generator.Data
                                  Reference = reference
                              };
             else
-                myList = new GenObjectList(new GenObjectListReference(genDataBase, null, defClass.ClassId,
+                myList = new GenObjectList(new SubClassReference(genDataBase, null, defClass.ClassId,
                                                                       new GenDataDefSubClass
                                                                           {
                                                                               SubClass = defClass,

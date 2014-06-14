@@ -33,7 +33,7 @@ namespace GenEdit.Controls
         /// <summary>
         /// The list that contains the <see cref="GenObject"/> items in the subclass.
         /// </summary>
-        public IGenObjectListBase GenObjectListBase { get; private set; }
+        public ISubClassBase SubClassBase { get; private set; }
         /// <summary>
         /// The saved context.
         /// </summary>
@@ -51,7 +51,7 @@ namespace GenEdit.Controls
             ClassId = classId;
             ParentNode = parentNode;
             GenData = genData;
-            GenObjectListBase = GenData.Context[ClassId].GenObjectListBase;
+            SubClassBase = GenData.Context[ClassId].SubClassBase;
             SavedContext = ClassId == 1 ? null : ParentNode.SavedContext;
             Definition = definition;
             
@@ -69,12 +69,12 @@ namespace GenEdit.Controls
             ToolTipText = Text;
             var genObject = GenData.Context[ClassId].GenObject;
             //if (genObject != null)
-                Tag = new SubClassViewModel(ParentNode == null ? null : ParentNode.GenObject.SubClass[i], GenObjectListBase, Def,
+                Tag = new SubClassViewModel(ParentNode == null ? null : ParentNode.GenObject.SubClass[i], SubClassBase, Def,
                                             SubClassDef,
                                             SavedContext, !string.IsNullOrEmpty(SubClassDef.Reference));
 
             GenData.First(ClassId);
-            for (var j = 0; j < GenObjectListBase.Count; j++)
+            for (var j = 0; j < SubClassBase.Count; j++)
             {
                 Nodes.Add(new ClassTreeNode(this, GenData, Definition, ClassId));
                 GenData.Next(ClassId);

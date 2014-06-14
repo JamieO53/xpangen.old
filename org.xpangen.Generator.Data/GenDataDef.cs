@@ -88,100 +88,53 @@ namespace org.xpangen.Generator.Data
             return Classes[classId].SubClasses.IndexOf(subClassId);
         }
 
-        public string CreateProfile()
-        {
-            var def = new StringBuilder();
-            def.Append("Definition=");
-            def.AppendLine(Definition);
-            var profile = new StringBuilder();
-
-            ClassProfile(0, def, profile);
-            return def + ".\r\n" + profile;
-        }
-
-        private void ClassProfile(int classId, StringBuilder def, StringBuilder profile)
-        {
-            if (classId != 0)
-            {
-                def.AppendLine("Class=" + Classes[classId].Name);
-                profile.Append("`[" + Classes[classId].Name + ":" + Classes[classId].Name);
-
-                if (Classes[classId].Properties.Count > 0)
-                {
-                    if (Classes[classId].Properties.Count == 1)
-                        def.AppendLine("Field=" + Classes[classId].Properties[0]);
-                    else
-                    {
-                        def.Append("Field={" + Classes[classId].Properties[0]);
-                        for (var i = 1; i < Classes[classId].Properties.Count; i++)
-                            def.Append("," + Classes[classId].Properties[i]);
-                        def.AppendLine("}");
-                    }
-
-                    var j = 0;
-                    if (String.Compare(Classes[classId].Properties[0], "Name", StringComparison.OrdinalIgnoreCase) == 0)
-                    {
-                        profile.Append("=`" + Classes[classId].Name + ".Name`");
-                        j = 1;
-                    }
-                    if (Classes[classId].Properties.Count > j)
-                    {
-                        profile.Append("[");
-                        var sep = "";
-                        for (var i = j; i < Classes[classId].Properties.Count; i++)
-                        {
-                            profile.Append("`?" + Classes[classId].Name + "." + Classes[classId].Properties[i] + ":" +
-                                           sep + Classes[classId].Properties[i] +
-                                           "`?" + Classes[classId].Name + "." + Classes[classId].Properties[i] + "<>True:" +
-                                           "=`@StringOrName:`{`" + Classes[classId].Name +
-                                           '.' + Classes[classId].Properties[i] +
-                                           "``]`]`]`]");
-                            sep = ",";
-                        }
-                        profile.Append("]");
-                    }
-                    profile.AppendLine();
-                }
-                
-                if (Classes[classId].SubClasses.Count == 1)
-                {
-                    def.Append("SubClass=" + Classes[classId].SubClasses[0].SubClass.Name);
-                    if (!string.IsNullOrEmpty(Classes[classId].SubClasses[0].SubClass.Reference))
-                        def.AppendLine("[Reference='" + Classes[classId].SubClasses[0].SubClass.Reference + "']");
-                    else
-                        def.AppendLine();
-                }
-                else if (Classes[classId].SubClasses.Count > 1)
-                {
-                    def.Append("SubClass={" + Classes[classId].SubClasses[0].SubClass.Name);
-                    for (var i = 1; i < Classes[classId].SubClasses.Count; i++)
-                        def.Append("," + Classes[classId].SubClasses[i].SubClass.Name);
-                    def.AppendLine("}");
-                }
-            }
-
-            for (var i = 0; i < Classes[classId].SubClasses.Count; i++)
-                if (string.IsNullOrEmpty(Classes[classId].SubClasses[i].SubClass.Reference))
-                    ClassProfile(Classes[classId].SubClasses[i].SubClass.ClassId, def, profile);
-                else
-                    profile.Append("`[" + Classes[classId].SubClasses[i].SubClass.Name + "@:`]");
-
-            if (classId != 0)
-                profile.Append("`]");
-        }
-
         public static GenDataDef CreateMinimal()
         {
             var def = new GenDataDef();
+            PopulateMinimal(def);
+            return def;
+        }
+
+        private static void PopulateMinimal(GenDataDef def)
+        {
             def.Definition = "Minimal";
             def.AddClass("", "Class");
             def.AddClass("Class", "SubClass");
             def.AddClass("Class", "Property");
             def.Classes[def.Classes.IndexOf("Class")].Properties.Add("Name");
+            def.Classes[def.Classes.IndexOf("Class")].Properties.Add("Inheritance");
             def.Classes[def.Classes.IndexOf("SubClass")].Properties.Add("Name");
             def.Classes[def.Classes.IndexOf("SubClass")].Properties.Add("Reference");
+            def.Classes[def.Classes.IndexOf("SubClass")].Properties.Add("Relationship");
             def.Classes[def.Classes.IndexOf("Property")].Properties.Add("Name");
+        }
+
+        public static GenDataDef CreateDefinition()
+        {
+            var def = new GenDataDef();
+            PopulateDefinition(def);
             return def;
+        }
+
+        private static void PopulateDefinition(GenDataDef def)
+        {
+            def.Definition = "Definition";
+            def.AddSubClass("", "Class");
+            def.AddSubClass("Class", "SubClass");
+            def.AddSubClass("Class", "Property");
+            def.Classes[1].Properties.Add("Name");
+            def.Classes[1].Properties.Add("Title");
+            def.Classes[1].Properties.Add("Inheritance");
+            def.Classes[2].Properties.Add("Name");
+            def.Classes[2].Properties.Add("Reference");
+            def.Classes[2].Properties.Add("Relationship");
+            def.Classes[3].Properties.Add("Name");
+            def.Classes[3].Properties.Add("Title");
+            def.Classes[3].Properties.Add("DataType");
+            def.Classes[3].Properties.Add("Default");
+            def.Classes[3].Properties.Add("LookupType");
+            def.Classes[3].Properties.Add("LookupDependence");
+            def.Classes[3].Properties.Add("LookupTable");
         }
 
         public GenData AsGenData()
@@ -196,6 +149,17 @@ namespace org.xpangen.Generator.Data
                 var c = Classes[i];
                 a.SetString("Name", c.Name);
                 a.SaveFields();
+                for (var j = 0; j < c.Inheritors.Count; j++)
+                {
+                    a.GenObject = d.CreateObject("Class", "SubClass");
+                    var inheritorId = c.Inheritors[j].ClassId;
+                    a.SetString("Name", Classes[inheritorId].Name);
+                    a.SetString("Relationship", "Extends");
+                    a.SaveFields();
+                    a.GenObject = ((GenObject) a.GenObject).Parent;
+                    a.SetString("Inheritance", "Abstract");
+                    a.SaveFields();
+                }
                 for (var j = 0; j < c.SubClasses.Count; j++)
                 {
                     a.GenObject = d.CreateObject("Class", "SubClass");
@@ -299,6 +263,32 @@ namespace org.xpangen.Generator.Data
             }
         }
 
+        public void AddInheritor(string className, string inheritorName)
+        {
+            var i = Classes.IndexOf(className);
+            var j = Classes.IndexOf(inheritorName);
+            GenDataDefClass inheritor;
+            if (j == -1)
+            {
+                inheritor = new GenDataDefClass {Name = inheritorName, ClassId = Classes.Count};
+                Classes.Add(inheritor);
+            }
+            else
+                inheritor = Classes[j];
+            var parent = Classes[i];
+            if (!parent.Inheritors.Contains(inheritorName))
+            {
+                parent.Inheritors.Add(inheritor);
+                inheritor.Parent = parent;
+                inheritor.IsInherited = true;
+                for (var k = 0; k < parent.Properties.Count; k++)
+                {
+                    if (inheritor.Properties.IndexOf(parent.Properties[k]) == -1)
+                        inheritor.Properties.Add(parent.Properties[k]);
+                }
+            }
+        }
+
         private static void ParseReference(string reference, GenDataDefSubClass sc)
         {
             sc.Reference = reference;
@@ -321,6 +311,11 @@ namespace org.xpangen.Generator.Data
         public string GetIdentifier(GenDataId genDataId)
         {
             return genDataId.Identifier;
+        }
+
+        public override string ToString()
+        {
+            return "GenDataDef:" + Definition;
         }
     }
 }

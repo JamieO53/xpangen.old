@@ -8,32 +8,32 @@ namespace org.xpangen.Generator.Data
 {
     public class GenObjectList
     {
-        private IGenObjectListBase _genObjectListBase;
+        private ISubClassBase _subClassBase;
 
         public GenObjectList ParentList { get; private set; }
 
         /// <summary>
         /// Create a new <see cref="GenObjectList"/> list.
         /// </summary>
-        /// <param name="genObjectListBase"> The underlying generator object list.</param>
+        /// <param name="subClassBase"> The underlying generator object list.</param>
         /// <param name="genDataBase">The underlying data container.</param>
         /// <param name="parentList">The parent list.</param>
         /// <param name="defSubClass">The subclass definition.</param>
-        public GenObjectList(IGenObjectListBase genObjectListBase, GenDataBase genDataBase, GenObjectList parentList,
+        public GenObjectList(ISubClassBase subClassBase, GenDataBase genDataBase, GenObjectList parentList,
                              GenDataDefSubClass defSubClass)
         {
             DefSubClass = defSubClass;
             ParentList = parentList;
             ClassId = -1;
             GenDataBase = genDataBase;
-            GenObjectListBase = genObjectListBase;
-            DefClass = GenObjectListBase.Definition.SubClass;
+            SubClassBase = subClassBase;
+            DefClass = SubClassBase.Definition.SubClass;
             ClassId = 0;
         }
 
-        public IGenObjectListBase GenObjectListBase
+        public ISubClassBase SubClassBase
         {
-            get { return _genObjectListBase; }
+            get { return _subClassBase; }
             set
             {
                 if (value != null && ClassId != -1)
@@ -68,7 +68,7 @@ namespace org.xpangen.Generator.Data
                                    value.GenDataBase, ReferenceData.GenDataBase));
                     }
                 }
-                _genObjectListBase = value;
+                _subClassBase = value;
             }
         }
 
@@ -104,7 +104,7 @@ namespace org.xpangen.Generator.Data
         public GenDataDefClass DefClass { get; private set; }
         public GenDataDefSubClass DefSubClass { get; private set; }
 
-        public GenObject this[int index] { get { return GenObjectListBase[index]; } }
+        public GenObject this[int index] { get { return SubClassBase[index]; } }
         
         /// <summary>
         /// The currently selected item.
@@ -113,7 +113,7 @@ namespace org.xpangen.Generator.Data
         {
             get
             {
-                return Eol ? null : GenObjectListBase[Index];
+                return Eol ? null : SubClassBase[Index];
             }
         }
 
@@ -122,7 +122,7 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         public bool Eol
         {
-            get { return GenObjectListBase.Count == 0 || Index < 0 || Index >= GenObjectListBase.Count; }
+            get { return SubClassBase.Count == 0 || Index < 0 || Index >= SubClassBase.Count; }
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         public int Count
         {
-            get { return GenObjectListBase.Count; }
+            get { return SubClassBase.Count; }
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace org.xpangen.Generator.Data
         /// <returns></returns>
         public bool IsFirst()
         {
-            return Index == 0 && GenObjectListBase.Count > 0;
+            return Index == 0 && SubClassBase.Count > 0;
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace org.xpangen.Generator.Data
         /// <returns></returns>
         public bool IsLast()
         {
-            return Index == GenObjectListBase.Count - 1 && GenObjectListBase.Count > 0;
+            return Index == SubClassBase.Count - 1 && SubClassBase.Count > 0;
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         public void First()
         {
-            if (GenObjectListBase.Count == 0)
+            if (SubClassBase.Count == 0)
                 Reset();
             else
                 Index = 0;
@@ -189,7 +189,7 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         public void Last()
         {
-            Index = GenObjectListBase.Count - 1;
+            Index = SubClassBase.Count - 1;
             if (!string.IsNullOrEmpty(Reference)) ReferenceData.Last(RefClassId);
         }
 
@@ -212,7 +212,7 @@ namespace org.xpangen.Generator.Data
         public void Reset()
         {
             Index = -1;
-            GenObjectListBase.Reset();
+            SubClassBase.Reset();
         }
 
         /// <summary>
@@ -243,10 +243,10 @@ namespace org.xpangen.Generator.Data
 
         private void MoveToTop(int itemIndex)
         {
-            if (itemIndex <= 0 || itemIndex >= GenObjectListBase.Count) return;
-            var genObject = GenObjectListBase[itemIndex];
-            GenObjectListBase.RemoveAt(itemIndex);
-            GenObjectListBase.Insert(0, genObject);
+            if (itemIndex <= 0 || itemIndex >= SubClassBase.Count) return;
+            var genObject = SubClassBase[itemIndex];
+            SubClassBase.RemoveAt(itemIndex);
+            SubClassBase.Insert(0, genObject);
             Index = 0;
             GenDataBase.Changed = true;
             GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
@@ -254,10 +254,10 @@ namespace org.xpangen.Generator.Data
 
         private void MoveUp(int itemIndex)
         {
-            if (itemIndex <= 0 || itemIndex >= GenObjectListBase.Count) return;
-            var genObject = GenObjectListBase[itemIndex];
-            GenObjectListBase[itemIndex] = GenObjectListBase[itemIndex - 1];
-            GenObjectListBase[itemIndex - 1] = genObject;
+            if (itemIndex <= 0 || itemIndex >= SubClassBase.Count) return;
+            var genObject = SubClassBase[itemIndex];
+            SubClassBase[itemIndex] = SubClassBase[itemIndex - 1];
+            SubClassBase[itemIndex - 1] = genObject;
             Index = itemIndex - 1;
             GenDataBase.Changed = true;
             GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
@@ -265,10 +265,10 @@ namespace org.xpangen.Generator.Data
 
         private void MoveDown(int itemIndex)
         {
-            if (itemIndex < 0 || itemIndex >= GenObjectListBase.Count - 1) return;
-            var genObject = GenObjectListBase[itemIndex];
-            GenObjectListBase[itemIndex] = GenObjectListBase[itemIndex + 1];
-            GenObjectListBase[itemIndex + 1] = genObject;
+            if (itemIndex < 0 || itemIndex >= SubClassBase.Count - 1) return;
+            var genObject = SubClassBase[itemIndex];
+            SubClassBase[itemIndex] = SubClassBase[itemIndex + 1];
+            SubClassBase[itemIndex + 1] = genObject;
             Index = itemIndex + 1;
             GenDataBase.Changed = true;
             GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
@@ -276,11 +276,11 @@ namespace org.xpangen.Generator.Data
 
         private void MoveToBottom(int itemIndex)
         {
-            if (itemIndex < 0 || itemIndex >= GenObjectListBase.Count - 1) return;
-            var genObject = GenObjectListBase[itemIndex];
-            GenObjectListBase.RemoveAt(itemIndex);
-            GenObjectListBase.Add(genObject);
-            Index = GenObjectListBase.Count - 1;
+            if (itemIndex < 0 || itemIndex >= SubClassBase.Count - 1) return;
+            var genObject = SubClassBase[itemIndex];
+            SubClassBase.RemoveAt(itemIndex);
+            SubClassBase.Add(genObject);
+            Index = SubClassBase.Count - 1;
             GenDataBase.Changed = true;
             GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
         }
@@ -291,13 +291,13 @@ namespace org.xpangen.Generator.Data
         /// <returns>The new object.</returns>
         public GenObject CreateObject()
         {
-            var genObjectListBase = GenObjectListBase as GenSubClass;
+            var genObjectListBase = SubClassBase as GenSubClass;
             return genObjectListBase != null ? genObjectListBase.CreateObject() : null;
         }
 
         public int IndexOf(GenObject genObject)
         {
-            return GenObjectListBase.IndexOf(genObject);
+            return SubClassBase.IndexOf(genObject);
         }
 
         public override string ToString()
@@ -311,7 +311,7 @@ namespace org.xpangen.Generator.Data
         public void Delete()
         {
             if (Eol) return;
-            GenObjectListBase.RemoveAt(Index);
+            SubClassBase.RemoveAt(Index);
             GenDataBase.Changed = true;
         }
     }

@@ -3,7 +3,6 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.IO;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Parameter;
@@ -16,61 +15,6 @@ namespace org.xpangen.Generator.Test
 	[TestFixture]
     public class GenDataTests : GenDataTestsBase
     {
-        /// <summary>
-        /// Tests the general functionality of GenData
-        /// </summary>
-        [TestCase(Description="Generator data tests")]
-        public void GenDataTest()
-        {
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            CreateClass(d, "Class");
-
-            var id = f.GetId("Class.Name");
-            Assert.AreEqual("Class", d.GetValue(id));
-
-            id = f.GetId("Property.Name");
-            Assert.AreEqual("Name", d.GetValue(id));
-
-            CreateClass(d, "SubClass");
-
-            id = f.GetId("Class.Name");
-            Assert.AreEqual("SubClass", d.GetValue(id));
-
-            CreateProperty(d, "Reference");
-
-            id = f.GetId("Property.Name");
-            Assert.AreEqual("Reference", d.GetValue(id));
-
-            CreateClass(d, "Property");
-
-            id = f.GetId("Class.Name");
-            Assert.AreEqual("Property", d.GetValue(id));
-
-            id = f.GetId("Property.Name");
-            Assert.AreEqual("Name", d.GetValue(id));
-
-            CreateClass(d, "FieldFilter");
-
-            id = f.GetId("Class.Name");
-            Assert.AreEqual("FieldFilter", d.GetValue(id));
-
-            CreateProperty(d, "Operand");
-
-            d.Context[ClassClassId].First();
-            CreateSubClass(d, "SubClass");
-
-            id = f.GetId("SubClass.Name");
-            Assert.AreEqual("SubClass", d.GetValue(id));
-
-            CreateSubClass(d, "Property");
-            
-            id = f.GetId("SubClass.Name");
-            Assert.AreEqual("Property", d.GetValue(id));
-
-            ValidateMinimalData(d);
-        }
-
         /// <summary>
         /// Tests the generator data subclass functionality
         /// </summary>
@@ -219,8 +163,7 @@ namespace org.xpangen.Generator.Test
         {
             var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
             var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", "Child", dataChild);
-            var p = dataParent.GenDataDef.CreateProfile();
-            Assert.AreEqual(ReferenceGenDataSaveProfile, p);
+            Assert.AreEqual(ReferenceGenDataSaveProfile, GenDataDefProfile.CreateProfile(dataParent.GenDataDef));
         }
 
         [TestCase(Description = "Verify that data context works as expected with reference data")]
@@ -265,8 +208,8 @@ namespace org.xpangen.Generator.Test
         public void VerifyNestedSetUpParentChildReferenceDataMethod()
         {
             var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
-            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "GrandChild", dataGrandchildhild);
-            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "ChildDef", "Child", dataChild);
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "Grandchild", "GrandChild", dataGrandchildhild);
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", "Child", dataChild);
             Assert.AreEqual(1, dataParent.Root.SubClass.Count);
             Assert.AreEqual(5, dataParent.Context.Count);
             Assert.AreEqual("Parent", dataParent.Context[1].GenObject.Attributes[0]);
@@ -381,11 +324,11 @@ namespace org.xpangen.Generator.Test
         public void ContextFirstPropertyExistsWithValueTest()
         {
             var f = GenDataDef.CreateMinimal();
-            f.Classes[1].Properties.Add("First");
+            var idx = f.Classes[1].Properties.Add("First");
             var d = new GenData(f);
 
             SetUpData(d);
-            d.Context[1].GenObject.Attributes[1] = "First value";
+            d.Context[1].GenObject.Attributes[idx] = "First value";
             var id = f.GetId("Class.First");
             Assert.AreEqual("First value", d.GetValue(id));
         }
@@ -429,12 +372,12 @@ namespace org.xpangen.Generator.Test
         public void ContextReferencePropertyExistsWithValueTest()
         {
             var f = GenDataDef.CreateMinimal();
-            f.Classes[1].Properties.Add("Reference");
+            var idx = f.Classes[1].Properties.Add("Reference");
             var d = new GenData(f);
 
             SetUpData(d);
             var id = f.GetId("Class.Reference");
-            d.Context[1].GenObject.Attributes[1] = "Reference value";
+            d.Context[1].GenObject.Attributes[idx] = "Reference value";
             Assert.AreEqual("Reference value", d.GetValue(id));
         }
 
@@ -442,13 +385,13 @@ namespace org.xpangen.Generator.Test
         public void ContextReferencePropertyExistsWithValueAndReferenceTest()
         {
             var f = GenDataDef.CreateMinimal();
-            f.Classes[1].Properties.Add("Reference");
+            var idx = f.Classes[1].Properties.Add("Reference");
             var d = new GenData(f);
 
             SetUpData(d);
             var id = f.GetId("Class.Reference");
             d.Context[1].Reference = "Class reference";
-            d.Context[1].GenObject.Attributes[1] = "Reference value";
+            d.Context[1].GenObject.Attributes[idx] = "Reference value";
             Assert.AreEqual("Reference value", d.GetValue(id));
         }
 

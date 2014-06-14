@@ -19,14 +19,14 @@ namespace org.xpangen.Generator.Test
         protected const string GenDataSaveText =
             @"Definition=Minimal
 Class=Class
-Field={Name,Title}
+Field={Name,Inheritance,Title}
 SubClass={SubClass,Property}
 Class=SubClass
-Field={Name,Reference}
+Field={Name,Reference,Relationship}
 Class=Property
 Field=Name
 .
-Class=Class[Title='Class object']
+Class=Class[,Title='Class object']
 SubClass=SubClass[]
 SubClass=Property[]
 Property=Name
@@ -59,17 +59,17 @@ SubClass=Child[Reference='Child']
         protected const string ReferenceGrandchildDefText =
             @"Definition=Minimal
 Class=Class
-Field=Name
+Field={Name,Inheritance}
 SubClass={SubClass,Property}
 Class=SubClass
-Field={Name,Reference}
+Field={Name,Reference,Relationship}
 Class=Property
 Field=Name
 .
-Class=Grandchild
+Class=Grandchild[]
 SubClass=Greatgrandchild[]
 Property=Name
-Class=Greatgrandchild
+Class=Greatgrandchild[]
 Property=Name
 ";
 
@@ -88,14 +88,14 @@ Greatgrandchild=Greatgrandchild
         protected const string ReferenceChildDefText =
             @"Definition=Minimal
 Class=Class
-Field=Name
+Field={Name,Inheritance}
 SubClass={SubClass,Property}
 Class=SubClass
-Field={Name,Reference}
+Field={Name,Reference,Relationship}
 Class=Property
 Field=Name
 .
-Class=Child
+Class=Child[]
 SubClass=Grandchild[Reference=GrandchildDef]
 Property=Name
 ";
@@ -113,14 +113,14 @@ Grandchild[Reference='grandchild']
         protected const string ReferenceParentDefText =
             @"Definition=Minimal
 Class=Class
-Field=Name
+Field={Name,Inheritance}
 SubClass={SubClass,Property}
 Class=SubClass
-Field={Name,Reference}
+Field={Name,Reference,Relationship}
 Class=Property
 Field=Name
 .
-Class=Parent
+Class=Parent[]
 SubClass=Child[Reference=ChildDef]
 Property=Name
 ";
@@ -168,7 +168,7 @@ Child[Reference='child']
             Assert.AreEqual("Class", a.AsString("Name"));
             Assert.AreEqual(2, d.Context[ClassClassId].GenObject.SubClass.Count);
             Assert.AreEqual(2, d.Context[SubClassClassId].Count);
-            Assert.AreEqual(1, d.Context[PropertyClassId].Count);
+            Assert.AreEqual(2, d.Context[PropertyClassId].Count);
             a.GenObject = d.Context[PropertyClassId].GenObject;
             Assert.AreEqual("Name", a.AsString("Name"));
 
@@ -191,7 +191,7 @@ Child[Reference='child']
             a.GenObject = d.Context[ClassClassId].GenObject;
             Assert.AreEqual("SubClass", a.AsString("Name"));
             Assert.AreEqual(0, d.Context[SubClassClassId].Count);
-            Assert.AreEqual(2, d.Context[PropertyClassId].Count);
+            Assert.AreEqual(3, d.Context[PropertyClassId].Count);
             a.GenObject = d.Context[PropertyClassId].GenObject;
             Assert.AreEqual("Name", a.AsString("Name"));
             d.Next(PropertyClassId);
@@ -456,7 +456,7 @@ Child[Reference='child']
             var classes = data.GenDataDef.Classes;
             var classId = classes.IndexOf(className);
             var subClassIndex = classes[classId].SubClasses.IndexOf(classes.IndexOf(subClassName));
-            var sub = data.Context[classId].GenObject.SubClass[subClassIndex] as GenObjectListReference;
+            var sub = data.Context[classId].GenObject.SubClass[subClassIndex] as SubClassReference;
             if (sub != null)
                 sub.Reference = reference.ToLowerInvariant();
         }
