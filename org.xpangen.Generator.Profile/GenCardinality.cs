@@ -14,6 +14,7 @@ namespace org.xpangen.Generator.Profile
         Tail,
         Last,
         Trunk,
-        Reference
+        Reference,
+        Inheritance
     }
 }

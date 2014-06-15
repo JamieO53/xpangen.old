@@ -41,12 +41,12 @@ namespace org.xpangen.Generator.Data
                     if (ParentList.Eol) ParentList.First();
                     if (String.IsNullOrEmpty(Reference))
                     {
-                        Assert(value.ClassId == ClassId, "Object list assignment error",
+                        Assert(value.ClassId == ClassId || value.ClassId == DefClass.Parent.ClassId, "Object list assignment error",
                                      string.Format("The expected class was {0}({1}) but is {2}({3})",
                                                    GenDataBase.GenDataDef.Classes[ClassId].Name,
                                                    ClassId, GenDataBase.GenDataDef.Classes[value.ClassId].Name,
                                                    value.ClassId));
-                        Assert(value.Parent == ParentList.GenObject, "Object list assignment error",
+                        Assert(value.Parent == ParentList.GenObject || value.Parent == ParentList.GenObject.Parent, "Object list assignment error",
                                string.Format("The the incorrect subclass is being used for the current parent"));
                     }
                     else if (ReferenceData != null)
@@ -122,7 +122,7 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         public bool Eol
         {
-            get { return SubClassBase.Count == 0 || Index < 0 || Index >= SubClassBase.Count; }
+            get { return SubClassBase == null || SubClassBase.Count == 0 || Index < 0 || Index >= SubClassBase.Count; }
         }
 
         /// <summary>

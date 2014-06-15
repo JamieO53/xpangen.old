@@ -134,8 +134,10 @@ namespace org.xpangen.Generator.Parameter
                         else
                             def.AppendLine("Field={" + fields + "}");
                 }
-                classProfile = new GenSegment(genDataDef, genDataDef.Classes[classId].Name, GenCardinality.All,
-                                              parentSegment);
+                classProfile = new GenSegment(genDataDef, genDataDef.Classes[classId].Name,
+                                              genDataDef.Classes[classId].IsInherited
+                                                  ? GenCardinality.Inheritance
+                                                  : GenCardinality.All, parentSegment);
 
                 if (!genDataDef.Classes[classId].IsAbstract)
                     classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment)

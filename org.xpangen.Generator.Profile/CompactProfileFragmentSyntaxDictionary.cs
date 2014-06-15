@@ -17,7 +17,7 @@ namespace org.xpangen.Generator.Profile
         /// </summary>
         public CompactProfileFragmentSyntaxDictionary()
         {
-            GenCardinalityText = new[] {">", "/", "<", "\\", "'", "+", ".", "-", "@"};
+            GenCardinalityText = new[] {">", "/", "<", "\\", "'", "+", ".", "-", "@", "^"};
             GenComparisonText = new[] {"", "~", "=", "<>", "<", "<=", ">", ">="};
             Dlm = "=<>~";
 

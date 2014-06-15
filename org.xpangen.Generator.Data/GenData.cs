@@ -378,5 +378,20 @@ namespace org.xpangen.Generator.Data
         {
             return !string.IsNullOrEmpty(DataName) ? DataName : base.ToString();
         }
+
+        public void SetInheritance(int classId)
+        {
+            if (!GenDataDef.Classes[classId].IsInherited)
+                throw new GeneratorException("Cannot set inheritance for a non-extension class", GenErrorType.Assertion);
+            var superClassId = GenDataDef.Classes[classId].Parent.ClassId;
+            if (Context[superClassId].Eol || Context[superClassId].GenObject.ClassId != classId)
+            {
+                Context[classId].SubClassBase = null;
+                Context[classId].Index = -1;
+                return;
+            }
+            Context[classId].SubClassBase = Context[superClassId].SubClassBase;
+            Context[classId].Index = Context[superClassId].Index;
+        }
     }
 }
