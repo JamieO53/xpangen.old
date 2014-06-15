@@ -64,6 +64,11 @@ namespace org.xpangen.Generator.Data
 
         public bool IsInherited { get; set; }
 
+        public bool IsAbstract
+        {
+            get { return Inheritors.Count > 0; }
+        }
+
         public GenDataDefClass()
         {
             SubClasses = new GenDataDefSubClassList();

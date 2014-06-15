@@ -170,9 +170,12 @@ namespace org.xpangen.Generator.Data
                 }
                 for (var j = 0; j < c.Properties.Count; j++)
                 {
-                    a.GenObject = d.CreateObject("Class", "Property");
-                    a.SetString("Name", c.Properties[j]);
-                    a.SaveFields();
+                    if (!c.IsInherited || !c.Parent.Properties.Contains(c.Properties[j]))
+                    {
+                        a.GenObject = d.CreateObject("Class", "Property");
+                        a.SetString("Name", c.Properties[j]);
+                        a.SaveFields();
+                    }
                 }
             }
             return d;
