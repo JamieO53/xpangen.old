@@ -7,6 +7,7 @@ using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Definition;
 using org.xpangen.Generator.Parameter;
+using org.xpangen.Generator.Profile;
 
 namespace org.xpangen.Generator.Test
 {
@@ -16,26 +17,7 @@ namespace org.xpangen.Generator.Test
     [TestFixture]
     public class GenDataInheritanceTests : GenDataTestsBase
     {
-
-        [TestCase(Description = "Tests the setting up of a definition with inheritance")]
-        public void InheritanceDefinitionSetupTest()
-        {
-            var df = new Definition();
-            var c = df.AddClass("Container");
-            c.AddProperty("Name", dataType: "Identifier");
-            c.AddSubClass("Abstract");
-            var a = df.AddClass("Abstract", "Abstract class", "Abstract");
-            a.AddProperty("Name", dataType: "Identifier");
-            a.AddSubClass("Virtual1").Relationship = "Extends";
-            a.AddSubClass("Virtual2").Relationship = "Extends";
-            a.AddSubClass("Child");
-            var v1 = df.AddClass("Virtual1");
-            v1.AddProperty("V1Field");
-            var v2 = df.AddClass("Virtual2");
-            v2.AddProperty("V2Field");
-            var ch = df.AddClass("Child");
-            ch.AddProperty("Name", dataType: "Identifier");
-            const string expectedProfile = @"Definition=
+        private const string VirtualDefintionProfile = @"Definition=
 Class=Container
 Field=Name
 SubClass=Abstract
@@ -52,10 +34,44 @@ Field=Name
 `[Container:Container=`Container.Name`
 `[Abstract:`[Virtual1:Virtual1=`Virtual1.Name`[`?Virtual1.V1Field:V1Field`?Virtual1.V1Field<>True:=`@StringOrName:`{`Virtual1.V1Field``]`]`]`]]
 `]`[Virtual2:Virtual2=`Virtual2.Name`[`?Virtual2.V2Field:V2Field`?Virtual2.V2Field<>True:=`@StringOrName:`{`Virtual2.V2Field``]`]`]`]]
-`]`]`[Child:Child=`Child.Name`
+`]`[Child:Child=`Child.Name`
 `]`]`]";
-            Assert.AreEqual(expectedProfile, GenDataDefProfile.CreateProfile(df.GenData.AsDef()));
+
+        [TestCase(Description = "Tests the setting up of a definition with inheritance")]
+        public void InheritanceDefinitionSetupTest()
+        {
+            var df = SetUpVirtualDefintion();
+            Assert.AreEqual(VirtualDefintionProfile, GenDataDefProfile.CreateProfile(df.GenData.AsDef()));
             CompareGenData(df.GenData, df.GenData.AsDef().AsGenData());
+        }
+
+        [TestCase(Description = "Tests the setting up of a definition with inheritance")]
+        public void InheritanceDataProfileTest()
+        {
+            var df = SetUpVirtualDefintion();
+            var p = GenParameters.CreateProfile(df.GenData.AsDef());
+            var profileText = p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary).Replace(">:", ":");
+            Assert.AreEqual(VirtualDefintionProfile, profileText);
+        }
+        
+        private static Definition SetUpVirtualDefintion()
+        {
+            var df = new Definition();
+            var c = df.AddClass("Container");
+            c.AddProperty("Name", dataType: "Identifier");
+            c.AddSubClass("Abstract");
+            var a = df.AddClass("Abstract", "Abstract class", "Abstract");
+            a.AddProperty("Name", dataType: "Identifier");
+            a.AddSubClass("Virtual1").Relationship = "Extends";
+            a.AddSubClass("Virtual2").Relationship = "Extends";
+            a.AddSubClass("Child");
+            var v1 = df.AddClass("Virtual1");
+            v1.AddProperty("V1Field");
+            var v2 = df.AddClass("Virtual2");
+            v2.AddProperty("V2Field");
+            var ch = df.AddClass("Child");
+            ch.AddProperty("Name", dataType: "Identifier");
+            return df;
         }
 
         private void CompareGenData(GenData expected, GenData actual)

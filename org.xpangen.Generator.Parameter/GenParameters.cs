@@ -86,28 +86,67 @@ namespace org.xpangen.Generator.Parameter
             GenSegment classProfile = null;
             if (classId != 0)
             {
-                def.AppendLine("Class=" + genDataDef.Classes[classId].Name);
-                classProfile = new GenSegment(genDataDef, genDataDef.Classes[classId].Name, GenCardinality.All,
-                                              parentSegment);
-                classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment)
-                                          {
-                                              Text =
-                                                  genDataDef.Classes[classId]
-                                                  .Name
-                                          });
-
-                if (genDataDef.Classes[classId].Properties.Count > 0)
+                def.Append("Class=" + genDataDef.Classes[classId].Name);
+                if (genDataDef.Classes[classId].Inheritors.Count > 0)
                 {
-                    if (genDataDef.Classes[classId].Properties.Count == 1)
-                        def.AppendLine("Field=" + genDataDef.Classes[classId].Properties[0]);
-                    else
+                    var sep = '[';
+                    foreach (var inheritor in genDataDef.Classes[classId].Inheritors)
                     {
-                        def.Append("Field={" + genDataDef.Classes[classId].Properties[0]);
-                        for (var i = 1; i < genDataDef.Classes[classId].Properties.Count; i++)
-                            def.Append("," + genDataDef.Classes[classId].Properties[i]);
-                        def.AppendLine("}");
+                        def.Append(sep);
+                        def.Append(inheritor.Name);
+                        sep = ',';
+                    }
+                    def.AppendLine("]");
+                    if (genDataDef.Classes[classId].Properties.Count > 0)
+                    {
+                        if (genDataDef.Classes[classId].Properties.Count == 1)
+                            def.AppendLine("Field=" + genDataDef.Classes[classId].Properties[0]);
+                        else
+                        {
+                            def.Append("Field={" + genDataDef.Classes[classId].Properties[0]);
+                            for (var i = 1; i < genDataDef.Classes[classId].Properties.Count; i++)
+                                def.Append("," + genDataDef.Classes[classId].Properties[i]);
+                            def.AppendLine("}");
+                        }
+                    }
+                }
+                else
+                {
+                    def.AppendLine();
+                    var f = new StringBuilder();
+                    var sep = "";
+                    var defClass = genDataDef.Classes[classId];
+                    for (var i = 0; i < defClass.Properties.Count; i++)
+                    {
+                        if (!defClass.IsInherited ||
+                            defClass.Parent.Properties.IndexOf(defClass.Properties[i]) == -1)
+                        {
+                            f.Append(sep);
+                            f.Append(defClass.Properties[i]);
+                            sep = ",";
+                        }
                     }
 
+                    var fields = f.ToString();
+                    if (fields != string.Empty)
+                        if (!fields.Contains(","))
+                            def.AppendLine("Field=" + fields);
+                        else
+                            def.AppendLine("Field={" + fields + "}");
+                }
+                classProfile = new GenSegment(genDataDef, genDataDef.Classes[classId].Name, GenCardinality.All,
+                                              parentSegment);
+
+                if (!genDataDef.Classes[classId].IsAbstract)
+                    classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment)
+                                              {
+                                                  Text =
+                                                      genDataDef.Classes[classId]
+                                                      .Name
+                                              });
+
+                if (genDataDef.Classes[classId].Properties.Count > 0 && !genDataDef.Classes[classId].IsAbstract)
+                {
                     var j = 0;
                     if (
                         String.Compare(genDataDef.Classes[classId].Properties[0], "Name",
@@ -149,7 +188,11 @@ namespace org.xpangen.Generator.Parameter
                                                       Lit = "True",
                                                       UseLit = true
                                                   };
-                            var functionQuote = new GenFunction(genDataDef, parentSegment) {FunctionName = "StringOrName"};
+                            var functionQuote = new GenFunction(genDataDef, parentSegment)
+                                                    {
+                                                        FunctionName =
+                                                            "StringOrName"
+                                                    };
                             var param = new GenBlock(genDataDef, parentSegment);
                             param.Body.Add(new GenPlaceholderFragment(genDataDef, parentSegment)
                                                {
@@ -198,6 +241,12 @@ namespace org.xpangen.Generator.Parameter
                 }
 
                 profile.Body.Add(classProfile);
+            }
+
+            for (var i = 0; i < genDataDef.Classes[classId].Inheritors.Count; i++)
+            {
+                ClassProfile(genDataDef, genDataDef.Classes[classId].Inheritors[i].ClassId, def, classProfile ?? profile,
+                             parentSegment);
             }
 
             for (var i = 0; i < genDataDef.Classes[classId].SubClasses.Count; i++)

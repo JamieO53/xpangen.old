@@ -65,7 +65,6 @@ namespace org.xpangen.Generator.Data
                 data.AddSubClass("", sName);
             var iClass = data.AddClass(sName);
 
-            // todo: properties not to be added for an extension class if it belongs to the superclass
             var pAttributes = new GenAttributes(GenDataDef);
             for (var i = 0; i < classObject.SubClass[_xProperty].Count; i++)
             {

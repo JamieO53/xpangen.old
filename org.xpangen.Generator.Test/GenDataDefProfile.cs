@@ -13,6 +13,7 @@ namespace org.xpangen.Generator.Test
                 def.Append("Class=" + genDataDef.Classes[classId].Name);
                 if (genDataDef.Classes[classId].Inheritors.Count > 0)
                 {
+                    profile.Append("`[" + genDataDef.Classes[classId].Name + ":");
                     var sep = '[';
                     foreach (var inheritor in genDataDef.Classes[classId].Inheritors)
                     {
@@ -105,12 +106,8 @@ namespace org.xpangen.Generator.Test
                 }
 
                 if (genDataDef.Classes[classId].Inheritors.Count > 0)
-                {
-                    profile.Append("`[" + genDataDef.Classes[classId].Name + ":");
                     for (var i = 0; i < genDataDef.Classes[classId].Inheritors.Count; i++)
                         ClassProfile(genDataDef, genDataDef.Classes[classId].Inheritors[i].ClassId, def, profile);
-                    profile.Append("`]");
-                }
             }
 
             for (var i = 0; i < genDataDef.Classes[classId].SubClasses.Count; i++)
