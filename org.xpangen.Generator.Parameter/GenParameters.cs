@@ -403,24 +403,32 @@ namespace org.xpangen.Generator.Parameter
             First(0);
             while (!Scan.Eof)
             {
-                var subClassId = GenDataDef.Classes.IndexOf(Scan.RecordType);
+                var recordType = Scan.RecordType;
+                var subClassId = GetClassId(recordType);
                 var subClassIdx = GenDataDef.IndexOfSubClass(0, subClassId);
                 var className = Scan.RecordType;
                 if (subClassIdx != -1)
-                    LoadSubClass(Context[0].GenObject, Scan.RecordType, subClassId, subClassIdx);
+                    LoadSubClass(Context[0].GenObject, subClassId, subClassIdx);
                 else
                     // Error: Invalid data type at the global level - skip it
-                {
                     while (!Scan.Eof && Scan.RecordType == className)
                         Scan.ScanObject();
-                }
             }
             Cache.Merge();
         }
 
-        private void LoadSubClass(GenObject parent, string className, int subClassId, int subClassIdx)
+        private int GetClassId(string recordType)
         {
-            while (!Scan.Eof && className == Scan.RecordType)
+            var classId = GenDataDef.Classes.IndexOf(recordType);
+            if (classId == -1)
+                throw new GeneratorException("Unknown record type: " + recordType, GenErrorType.Assertion);
+            var c = GenDataDef.Classes[classId];
+            return c.IsInherited ? c.Parent.ClassId : classId;
+        }
+
+        private void LoadSubClass(GenObject parent, int subClassId, int subClassIdx)
+        {
+            while (!Scan.Eof && subClassId == GetClassId(Scan.RecordType))
             {
                 if (Scan.Attribute("Name") != "" || Scan.Attribute("Reference") == "")
                 {
@@ -432,17 +440,12 @@ namespace org.xpangen.Generator.Parameter
                     }
                     parent.SubClass[subClassIdx].Add(child);
                     Scan.ScanObject();
-                    if (!Scan.Eof && !className.Equals(Scan.RecordType, StringComparison.InvariantCultureIgnoreCase))
+                    if (!Scan.Eof && subClassId != GetClassId(Scan.RecordType))
                     {
-                        int subSubClassIdx;
-                        do
-                        {
-                            var subClassName = Scan.RecordType;
-                            var subSubClassId = GenDataDef.Classes.IndexOf(subClassName);
-                            subSubClassIdx = GenDataDef.IndexOfSubClass(subClassId, subSubClassId);
-                            if (subSubClassIdx != -1)
-                                LoadSubClass(child, subClassName, subSubClassId, subSubClassIdx);
-                        } while (!Scan.Eof && subSubClassIdx != -1);
+                        int idx;
+                        while (!Scan.Eof &&
+                               (idx = GenDataDef.IndexOfSubClass(subClassId, GetClassId(Scan.RecordType))) != -1)
+                            LoadSubClass(child, GetClassId(Scan.RecordType), idx);
                     }
                 }
                 else
