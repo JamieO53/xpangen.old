@@ -33,7 +33,7 @@ namespace org.xpangen.Generator.Data
         public TextList Attributes { get; private set; }
 
         public ISubClassBase ParentSubClass { get; private set; }
-        public int ClassId { get; private set; }
+        public int ClassId { get; set; }
 
         public GenObject Parent { get; private set; }
         public GenSubClasses SubClass { get; private set; }

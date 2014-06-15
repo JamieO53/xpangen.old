@@ -228,6 +228,11 @@ namespace org.xpangen.Generator.Profile
                     writer.Write(genData.Context[ClassId].Reference);
                     writer.Write("']\r\n");
                     break;
+                case GenCardinality.Inheritance:
+                    genData.SetInheritance(ClassId);
+                    if (!genData.Eol(ClassId))
+                        generated |= Body.Generate(prefix, genData, writer);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
