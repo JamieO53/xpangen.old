@@ -125,6 +125,7 @@ namespace org.xpangen.Generator.Data
         /// <param name="classId">The class whose context is being established.</param>
         public void First(int classId)
         {
+            CheckInheritance(classId);
             if (!Eol(classId))
                 ResetSubClasses(classId);
             Context[classId].First();
@@ -139,6 +140,7 @@ namespace org.xpangen.Generator.Data
         /// <param name="classId">The class whose context is being established.</param>
         public void Next(int classId)
         {
+            CheckInheritance(classId);
             if (!Eol(classId))
                 ResetSubClasses(classId);
             Context[classId].Next();
@@ -153,6 +155,7 @@ namespace org.xpangen.Generator.Data
         /// <param name="classId">The class whose context is being established.</param>
         public void Last(int classId)
         {
+            CheckInheritance(classId);
             if (!Eol(classId))
                 ResetSubClasses(classId);
             Context[classId].Last();
@@ -167,6 +170,7 @@ namespace org.xpangen.Generator.Data
         /// <param name="classId">The class whose context is being established.</param>
         public void Prior(int classId)
         {
+            CheckInheritance(classId);
             if (!Eol(classId))
                 ResetSubClasses(classId);
             Context[classId].Prior();
@@ -210,6 +214,13 @@ namespace org.xpangen.Generator.Data
 
         private void SetSubClasses(int classId)
         {
+            var inheritedClassId = classId;
+            if (Context[classId].DefClass.IsInherited)
+            {
+                classId = Context[classId].DefClass.Parent.ClassId;
+                Context[classId].Index = Context[inheritedClassId].Index;
+            }
+            
             if (Context[classId].ReferenceData != null && Context[classId].ReferenceData != this)
             {
                 Context[classId].ReferenceData.Context[Context[classId].RefClassId].Index = Context[classId].Index;
@@ -376,6 +387,15 @@ namespace org.xpangen.Generator.Data
         public override string ToString()
         {
             return !string.IsNullOrEmpty(DataName) ? DataName : base.ToString();
+        }
+
+        private void CheckInheritance(int classId)
+        {
+            if (!GenDataDef.Classes[classId].IsInherited) return;
+            var superClassId = GenDataDef.Classes[classId].Parent.ClassId;
+            if (Context[classId].SubClassBase == Context[superClassId].SubClassBase) return;
+            Context[classId].SubClassBase = Context[superClassId].SubClassBase;
+            Context[classId].Index = 0;
         }
 
         public void SetInheritance(int classId)
