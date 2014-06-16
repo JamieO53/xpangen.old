@@ -238,7 +238,6 @@ namespace org.xpangen.Generator.Data
                     else if (Context[subClassId].ReferenceData != null && Context[subClassId].ReferenceData != this)
                     {
                         var refContext = Context[subClassId].ReferenceData.Context[Context[subClassId].RefClassId];
-                        //refContext.Index = Context[subClassId].Index;
                         Context[subClassId].SubClassBase = refContext.SubClassBase;
                         First(subClassId);
                     }
