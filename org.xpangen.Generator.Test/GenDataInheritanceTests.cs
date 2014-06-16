@@ -9,6 +9,7 @@ using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Definition;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
+using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
 
 namespace org.xpangen.Generator.Test
 {
@@ -16,7 +17,7 @@ namespace org.xpangen.Generator.Test
     /// Tests the generator data functionality
     /// </summary>
     [TestFixture]
-    public class GenDataInheritanceTests : GenDataTestsBase
+    public class GenDataInheritanceTests : GenProfileFragmentsTestBase
     {
         private const string VirtualDefintionProfile = @"Definition=
 Class=Container
@@ -75,7 +76,7 @@ Child=V2I2Child2
             CompareGenData(df.GenData, df.GenData.AsDef().AsGenData());
         }
 
-        [TestCase(Description = "Tests the setting up of a definition with inheritance")]
+        [TestCase(Description = "Tests the creation of a data profile with inheritance")]
         public void InheritanceDataProfileTest()
         {
             var df = SetUpVirtualDefintion();
@@ -86,6 +87,15 @@ Child=V2I2Child2
 
         [TestCase(Description = "Tests the saving of data with inheritance")]
         public void InheritanceDataSaveTest()
+        {
+            var d = PopulateInheritanceData();
+            var p = GenParameters.CreateProfile(d.GenDataDef);
+            var text = p.Expand(d);
+            Assert.AreEqual(VirtualDefintionData, text);
+        }
+
+        [TestCase(Description = "Tests the expansion of data with inheritance")]
+        public void InheritanceDataExpansionTest()
         {
             var d = PopulateInheritanceData();
             GenParameters.SaveToFile(d, "InheritanceData.dcb");
@@ -99,6 +109,58 @@ Child=V2I2Child2
             var d = PopulateInheritanceData();
             var x = new GenParameters(d.GenDataDef, VirtualDefintionData);
             CompareGenData(d, x);
+        }
+
+        private const string InheritanceProfile = @"`[Container:Container=`Container.Name`
+`[Virtual1:Virtual1=`Virtual1.Name`[`?Virtual1.V1Field:V1Field`?Virtual1.V1Field<>True:=`@StringOrName:`{`Virtual1.V1Field``]`]`]`]]
+`[Child:Child=`Child.Name`
+`]`]`[Virtual2:Virtual2=`Virtual2.Name`[`?Virtual2.V2Field:V2Field`?Virtual2.V2Field<>True:=`@StringOrName:`{`Virtual2.V2Field``]`]`]`]]
+`[Child:Child=`Child.Name`
+`]`]`]";
+
+        private const string InheritanceProfileResult = @"Container=Container
+Virtual1=V1Instance1[V1Field='Value 1']
+Child=V1I1Child1
+Child=V1I1Child2
+Virtual1=V1Instance2[V1Field='Value 2']
+Child=V1I2Child1
+Child=V1I2Child2
+Virtual2=V2Instance1[V2Field='Value 1']
+Child=V2I1Child1
+Child=V2I1Child2
+Virtual2=V2Instance2[V2Field='Value 2']
+Child=V2I2Child1
+Child=V2I2Child2
+";
+
+        [TestCase(Description = "Tests the expansion of a class with inheritance")]
+        public void InheritanceClassExpansionTest()
+        {
+            var d = PopulateInheritanceData();
+            var p = new GenCompactProfileParser(d, "", InheritanceProfile);
+            var text = p.Expand(d);
+            Assert.AreEqual(InheritanceProfileResult, text);
+        }
+
+        [TestCase(Description = "Tests the generation of a class with inheritance")]
+        public void InheritanceClassGenerationTest()
+        {
+            var d = PopulateInheritanceData();
+            var p = new GenCompactProfileParser(d, "", InheritanceProfile);
+            var text = GenerateFragment(d, p);
+            Assert.AreEqual(InheritanceProfileResult, text);
+        }
+
+        [TestCase(Description = "Tests the loading of nested data with inheritance")]
+        [Ignore("Not implemented")]
+        public void NestedInheritanceDataLoadTest()
+        {
+        }
+
+        [TestCase(Description = "Tests the saving of nested data with inheritance")]
+        [Ignore("Not implemented")]
+        public void NestedInheritanceDataSaveTest()
+        {
         }
 
         private static GenData PopulateInheritanceData()

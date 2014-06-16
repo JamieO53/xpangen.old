@@ -174,7 +174,10 @@ namespace org.xpangen.Generator.Data
             if (SubClassBase.Count == 0)
                 Reset();
             else
+            {
                 Index = 0;
+                if (DefClass.IsInherited) SetInheritedIndex();
+            }
             if (!string.IsNullOrEmpty(Reference) && ReferenceData != null) ReferenceData.First(RefClassId);
         }
 
@@ -186,6 +189,7 @@ namespace org.xpangen.Generator.Data
             Index++;
             if (Eol)
                 Reset();
+            if (DefClass.IsInherited) SetInheritedIndex();
             if (!string.IsNullOrEmpty(Reference)) ReferenceData.Next(RefClassId);
         }
 
@@ -195,6 +199,7 @@ namespace org.xpangen.Generator.Data
         public void Last()
         {
             Index = SubClassBase.Count - 1;
+            if (DefClass.IsInherited) SetPriorInheritedIndex();
             if (!string.IsNullOrEmpty(Reference)) ReferenceData.Last(RefClassId);
         }
 
@@ -206,6 +211,7 @@ namespace org.xpangen.Generator.Data
             Index--;
             if (Eol)
                 Reset();
+            if (DefClass.IsInherited) SetPriorInheritedIndex();
             if (!string.IsNullOrEmpty(Reference)) ReferenceData.Prior(RefClassId);
         }
 
@@ -218,6 +224,18 @@ namespace org.xpangen.Generator.Data
         {
             Index = -1;
             SubClassBase.Reset();
+        }
+
+        private void SetInheritedIndex()
+        {
+            while (Index < Count && GenObject != null && GenObject.ClassId != ClassId) Index++;
+            if (Index >= Count) Reset();
+        }
+
+        private void SetPriorInheritedIndex()
+        {
+            while (Index >= 0 && GenObject != null && GenObject.ClassId != ClassId) Index--;
+            if (Index < 0) Reset();
         }
 
         /// <summary>
