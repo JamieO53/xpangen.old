@@ -1,6 +1,6 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
 
@@ -13,7 +13,7 @@ namespace org.xpangen.Generator.Data
         public GenObjectList ParentList { get; private set; }
 
         /// <summary>
-        /// Create a new <see cref="GenObjectList"/> list.
+        ///     Create a new <see cref="GenObjectList" /> list.
         /// </summary>
         /// <param name="subClassBase"> The underlying generator object list.</param>
         /// <param name="genDataBase">The underlying data container.</param>
@@ -41,23 +41,28 @@ namespace org.xpangen.Generator.Data
                     if (ParentList.Eol) ParentList.First();
                     if (String.IsNullOrEmpty(Reference))
                     {
-                        Assert(value.ClassId == ClassId || value.ClassId == DefClass.Parent.ClassId, "Object list assignment error",
-                                     string.Format("The expected class was {0}({1}) but is {2}({3})",
-                                                   GenDataBase.GenDataDef.Classes[ClassId].Name,
-                                                   ClassId, GenDataBase.GenDataDef.Classes[value.ClassId].Name,
-                                                   value.ClassId));
-                        Assert(value.Parent == ParentList.GenObject || value.Parent == ParentList.GenObject.Parent, "Object list assignment error",
-                               string.Format("The the incorrect subclass is being used for the current parent"));
+                        Assert(
+                            value.ClassId == ClassId || DefClass.IsInherited && value.ClassId == DefClass.Parent.ClassId,
+                            "Object list assignment error",
+                            string.Format("The expected class was {0}({1}) but is {2}({3})",
+                                          GenDataBase.GenDataDef.Classes[ClassId].Name,
+                                          ClassId, GenDataBase.GenDataDef.Classes[value.ClassId].Name,
+                                          value.ClassId));
+                        Assert(
+                            value.Parent == ParentList.GenObject ||
+                            DefClass.IsInherited && value.Parent == ParentList.GenObject.Parent,
+                            "Object list assignment error",
+                            string.Format("The the incorrect subclass is being used for the current parent"));
                     }
                     else if (ReferenceData != null)
                     {
                         var refClassId = GetBaseReferenceClassId(RefClassId, ReferenceData);
                         Assert(value.ClassId == refClassId, "Object list assignment error",
-                                     string.Format("The expected class was {0}({1}) but is {2}({3})",
-                                                   ReferenceData.GenDataBase.GenDataDef.Classes[RefClassId].Name,
-                                                   ReferenceData.Context[refClassId].RefClassId,
-                                                   ReferenceData.GenDataBase.GenDataDef.Classes[value.ClassId].Name,
-                                                   value.ClassId));
+                               string.Format("The expected class was {0}({1}) but is {2}({3})",
+                                             ReferenceData.GenDataBase.GenDataDef.Classes[RefClassId].Name,
+                                             ReferenceData.Context[refClassId].RefClassId,
+                                             ReferenceData.GenDataBase.GenDataDef.Classes[value.ClassId].Name,
+                                             value.ClassId));
                         Assert(value.Parent.ClassId == 0 || value.Parent == ParentList.GenObject,
                                "Object list assignment error",
                                "The the incorrect subclass is being used for the current parent");
@@ -92,7 +97,7 @@ namespace org.xpangen.Generator.Data
             if (ReferenceData.Context[refClassId].ReferenceData != null &&
                 referenceData != ReferenceData.Context[refClassId].ReferenceData)
                 return GetBaseReferenceData(ReferenceData.Context[refClassId].RefClassId,
-                                               ReferenceData.Context[refClassId].ReferenceData);
+                                            ReferenceData.Context[refClassId].ReferenceData);
             return referenceData.GenDataBase;
         }
 
@@ -104,21 +109,21 @@ namespace org.xpangen.Generator.Data
         public GenDataDefClass DefClass { get; private set; }
         public GenDataDefSubClass DefSubClass { get; private set; }
 
-        public GenObject this[int index] { get { return SubClassBase[index]; } }
-        
-        /// <summary>
-        /// The currently selected item.
-        /// </summary>
-        public GenObject GenObject
+        public GenObject this[int index]
         {
-            get
-            {
-                return Eol ? null : SubClassBase[Index];
-            }
+            get { return SubClassBase[index]; }
         }
 
         /// <summary>
-        /// Is the current object at the end of the list?
+        ///     The currently selected item.
+        /// </summary>
+        public GenObject GenObject
+        {
+            get { return Eol ? null : SubClassBase[Index]; }
+        }
+
+        /// <summary>
+        ///     Is the current object at the end of the list?
         /// </summary>
         public bool Eol
         {
@@ -126,12 +131,12 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// The index of the currently selected item.
+        ///     The index of the currently selected item.
         /// </summary>
         public int Index { get; set; }
 
         /// <summary>
-        /// The number of items in the list.
+        ///     The number of items in the list.
         /// </summary>
         public int Count
         {
@@ -139,12 +144,12 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// The data reference of the list.
+        ///     The data reference of the list.
         /// </summary>
         public string Reference { get; set; }
 
         /// <summary>
-        /// Is the selected item in the first place?
+        ///     Is the selected item in the first place?
         /// </summary>
         /// <returns></returns>
         public bool IsFirst()
@@ -153,7 +158,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Is the selected item in the last place?
+        ///     Is the selected item in the last place?
         /// </summary>
         /// <returns></returns>
         public bool IsLast()
@@ -162,7 +167,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Make the first item, if any, the current selection.
+        ///     Make the first item, if any, the current selection.
         /// </summary>
         public void First()
         {
@@ -174,7 +179,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Make the next item the current selection.
+        ///     Make the next item the current selection.
         /// </summary>
         public void Next()
         {
@@ -185,7 +190,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Make the last item, if any, the current selection.
+        ///     Make the last item, if any, the current selection.
         /// </summary>
         public void Last()
         {
@@ -194,7 +199,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Make the prior item, if any, the current selection.
+        ///     Make the prior item, if any, the current selection.
         /// </summary>
         public void Prior()
         {
@@ -207,7 +212,7 @@ namespace org.xpangen.Generator.Data
         public GenData ReferenceData { get; set; }
 
         /// <summary>
-        /// Reset the current selection.
+        ///     Reset the current selection.
         /// </summary>
         public void Reset()
         {
@@ -216,7 +221,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Move the specified item up, down, to the top or to the bottom of the list.
+        ///     Move the specified item up, down, to the top or to the bottom of the list.
         /// </summary>
         /// <param name="move">The move to be made.</param>
         /// <param name="itemIndex">The item to be moved.</param>
@@ -286,7 +291,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Create a new <see cref="GenObject"/> and append it to the list.
+        ///     Create a new <see cref="GenObject" /> and append it to the list.
         /// </summary>
         /// <returns>The new object.</returns>
         public GenObject CreateObject()
@@ -308,11 +313,12 @@ namespace org.xpangen.Generator.Data
 
         public override string ToString()
         {
-            return GenDataBase.GenDataDef.Classes[ClassId] + (Eol || GenObject.Attributes.Count == 0 ? "" : ":" + GenObject.Attributes[0]) ;
+            return GenDataBase.GenDataDef.Classes[ClassId] +
+                   (Eol || GenObject.Attributes.Count == 0 ? "" : ":" + GenObject.Attributes[0]);
         }
 
         /// <summary>
-        /// Delete the currently selected object if any.
+        ///     Delete the currently selected object if any.
         /// </summary>
         public void Delete()
         {

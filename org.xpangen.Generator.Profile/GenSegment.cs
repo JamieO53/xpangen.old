@@ -126,6 +126,11 @@ namespace org.xpangen.Generator.Profile
                     s.Append(genData.Context[ClassId].Reference);
                     s.AppendLine("']");
                     break;
+                case GenCardinality.Inheritance:
+                    genData.SetInheritance(ClassId);
+                    if (!genData.Eol(ClassId))
+                        s.Append(Body.Expand(genData));
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
