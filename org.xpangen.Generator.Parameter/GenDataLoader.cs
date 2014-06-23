@@ -20,8 +20,24 @@ namespace org.xpangen.Generator.Parameter
         /// <returns>The loaded data.</returns>
         public GenData LoadData(string path)
         {
-            using (var stream = GenParameters.CreateStream(path))
-                return new GenParameters(stream) {DataName = Path.GetFileNameWithoutExtension(path)};
+            using (var stream = GenParameters.CreateStream(GetFullPath(path)))
+                return new GenParameters(stream) {DataName = GetDataName(path)};
+        }
+
+        private static string GetDataName(string path)
+        {
+            return Path.GetFileNameWithoutExtension(path.Replace('\\', '/'));
+        }
+
+        private static string GetFullPath(string path)
+        {
+            var fixedPath = path.Replace('/', '\\');
+            if (Path.GetExtension(fixedPath) == "")
+                fixedPath = Path.ChangeExtension(fixedPath, ".dcb");
+            var dataFixedPath = Path.Combine("Data", fixedPath);
+            if (!File.Exists(fixedPath) && File.Exists(dataFixedPath))
+                fixedPath = dataFixedPath;
+            return Path.GetFullPath(fixedPath);
         }
 
         /// <summary>
@@ -32,8 +48,8 @@ namespace org.xpangen.Generator.Parameter
         /// <returns>The loaded data.</returns>
         public GenData LoadData(GenDataDef dataDef, string path)
         {
-            using (var stream = GenParameters.CreateStream(path))
-                return new GenParameters(dataDef, stream) {DataName = Path.GetFileNameWithoutExtension(path)};
+            using (var stream = GenParameters.CreateStream(GetFullPath(path)))
+                return new GenParameters(dataDef, stream) {DataName = GetDataName(path)};
         }
     }
 }
