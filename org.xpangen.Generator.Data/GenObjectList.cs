@@ -9,6 +9,7 @@ namespace org.xpangen.Generator.Data
     public class GenObjectList
     {
         private ISubClassBase _subClassBase;
+        private int _index;
 
         public GenObjectList ParentList { get; private set; }
 
@@ -119,7 +120,7 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         public GenObject GenObject
         {
-            get { return Eol ? null : SubClassBase[Index]; }
+            get { return SubClassBase == null || SubClassBase.Count == 0 || Index < 0 || Index >= SubClassBase.Count ? null : SubClassBase[Index]; }
         }
 
         /// <summary>
@@ -127,13 +128,26 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         public bool Eol
         {
-            get { return SubClassBase == null || SubClassBase.Count == 0 || Index < 0 || Index >= SubClassBase.Count; }
+            get
+            {
+                return SubClassBase == null || SubClassBase.Count == 0 || Index < 0 || Index >= SubClassBase.Count ||
+                       DefClass.IsInherited && GenObject.ClassId != ObjectClassId;
+            }
+        }
+
+        private int ObjectClassId
+        {
+            get { return (DefClass.IsReference ? RefClassId : ClassId); }
         }
 
         /// <summary>
         ///     The index of the currently selected item.
         /// </summary>
-        public int Index { get; set; }
+        public int Index
+        {
+            get { return _index; }
+            set { _index = value; }
+        }
 
         /// <summary>
         ///     The number of items in the list.
@@ -187,9 +201,9 @@ namespace org.xpangen.Generator.Data
         public void Next()
         {
             Index++;
+            if (DefClass.IsInherited) SetInheritedIndex();
             if (Eol)
                 Reset();
-            if (DefClass.IsInherited) SetInheritedIndex();
             if (!string.IsNullOrEmpty(Reference)) ReferenceData.Next(RefClassId);
         }
 
@@ -209,9 +223,9 @@ namespace org.xpangen.Generator.Data
         public void Prior()
         {
             Index--;
+            if (DefClass.IsInherited) SetPriorInheritedIndex();
             if (Eol)
                 Reset();
-            if (DefClass.IsInherited) SetPriorInheritedIndex();
             if (!string.IsNullOrEmpty(Reference)) ReferenceData.Prior(RefClassId);
         }
 
@@ -228,13 +242,13 @@ namespace org.xpangen.Generator.Data
 
         private void SetInheritedIndex()
         {
-            while (Index < Count && GenObject != null && GenObject.ClassId != ClassId) Index++;
+            while (Index < Count && GenObject != null && GenObject.ClassId != ObjectClassId) Index++;
             if (Index >= Count) Reset();
         }
 
         private void SetPriorInheritedIndex()
         {
-            while (Index >= 0 && GenObject != null && GenObject.ClassId != ClassId) Index--;
+            while (Index >= 0 && GenObject != null && GenObject.ClassId != ObjectClassId) Index--;
             if (Index < 0) Reset();
         }
 

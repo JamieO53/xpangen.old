@@ -2,7 +2,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
 using System.IO;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
@@ -19,7 +18,32 @@ namespace org.xpangen.Generator.Test
     [TestFixture]
     public class GenDataInheritanceTests : GenProfileFragmentsTestBase
     {
-        private const string VirtualDefintionProfile = @"Definition=
+        private const string VirtualDefinition = @"Definition=Definition
+Class=Class
+Field={Name,Title,Inheritance}
+SubClass={SubClass,Property}
+Class=SubClass
+Field={Name,Reference,Relationship}
+Class=Property
+Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
+.
+Class=Container[]
+SubClass=Abstract[]
+Property=Name[,DataType=Identifier]
+Class=Abstract[Title='Abstract class',Inheritance=Abstract]
+SubClass=Virtual1[,Relationship=Extends]
+SubClass=Virtual2[,Relationship=Extends]
+SubClass=Child[]
+Property=Name[,DataType=Identifier]
+Class=Virtual1[]
+Property=V1Field[,DataType=String]
+Class=Virtual2[]
+Property=V2Field[,DataType=String]
+Class=Child[]
+Property=Name[,DataType=Identifier]
+";
+
+        private const string VirtualDefinitionProfile = @"Definition=VirtualDefinition
 Class=Container
 Field=Name
 SubClass=Abstract
@@ -35,11 +59,12 @@ Field=Name
 .
 `[Container:Container=`Container.Name`
 `[Abstract:`[Virtual1^:Virtual1=`Virtual1.Name`[`?Virtual1.V1Field:V1Field`?Virtual1.V1Field<>True:=`@StringOrName:`{`Virtual1.V1Field``]`]`]`]]
-`]`[Virtual2^:Virtual2=`Virtual2.Name`[`?Virtual2.V2Field:V2Field`?Virtual2.V2Field<>True:=`@StringOrName:`{`Virtual2.V2Field``]`]`]`]]
-`]`[Child:Child=`Child.Name`
-`]`]`]";
+`[Child:Child=`Child.Name`
+`]`]`[Virtual2^:Virtual2=`Virtual2.Name`[`?Virtual2.V2Field:V2Field`?Virtual2.V2Field<>True:=`@StringOrName:`{`Virtual2.V2Field``]`]`]`]]
+`[Child:Child=`Child.Name`
+`]`]`]`]";
 
-        private const string VirtualDefintionData = @"Definition=
+        private const string VirtualDefinitionData = @"Definition=VirtualDefinition
 Class=Container
 Field=Name
 SubClass=Abstract
@@ -71,18 +96,18 @@ Child=V2I2Child2
         [TestCase(Description = "Tests the setting up of a definition with inheritance")]
         public void InheritanceDefinitionSetupTest()
         {
-            var df = SetUpVirtualDefintion();
-            Assert.AreEqual(VirtualDefintionProfile, GenDataDefProfile.CreateProfile(df.GenData.AsDef()));
+            var df = SetUpVirtualDefinition();
+            Assert.AreEqual(VirtualDefinitionProfile, GenDataDefProfile.CreateProfile(df.GenData.AsDef()));
             CompareGenData(df.GenData, df.GenData.AsDef().AsGenData());
         }
 
         [TestCase(Description = "Tests the creation of a data profile with inheritance")]
         public void InheritanceDataProfileTest()
         {
-            var df = SetUpVirtualDefintion();
+            var df = SetUpVirtualDefinition();
             var p = GenParameters.CreateProfile(df.GenData.AsDef());
             var profileText = p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary).Replace(">:", ":");
-            Assert.AreEqual(VirtualDefintionProfile, profileText);
+            Assert.AreEqual(VirtualDefinitionProfile, profileText);
         }
 
         [TestCase(Description = "Tests the saving of data with inheritance")]
@@ -91,7 +116,7 @@ Child=V2I2Child2
             var d = PopulateInheritanceData();
             var p = GenParameters.CreateProfile(d.GenDataDef);
             var text = p.Expand(d);
-            Assert.AreEqual(VirtualDefintionData, text);
+            Assert.AreEqual(VirtualDefinitionData, text);
         }
 
         [TestCase(Description = "Tests the expansion of data with inheritance")]
@@ -100,14 +125,22 @@ Child=V2I2Child2
             var d = PopulateInheritanceData();
             GenParameters.SaveToFile(d, "InheritanceData.dcb");
             var text = File.ReadAllText("InheritanceData.dcb");
-            Assert.AreEqual(VirtualDefintionData, text);
+            Assert.AreEqual(VirtualDefinitionData, text);
         }
 
         [TestCase(Description = "Tests the loading of data with inheritance")]
         public void InheritanceDataLoadTest()
         {
             var d = PopulateInheritanceData();
-            var x = new GenParameters(d.GenDataDef, VirtualDefintionData);
+            var x = GenData.DataLoader.LoadData(d.GenDataDef, VirtualDataFile);
+            CompareGenData(d, x);
+        }
+
+        [TestCase(Description = "Tests the loading of data with inheritance without a definition")]
+        public void InheritanceDataLoadSansDefinitionTest()
+        {
+            var d = PopulateInheritanceData();
+            var x = GenData.DataLoader.LoadData(VirtualDataFile);
             CompareGenData(d, x);
         }
 
@@ -117,6 +150,13 @@ Child=V2I2Child2
 `]`]`[Virtual2:Virtual2=`Virtual2.Name`[`?Virtual2.V2Field:V2Field`?Virtual2.V2Field<>True:=`@StringOrName:`{`Virtual2.V2Field``]`]`]`]]
 `[Child:Child=`Child.Name`
 `]`]`]";
+
+        private const string NestedInheritanceProfile = @"`[Parent:`[Container:Container=`Container.Name`
+`[Virtual1:Virtual1=`Virtual1.Name`[`?Virtual1.V1Field:V1Field`?Virtual1.V1Field<>True:=`@StringOrName:`{`Virtual1.V1Field``]`]`]`]]
+`[Child:Child=`Child.Name`
+`]`]`[Virtual2:Virtual2=`Virtual2.Name`[`?Virtual2.V2Field:V2Field`?Virtual2.V2Field<>True:=`@StringOrName:`{`Virtual2.V2Field``]`]`]`]]
+`[Child:Child=`Child.Name`
+`]`]`]`]";
 
         private const string InheritanceProfileResult = @"Container=Container
 Virtual1=V1Instance1[V1Field='Value 1']
@@ -151,22 +191,103 @@ Child=V2I2Child2
             Assert.AreEqual(InheritanceProfileResult, text);
         }
 
+        private const string VirtualDefinitionFile = "TestData\\VirtualDefinition.dcb";
+        private const string VirtualDataFile = "TestData\\VirtualData.dcb";
+        private const string VirtualParentDefinitionFile = "TestData\\VirtualParentDefinition.dcb";
+        private const string VirtualParentDataFile = "TestData\\VirtualParentData.dcb";
+
+        private const string VirtualParentDefinition = @"Definition=Definition
+Class=Class
+Field={Name,Title,Inheritance}
+SubClass={SubClass,Property}
+Class=SubClass
+Field={Name,Reference,Relationship}
+Class=Property
+Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
+.
+Class=Parent[]
+SubClass=Container[Reference='TestData/VirtualDefinition']
+Property=Name[,DataType=String]
+";
+        private const string VirtualParentData = @"Definition=VirtualParentDefinition
+Class=Parent
+Field=Name
+SubClass=Container[Reference='TestData/VirtualDefinition']
+.
+Parent=Parent
+Container[Reference='TestData\VirtualData']
+";
+
         [TestCase(Description = "Tests the loading of nested data with inheritance")]
-        [Ignore("Not implemented")]
         public void NestedInheritanceDataLoadTest()
         {
+            var data = LoadVirtualParentData();
+            var expectedData = SetUpParentOfVirtualData();
+            CompareGenData(expectedData, data);
+        }
+
+        private static GenData LoadVirtualParentData()
+        {
+            SetUpParametersFile(VirtualDefinitionFile, VirtualDefinition);
+            SetUpParametersFile(VirtualDataFile, VirtualDefinitionData);
+            SetUpParametersFile(VirtualParentDefinitionFile, VirtualParentDefinition);
+            SetUpParametersFile(VirtualParentDataFile, VirtualParentData);
+            var data = GenData.DataLoader.LoadData(VirtualParentDataFile);
+            return data;
+        }
+
+        private static void SetUpParametersFile(string fileName, string text)
+        {
+            if (File.Exists(fileName)) File.Delete(fileName);
+            File.WriteAllText(fileName, text);
         }
 
         [TestCase(Description = "Tests the saving of nested data with inheritance")]
-        [Ignore("Not implemented")]
         public void NestedInheritanceDataSaveTest()
         {
+            SaveVirtualAndParentData();
+            var def = File.ReadAllText(VirtualDefinitionFile);
+            Assert.AreEqual(VirtualDefinition, def);
+            var data = File.ReadAllText(VirtualDataFile);
+            Assert.AreEqual(VirtualDefinitionData, data);
+            def = File.ReadAllText(VirtualParentDefinitionFile);
+            Assert.AreEqual(VirtualParentDefinition, def);
+            data = File.ReadAllText(VirtualParentDataFile);
+            Assert.AreEqual(VirtualParentData, data);
+        }
+
+        [TestCase(Description = "Tests the expansion of a nested class with inheritance")]
+        public void NestedInheritanceClassExpansionTest()
+        {
+            var d = LoadVirtualParentData();
+            var p = new GenCompactProfileParser(d, "", NestedInheritanceProfile);
+            var text = p.Expand(d);
+            Assert.AreEqual(InheritanceProfileResult, text);
+        }
+
+        private static void SaveVirtualAndParentData()
+        {
+            if (!Directory.Exists("TestData")) Directory.CreateDirectory("TestData");
+
+            var df = SetUpVirtualDefinition();
+            if (File.Exists(VirtualDefinitionFile)) File.Delete(VirtualDefinitionFile);
+            GenParameters.SaveToFile(df.GenData, VirtualDefinitionFile);
+            var d = PopulateInheritanceData();
+            if (File.Exists(VirtualDataFile)) File.Delete(VirtualDataFile);
+            GenParameters.SaveToFile(d, VirtualDataFile);
+
+            var pdf = SetUpParentOfVirtualDefinition();
+            if (File.Exists(VirtualParentDefinitionFile)) File.Delete(VirtualParentDefinitionFile);
+            GenParameters.SaveToFile(pdf.GenData, VirtualParentDefinitionFile);
+            var pd = SetUpParentOfVirtualData();
+            if (File.Exists(VirtualParentDataFile)) File.Delete(VirtualParentDataFile);
+            GenParameters.SaveToFile(pd, VirtualParentDataFile);
         }
 
         private static GenData PopulateInheritanceData()
         {
-            var f = SetUpVirtualDefintion().GenData.AsDef();
-            var d = new GenData(f);
+            var f = SetUpVirtualDefinition().GenData.AsDef();
+            var d = new GenData(f) {DataName = "VirtualData"};
             var container = new GenAttributes(f) {GenObject = d.Context[1].CreateObject()};
             container.SetString("Name", "Container");
             container.SaveFields();
@@ -226,9 +347,9 @@ Child=V2I2Child2
             return d;
         }
 
-        private static Definition SetUpVirtualDefintion()
+        private static Definition SetUpVirtualDefinition()
         {
-            var df = new Definition();
+            var df = new Definition {GenData = {DataName = "VirtualDefinition"}};
             var c = df.AddClass("Container");
             c.AddProperty("Name", dataType: "Identifier");
             c.AddSubClass("Abstract");
@@ -246,6 +367,32 @@ Child=V2I2Child2
             return df;
         }
 
+        private static Definition SetUpParentOfVirtualDefinition()
+        {
+            Assert.IsTrue(File.Exists(VirtualDefinitionFile));
+            Assert.IsTrue(File.Exists(VirtualDataFile));
+            var df = new Definition {GenData = {DataName = "VirtualParentDefintion"}};
+            var c = df.AddClass("Parent");
+            c.AddProperty("Name");
+            c.AddSubClass("Container", "TestData/VirtualDefinition");
+            return df;
+        }
+
+        private static GenData SetUpParentOfVirtualData()
+        {
+            Assert.IsTrue(File.Exists(VirtualDefinitionFile));
+            Assert.IsTrue(File.Exists(VirtualParentDefinitionFile));
+            Assert.IsTrue(File.Exists(VirtualDataFile));
+            var f = GenData.DataLoader.LoadData(VirtualParentDefinitionFile).AsDef();
+            var d = new GenData(f) { DataName = "VirtualParentData" };
+            var container = new GenAttributes(f) { GenObject = d.Context[1].CreateObject() };
+            container.SetString("Name", "Parent");
+            container.SaveFields();
+            d.First(1);
+            d.Context[1].GenObject.SubClass[0].Reference = "TestData\\VirtualData";
+            return d;
+        }
+
         private void CompareGenData(GenData expected, GenData actual)
         {
             //Assert.AreEqual(expected, actual);
@@ -254,18 +401,21 @@ Child=V2I2Child2
             CompareContext(0, 0, expected, actual);
         }
 
-        private void CompareContext(int expectedId, int actualId, GenData expected, GenData actual)
+        private static void CompareContext(int expectedId, int actualId, GenData expected, GenData actual)
         {
             var expectedContext = expected.Context[expectedId];
             var actualContext = actual.Context[actualId];
             var expectedAttributes = new GenAttributes(expected.GenDataDef);
             var actualAttributes = new GenAttributes(actual.GenDataDef);
+            Assert.AreEqual(expectedContext.ToString(), actualContext.ToString());
             Assert.AreEqual(expectedContext.Count, actualContext.Count, "Class " + expectedId + " objects");
+            Assert.AreEqual(expectedContext.ClassId, actualContext.ClassId);
+            Assert.AreEqual(expectedContext.RefClassId, actualContext.RefClassId);
+            Assert.AreEqual(expectedContext.Reference, expectedContext.Reference);
+            Assert.AreEqual(expectedContext.DefClass.ToString(), actualContext.DefClass.ToString());
             expected.First(expectedId); actual.First(actualId);
             while (!expected.Eol(expectedId) && !actual.Eol(actualId))
             {
-                Assert.AreEqual(expectedContext.ToString(), actualContext.ToString());
-                Assert.AreEqual(expectedContext.DefClass.ToString(), actualContext.DefClass.ToString());
                 if (expectedContext.DefSubClass != null || actualContext.DefSubClass != null)
                 {
                     Assert.IsNotNull(expectedContext.DefSubClass);
@@ -285,16 +435,29 @@ Child=V2I2Child2
                                     actualObject.Definition.Properties[i] + 
                                     " " + expectedAttributes.AsString("Name") +
                                     " vs " + actualAttributes.AsString("Name"));
-                //Assert.AreEqual();
+
                 Assert.AreEqual(expectedObject.SubClass.Count, actualObject.SubClass.Count);
                 for (var i = 0; i < actualObject.SubClass.Count; i++)
                 {
+                    var expectedSubClassDef = expected.Context[expectedId].DefClass.SubClasses[i].SubClass;
+                    var actualSubClassDef = actual.Context[expectedId].DefClass.SubClasses[i].SubClass;
+                    Assert.AreEqual(expectedSubClassDef.ToString(), actualSubClassDef.ToString());
+                    Assert.AreEqual(expectedSubClassDef.ClassId, actualSubClassDef.ClassId);
+                    Assert.AreEqual(expectedSubClassDef.IsInherited, actualSubClassDef.IsInherited);
+                    Assert.AreEqual(expectedSubClassDef.IsAbstract, actualSubClassDef.IsAbstract);
                     Assert.AreEqual(expectedObject.SubClass[i].ClassId, actualObject.SubClass[i].ClassId);
                     Assert.AreEqual(expectedObject.SubClass[i].Reference, actualObject.SubClass[i].Reference);
-                    CompareContext(expectedObject.SubClass[i].ClassId,
-                                   actual.GenDataDef.Classes.IndexOf(
-                                       expected.GenDataDef.Classes[expectedObject.SubClass[i].ClassId].Name), expected,
-                                   actual);
+                    CompareContext(expectedSubClassDef.ClassId,
+                                   actualSubClassDef.ClassId, expected, actual);
+                }
+
+                Assert.AreEqual(expectedContext.DefClass.Inheritors.Count, actualContext.DefClass.Inheritors.Count);
+                for (var i = 0; i < actualContext.DefClass.Inheritors.Count; i++)
+                {
+                    var expectedDefInheritor = expectedContext.DefClass.Inheritors[i];
+                    var actualDefInheritor = actualContext.DefClass.Inheritors[i];
+                    Assert.AreEqual(expectedDefInheritor.ClassId, actualDefInheritor.ClassId);
+                    Assert.Less(expectedId, expectedDefInheritor.ClassId);
                 }
                 expected.Next(expectedId); actual.Next(actualId);
             }

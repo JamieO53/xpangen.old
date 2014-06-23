@@ -3,7 +3,6 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Text;
 
 namespace org.xpangen.Generator.Data
 {
@@ -218,6 +217,7 @@ namespace org.xpangen.Generator.Data
                                         Parent = item.Parent,
                                         ClassId = Classes.Count,
                                         IsReference = true,
+                                        IsInherited = item.IsInherited,
                                         RefClassId = item.ClassId,
                                         RefDef = rf,
                                         Reference = sc.Reference,
@@ -232,36 +232,61 @@ namespace org.xpangen.Generator.Data
                     oldItem.RefDef = rf;
                     oldItem.Reference = sc.Reference;
                     oldItem.ReferenceDefinition = sc.ReferenceDefinition;
+                    oldItem.IsInherited = item.IsInherited;
                 }
             }
             for (var k = 1; k < rf.Classes.Count; k++)
             {
                 var item = rf.Classes[k];
-                if (item.SubClasses.Count == 0) continue;
-                var refItem = Classes[Classes.IndexOf(item.Name)];
-                for (var l = 0; l < item.SubClasses.Count; l++)
+                if (item.SubClasses.Count != 0)
                 {
-                    var sub = item.SubClasses[l];
-                    var classId = Classes.IndexOf(sub.SubClass.Name);
-                    
-                    var found = false;
-                    for (var m = 0; m < refItem.SubClasses.Count; m++)
+                    var refItem = Classes[Classes.IndexOf(item.Name)];
+                    for (var l = 0; l < item.SubClasses.Count; l++)
                     {
-                        if (refItem.SubClasses[m].SubClass.ClassId != classId) continue;
-                        found = true;
-                        break;
+                        var sub = item.SubClasses[l];
+                        var classId = Classes.IndexOf(sub.SubClass.Name);
+
+                        var found = false;
+                        for (var m = 0; m < refItem.SubClasses.Count; m++)
+                        {
+                            if (refItem.SubClasses[m].SubClass.ClassId != classId) continue;
+                            found = true;
+                            break;
+                        }
+
+                        if (found) continue;
+
+                        var newSub = new GenDataDefSubClass
+                                         {
+                                             Reference = sc.Reference,
+                                             ReferenceDefinition = sc.ReferenceDefinition,
+                                             SubClass = Classes[classId]
+                                         };
+                        refItem.SubClasses.Add(newSub);
+                        newSub.SubClass.Parent = refItem;
                     }
-                    
-                    if (found) continue;
-                    
-                    var newSub = new GenDataDefSubClass
-                                     {
-                                         Reference = sc.Reference,
-                                         ReferenceDefinition = sc.ReferenceDefinition,
-                                         SubClass = Classes[classId]
-                                     };
-                    refItem.SubClasses.Add(newSub);
-                    newSub.SubClass.Parent = refItem;
+                }
+                if (item.Inheritors.Count != 0)
+                {
+                    var refItem = Classes[Classes.IndexOf(item.Name)];
+                    for (var l = 0; l < item.Inheritors.Count; l++)
+                    {
+                        var inheritor = item.Inheritors[l];
+                        var classId = Classes.IndexOf(inheritor.Name);
+                        
+                        var found = false;
+                        for (var m = 0; m < refItem.Inheritors.Count; m++)
+                        {
+                            if (refItem.Inheritors[m].ClassId != classId) continue;
+                            found = true;
+                            break;
+                        }
+
+                        if (found) continue;
+
+                        refItem.Inheritors.Add(Classes[classId]);
+                        Classes[classId].Parent = refItem;
+                    }
                 }
             }
         }

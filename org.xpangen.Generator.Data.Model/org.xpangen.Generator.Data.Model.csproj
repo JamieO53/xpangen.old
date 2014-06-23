@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>org.xpangen.Generator.Data.Model</RootNamespace>
-    <AssemblyName>org.xpangen.Generator.Data.Model</AssemblyName>
+    <AssemblyName>Generator.Data.Model</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

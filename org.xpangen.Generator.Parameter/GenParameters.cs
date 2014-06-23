@@ -75,15 +75,14 @@ namespace org.xpangen.Generator.Parameter
             var profile = new GenProfileFragment(genDataDef);
             profile.Body.Add(new GenTextFragment(genDataDef, profile));
 
-            ClassProfile(genDataDef, 0, def, profile, profile);
+            ClassDefinition(genDataDef, 0, def);
+            ClassProfile(genDataDef, 0, profile, profile);
             ((GenTextFragment) profile.Body.Fragment[0]).Text = def + ".\r\n";
             return profile;
         }
 
-        private static void ClassProfile(GenDataDef genDataDef, int classId, StringBuilder def,
-                                         GenContainerFragmentBase profile, GenContainerFragmentBase parentSegment)
+        public static void ClassDefinition(GenDataDef genDataDef, int classId, StringBuilder def)
         {
-            GenSegment classProfile = null;
             if (classId != 0)
             {
                 def.Append("Class=" + genDataDef.Classes[classId].Name);
@@ -134,6 +133,46 @@ namespace org.xpangen.Generator.Parameter
                         else
                             def.AppendLine("Field={" + fields + "}");
                 }
+
+                if (genDataDef.Classes[classId].SubClasses.Count == 1)
+                {
+                    def.Append("SubClass=" + genDataDef.Classes[classId].SubClasses[0].SubClass.Name);
+                    if (!String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[0].SubClass.Reference))
+                        def.AppendLine("[Reference='" + genDataDef.Classes[classId].SubClasses[0].SubClass.Reference +
+                                       "']");
+                    else
+                        def.AppendLine();
+                }
+                else if (genDataDef.Classes[classId].SubClasses.Count > 1)
+                {
+                    def.Append("SubClass={" + genDataDef.Classes[classId].SubClasses[0].SubClass.Name);
+                    if (!String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[0].SubClass.Reference))
+                        def.AppendLine("[Reference='" + genDataDef.Classes[classId].SubClasses[0].SubClass.Reference +
+                                       "']");
+                    for (var i = 1; i < genDataDef.Classes[classId].SubClasses.Count; i++)
+                    {
+                        def.Append("," + genDataDef.Classes[classId].SubClasses[i].SubClass.Name);
+                        if (!String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[0].SubClass.Reference))
+                            def.AppendLine("[Reference='" + genDataDef.Classes[classId].SubClasses[0].SubClass.Reference +
+                                           "']");
+                    }
+                    def.AppendLine("}");
+                }
+            }
+
+            for (var i = 0; i < genDataDef.Classes[classId].Inheritors.Count; i++)
+                ClassDefinition(genDataDef, genDataDef.Classes[classId].Inheritors[i].ClassId, def);
+            
+            for (var i = 0; i < genDataDef.Classes[classId].SubClasses.Count; i++)
+                if (String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[i].SubClass.Reference))
+                    ClassDefinition(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.ClassId, def);
+        }
+
+        private static void ClassProfile(GenDataDef genDataDef, int classId, GenContainerFragmentBase profile, GenContainerFragmentBase parentSegment)
+        {
+            GenSegment classProfile = null;
+            if (classId != 0)
+            {
                 classProfile = new GenSegment(genDataDef, genDataDef.Classes[classId].Name,
                                               genDataDef.Classes[classId].IsInherited
                                                   ? GenCardinality.Inheritance
@@ -217,43 +256,26 @@ namespace org.xpangen.Generator.Parameter
                         classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment) {Text = "\r\n"});
                 }
 
-                if (genDataDef.Classes[classId].SubClasses.Count == 1)
-                {
-                    def.Append("SubClass=" + genDataDef.Classes[classId].SubClasses[0].SubClass.Name);
-                    if (!String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[0].SubClass.Reference))
-                        def.AppendLine("[Reference='" + genDataDef.Classes[classId].SubClasses[0].SubClass.Reference +
-                                       "']");
-                    else
-                        def.AppendLine();
-                }
-                else if (genDataDef.Classes[classId].SubClasses.Count > 1)
-                {
-                    def.Append("SubClass={" + genDataDef.Classes[classId].SubClasses[0].SubClass.Name);
-                    if (!String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[0].SubClass.Reference))
-                        def.AppendLine("[Reference='" + genDataDef.Classes[classId].SubClasses[0].SubClass.Reference +
-                                       "']");
-                    for (var i = 1; i < genDataDef.Classes[classId].SubClasses.Count; i++)
-                    {
-                        def.Append("," + genDataDef.Classes[classId].SubClasses[i].SubClass.Name);
-                        if (!String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[0].SubClass.Reference))
-                            def.AppendLine("[Reference='" + genDataDef.Classes[classId].SubClasses[0].SubClass.Reference +
-                                           "']");
-                    }
-                    def.AppendLine("}");
-                }
-
                 profile.Body.Add(classProfile);
             }
 
             for (var i = 0; i < genDataDef.Classes[classId].Inheritors.Count; i++)
-            {
-                ClassProfile(genDataDef, genDataDef.Classes[classId].Inheritors[i].ClassId, def, classProfile ?? profile,
+                ClassProfile(genDataDef, genDataDef.Classes[classId].Inheritors[i].ClassId, classProfile ?? profile,
                              parentSegment);
-            }
 
+            if (!genDataDef.Classes[classId].IsAbstract)
+                SubClassProfiles(genDataDef, classId, profile, parentSegment, classProfile);
+            if (genDataDef.Classes[classId].IsInherited)
+                SubClassProfiles(genDataDef, genDataDef.Classes[classId].Parent.ClassId, profile, parentSegment, classProfile);
+        }
+
+        private static void SubClassProfiles(GenDataDef genDataDef, int classId,
+                                             GenContainerFragmentBase profile, GenContainerFragmentBase parentSegment,
+                                             GenSegment classProfile)
+        {
             for (var i = 0; i < genDataDef.Classes[classId].SubClasses.Count; i++)
                 if (String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[i].SubClass.Reference))
-                    ClassProfile(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.ClassId, def,
+                    ClassProfile(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.ClassId,
                                  classProfile ?? profile, parentSegment);
                 else
                 {
@@ -313,19 +335,39 @@ namespace org.xpangen.Generator.Parameter
                         classId = f.AddClass(className);
                         if (f.Classes.Count == 2)
                             f.AddSubClass("", className);
+                        reader.ScanWhile(ScanReader.WhiteSpace);
+                        if (reader.CheckChar('['))
+                        {
+                            do
+                            {
+                                reader.SkipChar();
+                                reader.ScanWhile(ScanReader.WhiteSpace);
+                                var inheritorClassName = reader.ScanWhile(ScanReader.AlphaNumeric);
+                                f.AddInheritor(className, inheritorClassName);
+                                reader.ScanWhile(ScanReader.WhiteSpace);
+                            } while (reader.CheckChar(','));
+                            if (!reader.CheckChar(']'))
+                                throw new GeneratorException(
+                                    "Definition Error for class " + className + ": ] expected", GenErrorType.Assertion);
+                            reader.SkipChar();
+                        }
                         break;
                     case "Field":
                         reader.ScanWhile(ScanReader.WhiteSpace);
                         if (reader.CheckChar('=')) reader.SkipChar();
                         if (reader.CheckChar('{'))
                         {
-                            while (!reader.CheckChar('}'))
+                            do
                             {
                                 reader.SkipChar();
                                 reader.ScanWhile(ScanReader.WhiteSpace);
                                 var field = reader.ScanWhile(ScanReader.AlphaNumeric);
                                 f.Classes[classId].Properties.Add(field);
-                            }
+                                reader.ScanWhile(ScanReader.WhiteSpace);
+                            } while (reader.CheckChar(','));
+                            if (!reader.CheckChar('}'))
+                                throw new GeneratorException(
+                                    "Definition Error for class " + className + " fields list: } expected", GenErrorType.Assertion);
                             reader.SkipChar();
                         }
                         else
@@ -333,7 +375,6 @@ namespace org.xpangen.Generator.Parameter
                             reader.ScanWhile(ScanReader.WhiteSpace);
                             var field = reader.ScanWhile(ScanReader.AlphaNumeric);
                             f.Classes[classId].Properties.Add(field);
-                            reader.ScanWhile(ScanReader.WhiteSpace);
                         }
                         break;
                     case "SubClass":
@@ -371,10 +412,10 @@ namespace org.xpangen.Generator.Parameter
                 reader.ScanWhile(ScanReader.WhiteSpace);
                 var field = reader.ScanWhile(ScanReader.Identifier);
                 if (!field.Equals("Reference", StringComparison.InvariantCultureIgnoreCase))
-                    throw new ApplicationException("Data definition reference expected: " + field);
+                    throw new GeneratorException("Data definition reference expected: " + field, GenErrorType.Assertion);
                 reader.ScanWhile(ScanReader.WhiteSpace);
                 if (!reader.CheckChar('='))
-                    throw new ApplicationException("Data definition [Reference=definition] expected: " + field);
+                    throw new GeneratorException("Data definition [Reference=definition] expected: " + field, GenErrorType.Assertion);
                 reader.SkipChar();
                 reader.ScanWhile(ScanReader.WhiteSpace);
                 var value = reader.CheckChar('\'')
@@ -383,7 +424,7 @@ namespace org.xpangen.Generator.Parameter
                 f.AddSubClass(className, sub, value);
                 reader.ScanWhile(ScanReader.WhiteSpace);
                 if (!reader.CheckChar(']'))
-                    throw new ApplicationException("Data definition ] expected");
+                    throw new GeneratorException("Data definition ] expected", GenErrorType.Assertion);
                 reader.SkipChar();
             }
             else

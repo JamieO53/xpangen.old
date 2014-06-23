@@ -28,9 +28,12 @@ namespace org.xpangen.Generator.Profile
             {
                 if (_classId != -1)
                     return _classId;
-                return ParentSegment is GenSegment
-                           ? (ParentSegment).ClassId
-                           : (ParentSegment is GenLookup ? ((GenLookup) ParentSegment).ClassId : -1);
+                var classId = ParentSegment is GenSegment
+                                  ? (ParentSegment).ClassId
+                                  : (ParentSegment is GenLookup ? ((GenLookup) ParentSegment).ClassId : -1);
+                if (classId == -1)
+                    throw new GeneratorException("Unable to identify fragment class ID", GenErrorType.Assertion);
+                return classId;
             }
             protected set { _classId = value; }
         }
