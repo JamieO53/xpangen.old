@@ -1,46 +1,43 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 namespace org.xpangen.Generator.Data
 {
     /// <summary>
-    /// The container for navigating generator data.
+    ///     The container for navigating generator data.
     /// </summary>
-    public class GenData
+    public class GenData : GenBase
     {
         /// <summary>
-        /// The class context for automated navigation of the data.
+        ///     The class context for automated navigation of the data.
         /// </summary>
         public GenContext Context { get; private set; }
-        
+
         /// <summary>
-        /// The container of the data.
+        ///     The container of the data.
         /// </summary>
         public GenDataBase GenDataBase { get; private set; }
-        
+
         /// <summary>
-        /// The definition of the data.
+        ///     The definition of the data.
         /// </summary>
-        public GenDataDef GenDataDef { get { return GenDataBase.GenDataDef; } }
-        
+        public GenDataDef GenDataDef
+        {
+            get { return GenDataBase.GenDataDef; }
+        }
+
         /// <summary>
-        /// The name of the data file.
+        ///     The name of the data file.
         /// </summary>
         public string DataName
         {
-            get
-            {
-                return GenDataBase.DataName;
-            } 
-            set
-            {
-                GenDataBase.DataName = value;
-            }
+            get { return GenDataBase.DataName; }
+            set { GenDataBase.DataName = value; }
         }
-        
+
         /// <summary>
-        /// Has the data been changed?
+        ///     Has the data been changed?
         /// </summary>
         public bool Changed
         {
@@ -48,7 +45,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// The root object of the data, is also accessible as Context[0].
+        ///     The root object of the data, is also accessible as Context[0].
         /// </summary>
         public GenObject Root
         {
@@ -56,17 +53,20 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// The cached data references.
+        ///     The cached data references.
         /// </summary>
-        public GenDataReferenceCache Cache { get { return Context.Cache; } }
+        public GenDataReferenceCache Cache
+        {
+            get { return Context.Cache; }
+        }
 
         /// <summary>
-        /// The data loader for reference data.
+        ///     The data loader for reference data.
         /// </summary>
         public static IGenDataLoader DataLoader { get; set; }
 
         /// <summary>
-        /// Create a new <see cref="GenData"/> container for the specified definition.
+        ///     Create a new <see cref="GenData" /> container for the specified definition.
         /// </summary>
         /// <param name="genDataDef">The data definition.</param>
         public GenData(GenDataDef genDataDef) : this(new GenDataBase(genDataDef))
@@ -88,7 +88,7 @@ namespace org.xpangen.Generator.Data
                     foreach (var subClass in parent.SubClasses)
                     {
                         if (subClass.SubClass != GenDataDef.Classes[i]) continue;
-                        
+
                         reference = subClass.Reference ?? "";
                         referenceDefinition = subClass.ReferenceDefinition ?? "";
                         defSubClass = subClass;
@@ -109,10 +109,10 @@ namespace org.xpangen.Generator.Data
             Context[0].SubClassBase.Add(GenDataBase.Root);
             First(0);
         }
-        
+
         /// <summary>
-        /// Create a new object for the named class, and add to the end of the list
-        /// of classes belonging to the current parent class specified.
+        ///     Create a new object for the named class, and add to the end of the list
+        ///     of classes belonging to the current parent class specified.
         /// </summary>
         /// <param name="parentClassName">The name of the parent class.</param>
         /// <param name="className">The name of the class object being created.</param>
@@ -127,8 +127,8 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Establish the first item of the class as the current item for its context, 
-        /// then set all of its subclasses to their first classes.
+        ///     Establish the first item of the class as the current item for its context,
+        ///     then set all of its subclasses to their first classes.
         /// </summary>
         /// <param name="classId">The class whose context is being established.</param>
         public void First(int classId)
@@ -140,8 +140,8 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Establish the next item after the current item of the class as the current item for its context, 
-        /// then set all of its subclasses to their first classes.
+        ///     Establish the next item after the current item of the class as the current item for its context,
+        ///     then set all of its subclasses to their first classes.
         /// </summary>
         /// <param name="classId">The class whose context is being established.</param>
         public void Next(int classId)
@@ -153,8 +153,8 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Establish the last item of the class as the current item for its context, 
-        /// then set all of its subclasses to their first classes.
+        ///     Establish the last item of the class as the current item for its context,
+        ///     then set all of its subclasses to their first classes.
         /// </summary>
         /// <param name="classId">The class whose context is being established.</param>
         public void Last(int classId)
@@ -166,8 +166,8 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Establish the item before the current item of the class as the current item for its context, 
-        /// then set all of its subclasses to their first classes.
+        ///     Establish the item before the current item of the class as the current item for its context,
+        ///     then set all of its subclasses to their first classes.
         /// </summary>
         /// <param name="classId">The class whose context is being established.</param>
         public void Prior(int classId)
@@ -179,7 +179,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Are we at the end of the list of objects of the specified class?
+        ///     Are we at the end of the list of objects of the specified class?
         /// </summary>
         /// <param name="classId">The class being checked.</param>
         /// <returns>The context is at the end of the list.</returns>
@@ -190,7 +190,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Ensure that no object is current for the specified class.
+        ///     Ensure that no object is current for the specified class.
         /// </summary>
         /// <param name="classId">The class being reset.</param>
         public void Reset(int classId)
@@ -221,7 +221,7 @@ namespace org.xpangen.Generator.Data
                 classId = Context[classId].DefClass.Parent.ClassId;
                 Context[classId].Index = Context[inheritedClassId].Index;
             }
-            
+
             if (Context[classId].ReferenceData != null && Context[classId].ReferenceData != this)
             {
                 Context[classId].ReferenceData.Context[Context[classId].RefClassId].Index = Context[classId].Index;
@@ -256,6 +256,7 @@ namespace org.xpangen.Generator.Data
                     }
                     else
                     {
+                        Assert(i < genObject.SubClass.Count, "The object does not have a subclass to set");
                         Context[subClassId].SubClassBase = genObject.SubClass[i];
                         First(subClassId);
                     }
@@ -281,7 +282,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Get the text value for the id.
+        ///     Get the text value for the id.
         /// </summary>
         /// <param name="id">The identifier being looked up.</param>
         /// <returns>The text corresponding to the id.</returns>
@@ -300,7 +301,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Cache the references in GenDataBase
+        ///     Cache the references in GenDataBase
         /// </summary>
         private void CacheReferences()
         {
@@ -314,7 +315,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Load the cache from the data references and loaded data references
+        ///     Load the cache from the data references and loaded data references
         /// </summary>
         public void LoadCache()
         {
@@ -323,7 +324,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Create a new generator data object and duplicate the context.
+        ///     Create a new generator data object and duplicate the context.
         /// </summary>
         /// <returns></returns>
         public GenData DuplicateContext()
@@ -335,7 +336,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Restore the context to that saved before.
+        ///     Restore the context to that saved before.
         /// </summary>
         /// <param name="savedContext">The context being restored.</param>
         public void EstablishContext(GenSavedContext savedContext)
@@ -352,7 +353,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Save the specified context, in the context of the saved parent context.
+        ///     Save the specified context, in the context of the saved parent context.
         /// </summary>
         /// <param name="classId">The class ID being saved.</param>
         /// <param name="parentContext">The saved parent context.</param>
@@ -374,7 +375,7 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        /// Save the specified context.
+        ///     Save the specified context.
         /// </summary>
         /// <param name="classId">The class ID being saved.</param>
         /// <returns>The saved context.</returns>
@@ -386,7 +387,7 @@ namespace org.xpangen.Generator.Data
                 return SaveContext(classId, null);
             return SaveContext(classId, SaveContext(Context[classId].DefClass.Parent.ClassId));
         }
-        
+
         public override string ToString()
         {
             return !string.IsNullOrEmpty(DataName) ? DataName : base.ToString();
@@ -403,8 +404,8 @@ namespace org.xpangen.Generator.Data
 
         public void SetInheritance(int classId)
         {
-            if (!GenDataDef.Classes[classId].IsInherited)
-                throw new GeneratorException("Cannot set inheritance for a non-extension class", GenErrorType.Assertion);
+            Assert(GenDataDef.Classes[classId].IsInherited,
+                   "Cannot set inheritance for a non-extension class");
             var superClassId = GenDataDef.Classes[classId].Parent.ClassId;
             Context[classId].SubClassBase = Context[superClassId].SubClassBase;
             Context[classId].Index = Context[superClassId].Index;

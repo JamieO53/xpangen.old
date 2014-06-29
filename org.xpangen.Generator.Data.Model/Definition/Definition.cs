@@ -28,19 +28,19 @@ namespace org.xpangen.Generator.Data.Model.Definition
             f.AddSubClass("", "Class");
             f.AddSubClass("Class", "SubClass");
             f.AddSubClass("Class", "Property");
-            f.Classes[1].Properties.Add("Name");
-            f.Classes[1].Properties.Add("Title");
-            f.Classes[1].Properties.Add("Inheritance");
-            f.Classes[2].Properties.Add("Name");
-            f.Classes[2].Properties.Add("Reference");
-            f.Classes[2].Properties.Add("Relationship");
-            f.Classes[3].Properties.Add("Name");
-            f.Classes[3].Properties.Add("Title");
-            f.Classes[3].Properties.Add("DataType");
-            f.Classes[3].Properties.Add("Default");
-            f.Classes[3].Properties.Add("LookupType");
-            f.Classes[3].Properties.Add("LookupDependence");
-            f.Classes[3].Properties.Add("LookupTable");
+            f.Classes[1].InstanceProperties.Add("Name");
+            f.Classes[1].InstanceProperties.Add("Title");
+            f.Classes[1].InstanceProperties.Add("Inheritance");
+            f.Classes[2].InstanceProperties.Add("Name");
+            f.Classes[2].InstanceProperties.Add("Reference");
+            f.Classes[2].InstanceProperties.Add("Relationship");
+            f.Classes[3].InstanceProperties.Add("Name");
+            f.Classes[3].InstanceProperties.Add("Title");
+            f.Classes[3].InstanceProperties.Add("DataType");
+            f.Classes[3].InstanceProperties.Add("Default");
+            f.Classes[3].InstanceProperties.Add("LookupType");
+            f.Classes[3].InstanceProperties.Add("LookupDependence");
+            f.Classes[3].InstanceProperties.Add("LookupTable");
             return f;
         }
 
