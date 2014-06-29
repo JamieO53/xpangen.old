@@ -16,6 +16,11 @@ namespace org.xpangen.Generator.Data
         private readonly int _nProperty;
         private readonly int _xSubClass;
         private readonly int _xProperty;
+        private readonly int _xClassName;
+        private readonly int _xSubClassName;
+        private readonly int _xSubClassRelationship;
+        private readonly int _xSubClassReference;
+        private readonly int _xPropertyName;
 
         private GenDataBase GenDataBase { get; set; }
         private GenDataDef GenDataDef { get; set; }
@@ -27,6 +32,11 @@ namespace org.xpangen.Generator.Data
             _nClass = GenDataDef.Classes.IndexOf("Class");
             _nSubClass = GenDataDef.Classes.IndexOf("SubClass");
             _nProperty = GenDataDef.Classes.IndexOf("Property");
+            _xClassName = GenDataDef.Classes[_nClass].Properties.IndexOf("Name");
+            _xSubClassName = GenDataDef.Classes[_nSubClass].Properties.IndexOf("Name");
+            _xSubClassRelationship = GenDataDef.Classes[_nSubClass].Properties.IndexOf("Relationship");
+            _xSubClassReference = GenDataDef.Classes[_nSubClass].Properties.IndexOf("Reference");
+            _xPropertyName = GenDataDef.Classes[_nProperty].Properties.IndexOf("Name");
 
             if (_nClass == -1 || _nSubClass == -1 || _nProperty == -1)
                 return;
@@ -53,33 +63,49 @@ namespace org.xpangen.Generator.Data
             {
                 var sc = c.ParentSubClass;
                 for (var i = 0; i < sc.Count; i++)
-                    AsDefSubClass(f, sc[i], i == 0);
-            }
-        }
+                {
+                    var className = sc[i].Attributes[_xClassName];
+                    if (!f.Classes.Contains(className))
+                    {
+                        if (f.Classes.Count <= 1) f.AddSubClass("", className);
+                        else f.AddClass(className);
+                    }
+                }
 
-        private void AsDefSubClass(GenDataDef data, GenObject classObject, bool first)
-        {
-            var attributes = new GenAttributes(GenDataDef) { GenObject = classObject };
-            var sName = attributes.AsString("Name");
-            if (first)
-                data.AddSubClass("", sName);
-            var iClass = data.AddClass(sName);
+                for (var i = 0; i < sc.Count; i++)
+                {
+                    var className = sc[i].Attributes[_xClassName];
+                    for (var j = 0; j < sc[i].SubClass[_xSubClass].Count; j++)
+                    {
+                        var subClassName = sc[i].SubClass[_xSubClass][j].Attributes[_xSubClassName];
+                        var relationship = _xSubClassRelationship != -1
+                                               ? sc[i].SubClass[_xSubClass][j].Attributes[_xSubClassRelationship]
+                                               : "";
+                        var reference = _xSubClassReference != -1
+                                            ? sc[i].SubClass[_xSubClass][j].Attributes[_xSubClassReference]
+                                            : "";
+                        if (relationship.Equals("Extends", StringComparison.InvariantCultureIgnoreCase))
+                            f.AddInheritor(className, subClassName);
+                        else
+                            f.AddSubClass(className, subClassName, reference);
+                    }
+                }
 
-            var pAttributes = new GenAttributes(GenDataDef);
-            for (var i = 0; i < classObject.SubClass[_xProperty].Count; i++)
-            {
-                pAttributes.GenObject = classObject.SubClass[_xProperty][i];
-                data.Classes[iClass].InstanceProperties.Add(pAttributes.AsString("Name"));
-            }
-
-            var scAttributes = new GenAttributes(GenDataDef);
-            for (var i = 0; i < classObject.SubClass[_xSubClass].Count; i++)
-            {
-                scAttributes.GenObject = classObject.SubClass[_xSubClass][i];
-                if (scAttributes.AsString("Relationship").Equals("Extends", StringComparison.InvariantCultureIgnoreCase))
-                    data.AddInheritor(sName, scAttributes.AsString("Name"));
-                else
-                    data.AddSubClass(sName, scAttributes.AsString("Name"), scAttributes.AsString("Reference"));
+                for (var i = 0; i < sc.Count; i++)
+                {
+                    var className = sc[i].Attributes[_xClassName];
+                    var iClass = f.Classes.IndexOf(className);
+                    var @class = f.Classes[iClass];
+                    for (var j = 0; j < sc[i].SubClass[_xProperty].Count; j++)
+                    {
+                        var name = sc[i].SubClass[_xProperty][j].Attributes[_xPropertyName];
+                        if (!@class.IsInherited || !@class.Parent.Properties.Contains(name))
+                        {
+                            @class.InstanceProperties.Add(name);
+                            @class.Properties.Add(name);
+                        }
+                    }
+                }
             }
         }
     }

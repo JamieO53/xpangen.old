@@ -97,8 +97,10 @@ Child=V2I2Child2
         public void InheritanceDefinitionSetupTest()
         {
             var df = SetUpVirtualDefinition();
-            Assert.AreEqual(VirtualDefinitionProfile, GenDataDefProfile.CreateProfile(df.GenData.AsDef()));
-            CompareGenData(df.GenData, df.GenData.AsDef().AsGenData());
+            var def = df.GenData.AsDef();
+            Assert.AreEqual(VirtualDefinitionProfile, GenDataDefProfile.CreateProfile(def));
+            var data = def.AsGenData();
+            CompareGenData(df.GenData, data);
         }
 
         [TestCase(Description = "Tests the creation of a data profile with inheritance")]
