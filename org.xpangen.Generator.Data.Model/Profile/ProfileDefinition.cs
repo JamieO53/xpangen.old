@@ -30,13 +30,13 @@ namespace org.xpangen.Generator.Data.Model.Profile
             f.AddSubClass("ProfileRoot", "Definition");
             f.AddSubClass("Definition", "Class");
             f.AddSubClass("Fragment", "BodyFragment");
-            f.Classes[1].Properties.Add("Name");
-            f.Classes[1].Properties.Add("Title");
-            f.Classes[2].Properties.Add("Name");
-            f.Classes[2].Properties.Add("Path");
-            f.Classes[3].Properties.Add("Name");
-            f.Classes[3].Properties.Add("FragmentType");
-            f.Classes[4].Properties.Add("Name");
+            f.Classes[1].InstanceProperties.Add("Name");
+            f.Classes[1].InstanceProperties.Add("Title");
+            f.Classes[2].InstanceProperties.Add("Name");
+            f.Classes[2].InstanceProperties.Add("Path");
+            f.Classes[3].InstanceProperties.Add("Name");
+            f.Classes[3].InstanceProperties.Add("FragmentType");
+            f.Classes[4].InstanceProperties.Add("Name");
             return f;
         }
 

@@ -360,7 +360,7 @@ namespace org.xpangen.Generator.Parameter
                                 reader.SkipChar();
                                 reader.ScanWhile(ScanReader.WhiteSpace);
                                 var field = reader.ScanWhile(ScanReader.AlphaNumeric);
-                                f.Classes[classId].Properties.Add(field);
+                                f.Classes[classId].InstanceProperties.Add(field);
                                 reader.ScanWhile(ScanReader.WhiteSpace);
                             } while (reader.CheckChar(','));
                             Assert(reader.CheckChar('}'), "Definition Error for class " + className + " fields list: } expected");
@@ -370,7 +370,7 @@ namespace org.xpangen.Generator.Parameter
                         {
                             reader.ScanWhile(ScanReader.WhiteSpace);
                             var field = reader.ScanWhile(ScanReader.AlphaNumeric);
-                            f.Classes[classId].Properties.Add(field);
+                            f.Classes[classId].InstanceProperties.Add(field);
                         }
                         break;
                     case "SubClass":

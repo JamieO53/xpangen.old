@@ -305,12 +305,12 @@ Child[Reference='child']
         {
             var f = new GenDataDef();
             var parentId = f.AddClass("", "Parent");
-            f.Classes[parentId].Properties.Add("Name");
+            f.Classes[parentId].InstanceProperties.Add("Name");
             var childId = f.AddClass("Parent", "Child");
-            f.Classes[childId].Properties.Add("Name");
-            f.Classes[childId].Properties.Add("Lookup");
+            f.Classes[childId].InstanceProperties.Add("Name");
+            f.Classes[childId].InstanceProperties.Add("Lookup");
             var lookupId = f.AddClass("Parent", "Lookup");
-            f.Classes[lookupId].Properties.Add("Name");
+            f.Classes[lookupId].InstanceProperties.Add("Name");
 
             var a = new GenAttributes(f);
             var d = new GenData(f);
@@ -362,11 +362,11 @@ Child[Reference='child']
             f.AddSubClass("", "Root");
             f.AddSubClass("Root", "ReferenceData");
             f.AddSubClass("Root", "BaseData");
-            f.Classes[f.Classes.IndexOf("Root")].Properties.Add("Name");
-            f.Classes[f.Classes.IndexOf("ReferenceData")].Properties.Add("Name");
-            f.Classes[f.Classes.IndexOf("ReferenceData")].Properties.Add("Value");
-            f.Classes[f.Classes.IndexOf("BaseData")].Properties.Add("Name");
-            f.Classes[f.Classes.IndexOf("BaseData")].Properties.Add("ReferenceKey");
+            f.Classes[f.Classes.IndexOf("Root")].InstanceProperties.Add("Name");
+            f.Classes[f.Classes.IndexOf("ReferenceData")].InstanceProperties.Add("Name");
+            f.Classes[f.Classes.IndexOf("ReferenceData")].InstanceProperties.Add("Value");
+            f.Classes[f.Classes.IndexOf("BaseData")].InstanceProperties.Add("Name");
+            f.Classes[f.Classes.IndexOf("BaseData")].InstanceProperties.Add("ReferenceKey");
             f.AddSubClass("BaseData", "ReferenceLookup", reference);
             return f;
         }
@@ -408,7 +408,7 @@ Child[Reference='child']
             def.Definition = parentClassName;
             def.Cache.Internal(childDefName, defChild);
             def.AddSubClass("", parentClassName);
-            def.Classes[1].Properties.Add("Name");
+            def.Classes[1].InstanceProperties.Add("Name");
             def.AddSubClass(parentClassName, childClassName, childDefName);
             return def;
         }
@@ -428,9 +428,9 @@ Child[Reference='child']
             var def = new GenDataDef();
             def.Definition = parentClassName;
             def.AddSubClass("", parentClassName);
-            def.Classes[1].Properties.Add("Name");
+            def.Classes[1].InstanceProperties.Add("Name");
             def.AddSubClass(parentClassName, childClassName);
-            def.Classes[2].Properties.Add("Name");
+            def.Classes[2].InstanceProperties.Add("Name");
             return def;
         }
 

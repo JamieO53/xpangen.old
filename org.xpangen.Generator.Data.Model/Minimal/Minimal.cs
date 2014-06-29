@@ -28,10 +28,10 @@ namespace org.xpangen.Generator.Data.Model.Minimal
             f.AddSubClass("", "Class");
             f.AddSubClass("Class", "SubClass");
             f.AddSubClass("Class", "Property");
-            f.Classes[1].Properties.Add("Name");
-            f.Classes[2].Properties.Add("Name");
-            f.Classes[2].Properties.Add("Reference");
-            f.Classes[3].Properties.Add("Name");
+            f.Classes[1].InstanceProperties.Add("Name");
+            f.Classes[2].InstanceProperties.Add("Name");
+            f.Classes[2].InstanceProperties.Add("Reference");
+            f.Classes[3].InstanceProperties.Add("Name");
             return f;
         }
 

@@ -131,7 +131,7 @@
             if (!Pseudos.Contains(propertyId)) Pseudos.Add(propertyId);
         }
 
-        internal void CreateInstanceProperties()
+        public void CreateInstanceProperties()
         {
             _instanceProperties = RefDef != null && RefClassId >= 0 && RefClassId < RefDef.Classes.Count
                                       ? RefDef.Classes[RefClassId].InstanceProperties

@@ -59,7 +59,9 @@ namespace org.xpangen.Generator.Data
                 id.PropertyId = c.Properties.IndexOf(propertyName);
                 if (id.PropertyId == -1)
                     if (createIfMissing)
+                    {
                         id.PropertyId = Classes[id.ClassId].Properties.Add(propertyName);
+                    }
                     else if (propertyName.Equals("First", StringComparison.InvariantCultureIgnoreCase))
                     {
                         id.PropertyId = c.Properties.Add("First");
@@ -78,6 +80,8 @@ namespace org.xpangen.Generator.Data
                 throw new Exception("<<<<Unknown Class/Property: " + name + ">>>>");
 
             id.ClassName = Classes[id.ClassId].Name;
+            //Assert(id.ClassId >= 0 && id.ClassId < Classes.Count, "Invalid ClassId in GetId: " + id);
+            //Assert(id.PropertyId >= 0 && id.PropertyId < Classes[id.ClassId].Properties.Count, "Invalid PropertyId in GetId: " + id);
             id.PropertyName = Classes[id.ClassId].Properties[id.PropertyId];
             return id;
         }
@@ -103,12 +107,12 @@ namespace org.xpangen.Generator.Data
             def.AddClass("", "Class");
             def.AddClass("Class", "SubClass");
             def.AddClass("Class", "Property");
-            def.Classes[def.Classes.IndexOf("Class")].Properties.Add("Name");
-            def.Classes[def.Classes.IndexOf("Class")].Properties.Add("Inheritance");
-            def.Classes[def.Classes.IndexOf("SubClass")].Properties.Add("Name");
-            def.Classes[def.Classes.IndexOf("SubClass")].Properties.Add("Reference");
-            def.Classes[def.Classes.IndexOf("SubClass")].Properties.Add("Relationship");
-            def.Classes[def.Classes.IndexOf("Property")].Properties.Add("Name");
+            def.Classes[def.Classes.IndexOf("Class")].InstanceProperties.Add("Name");
+            def.Classes[def.Classes.IndexOf("Class")].InstanceProperties.Add("Inheritance");
+            def.Classes[def.Classes.IndexOf("SubClass")].InstanceProperties.Add("Name");
+            def.Classes[def.Classes.IndexOf("SubClass")].InstanceProperties.Add("Reference");
+            def.Classes[def.Classes.IndexOf("SubClass")].InstanceProperties.Add("Relationship");
+            def.Classes[def.Classes.IndexOf("Property")].InstanceProperties.Add("Name");
         }
 
         public static GenDataDef CreateDefinition()
@@ -124,19 +128,19 @@ namespace org.xpangen.Generator.Data
             def.AddSubClass("", "Class");
             def.AddSubClass("Class", "SubClass");
             def.AddSubClass("Class", "Property");
-            def.Classes[1].Properties.Add("Name");
-            def.Classes[1].Properties.Add("Title");
-            def.Classes[1].Properties.Add("Inheritance");
-            def.Classes[2].Properties.Add("Name");
-            def.Classes[2].Properties.Add("Reference");
-            def.Classes[2].Properties.Add("Relationship");
-            def.Classes[3].Properties.Add("Name");
-            def.Classes[3].Properties.Add("Title");
-            def.Classes[3].Properties.Add("DataType");
-            def.Classes[3].Properties.Add("Default");
-            def.Classes[3].Properties.Add("LookupType");
-            def.Classes[3].Properties.Add("LookupDependence");
-            def.Classes[3].Properties.Add("LookupTable");
+            def.Classes[1].InstanceProperties.Add("Name");
+            def.Classes[1].InstanceProperties.Add("Title");
+            def.Classes[1].InstanceProperties.Add("Inheritance");
+            def.Classes[2].InstanceProperties.Add("Name");
+            def.Classes[2].InstanceProperties.Add("Reference");
+            def.Classes[2].InstanceProperties.Add("Relationship");
+            def.Classes[3].InstanceProperties.Add("Name");
+            def.Classes[3].InstanceProperties.Add("Title");
+            def.Classes[3].InstanceProperties.Add("DataType");
+            def.Classes[3].InstanceProperties.Add("Default");
+            def.Classes[3].InstanceProperties.Add("LookupType");
+            def.Classes[3].InstanceProperties.Add("LookupDependence");
+            def.Classes[3].InstanceProperties.Add("LookupTable");
         }
 
         public GenData AsGenData()
@@ -170,14 +174,11 @@ namespace org.xpangen.Generator.Data
                     a.SetString("Reference", c.SubClasses[j].Reference);
                     a.SaveFields();
                 }
-                for (var j = 0; j < c.Properties.Count; j++)
+                for (var j = 0; j < c.InstanceProperties.Count; j++)
                 {
-                    if (!c.IsInherited || !c.Parent.Properties.Contains(c.Properties[j]))
-                    {
-                        a.GenObject = d.CreateObject("Class", "Property");
-                        a.SetString("Name", c.Properties[j]);
-                        a.SaveFields();
-                    }
+                    a.GenObject = d.CreateObject("Class", "Property");
+                    a.SetString("Name", c.InstanceProperties[j]);
+                    a.SaveFields();
                 }
             }
             return d;
@@ -203,6 +204,7 @@ namespace org.xpangen.Generator.Data
             var i = Classes.IndexOf(className);
             var j = Classes[i].SubClasses.IndexOf(subClassName);
             var sc = Classes[i].SubClasses[j];
+            sc.SubClass.CreateInstanceProperties();
             ParseReference(reference, sc);
             if (!Cache.Contains(sc.ReferenceDefinition))
                 Cache[sc.ReferenceDefinition] = sc.ReferenceDefinition.Equals("minimal",
@@ -216,18 +218,21 @@ namespace org.xpangen.Generator.Data
                 var item = rf.Classes[k];
                 if (!Classes.Contains(rf.Classes[k].Name))
                 {
-                    Classes.Add(new GenDataDefClass
-                                    {
-                                        Name = item.Name,
-                                        Parent = item.Parent,
-                                        ClassId = Classes.Count,
-                                        IsReference = true,
-                                        IsInherited = item.IsInherited,
-                                        RefClassId = item.ClassId,
-                                        RefDef = rf,
-                                        Reference = sc.Reference,
-                                        ReferenceDefinition = sc.ReferenceDefinition
-                                    });
+                    var newClass = new GenDataDefClass
+                                       {
+                                           Name = item.Name,
+                                           Parent = item.Parent,
+                                           ClassId = Classes.Count,
+                                           IsReference = true,
+                                           IsInherited = item.IsInherited,
+                                           RefClassId = item.ClassId,
+                                           RefDef = rf,
+                                           Reference = sc.Reference,
+                                           ReferenceDefinition = sc.ReferenceDefinition
+                                       };
+                    for (var l = 0; l < item.InstanceProperties.Count; l++)
+                        newClass.InstanceProperties.Add(item.InstanceProperties[l]);
+                    Classes.Add(newClass);
                 }
                 else
                 {
@@ -238,6 +243,8 @@ namespace org.xpangen.Generator.Data
                     oldItem.Reference = sc.Reference;
                     oldItem.ReferenceDefinition = sc.ReferenceDefinition;
                     oldItem.IsInherited = item.IsInherited;
+                    for (var l = 0; l < item.InstanceProperties.Count; l++)
+                        oldItem.InstanceProperties.Add(item.InstanceProperties[l]);
                 }
             }
             for (var k = 1; k < rf.Classes.Count; k++)
