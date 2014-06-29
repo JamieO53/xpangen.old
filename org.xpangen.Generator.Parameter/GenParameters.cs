@@ -442,7 +442,7 @@ namespace org.xpangen.Generator.Parameter
                 var subClassIdx = GenDataDef.IndexOfSubClass(0, subClassId);
                 var className = Scan.RecordType;
                 if (subClassIdx != -1)
-                    LoadSubClass(Context[0].GenObject, subClassId, subClassId, subClassIdx);
+                    LoadSubClass(Context[0].GenObject, subClassId, subClassIdx);
                 else
                     // Error: Invalid data type at the global level - skip it
                     while (!Scan.Eof && Scan.RecordType == className)
@@ -468,7 +468,7 @@ namespace org.xpangen.Generator.Parameter
             return baseClassId;
         }
 
-        private void LoadSubClass(GenObject parent, int subClassId, int baseSubClassId, int subClassIdx)
+        private void LoadSubClass(GenObject parent, int baseSubClassId, int subClassIdx)
         {
             Assert(Scan.HasProgressed, "Parameter reader is in a loop");
             while (!Scan.Eof && baseSubClassId == GetBaseClassId(Scan.RecordType))
@@ -478,9 +478,9 @@ namespace org.xpangen.Generator.Parameter
                     var parentSubClass = parent.SubClass[subClassIdx] as GenSubClass;
                     var classId = GetClassId(Scan.RecordType);
                     var child = new GenObject(parent, parentSubClass, classId);
-                    for (var i = 0; i < GenDataDef.Classes[subClassId].Properties.Count; i++)
+                    for (var i = 0; i < GenDataDef.Classes[GetClassId(Scan.RecordType)].Properties.Count; i++)
                     {
-                        var s = Scan.Attribute(GenDataDef.Classes[subClassId].Properties[i]);
+                        var s = Scan.Attribute(GenDataDef.Classes[GetClassId(Scan.RecordType)].Properties[i]);
                         child.Attributes[i] = s;
                     }
                     parent.SubClass[subClassIdx].Add(child);
@@ -490,7 +490,7 @@ namespace org.xpangen.Generator.Parameter
                         int idx;
                         while (!Scan.Eof &&
                                (idx = GenDataDef.IndexOfSubClass(baseSubClassId, GetBaseClassId(Scan.RecordType))) != -1)
-                            LoadSubClass(child, GetClassId(Scan.RecordType), GetBaseClassId(Scan.RecordType), idx);
+                            LoadSubClass(child, GetBaseClassId(Scan.RecordType), idx);
                     }
                 }
                 else

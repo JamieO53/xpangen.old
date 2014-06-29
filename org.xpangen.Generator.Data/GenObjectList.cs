@@ -9,7 +9,6 @@ namespace org.xpangen.Generator.Data
     public class GenObjectList: GenBase
     {
         private ISubClassBase _subClassBase;
-        private int _index;
 
         public GenObjectList ParentList { get; private set; }
 
@@ -117,11 +116,7 @@ namespace org.xpangen.Generator.Data
         /// <summary>
         ///     The index of the currently selected item.
         /// </summary>
-        public int Index
-        {
-            get { return _index; }
-            set { _index = value; }
-        }
+        public int Index { get; set; }
 
         /// <summary>
         ///     The number of items in the list.
@@ -166,7 +161,7 @@ namespace org.xpangen.Generator.Data
                 Index = 0;
                 if (DefClass.IsInherited) SetInheritedIndex();
             }
-            if (!string.IsNullOrEmpty(Reference) && ReferenceData != null) ReferenceData.First(RefClassId);
+            if (!string.IsNullOrEmpty(Reference)) ReferenceData.First(RefClassId);
         }
 
         /// <summary>
@@ -309,7 +304,7 @@ namespace org.xpangen.Generator.Data
                 Index = IndexOf(genObject);
                 return genObject;
             }
-            else return null;
+            return null;
         }
 
         public int IndexOf(GenObject genObject)
