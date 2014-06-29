@@ -1,12 +1,12 @@
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenDataDef
+    public class GenDataDef : GenBase
     {
         public GenDataDefClassList Classes { get; private set; }
         public int CurrentClassId { get; set; }
@@ -76,7 +76,7 @@ namespace org.xpangen.Generator.Data
                 throw new Exception("<<<<Unknown Class: " + name + ">>>>");
             if (id.PropertyId == -1 && className != "")
                 throw new Exception("<<<<Unknown Class/Property: " + name + ">>>>");
-            
+
             id.ClassName = Classes[id.ClassId].Name;
             id.PropertyName = Classes[id.ClassId].Properties[id.PropertyId];
             return id;
@@ -84,7 +84,10 @@ namespace org.xpangen.Generator.Data
 
         public int IndexOfSubClass(int classId, int subClassId)
         {
-            return Classes[classId].SubClasses.IndexOf(subClassId);
+            var idx = Classes[classId].SubClasses.IndexOf(subClassId);
+            if (idx == -1 && Classes[classId].IsInherited)
+                idx = Classes[classId].SubClasses.Count + IndexOfSubClass(Classes[classId].Parent.ClassId, subClassId);
+            return idx;
         }
 
         public static GenDataDef CreateMinimal()
@@ -187,7 +190,7 @@ namespace org.xpangen.Generator.Data
             var sc = Classes[i].SubClasses;
             var k = sc.IndexOf(subClassName);
             if (k == -1)
-                sc.Add(new GenDataDefSubClass { SubClass = Classes[j], Reference = ""});
+                sc.Add(new GenDataDefSubClass {SubClass = Classes[j], Reference = ""});
             Classes[j].Parent = Classes[i];
         }
 
@@ -196,15 +199,17 @@ namespace org.xpangen.Generator.Data
         {
             AddSubClass(className, subClassName);
             if (string.IsNullOrEmpty(reference)) return;
-            
+
             var i = Classes.IndexOf(className);
             var j = Classes[i].SubClasses.IndexOf(subClassName);
             var sc = Classes[i].SubClasses[j];
             ParseReference(reference, sc);
             if (!Cache.Contains(sc.ReferenceDefinition))
-                Cache[sc.ReferenceDefinition] = sc.ReferenceDefinition.Equals("minimal", StringComparison.InvariantCultureIgnoreCase)
-                     ? CreateMinimal()
-                     : GenData.DataLoader.LoadData(sc.ReferenceDefinition).AsDef();
+                Cache[sc.ReferenceDefinition] = sc.ReferenceDefinition.Equals("minimal",
+                                                                              StringComparison
+                                                                                  .InvariantCultureIgnoreCase)
+                                                    ? CreateMinimal()
+                                                    : GenData.DataLoader.LoadData(sc.ReferenceDefinition).AsDef();
             var rf = Cache[sc.ReferenceDefinition];
             for (var k = 1; k < rf.Classes.Count; k++)
             {
@@ -273,7 +278,7 @@ namespace org.xpangen.Generator.Data
                     {
                         var inheritor = item.Inheritors[l];
                         var classId = Classes.IndexOf(inheritor.Name);
-                        
+
                         var found = false;
                         for (var m = 0; m < refItem.Inheritors.Count; m++)
                         {
@@ -309,10 +314,10 @@ namespace org.xpangen.Generator.Data
                 parent.Inheritors.Add(inheritor);
                 inheritor.Parent = parent;
                 inheritor.IsInherited = true;
-                for (var k = 0; k < parent.Properties.Count; k++)
+                for (var k = 0; k < parent.InstanceProperties.Count; k++)
                 {
-                    if (inheritor.Properties.IndexOf(parent.Properties[k]) == -1)
-                        inheritor.Properties.Add(parent.Properties[k]);
+                    if (inheritor.InstanceProperties.IndexOf(parent.Properties[k]) == -1)
+                        inheritor.InstanceProperties.Add(parent.Properties[k]);
                 }
             }
         }
@@ -329,10 +334,10 @@ namespace org.xpangen.Generator.Data
             var i = Classes.IndexOf(className);
             if (i == -1)
             {
-                Classes.Add(new GenDataDefClass{Name = className, ClassId = Classes.Count, RefClassId = Classes.Count });
+                Classes.Add(new GenDataDefClass {Name = className, ClassId = Classes.Count, RefClassId = Classes.Count});
                 i = Classes.IndexOf(className);
             }
-
+            if (i == 0) Classes[0].CreateInstanceProperties();
             return i;
         }
 

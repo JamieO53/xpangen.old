@@ -31,8 +31,7 @@ namespace org.xpangen.Generator.Profile
                 var classId = ParentSegment is GenSegment
                                   ? (ParentSegment).ClassId
                                   : (ParentSegment is GenLookup ? ((GenLookup) ParentSegment).ClassId : -1);
-                if (classId == -1)
-                    throw new GeneratorException("Unable to identify fragment class ID", GenErrorType.Assertion);
+                Assert(classId != -1, "Unable to identify fragment class ID");
                 return classId;
             }
             protected set { _classId = value; }

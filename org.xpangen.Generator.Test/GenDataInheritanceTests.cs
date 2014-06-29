@@ -426,6 +426,7 @@ Container[Reference='TestData\VirtualData']
                                     actualContext.DefSubClass.ToString());
                 var expectedObject = expectedContext.GenObject;
                 var actualObject = actualContext.GenObject;
+                Assert.AreEqual(expectedObject.ClassId, actualObject.ClassId);
                 expectedAttributes.GenObject = expectedObject;
                 actualAttributes.GenObject = actualObject;
                 Assert.GreaterOrEqual(expectedObject.Attributes.Count, actualObject.Attributes.Count);

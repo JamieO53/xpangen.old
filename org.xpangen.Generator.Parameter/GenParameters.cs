@@ -96,15 +96,15 @@ namespace org.xpangen.Generator.Parameter
                         sep = ',';
                     }
                     def.AppendLine("]");
-                    if (genDataDef.Classes[classId].Properties.Count > 0)
+                    if (genDataDef.Classes[classId].InstanceProperties.Count > 0)
                     {
-                        if (genDataDef.Classes[classId].Properties.Count == 1)
-                            def.AppendLine("Field=" + genDataDef.Classes[classId].Properties[0]);
+                        if (genDataDef.Classes[classId].InstanceProperties.Count == 1)
+                            def.AppendLine("Field=" + genDataDef.Classes[classId].InstanceProperties[0]);
                         else
                         {
-                            def.Append("Field={" + genDataDef.Classes[classId].Properties[0]);
-                            for (var i = 1; i < genDataDef.Classes[classId].Properties.Count; i++)
-                                def.Append("," + genDataDef.Classes[classId].Properties[i]);
+                            def.Append("Field={" + genDataDef.Classes[classId].InstanceProperties[0]);
+                            for (var i = 1; i < genDataDef.Classes[classId].InstanceProperties.Count; i++)
+                                def.Append("," + genDataDef.Classes[classId].InstanceProperties[i]);
                             def.AppendLine("}");
                         }
                     }
@@ -115,13 +115,13 @@ namespace org.xpangen.Generator.Parameter
                     var f = new StringBuilder();
                     var sep = "";
                     var defClass = genDataDef.Classes[classId];
-                    for (var i = 0; i < defClass.Properties.Count; i++)
+                    for (var i = 0; i < defClass.InstanceProperties.Count; i++)
                     {
                         if (!defClass.IsInherited ||
-                            defClass.Parent.Properties.IndexOf(defClass.Properties[i]) == -1)
+                            defClass.Parent.InstanceProperties.IndexOf(defClass.InstanceProperties[i]) == -1)
                         {
                             f.Append(sep);
-                            f.Append(defClass.Properties[i]);
+                            f.Append(defClass.InstanceProperties[i]);
                             sep = ",";
                         }
                     }
@@ -346,9 +346,7 @@ namespace org.xpangen.Generator.Parameter
                                 f.AddInheritor(className, inheritorClassName);
                                 reader.ScanWhile(ScanReader.WhiteSpace);
                             } while (reader.CheckChar(','));
-                            if (!reader.CheckChar(']'))
-                                throw new GeneratorException(
-                                    "Definition Error for class " + className + ": ] expected", GenErrorType.Assertion);
+                            Assert(reader.CheckChar(']'), "Definition Error for class " + className + ": ] expected");
                             reader.SkipChar();
                         }
                         break;
@@ -365,9 +363,7 @@ namespace org.xpangen.Generator.Parameter
                                 f.Classes[classId].Properties.Add(field);
                                 reader.ScanWhile(ScanReader.WhiteSpace);
                             } while (reader.CheckChar(','));
-                            if (!reader.CheckChar('}'))
-                                throw new GeneratorException(
-                                    "Definition Error for class " + className + " fields list: } expected", GenErrorType.Assertion);
+                            Assert(reader.CheckChar('}'), "Definition Error for class " + className + " fields list: } expected");
                             reader.SkipChar();
                         }
                         else
@@ -411,11 +407,9 @@ namespace org.xpangen.Generator.Parameter
                 reader.SkipChar();
                 reader.ScanWhile(ScanReader.WhiteSpace);
                 var field = reader.ScanWhile(ScanReader.Identifier);
-                if (!field.Equals("Reference", StringComparison.InvariantCultureIgnoreCase))
-                    throw new GeneratorException("Data definition reference expected: " + field, GenErrorType.Assertion);
+                Assert(field.Equals("Reference", StringComparison.InvariantCultureIgnoreCase), "Data definition reference expected: " + field);
                 reader.ScanWhile(ScanReader.WhiteSpace);
-                if (!reader.CheckChar('='))
-                    throw new GeneratorException("Data definition [Reference=definition] expected: " + field, GenErrorType.Assertion);
+                Assert(reader.CheckChar('='), "Data definition [Reference=definition] expected: " + field);
                 reader.SkipChar();
                 reader.ScanWhile(ScanReader.WhiteSpace);
                 var value = reader.CheckChar('\'')
@@ -423,8 +417,7 @@ namespace org.xpangen.Generator.Parameter
                                 : reader.ScanWhile(ScanReader.Identifier);
                 f.AddSubClass(className, sub, value);
                 reader.ScanWhile(ScanReader.WhiteSpace);
-                if (!reader.CheckChar(']'))
-                    throw new GeneratorException("Data definition ] expected", GenErrorType.Assertion);
+                Assert(reader.CheckChar(']'), "Data definition ] expected");
                 reader.SkipChar();
             }
             else
@@ -445,11 +438,11 @@ namespace org.xpangen.Generator.Parameter
             while (!Scan.Eof)
             {
                 var recordType = Scan.RecordType;
-                var subClassId = GetClassId(recordType);
+                var subClassId = GetBaseClassId(recordType);
                 var subClassIdx = GenDataDef.IndexOfSubClass(0, subClassId);
                 var className = Scan.RecordType;
                 if (subClassIdx != -1)
-                    LoadSubClass(Context[0].GenObject, subClassId, subClassIdx);
+                    LoadSubClass(Context[0].GenObject, subClassId, subClassId, subClassIdx);
                 else
                     // Error: Invalid data type at the global level - skip it
                     while (!Scan.Eof && Scan.RecordType == className)
@@ -461,19 +454,30 @@ namespace org.xpangen.Generator.Parameter
         private int GetClassId(string recordType)
         {
             var classId = GenDataDef.Classes.IndexOf(recordType);
-            if (classId == -1)
-                throw new GeneratorException("Unknown record type: " + recordType, GenErrorType.Assertion);
-            var c = GenDataDef.Classes[classId];
-            return c.IsInherited ? c.Parent.ClassId : classId;
+            Assert(classId != -1, "Unknown record type: " + recordType);
+            return classId;
         }
 
-        private void LoadSubClass(GenObject parent, int subClassId, int subClassIdx)
+        private int GetBaseClassId(string recordType)
         {
-            while (!Scan.Eof && subClassId == GetClassId(Scan.RecordType))
+            var classId = GenDataDef.Classes.IndexOf(recordType);
+            Assert(classId != -1, "Unknown record type: " + recordType);
+            var baseClassId = classId;
+            while (GenDataDef.Classes[baseClassId].IsInherited)
+                baseClassId = GenDataDef.Classes[baseClassId].Parent.ClassId;
+            return baseClassId;
+        }
+
+        private void LoadSubClass(GenObject parent, int subClassId, int baseSubClassId, int subClassIdx)
+        {
+            Assert(Scan.HasProgressed, "Parameter reader is in a loop");
+            while (!Scan.Eof && baseSubClassId == GetBaseClassId(Scan.RecordType))
             {
                 if (Scan.Attribute("Name") != "" || Scan.Attribute("Reference") == "")
                 {
-                    var child = new GenObject(parent, parent.SubClass[subClassIdx] as GenSubClass, subClassId);
+                    var parentSubClass = parent.SubClass[subClassIdx] as GenSubClass;
+                    var classId = GetClassId(Scan.RecordType);
+                    var child = new GenObject(parent, parentSubClass, classId);
                     for (var i = 0; i < GenDataDef.Classes[subClassId].Properties.Count; i++)
                     {
                         var s = Scan.Attribute(GenDataDef.Classes[subClassId].Properties[i]);
@@ -481,12 +485,12 @@ namespace org.xpangen.Generator.Parameter
                     }
                     parent.SubClass[subClassIdx].Add(child);
                     Scan.ScanObject();
-                    if (!Scan.Eof && subClassId != GetClassId(Scan.RecordType))
+                    if (!Scan.Eof && baseSubClassId != GetBaseClassId(Scan.RecordType))
                     {
                         int idx;
                         while (!Scan.Eof &&
-                               (idx = GenDataDef.IndexOfSubClass(subClassId, GetClassId(Scan.RecordType))) != -1)
-                            LoadSubClass(child, GetClassId(Scan.RecordType), idx);
+                               (idx = GenDataDef.IndexOfSubClass(baseSubClassId, GetBaseClassId(Scan.RecordType))) != -1)
+                            LoadSubClass(child, GetClassId(Scan.RecordType), GetBaseClassId(Scan.RecordType), idx);
                     }
                 }
                 else

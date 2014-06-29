@@ -27,6 +27,18 @@ namespace org.xpangen.Generator.Parameter
         private int _index = -1;
         public bool AtEnd { get; private set; }
 
+        public bool HasProgressed
+        {
+            get 
+            {
+                var progress = Progress;
+                Progress = false;
+                return progress;
+            }
+        }
+
+        private bool Progress { get; set; }
+
         public ParameterScanner(string text) : base(text)
         {
         }
@@ -94,6 +106,7 @@ namespace org.xpangen.Generator.Parameter
             }
             else if (CheckChar('['))
                 ScanAttributes();
+            Progress = true;
         }
 
         public string Attribute(string fieldName)

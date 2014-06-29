@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Data
     /// http://joshsmithonwpf.wordpress.com/2007/08/29/a-base-class-which-implements-inotifypropertychanged/
     /// </remarks>
 	[Serializable]
-	public abstract class BindableObject : INotifyPropertyChanged
+	public abstract class BindableObject : GenBase, INotifyPropertyChanged
 	{
 		#region Data
 

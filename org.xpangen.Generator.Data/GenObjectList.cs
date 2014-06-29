@@ -6,7 +6,7 @@ using System;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenObjectList
+    public class GenObjectList: GenBase
     {
         private ISubClassBase _subClassBase;
         private int _index;
@@ -42,46 +42,20 @@ namespace org.xpangen.Generator.Data
                     if (ParentList.Eol) ParentList.First();
                     if (String.IsNullOrEmpty(Reference))
                     {
-                        Assert(
-                            value.ClassId == ClassId || DefClass.IsInherited && value.ClassId == DefClass.Parent.ClassId,
-                            "Object list assignment error",
-                            string.Format("The expected class was {0}({1}) but is {2}({3})",
-                                          GenDataBase.GenDataDef.Classes[ClassId].Name,
-                                          ClassId, GenDataBase.GenDataDef.Classes[value.ClassId].Name,
-                                          value.ClassId));
-                        Assert(
-                            value.Parent == ParentList.GenObject ||
-                            DefClass.IsInherited && value.Parent == ParentList.GenObject.Parent,
-                            "Object list assignment error",
-                            string.Format("The the incorrect subclass is being used for the current parent"));
+                        Assert(value.ClassId == ClassId || DefClass.IsInherited && value.ClassId == DefClass.Parent.ClassId, "Object list assignment error: " + string.Format("The expected class was {0}({1}) but is {2}({3})", GenDataBase.GenDataDef.Classes[ClassId].Name,ClassId, GenDataBase.GenDataDef.Classes[value.ClassId].Name, value.ClassId));
+                        Assert(value.Parent == ParentList.GenObject || DefClass.IsInherited && value.Parent == ParentList.GenObject.Parent, "Object list assignment error:" + string.Format("The the incorrect subclass is being used for the current parent"));
                     }
                     else if (ReferenceData != null)
                     {
                         var refClassId = GetBaseReferenceClassId(RefClassId, ReferenceData);
-                        Assert(value.ClassId == refClassId, "Object list assignment error",
-                               string.Format("The expected class was {0}({1}) but is {2}({3})",
-                                             ReferenceData.GenDataBase.GenDataDef.Classes[RefClassId].Name,
-                                             ReferenceData.Context[refClassId].RefClassId,
-                                             ReferenceData.GenDataBase.GenDataDef.Classes[value.ClassId].Name,
-                                             value.ClassId));
-                        Assert(value.Parent.ClassId == 0 || value.Parent == ParentList.GenObject,
-                               "Object list assignment error",
-                               "The the incorrect subclass is being used for the current parent");
+                        Assert(value.ClassId == refClassId, "Object list assignment error:" + string.Format("The expected class was {0}({1}) but is {2}({3})", ReferenceData.GenDataBase.GenDataDef.Classes[RefClassId].Name, ReferenceData.Context[refClassId].RefClassId, ReferenceData.GenDataBase.GenDataDef.Classes[value.ClassId].Name, value.ClassId));
+                        Assert(value.Parent.ClassId == 0 || value.Parent == ParentList.GenObject, "Object list assignment error:" + "The the incorrect subclass is being used for the current parent");
                         var refGenDataBase = GetBaseReferenceData(RefClassId, ReferenceData);
-                        Assert(value.GenDataBase == refGenDataBase, "Object list assignment error",
-                               string.Format(
-                                   "The assigned object list does not belong to the context generator data: {0} vs {1}",
-                                   value.GenDataBase, ReferenceData.GenDataBase));
+                        Assert(value.GenDataBase == refGenDataBase, "Object list assignment error: " + string.Format("The assigned object list does not belong to the context generator data: {0} vs {1}", value.GenDataBase, ReferenceData.GenDataBase));
                     }
                 }
                 _subClassBase = value;
             }
-        }
-
-        private static void Assert(bool condition, string message, string details)
-        {
-            if (!condition)
-                throw new GeneratorException(message + ": " + details, GenErrorType.Assertion);
         }
 
         private int GetBaseReferenceClassId(int refClassId, GenData referenceData)
