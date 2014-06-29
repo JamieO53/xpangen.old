@@ -220,6 +220,7 @@ namespace org.xpangen.Generator.Data
             {
                 classId = Context[classId].DefClass.Parent.ClassId;
                 Context[classId].Index = Context[inheritedClassId].Index;
+                Context[classId].ReferenceData = Context[inheritedClassId].ReferenceData;
             }
 
             if (Context[classId].ReferenceData != null && Context[classId].ReferenceData != this)
@@ -400,6 +401,7 @@ namespace org.xpangen.Generator.Data
             if (Context[classId].SubClassBase == Context[superClassId].SubClassBase) return;
             Context[classId].SubClassBase = Context[superClassId].SubClassBase;
             Context[classId].Index = Context[superClassId].Index;
+            Context[classId].ReferenceData = Context[superClassId].ReferenceData;
         }
 
         public void SetInheritance(int classId)
@@ -409,6 +411,7 @@ namespace org.xpangen.Generator.Data
             var superClassId = GenDataDef.Classes[classId].Parent.ClassId;
             Context[classId].SubClassBase = Context[superClassId].SubClassBase;
             Context[classId].Index = Context[superClassId].Index;
+            Context[classId].ReferenceData = Context[superClassId].ReferenceData;
         }
     }
 }
