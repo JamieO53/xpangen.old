@@ -231,8 +231,8 @@ namespace org.xpangen.Generator.Test
         {
             var f = new GenDataDef();
             var classId = f.AddClass("", "Class");
-            f.Classes[classId].Properties.Add("Prop1");
-            f.Classes[classId].Properties.Add("Prop2");
+            f.Classes[classId].InstanceProperties.Add("Prop1");
+            f.Classes[classId].InstanceProperties.Add("Prop2");
             var d = new GenData(f);
             var o = d.CreateObject("", "Class");
             var a = new GenAttributes(f) {GenObject = o};
@@ -312,7 +312,7 @@ namespace org.xpangen.Generator.Test
         public void ContextEmptyFirstPropertyExistsTest()
         {
             var f = GenDataDef.CreateMinimal();
-            f.Classes[1].Properties.Add("First");
+            f.Classes[1].InstanceProperties.Add("First");
             var d = new GenData(f);
 
             SetUpData(d);
@@ -324,7 +324,7 @@ namespace org.xpangen.Generator.Test
         public void ContextFirstPropertyExistsWithValueTest()
         {
             var f = GenDataDef.CreateMinimal();
-            var idx = f.Classes[1].Properties.Add("First");
+            var idx = f.Classes[1].InstanceProperties.Add("First");
             var d = new GenData(f);
 
             SetUpData(d);
@@ -360,7 +360,7 @@ namespace org.xpangen.Generator.Test
         public void ContextEmptyReferencePropertyExistsTest()
         {
             var f = GenDataDef.CreateMinimal();
-            f.Classes[1].Properties.Add("Reference");
+            f.Classes[1].InstanceProperties.Add("Reference");
             var d = new GenData(f);
 
             SetUpData(d);
@@ -372,7 +372,7 @@ namespace org.xpangen.Generator.Test
         public void ContextReferencePropertyExistsWithValueTest()
         {
             var f = GenDataDef.CreateMinimal();
-            var idx = f.Classes[1].Properties.Add("Reference");
+            var idx = f.Classes[1].InstanceProperties.Add("Reference");
             var d = new GenData(f);
 
             SetUpData(d);
@@ -385,7 +385,7 @@ namespace org.xpangen.Generator.Test
         public void ContextReferencePropertyExistsWithValueAndReferenceTest()
         {
             var f = GenDataDef.CreateMinimal();
-            var idx = f.Classes[1].Properties.Add("Reference");
+            var idx = f.Classes[1].InstanceProperties.Add("Reference");
             var d = new GenData(f);
 
             SetUpData(d);

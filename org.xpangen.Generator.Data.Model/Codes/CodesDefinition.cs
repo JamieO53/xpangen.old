@@ -27,11 +27,11 @@ namespace org.xpangen.Generator.Data.Model.Codes
             f.Definition = "CodesDefinition";
             f.AddSubClass("", "CodesTable");
             f.AddSubClass("CodesTable", "Code");
-            f.Classes[1].Properties.Add("Name");
-            f.Classes[1].Properties.Add("Title");
-            f.Classes[2].Properties.Add("Name");
-            f.Classes[2].Properties.Add("Description");
-            f.Classes[2].Properties.Add("Value");
+            f.Classes[1].InstanceProperties.Add("Name");
+            f.Classes[1].InstanceProperties.Add("Title");
+            f.Classes[2].InstanceProperties.Add("Name");
+            f.Classes[2].InstanceProperties.Add("Description");
+            f.Classes[2].InstanceProperties.Add("Value");
             return f;
         }
 

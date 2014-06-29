@@ -27,7 +27,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             f.Definition = "`Assembly.Name`";
 `[Class':            f.AddSubClass("", "`Class.Name`");
 `]`[Class:`[SubClass:            f.AddSubClass("`Class.Name`", "`SubClass.Name`");
-`]`]`@Set:`{ClassId`]0`]`[Class:`@Add:`{ClassId`]`]`[Property:            f.Classes[`@Get:`{ClassId`]`]].Properties.Add("`Property.Name`");
+`]`]`@Set:`{ClassId`]0`]`[Class:`@Add:`{ClassId`]`]`[Property:            f.Classes[`@Get:`{ClassId`]`]].InstanceProperties.Add("`Property.Name`");
 `]`]            return f;
         }
 `[Class':
