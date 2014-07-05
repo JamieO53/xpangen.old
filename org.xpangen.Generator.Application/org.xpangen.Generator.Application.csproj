@@ -35,10 +35,6 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GenApplicationBase.cs" />
-    <Compile Include="GenApplicationList.cs" />
-    <Compile Include="GenNamedApplicationBase.cs" />
-    <Compile Include="GenNamedApplicationList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
