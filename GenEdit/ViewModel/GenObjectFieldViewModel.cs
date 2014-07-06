@@ -40,7 +40,7 @@ namespace GenEdit.ViewModel
         {
             IgnorePropertyValidation = true;
             GenAttributes = genAttributes;
-            _name = GenAttributes.Definition.Properties[propertyId];
+            _name = GenAttributes.Properties[propertyId];
             Name = _name;
             if (property != null)
             {

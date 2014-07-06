@@ -23,7 +23,7 @@ namespace org.xpangen.Generator.Test
         {
             var f = GenDataDef.CreateMinimal();
             var d = new GenData(f);
-            var a = new GenAttributes(f);
+            var a = new GenAttributes(f, 1);
             var o = d.CreateObject("", "Class");
             a.GenObject = o;
             a.SetString("Name", "Class");
@@ -235,7 +235,7 @@ namespace org.xpangen.Generator.Test
             f.Classes[classId].InstanceProperties.Add("Prop2");
             var d = new GenData(f);
             var o = d.CreateObject("", "Class");
-            var a = new GenAttributes(f) {GenObject = o};
+            var a = new GenAttributes(f, 1) {GenObject = o};
             a.SetString("Prop1", "Prop1");
             a.SetString("Prop2", "Prop2");
             a.SaveFields();
@@ -249,7 +249,7 @@ namespace org.xpangen.Generator.Test
         public void GenAttributeTests()
         {
             var f = GenDataDef.CreateMinimal();
-            var a = new GenAttributes(f);
+            var a = new GenAttributes(f, 1);
             var d = new GenData(f);
             var o = d.CreateObject("", "Class");
             a.GenObject = o;

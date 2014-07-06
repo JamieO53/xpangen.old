@@ -240,7 +240,7 @@ namespace org.xpangen.Generator.Test
 
             var f = GenDataDef.CreateMinimal();
             f.Classes[ClassClassId].InstanceProperties.Add("Title");
-            var a = new GenAttributes(f);
+            var a = new GenAttributes(f, ClassClassId);
             var d = new GenData(f);
             SetUpData(d);
             d.First(ClassClassId);

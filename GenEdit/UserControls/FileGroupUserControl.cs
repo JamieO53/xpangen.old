@@ -6,7 +6,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using GenEdit.ViewModel;
-using org.xpangen.Generator.Application;
+using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Settings;
 using org.xpangen.Generator.Editor.Helper;
 

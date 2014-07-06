@@ -49,6 +49,7 @@
     <Compile Include="GenDataTests.cs" />
     <Compile Include="GenDataTestsBase.cs" />
     <Compile Include="GenDataToDefConversionTests.cs" />
+    <Compile Include="GenDefinitionTests.cs" />
     <Compile Include="GenEditTests.cs" />
     <Compile Include="GenFragmentTest.cs" />
     <Compile Include="GenParameterTests.cs" />

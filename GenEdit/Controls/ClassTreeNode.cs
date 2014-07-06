@@ -64,7 +64,7 @@ namespace GenEdit.Controls
             SavedContext = GenData.SaveContext(ClassId, ParentNode.SavedContext);
             ClassDef = GenData.GenDataDef.Classes[ClassId];
             Def = ClassId > definition.ClassList.Count ? null : definition.ClassList[ClassId-1];
-            GenAttributes = new GenAttributes(GenData.GenDataDef) {GenObject = GenObject};
+            GenAttributes = new GenAttributes(GenData.GenDataDef, classId) { GenObject = GenObject };
 
             if (ClassDef.Properties.IndexOf("Name") == -1)
                 Text = ClassDef.Name;

@@ -21,7 +21,7 @@ namespace org.xpangen.Generator.Test
         {
             var f = new GenDataDef();
             var d = f.AsGenData(); // Creates from a minimal definition, i.e. Root class, Class class, SubClass class, Properties class and FieldFilter class
-            var a = new GenAttributes(f);
+            var a = new GenAttributes(f, RootClassId);
             Assert.AreEqual(4, d.Context.Count);
             
             Assert.IsFalse(d.Eol(RootClassId));
@@ -48,7 +48,7 @@ namespace org.xpangen.Generator.Test
             var f = new GenDataDef();
             f.AddClass("", "Class");
             var d = f.AsGenData();
-            var a = new GenAttributes(f);
+            var a = new GenAttributes(d.GenDataDef, ClassClassId);
 
             Assert.AreEqual(1, d.Context[RootClassId].GenObject.SubClass.Count);
             d.First(ClassClassId);
@@ -72,7 +72,7 @@ namespace org.xpangen.Generator.Test
             f.AddClass("", "Class");
             f.AddClass("Class", "Property");
             var d = f.AsGenData();
-            var a = new GenAttributes(f);
+            var a = new GenAttributes(d.GenDataDef, SubClassClassId);
 
             Assert.AreEqual(1, d.Context[RootClassId].GenObject.SubClass.Count);
             d.First(ClassClassId);
@@ -107,13 +107,14 @@ namespace org.xpangen.Generator.Test
             var fChild = SetUpParentChildDef("Child", "Grandchild");
             var fParent = SetUpParentChildReferenceDef("Parent", "Child", "ChildDef", fChild);
             var d = fParent.AsGenData();
-            var a = new GenAttributes(fParent);
+            var a = new GenAttributes(fParent, ClassClassId);
 
             Assert.AreEqual(1, d.Context[ClassClassId].Count);
             Assert.AreEqual(1, d.Context[RootClassId].GenObject.SubClass.Count);
             d.First(ClassClassId);
             a.GenObject = d.Context[ClassClassId].GenObject;
             Assert.AreEqual("Parent", a.AsString("Name"));
+            a = new GenAttributes(d.GenDataDef, SubClassClassId);
             a.GenObject = d.Context[SubClassClassId].GenObject;
             Assert.AreEqual("Child", a.AsString("Name"));
             Assert.AreEqual("ChildDef", a.AsString("Reference"));

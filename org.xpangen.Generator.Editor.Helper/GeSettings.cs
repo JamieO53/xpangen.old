@@ -4,7 +4,6 @@
 
 using System.Collections;
 using System.IO;
-using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Settings;
 

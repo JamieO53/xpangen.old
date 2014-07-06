@@ -28,7 +28,7 @@ namespace org.xpangen.Generator.Test
             var c = d.SaveContext(1, null);
             d.First(1);
             c.EstablishContext();
-            var o = new GenAttributes(f) {GenObject = c.GenObject};
+            var o = new GenAttributes(f, c.GenObject.ClassId) { GenObject = c.GenObject };
             Assert.AreEqual("Database schema definition", o.AsString("Title"));
             o.GenObject = d.Context[1].GenObject;
             Assert.AreEqual("Database schema definition", o.AsString("Title"));

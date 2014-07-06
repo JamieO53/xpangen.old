@@ -39,7 +39,7 @@ namespace org.xpangen.Generator.Test
 
             d.First(ClassClassId);
             Assert.AreEqual("Class", d.Context[ClassClassId].GenObject.Attributes[0]);
-            var a = new GenAttributes(f) { GenObject = d.Context[ClassClassId].GenObject };
+            var a = new GenAttributes(f, ClassClassId) { GenObject = d.Context[ClassClassId].GenObject };
             a.SetString("NameLT", "Clasa");
             a.SetString("NameEQ", "Class");
             a.SetString("NameGT", "Clasz");
@@ -66,7 +66,7 @@ namespace org.xpangen.Generator.Test
             f.Classes[PropertyClassId].InstanceProperties.Add("Number");
 
             var d = new GenData(f);
-            var a = new GenAttributes(f);
+            var a = new GenAttributes(f, PropertyClassId);
             SetUpData(d);
 
             d.First(PropertyClassId);
@@ -229,7 +229,7 @@ namespace org.xpangen.Generator.Test
         public static GenData SetUpSegmentSeparatorData(string display)
         {
             var fm = GenDataDef.CreateMinimal();
-            var am = new GenAttributes(fm);
+            var am = new GenAttributes(fm, ClassClassId);
             var dm = new GenData(fm);
             am.GenObject = dm.Context[ClassClassId].CreateObject();
             am.SetString("Name", "TestData");
@@ -242,7 +242,7 @@ namespace org.xpangen.Generator.Test
             am.SetString("Name", "Display");
             am.SaveFields();
             var f = dm.AsDef();
-            var a = new GenAttributes(f);
+            var a = new GenAttributes(f, 1);
             var d = new GenData(f);
             a.GenObject = d.Context[1].CreateObject();
             a.SetString("Name", "One");

@@ -23,8 +23,15 @@ namespace org.xpangen.Generator.Data
                 
                 if (value != null)
                 {
-                    ClassId = value.ClassId;
-                    GenDataDef = value.GenDataBase.GenDataDef;
+                    if (Properties.Count == 0)
+                    {
+                        ClassId = GenObject.ClassId;
+                        var classDef = GenObject.GenDataBase.GenDataDef.Classes[ClassId];
+                        foreach (var property in classDef.Properties)
+                            Properties.Add(property);
+                        foreach (var subClass in classDef.SubClasses)
+                            SubClasses.Add((subClass.SubClass.Name));
+                    }
                     value.GenDataBase.PropertyChanged += OnPropertyChanged;
                 }
 
@@ -41,7 +48,7 @@ namespace org.xpangen.Generator.Data
         {
             if (GenObject != null)
             {
-                var props = GenObject.Properties;
+                var props = Properties;
                 Fields.Clear();
                 Values.Clear();
                 for (var i = 0; i < props.Count; i++)
@@ -51,7 +58,7 @@ namespace org.xpangen.Generator.Data
             {
                 try
                 {
-                    var props = Definition.Properties;
+                    var props = Properties;
                     if (props != null)
                         foreach (var t in props)
                             SetString(t, "");
@@ -65,13 +72,9 @@ namespace org.xpangen.Generator.Data
             Changed = false;
         }
 
-        public GenDataDefClass Definition
-        {
-            get { return GenDataDef.Classes[ClassId]; }
-        }
-
-        public GenDataDef GenDataDef { get; protected set; }
-
+        public NameList Classes { get; private set; }
+        public NameList SubClasses { get; private set; }
+        public NameList Properties { get; private set; }
         public int ClassId { get; private set; }
 
         protected GenAttributes()
@@ -79,11 +82,20 @@ namespace org.xpangen.Generator.Data
             IgnorePropertyValidation = true;
             Fields = new NameList();
             Values = new TextList();
+            Properties = new NameList();
+            Classes = new NameList();
+            SubClasses = new NameList();
         }
 
-        public GenAttributes(GenDataDef genDataDef) : this()
+        public GenAttributes(GenDataDef genDataDef, int classId) : this()
         {
-            GenDataDef = genDataDef;
+            ClassId = classId;
+            foreach (var c in genDataDef.Classes)
+                Classes.Add(c.Name);
+            foreach (var property in genDataDef.Classes[ClassId].Properties)
+                Properties.Add(property);
+            foreach (var sc in genDataDef.Classes[ClassId].SubClasses)
+                SubClasses.Add(sc.SubClass.Name);
         }
 
         public string AsString(string name)
