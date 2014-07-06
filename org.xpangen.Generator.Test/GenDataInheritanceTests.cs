@@ -290,18 +290,18 @@ Container[Reference='TestData\VirtualData']
         {
             var f = SetUpVirtualDefinition().GenData.AsDef();
             var d = new GenData(f) {DataName = "VirtualData"};
-            var container = new GenAttributes(f) {GenObject = d.Context[1].CreateObject()};
+            var container = new GenAttributes(f, 1) {GenObject = d.Context[1].CreateObject()};
             container.SetString("Name", "Container");
             container.SaveFields();
             d.First(1);
             var genObject = d.Context[2].CreateObject();
             genObject.ClassId = 3;
-            var @abstract = new GenAttributes(f) {GenObject = genObject};
+            var @abstract = new GenAttributes(f, 3) {GenObject = genObject};
             @abstract.SetString("Name", "V1Instance1");
             @abstract.SetString("V1Field", "Value 1");
             @abstract.SaveFields();
             d.Last(2);
-            var child = new GenAttributes(f) {GenObject = d.Context[5].CreateObject()};
+            var child = new GenAttributes(f, 5) {GenObject = d.Context[5].CreateObject()};
             child.SetString("Name", "V1I1Child1");
             child.SaveFields();
             child.GenObject = d.Context[5].CreateObject();
@@ -387,7 +387,7 @@ Container[Reference='TestData\VirtualData']
             Assert.IsTrue(File.Exists(VirtualDataFile));
             var f = GenData.DataLoader.LoadData(VirtualParentDefinitionFile).AsDef();
             var d = new GenData(f) { DataName = "VirtualParentData" };
-            var container = new GenAttributes(f) { GenObject = d.Context[1].CreateObject() };
+            var container = new GenAttributes(f, 1) { GenObject = d.Context[1].CreateObject() };
             container.SetString("Name", "Parent");
             container.SaveFields();
             d.First(1);
@@ -407,8 +407,6 @@ Container[Reference='TestData\VirtualData']
         {
             var expectedContext = expected.Context[expectedId];
             var actualContext = actual.Context[actualId];
-            var expectedAttributes = new GenAttributes(expected.GenDataDef);
-            var actualAttributes = new GenAttributes(actual.GenDataDef);
             Assert.AreEqual(expectedContext.ToString(), actualContext.ToString());
             Assert.AreEqual(expectedContext.Count, actualContext.Count, "Class " + expectedId + " objects");
             Assert.AreEqual(expectedContext.ClassId, actualContext.ClassId);
@@ -429,6 +427,8 @@ Container[Reference='TestData\VirtualData']
                 var expectedObject = expectedContext.GenObject;
                 var actualObject = actualContext.GenObject;
                 Assert.AreEqual(expectedObject.ClassId, actualObject.ClassId);
+                var expectedAttributes = new GenAttributes(expected.GenDataDef, expectedObject.ClassId);
+                var actualAttributes = new GenAttributes(actual.GenDataDef, actualObject.ClassId);
                 expectedAttributes.GenObject = expectedObject;
                 actualAttributes.GenObject = actualObject;
                 Assert.GreaterOrEqual(expectedObject.Attributes.Count, actualObject.Attributes.Count);

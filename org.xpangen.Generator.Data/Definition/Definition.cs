@@ -2,18 +2,18 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-namespace org.xpangen.Generator.Data.Model.Minimal
+namespace org.xpangen.Generator.Data.Definition
 {
     /// <summary>
     /// Classes allowing access to generator data for the Definition definition
     /// </summary>
-    public class Minimal : GenApplicationBase
+    public class Definition : GenApplicationBase
     {
-        public Minimal(): this(new GenData(GetDefinition()))
+        public Definition(): this(new GenData(GetDefinition()))
         {
         }
 
-        public Minimal(GenData genData)
+        public Definition(GenData genData)
         {
             GenData = genData;
             base.GenObject = genData.Root;
@@ -22,14 +22,23 @@ namespace org.xpangen.Generator.Data.Model.Minimal
         public static GenDataDef GetDefinition()
         {
             var f = new GenDataDef();
-            f.Definition = "Minimal";
+            f.Definition = "Definition";
             f.AddSubClass("", "Class");
             f.AddSubClass("Class", "SubClass");
             f.AddSubClass("Class", "Property");
             f.Classes[1].InstanceProperties.Add("Name");
+            f.Classes[1].InstanceProperties.Add("Title");
+            f.Classes[1].InstanceProperties.Add("Inheritance");
             f.Classes[2].InstanceProperties.Add("Name");
             f.Classes[2].InstanceProperties.Add("Reference");
+            f.Classes[2].InstanceProperties.Add("Relationship");
             f.Classes[3].InstanceProperties.Add("Name");
+            f.Classes[3].InstanceProperties.Add("Title");
+            f.Classes[3].InstanceProperties.Add("DataType");
+            f.Classes[3].InstanceProperties.Add("Default");
+            f.Classes[3].InstanceProperties.Add("LookupType");
+            f.Classes[3].InstanceProperties.Add("LookupDependence");
+            f.Classes[3].InstanceProperties.Add("LookupTable");
             return f;
         }
 
@@ -40,12 +49,14 @@ namespace org.xpangen.Generator.Data.Model.Minimal
             ClassList = new GenNamedApplicationList<Class>(this);
         }
 
-        public Class AddClass(string name)
+        public Class AddClass(string name, string title = "", string inheritance = "")
         {
             var item = new Class(GenData)
                            {
                                GenObject = GenData.CreateObject("", "Class"),
-                               Name = name
+                               Name = name,
+                               Title = title,
+                               Inheritance = inheritance
                            };
             ClassList.Add(item);
             return item;

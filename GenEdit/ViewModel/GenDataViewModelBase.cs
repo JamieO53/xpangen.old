@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using GenEdit.Controls;
-using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data;
 
 namespace GenEdit.ViewModel

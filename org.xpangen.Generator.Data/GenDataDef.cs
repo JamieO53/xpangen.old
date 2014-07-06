@@ -147,7 +147,7 @@ namespace org.xpangen.Generator.Data
         {
             var f = CreateMinimal();
             var d = new GenData(f) {DataName = Definition};
-            var a = new GenAttributes(f);
+            var a = new GenAttributes(f, 1);
             for (var i = 1; i < Classes.Count; i++)
             {
                 if (!string.IsNullOrEmpty(Classes[i].ReferenceDefinition)) continue;

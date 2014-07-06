@@ -3,7 +3,7 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections;
-using org.xpangen.Generator.Application;
+using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Settings;
 
 namespace org.xpangen.Generator.Editor.Helper

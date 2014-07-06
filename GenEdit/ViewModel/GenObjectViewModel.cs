@@ -3,7 +3,6 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.ObjectModel;
-using org.xpangen.Generator.Application;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Definition;
 
@@ -20,11 +19,10 @@ namespace GenEdit.ViewModel
         {
             get
             {
-                var classId = GenAttributes.GenObject.ClassId;
                 if (_fields == null)
                 {
                     _fields = new ObservableCollection<FieldViewModelBase>();
-                    var n = GenAttributes.GenDataDef.Classes[classId].Properties.Count;
+                    var n = GenAttributes.Properties.Count;
                     var def = Definition as Class;
 
                     for (var i = 0; i < n; i++)
@@ -80,7 +78,7 @@ namespace GenEdit.ViewModel
             SavedContext = savedContext;
             IgnorePropertyValidation = true;
             Definition = definition;
-            GenAttributes = new GenAttributes(genObject.GenDataBase.GenDataDef) {GenObject = genObject};
+            GenAttributes = new GenAttributes(genObject.GenDataBase.GenDataDef, genObject.ClassId) {GenObject = genObject};
             Changed = false;
             IsNew = false;
         }
