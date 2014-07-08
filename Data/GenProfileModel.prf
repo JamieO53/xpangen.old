@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Application;
+using org.xpangen.Generator.Data;
 
 namespace `Assembly.Namespace`.`Assembly.Subfolder`
 {
@@ -19,7 +19,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
         {
             GenData = genData;
             base.GenObject = genData.Root;
-		}
+        }
 
         public static GenDataDef GetDefinition()
         {
@@ -54,7 +54,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Application;
+using org.xpangen.Generator.Data;
 
 namespace `Assembly.Namespace`.`Assembly.Subfolder`
 {
@@ -69,7 +69,8 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
 
         public `Class.Name`(GenData genData)
         {
-			GenData = genData;
+            GenData = genData;`[Property:
+            Properties.Add("`Property.Name`");`]
         }
 
 `[Property:`?Class.Inheritance~:        /// <summary>
@@ -118,7 +119,8 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
 `]`]`]`[SubClass':
         protected override void GenObjectSetNotification()
         {
-`]`[SubClass:`%Class.Name=SubClass.Name:`?Class.Inheritance<>Virtual:            `Class.Name`List = new GenNamedApplicationList<`Class.Name`>(this);
+`]`[SubClass:`%Class.Name=SubClass.Name:`?Class.Inheritance<>Virtual:            base.GenObjectSetNotification();
+            `Class.Name`List = new GenNamedApplicationList<`Class.Name`>(this);
 `]`]`]`[SubClass':        }`]`[SubClass:`@MapSet:`{SubClassName`]`{`SubClass.Name``]`]`%Class.Name=SubClass.Name:`?Class.Inheritance~:
 
         public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])

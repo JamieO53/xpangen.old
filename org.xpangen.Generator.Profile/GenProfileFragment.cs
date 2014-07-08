@@ -17,7 +17,7 @@ namespace org.xpangen.Generator.Profile
         private GenProfileFragment(GenDataDef genDataDef, ProfileDefinition model)
             : base(
                 genDataDef, null, FragmentType.Profile, model.GenData, model.ProfileRootList[0],
-                (GenObject) model.ProfileRootList[0].FragmentList[0].GenObject)
+                (GenObject)model.ProfileRootList[0].FragmentBodyList[0].GenObject)
         {
             Model = model;
             ClassId = 0;
@@ -30,7 +30,8 @@ namespace org.xpangen.Generator.Profile
         {
             var model = new ProfileDefinition();
             var r = model.AddProfileRoot("Profile");
-            r.AddFragment("Profile", "Profile");
+            var b = r.AddFragmentBody("ProfileBody");
+            b.AddProfile("Profile");
             return model;
         }
 

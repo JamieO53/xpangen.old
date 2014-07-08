@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Codes;
-using org.xpangen.Generator.Data.Model.Definition;
+using org.xpangen.Generator.Data.Definition;
 using org.xpangen.Generator.Data.Model.Settings;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;

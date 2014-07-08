@@ -7,7 +7,7 @@ Field={Name,Title,Namespace,Subfolder,ModelLocator,ModelLocatorType,BindingNames
 SubClass=Class[Reference='Definition']
 .
 Solution=Generator[]
-Assembly=Definition[Title='Classes allowing access to generator data for the Definition definition',Namespace='org.xpangen.Generator.Data.Model',Subfolder=Definition]
+Assembly=Definition[Title='Classes allowing access to generator data for the Definition definition',Namespace='org.xpangen.Generator.Data',Subfolder=Definition]
 Class[Reference='Definition']
 Assembly=Minimal[Title='Classes allowing access to generator data for the Definition definition',Namespace='org.xpangen.Generator.Data.Model',Subfolder=Minimal]
 Class[Reference='Minimal']
