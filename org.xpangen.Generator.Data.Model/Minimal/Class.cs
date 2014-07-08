@@ -2,8 +2,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Data;
-
 namespace org.xpangen.Generator.Data.Model.Minimal
 {
     /// <summary>
@@ -17,9 +15,7 @@ namespace org.xpangen.Generator.Data.Model.Minimal
 
         public Class(GenData genData)
         {
-            GenData = genData;
-            Properties.Add("Name");
-            Properties.Add("Inheritance");
+			GenData = genData;
         }
 
         /// <summary>
@@ -36,39 +32,22 @@ namespace org.xpangen.Generator.Data.Model.Minimal
             }
         }
 
-        /// <summary>
-        /// What kind of inheritance do extended subclasses have
-        /// </summary>
-        public string Inheritance
-        {
-            get { return AsString("Inheritance"); }
-            set
-            {
-                if (Inheritance == value) return;
-                SetString("Inheritance", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
         public GenNamedApplicationList<SubClass> SubClassList { get; private set; }
         public GenNamedApplicationList<Property> PropertyList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            base.GenObjectSetNotification();
             SubClassList = new GenNamedApplicationList<SubClass>(this);
-            base.GenObjectSetNotification();
             PropertyList = new GenNamedApplicationList<Property>(this);
         }
 
-        public SubClass AddSubClass(string name, string reference = "", string relationship = "")
+        public SubClass AddSubClass(string name, string reference = "")
         {
             var item = new SubClass(GenData)
                            {
                                GenObject = GenData.CreateObject("Class", "SubClass"),
                                Name = name,
-                               Reference = reference,
-                               Relationship = relationship
+                               Reference = reference
                            };
             SubClassList.Add(item);
             return item;

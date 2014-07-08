@@ -2,8 +2,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Data;
-
 namespace org.xpangen.Generator.Data.Model.Minimal
 {
     /// <summary>
@@ -19,7 +17,7 @@ namespace org.xpangen.Generator.Data.Model.Minimal
         {
             GenData = genData;
             base.GenObject = genData.Root;
-        }
+		}
 
         public static GenDataDef GetDefinition()
         {
@@ -29,10 +27,8 @@ namespace org.xpangen.Generator.Data.Model.Minimal
             f.AddSubClass("Class", "SubClass");
             f.AddSubClass("Class", "Property");
             f.Classes[1].InstanceProperties.Add("Name");
-            f.Classes[1].InstanceProperties.Add("Inheritance");
             f.Classes[2].InstanceProperties.Add("Name");
             f.Classes[2].InstanceProperties.Add("Reference");
-            f.Classes[2].InstanceProperties.Add("Relationship");
             f.Classes[3].InstanceProperties.Add("Name");
             return f;
         }
@@ -42,16 +38,14 @@ namespace org.xpangen.Generator.Data.Model.Minimal
         protected override void GenObjectSetNotification()
         {
             ClassList = new GenNamedApplicationList<Class>(this);
-            Lists.Add("Class", ClassList);
         }
 
-        public Class AddClass(string name, string inheritance = "")
+        public Class AddClass(string name)
         {
             var item = new Class(GenData)
                            {
                                GenObject = GenData.CreateObject("", "Class"),
-                               Name = name,
-                               Inheritance = inheritance
+                               Name = name
                            };
             ClassList.Add(item);
             return item;

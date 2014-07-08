@@ -2,8 +2,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Data;
-
 namespace org.xpangen.Generator.Data.Model.Profile
 {
     /// <summary>
@@ -17,9 +15,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
 
         public ProfileRoot(GenData genData)
         {
-            GenData = genData;
-            Properties.Add("Name");
-            Properties.Add("Title");
+			GenData = genData;
         }
 
         /// <summary>
@@ -50,18 +46,27 @@ namespace org.xpangen.Generator.Data.Model.Profile
             }
         }
 
+        public GenNamedApplicationList<Fragment> FragmentList { get; private set; }
         public GenNamedApplicationList<Definition> DefinitionList { get; private set; }
-        public GenNamedApplicationList<FragmentBody> FragmentBodyList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            base.GenObjectSetNotification();
+            FragmentList = new GenNamedApplicationList<Fragment>(this);
             DefinitionList = new GenNamedApplicationList<Definition>(this);
-            Lists.Add("Definition", DefinitionList);
-            base.GenObjectSetNotification();
-            FragmentBodyList = new GenNamedApplicationList<FragmentBody>(this);
-            Lists.Add("FragmentBody", FragmentBodyList);
         }
+
+        public Fragment AddFragment(string name, string fragmentType = "")
+        {
+            var item = new Fragment(GenData)
+                           {
+                               GenObject = GenData.CreateObject("ProfileRoot", "Fragment"),
+                               Name = name,
+                               FragmentType = fragmentType
+                           };
+            FragmentList.Add(item);
+            return item;
+        }
+
 
         public Definition AddDefinition(string name, string path = "")
         {
@@ -74,18 +79,5 @@ namespace org.xpangen.Generator.Data.Model.Profile
             DefinitionList.Add(item);
             return item;
         }
-
-
-        public FragmentBody AddFragmentBody(string name)
-        {
-            var item = new FragmentBody(GenData)
-                           {
-                               GenObject = GenData.CreateObject("ProfileRoot", "FragmentBody"),
-                               Name = name
-                           };
-            FragmentBodyList.Add(item);
-            return item;
-        }
-
     }
 }

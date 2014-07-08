@@ -2,8 +2,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Data;
-
 namespace org.xpangen.Generator.Data.Model.Database
 {
     /// <summary>
@@ -17,16 +15,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public Parameter(GenData genData)
         {
-            GenData = genData;
-            Properties.Add("Name");
-            Properties.Add("ParameterName");
-            Properties.Add("NativeDataType");
-            Properties.Add("ODBCDataType");
-            Properties.Add("Length");
-            Properties.Add("Precision");
-            Properties.Add("Scale");
-            Properties.Add("IsNullable");
-            Properties.Add("Direction");
+			GenData = genData;
         }
 
         /// <summary>

@@ -2,8 +2,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Data;
-
 namespace org.xpangen.Generator.Data.Model.Database
 {
     /// <summary>
@@ -17,9 +15,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public View(GenData genData)
         {
-            GenData = genData;
-            Properties.Add("Name");
-            Properties.Add("ViewName");
+			GenData = genData;
         }
 
         /// <summary>
@@ -50,6 +46,31 @@ namespace org.xpangen.Generator.Data.Model.Database
             }
         }
 
+        public GenNamedApplicationList<Column> ColumnList { get; private set; }
+
+        protected override void GenObjectSetNotification()
+        {
+            ColumnList = new GenNamedApplicationList<Column>(this);
+        }
+
+        public Column AddColumn(string name, string columnName = "", string nativeDataType = "", string oDBCDataType = "", string length = "", string precision = "", string scale = "", string isNullable = "", string isKey = "")
+        {
+            var item = new Column(GenData)
+                           {
+                               GenObject = GenData.CreateObject("View", "Column"),
+                               Name = name,
+                               ColumnName = columnName,
+                               NativeDataType = nativeDataType,
+                               ODBCDataType = oDBCDataType,
+                               Length = length,
+                               Precision = precision,
+                               Scale = scale,
+                               IsNullable = isNullable,
+                               IsKey = isKey
+                           };
+            ColumnList.Add(item);
+            return item;
+        }
 
     }
 }
