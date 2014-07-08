@@ -2,12 +2,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Data;
-
 namespace org.xpangen.Generator.Data.Model.Minimal
 {
     /// <summary>
-    /// Class to SubClass link
+    /// 
     /// </summary>
     public class SubClass : GenNamedApplicationBase
     {
@@ -17,10 +15,7 @@ namespace org.xpangen.Generator.Data.Model.Minimal
 
         public SubClass(GenData genData)
         {
-            GenData = genData;
-            Properties.Add("Name");
-            Properties.Add("Reference");
-            Properties.Add("Relationship");
+			GenData = genData;
         }
 
         /// <summary>
@@ -47,20 +42,6 @@ namespace org.xpangen.Generator.Data.Model.Minimal
             {
                 if (Reference == value) return;
                 SetString("Reference", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
-        /// SubClass relationship between parent and child
-        /// </summary>
-        public string Relationship
-        {
-            get { return AsString("Relationship"); }
-            set
-            {
-                if (Relationship == value) return;
-                SetString("Relationship", value);
                 if (!DelayedSave) SaveFields();
             }
         }

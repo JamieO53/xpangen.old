@@ -2,8 +2,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Data;
-
 namespace org.xpangen.Generator.Data.Model.Profile
 {
     /// <summary>
@@ -19,64 +17,24 @@ namespace org.xpangen.Generator.Data.Model.Profile
         {
             GenData = genData;
             base.GenObject = genData.Root;
-        }
+		}
 
         public static GenDataDef GetDefinition()
         {
             var f = new GenDataDef();
             f.Definition = "ProfileDefinition";
             f.AddSubClass("", "ProfileRoot");
+            f.AddSubClass("ProfileRoot", "Fragment");
             f.AddSubClass("ProfileRoot", "Definition");
-            f.AddSubClass("ProfileRoot", "FragmentBody");
             f.AddSubClass("Definition", "Class");
-            f.AddSubClass("FragmentBody", "Fragment");
-            f.AddSubClass("Fragment", "Null");
-            f.AddSubClass("Fragment", "Text");
-            f.AddSubClass("Fragment", "Placeholder");
-            f.AddSubClass("Fragment", "Body");
-            f.AddSubClass("Fragment", "Segment");
-            f.AddSubClass("Fragment", "Block");
-            f.AddSubClass("Fragment", "Lookup");
-            f.AddSubClass("Fragment", "Condition");
-            f.AddSubClass("Fragment", "Function");
-            f.AddSubClass("Fragment", "TextBlock");
-            f.AddSubClass("Fragment", "Profile");
+            f.AddSubClass("Fragment", "BodyFragment");
             f.Classes[1].InstanceProperties.Add("Name");
             f.Classes[1].InstanceProperties.Add("Title");
             f.Classes[2].InstanceProperties.Add("Name");
             f.Classes[2].InstanceProperties.Add("Path");
             f.Classes[3].InstanceProperties.Add("Name");
+            f.Classes[3].InstanceProperties.Add("FragmentType");
             f.Classes[4].InstanceProperties.Add("Name");
-            f.Classes[4].InstanceProperties.Add("FragmentType");
-            f.Classes[4].InstanceProperties.Add("Body");
-            f.Classes[5].InstanceProperties.Add("Name");
-            f.Classes[6].InstanceProperties.Add("Name");
-            f.Classes[6].InstanceProperties.Add("TextValue");
-            f.Classes[7].InstanceProperties.Add("Name");
-            f.Classes[7].InstanceProperties.Add("Class");
-            f.Classes[7].InstanceProperties.Add("Property");
-            f.Classes[8].InstanceProperties.Add("Name");
-            f.Classes[9].InstanceProperties.Add("Name");
-            f.Classes[10].InstanceProperties.Add("Name");
-            f.Classes[10].InstanceProperties.Add("Class");
-            f.Classes[10].InstanceProperties.Add("Cardinality");
-            f.Classes[11].InstanceProperties.Add("Name");
-            f.Classes[12].InstanceProperties.Add("Name");
-            f.Classes[12].InstanceProperties.Add("NoMatch");
-            f.Classes[12].InstanceProperties.Add("Class1");
-            f.Classes[12].InstanceProperties.Add("Property1");
-            f.Classes[12].InstanceProperties.Add("Class2");
-            f.Classes[12].InstanceProperties.Add("Property2");
-            f.Classes[13].InstanceProperties.Add("Name");
-            f.Classes[13].InstanceProperties.Add("Class1");
-            f.Classes[13].InstanceProperties.Add("Property1");
-            f.Classes[13].InstanceProperties.Add("Class2");
-            f.Classes[13].InstanceProperties.Add("Property2");
-            f.Classes[13].InstanceProperties.Add("Lit");
-            f.Classes[13].InstanceProperties.Add("UseLit");
-            f.Classes[14].InstanceProperties.Add("Name");
-            f.Classes[14].InstanceProperties.Add("FunctionName");
-            f.Classes[15].InstanceProperties.Add("Name");
             return f;
         }
 

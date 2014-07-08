@@ -2,8 +2,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Data;
-
 namespace org.xpangen.Generator.Data.Model.Database
 {
     /// <summary>
@@ -17,9 +15,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public Procedure(GenData genData)
         {
-            GenData = genData;
-            Properties.Add("Name");
-            Properties.Add("ProcedureName");
+			GenData = genData;
         }
 
         /// <summary>
@@ -50,6 +46,31 @@ namespace org.xpangen.Generator.Data.Model.Database
             }
         }
 
+        public GenNamedApplicationList<Parameter> ParameterList { get; private set; }
+
+        protected override void GenObjectSetNotification()
+        {
+            ParameterList = new GenNamedApplicationList<Parameter>(this);
+        }
+
+        public Parameter AddParameter(string name, string parameterName = "", string nativeDataType = "", string oDBCDataType = "", string length = "", string precision = "", string scale = "", string isNullable = "", string direction = "")
+        {
+            var item = new Parameter(GenData)
+                           {
+                               GenObject = GenData.CreateObject("Procedure", "Parameter"),
+                               Name = name,
+                               ParameterName = parameterName,
+                               NativeDataType = nativeDataType,
+                               ODBCDataType = oDBCDataType,
+                               Length = length,
+                               Precision = precision,
+                               Scale = scale,
+                               IsNullable = isNullable,
+                               Direction = direction
+                           };
+            ParameterList.Add(item);
+            return item;
+        }
 
     }
 }

@@ -59,8 +59,8 @@ namespace org.xpangen.Generator.Profile
             {
                 if (fragment.GenData == null) fragment.GenData = GenData;
                 fragment.GenObject = GenData.CreateObject("ProfileRoot", "Fragment");
-                fragment.Name = fragment.FragmentType.ToString() + ProfileRoot.FragmentBodyList[0].FragmentList.Count;
-                ProfileRoot.FragmentBodyList[0].FragmentList.Add(fragment);
+                fragment.Name = fragment.FragmentType.ToString() + ProfileRoot.FragmentList.Count;
+                ProfileRoot.FragmentList.Add(fragment);
             }
         }
 

@@ -71,9 +71,9 @@ namespace org.xpangen.Generator.Data.Definition
         protected override void GenObjectSetNotification()
         {
             base.GenObjectSetNotification();
-            SubClassList = new GenNamedApplicationList<SubClass>(this);
+            SubClassList = new GenNamedApplicationList<SubClass>(this, 2, 0);
             base.GenObjectSetNotification();
-            PropertyList = new GenNamedApplicationList<Property>(this);
+            PropertyList = new GenNamedApplicationList<Property>(this, 3, 1);
         }
 
         public SubClass AddSubClass(string name, string reference = "", string relationship = "")

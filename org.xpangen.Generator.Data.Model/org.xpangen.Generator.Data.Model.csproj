@@ -50,26 +50,20 @@
     <Compile Include="Database\Function.cs" />
     <Compile Include="Database\Index.cs" />
     <Compile Include="Database\KeyColumn.cs" />
-    <Compile Include="Database\Object.cs" />
     <Compile Include="Database\Parameter.cs" />
     <Compile Include="Database\Procedure.cs" />
     <Compile Include="Database\Schema.cs" />
     <Compile Include="Database\Table.cs" />
     <Compile Include="Database\View.cs" />
+    <Compile Include="Definition\Class.cs" />
+    <Compile Include="Definition\Definition.cs" />
+    <Compile Include="Definition\Property.cs" />
+    <Compile Include="Definition\SubClass.cs" />
     <Compile Include="Minimal\Class.cs" />
     <Compile Include="Minimal\Minimal.cs" />
     <Compile Include="Minimal\Property.cs" />
     <Compile Include="Minimal\SubClass.cs" />
-    <Compile Include="Profile\Block.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Profile\Body.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Profile\BodyFragment.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Profile\Condition.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Profile\Definition.cs">
@@ -78,37 +72,10 @@
     <Compile Include="Profile\Fragment.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Profile\FragmentBody.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Profile\Function.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Profile\Lookup.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Profile\Null.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Profile\Placeholder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Profile\Profile.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Profile\ProfileDefinition.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Profile\ProfileRoot.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Profile\Segment.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Profile\Text.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Profile\TextBlock.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
