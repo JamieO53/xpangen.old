@@ -2,6 +2,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using org.xpangen.Generator.Data;
+
 namespace org.xpangen.Generator.Data.Model.Settings
 {
     /// <summary>
@@ -15,7 +17,12 @@ namespace org.xpangen.Generator.Data.Model.Settings
 
         public BaseFile(GenData genData)
         {
-			GenData = genData;
+            GenData = genData;
+            Properties.Add("Name");
+            Properties.Add("FileName");
+            Properties.Add("FilePath");
+            Properties.Add("Title");
+            Properties.Add("FileExtension");
         }
 
         /// <summary>
@@ -92,6 +99,7 @@ namespace org.xpangen.Generator.Data.Model.Settings
 
         protected override void GenObjectSetNotification()
         {
+            base.GenObjectSetNotification();
             ProfileList = new GenNamedApplicationList<Profile>(this);
         }
 

@@ -4,7 +4,7 @@
 
 using System.Collections.ObjectModel;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Model.Definition;
+using org.xpangen.Generator.Data.Definition;
 
 namespace GenEdit.ViewModel
 {

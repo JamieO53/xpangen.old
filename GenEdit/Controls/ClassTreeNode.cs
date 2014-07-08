@@ -1,6 +1,6 @@
 ﻿using GenEdit.ViewModel;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Model.Definition;
+using org.xpangen.Generator.Data.Definition;
 using org.xpangen.Generator.Editor.Helper;
 
 namespace GenEdit.Controls

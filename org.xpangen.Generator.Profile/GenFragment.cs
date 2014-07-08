@@ -72,7 +72,7 @@ namespace org.xpangen.Generator.Profile
             ParentSegment = parentSegment;
             ProfileRoot = profileRoot ?? (ParentSegment != null ? ParentSegment.ProfileRoot : null);
             FragmentType = fragmentType;
-            GenObject = genObject ?? (ProfileRoot != null ? ProfileRoot.AddFragment(FragmentType.ToString() + ProfileRoot.FragmentList.Count).GenObject : null);
+            GenObject = genObject ?? (ProfileRoot != null ? ProfileRoot.FragmentBodyList[0].AddNull(FragmentType.ToString() + ProfileRoot.FragmentBodyList[0].FragmentList.Count).GenObject : null);
         }
 
         public ProfileRoot ProfileRoot { get; set; }

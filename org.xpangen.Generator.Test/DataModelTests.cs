@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using NUnit.Framework;
-using org.xpangen.Generator.Data.Model.Definition;
+using org.xpangen.Generator.Data.Definition;
 using org.xpangen.Generator.Parameter;
 
 namespace org.xpangen.Generator.Test

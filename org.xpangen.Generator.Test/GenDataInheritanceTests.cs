@@ -5,7 +5,7 @@
 using System.IO;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Model.Definition;
+using org.xpangen.Generator.Data.Definition;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;

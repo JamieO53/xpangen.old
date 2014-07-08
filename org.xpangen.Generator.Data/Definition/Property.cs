@@ -2,6 +2,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using org.xpangen.Generator.Data;
+
 namespace org.xpangen.Generator.Data.Definition
 {
     /// <summary>
@@ -15,7 +17,14 @@ namespace org.xpangen.Generator.Data.Definition
 
         public Property(GenData genData)
         {
-			GenData = genData;
+            GenData = genData;
+            Properties.Add("Name");
+            Properties.Add("Title");
+            Properties.Add("DataType");
+            Properties.Add("Default");
+            Properties.Add("LookupType");
+            Properties.Add("LookupDependence");
+            Properties.Add("LookupTable");
         }
 
         /// <summary>

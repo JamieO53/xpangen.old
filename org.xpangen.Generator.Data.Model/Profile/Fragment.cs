@@ -2,6 +2,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using org.xpangen.Generator.Data;
+
 namespace org.xpangen.Generator.Data.Model.Profile
 {
     /// <summary>
@@ -15,21 +17,10 @@ namespace org.xpangen.Generator.Data.Model.Profile
 
         public Fragment(GenData genData)
         {
-			GenData = genData;
-        }
-
-        /// <summary>
-        /// Generated name of the fragment
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
+            GenData = genData;
+            Properties.Add("Name");
+            Properties.Add("FragmentType");
+            Properties.Add("Body");
         }
 
         /// <summary>
@@ -46,22 +37,23 @@ namespace org.xpangen.Generator.Data.Model.Profile
             }
         }
 
-        public GenNamedApplicationList<BodyFragment> BodyFragmentList { get; private set; }
+        /// <summary>
+        /// The body that contains the container fragment's fragments
+        /// </summary>
+        public string Body
+        {
+            get { return AsString("Body"); }
+            set
+            {
+                if (Body == value) return;
+                SetString("Body", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
 
         protected override void GenObjectSetNotification()
         {
-            BodyFragmentList = new GenNamedApplicationList<BodyFragment>(this);
-        }
-
-        public BodyFragment AddBodyFragment(string name)
-        {
-            var item = new BodyFragment(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Fragment", "BodyFragment"),
-                               Name = name
-                           };
-            BodyFragmentList.Add(item);
-            return item;
         }
     }
 }

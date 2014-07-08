@@ -4,7 +4,7 @@
 
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Model.Definition;
+using org.xpangen.Generator.Data.Definition;
 
 namespace org.xpangen.Generator.Test
 {
