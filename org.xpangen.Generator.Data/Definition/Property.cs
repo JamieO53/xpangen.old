@@ -13,11 +13,6 @@ namespace org.xpangen.Generator.Data.Definition
     {
         public Property()
         {
-        }
-
-        public Property(GenData genData)
-        {
-            GenData = genData;
             Properties.Add("Name");
             Properties.Add("Title");
             Properties.Add("DataType");
@@ -25,6 +20,11 @@ namespace org.xpangen.Generator.Data.Definition
             Properties.Add("LookupType");
             Properties.Add("LookupDependence");
             Properties.Add("LookupTable");
+        }
+
+        public Property(GenData genData) : this()
+        {
+            GenData = genData;
         }
 
         /// <summary>

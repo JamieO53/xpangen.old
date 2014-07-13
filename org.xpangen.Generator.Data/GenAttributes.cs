@@ -11,6 +11,7 @@ namespace org.xpangen.Generator.Data
     public class GenAttributes : BindableObject
     {
         private IGenObject _genObject;
+        private NameList _classes;
         private NameList Fields { get; set; }
         private TextList Values { get; set; }
         public bool Changed { get; private set; }
@@ -26,11 +27,14 @@ namespace org.xpangen.Generator.Data
                     if (Properties.Count == 0)
                     {
                         ClassId = GenObject.ClassId;
-                        var classDef = GenObject.GenDataBase.GenDataDef.Classes[ClassId];
-                        foreach (var property in classDef.Properties)
-                            Properties.Add(property);
-                        foreach (var subClass in classDef.SubClasses)
-                            SubClasses.Add((subClass.SubClass.Name));
+                        if (GenObject.GenDataBase.GenDataDef != null)
+                        {
+                            var classDef = GenObject.GenDataBase.GenDataDef.Classes[ClassId];
+                            foreach (var property in classDef.Properties)
+                                Properties.Add(property);
+                            foreach (var subClass in classDef.SubClasses)
+                                SubClasses.Add((subClass.SubClass.Name));
+                        }
                     }
                     value.GenDataBase.PropertyChanged += OnPropertyChanged;
                 }
@@ -72,7 +76,12 @@ namespace org.xpangen.Generator.Data
             Changed = false;
         }
 
-        public NameList Classes { get; private set; }
+        public NameList Classes
+        {
+            get { return _classes ?? new NameList(); }
+            set { _classes = value; }
+        }
+
         public NameList SubClasses { get; private set; }
         public NameList Properties { get; private set; }
         public int ClassId { get; private set; }
@@ -83,7 +92,6 @@ namespace org.xpangen.Generator.Data
             Fields = new NameList();
             Values = new TextList();
             Properties = new NameList();
-            Classes = new NameList();
             SubClasses = new NameList();
         }
 

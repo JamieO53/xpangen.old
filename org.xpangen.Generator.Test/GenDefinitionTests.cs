@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Definition;
+using org.xpangen.Generator.Parameter;
 
 namespace org.xpangen.Generator.Test
 {
@@ -22,7 +19,25 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Class", def.ClassList[0].Name);
             Assert.AreEqual("SubClass", def.ClassList[1].Name);
             Assert.AreEqual("Property", def.ClassList[2].Name);
-            CompareGenDataDef(GenDataDef.CreateDefinition(), def.GenData.AsDef(), "Definition ");
+            CompareGenDataBase(GenData.DataLoader.LoadData("Data/Definition").GenDataBase, def.GenData.GenDataBase);
+        }
+
+        /// <summary>
+        /// Set up the Generator data definition tests
+        /// </summary>
+        [TestFixtureSetUp]
+        public void SetUp()
+        {
+            GenDataLoader.Register();
+        }
+
+        /// <summary>
+        /// Tear down the Generator data definition tests
+        /// </summary>
+        [TestFixtureTearDown]
+        public void TearDown()
+        {
+
         }
     }
 }

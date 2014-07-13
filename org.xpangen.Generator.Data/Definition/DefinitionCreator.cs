@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace org.xpangen.Generator.Data.Definition
+﻿namespace org.xpangen.Generator.Data.Definition
 {
     public static class DefinitionCreator
     {
 
         public static Definition Create()
         {
-            var def = new Definition();
-            var d = new GenData(GenDataDef.CreateDefinition()) { DataName = "Definition" };
+            //var d = new GenData(GenDataDef.CreateDefinition()) { DataName = "Definition" };
+            var d = new GenData(null) { DataName = "Definition" };
             var b = d.GenDataBase;
             var root = b.Root;
+            root.SubClass.Add(new GenSubClass(b, root, 1, null));
 
             var @class = CreateDefinitionClass(root, "Class", "Class Definition", "", b);
             CreateDefinitionSubClass(@class, "SubClass", "", "");
@@ -48,7 +44,7 @@ namespace org.xpangen.Generator.Data.Definition
             CreateDefinitionProperty(property, "LookupTable", "The lookup table used for the property's values",
                                      "String", "", "Standard", "LookupType", "LookupTablesX");
 
-            return def;
+            return new Definition(d);
         }
 
         private static GenObject CreateDefinitionClass(GenObject root, string name, string title, string inheritance,

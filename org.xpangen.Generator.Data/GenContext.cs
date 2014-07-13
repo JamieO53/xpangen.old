@@ -41,11 +41,11 @@ namespace org.xpangen.Generator.Data
         public void Add(GenObjectList item, GenDataDefClass defClass, GenDataBase genDataBase, string reference,
                         string referenceDefinition, GenDataDefSubClass defSubClass)
         {
-            if (defClass.ClassId != 0 && this[0].Count > 0 && this[0].Index == -1) this[0].Index = 0;
+            if (defClass != null && defClass.ClassId != 0 && this[0].Count > 0 && this[0].Index == -1) this[0].Index = 0;
             GenObjectList myList;
             if (item != null) myList = item;
             else if (reference == "")
-                myList = new GenObjectList(new GenSubClass(genDataBase, null, defClass.ClassId,
+                myList = new GenObjectList(new GenSubClass(genDataBase, null, defClass == null ? 0 : defClass.ClassId,
                                                                  new GenDataDefSubClass
                                                                      {
                                                                          SubClass = defClass,
@@ -55,15 +55,15 @@ namespace org.xpangen.Generator.Data
                                                                      }), genDataBase,
                                            Count == 0
                                                ? null
-                                               : this[defClass.Parent == null ? 0 : defClass.Parent.ClassId],
+                                               : this[defClass == null || defClass.Parent == null ? 0 : defClass.Parent.ClassId],
                                            defSubClass)
                              {
-                                 RefClassId = defClass.RefClassId,
-                                 ClassId = defClass.ClassId,
+                                 RefClassId = defClass == null ? 0 : defClass.RefClassId,
+                                 ClassId = defClass == null ? 0 : defClass.ClassId,
                                  Reference = reference
                              };
             else
-                myList = new GenObjectList(new SubClassReference(genDataBase, null, defClass.ClassId,
+                myList = new GenObjectList(new SubClassReference(genDataBase, null, defClass == null ? 0 : defClass.ClassId,
                                                                       new GenDataDefSubClass
                                                                           {
                                                                               SubClass = defClass,
@@ -73,11 +73,11 @@ namespace org.xpangen.Generator.Data
                                                                           }), genDataBase,
                                            Count == 0
                                                ? null
-                                               : this[defClass.Parent == null ? 0 : defClass.Parent.ClassId],
+                                               : this[defClass == null || defClass.Parent == null ? 0 : defClass.Parent.ClassId],
                                            defSubClass)
                              {
-                                 RefClassId = defClass.RefClassId,
-                                 ClassId = defClass.ClassId,
+                                 RefClassId = defClass == null ? 0 : defClass.RefClassId,
+                                 ClassId = defClass == null ? 0 : defClass.ClassId,
                                  Reference = reference
                              };
             Add(myList);

@@ -57,6 +57,7 @@
     <Compile Include="GenProfileFragmentsTestBase.cs" />
     <Compile Include="GenCompactProfileScannerTest.cs" />
     <Compile Include="GenCompactProfileTest.cs" />
+    <Compile Include="NewGenProfileFragmentTests.cs" />
     <Compile Include="ProfileDataTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScannerTest.cs">

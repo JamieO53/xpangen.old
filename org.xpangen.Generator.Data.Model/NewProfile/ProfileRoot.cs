@@ -2,9 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Data;
-
-namespace org.xpangen.Generator.Data.Model.Profile
+namespace org.xpangen.Generator.Data.Model.NewProfile
 {
     /// <summary>
     /// The root node of the profile
@@ -51,14 +49,14 @@ namespace org.xpangen.Generator.Data.Model.Profile
         }
 
         public GenNamedApplicationList<Definition> DefinitionList { get; private set; }
-        public GenNamedApplicationList<Profile> ProfileList { get; private set; }
+        public GenNamedApplicationList<NewProfile.Profile> ProfileList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
             base.GenObjectSetNotification();
             DefinitionList = new GenNamedApplicationList<Definition>(this);
             base.GenObjectSetNotification();
-            ProfileList = new GenNamedApplicationList<Profile>(this);
+            ProfileList = new GenNamedApplicationList<NewProfile.Profile>(this);
         }
 
         public Definition AddDefinition(string name, string path = "")
@@ -74,9 +72,9 @@ namespace org.xpangen.Generator.Data.Model.Profile
         }
 
 
-        public Profile AddProfile(string name)
+        public NewProfile.Profile AddProfile(string name)
         {
-            var item = new Profile(GenData)
+            var item = new NewProfile.Profile(GenData)
                            {
                                GenObject = GenData.CreateObject("ProfileRoot", "Profile"),
                                Name = name
