@@ -5,17 +5,20 @@
 namespace org.xpangen.Generator.Data.Model.Minimal
 {
     /// <summary>
-    /// 
+    /// Class to SubClass link
     /// </summary>
     public class SubClass : GenNamedApplicationBase
     {
         public SubClass()
         {
+            Properties.Add("Name");
+            Properties.Add("Reference");
+            Properties.Add("Relationship");
         }
 
-        public SubClass(GenData genData)
+        public SubClass(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -42,6 +45,20 @@ namespace org.xpangen.Generator.Data.Model.Minimal
             {
                 if (Reference == value) return;
                 SetString("Reference", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+        /// <summary>
+        /// SubClass relationship between parent and child
+        /// </summary>
+        public string Relationship
+        {
+            get { return AsString("Relationship"); }
+            set
+            {
+                if (Relationship == value) return;
+                SetString("Relationship", value);
                 if (!DelayedSave) SaveFields();
             }
         }

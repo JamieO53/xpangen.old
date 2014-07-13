@@ -11,14 +11,14 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
     {
         public Segment()
         {
-        }
-
-        public Segment(GenData genData)
-        {
-            GenData = genData;
             Properties.Add("Name");
             Properties.Add("Class");
             Properties.Add("Cardinality");
+        }
+
+        public Segment(GenData genData) : this()
+        {
+            GenData = genData;
         }
 
         /// <summary>

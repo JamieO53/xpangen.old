@@ -16,6 +16,22 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
         public ProfileDefinition(GenData genData)
         {
             GenData = genData;
+            Classes.Add("ProfileRoot");
+            Classes.Add("Definition");
+            Classes.Add("Profile");
+            Classes.Add("FragmentBody");
+            Classes.Add("Fragment");
+            Classes.Add("Null");
+            Classes.Add("Text");
+            Classes.Add("Placeholder");
+            Classes.Add("ContainerFragment");
+            Classes.Add("Segment");
+            Classes.Add("Block");
+            Classes.Add("Lookup");
+            Classes.Add("Condition");
+            Classes.Add("Function");
+            Classes.Add("TextBlock");
+            SubClasses.Add("ProfileRoot");
             base.GenObject = genData.Root;
         }
 
@@ -46,7 +62,6 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
             f.Classes[3].InstanceProperties.Add("Name");
             f.Classes[4].InstanceProperties.Add("Name");
             f.Classes[5].InstanceProperties.Add("Name");
-            f.Classes[5].InstanceProperties.Add("FragmentType");
             f.Classes[6].InstanceProperties.Add("Name");
             f.Classes[7].InstanceProperties.Add("Name");
             f.Classes[7].InstanceProperties.Add("TextValue");
@@ -67,6 +82,7 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
             f.Classes[13].InstanceProperties.Add("Name");
             f.Classes[13].InstanceProperties.Add("Class1");
             f.Classes[13].InstanceProperties.Add("Property1");
+            f.Classes[13].InstanceProperties.Add("Comparison");
             f.Classes[13].InstanceProperties.Add("Class2");
             f.Classes[13].InstanceProperties.Add("Property2");
             f.Classes[13].InstanceProperties.Add("Lit");
@@ -81,7 +97,7 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
 
         protected override void GenObjectSetNotification()
         {
-            ProfileRootList = new GenNamedApplicationList<ProfileRoot>(this);
+            ProfileRootList = new GenNamedApplicationList<ProfileRoot>(this, 1, 0);
         }
 
         public ProfileRoot AddProfileRoot(string name, string title = "")

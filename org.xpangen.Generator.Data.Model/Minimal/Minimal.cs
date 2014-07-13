@@ -16,8 +16,12 @@ namespace org.xpangen.Generator.Data.Model.Minimal
         public Minimal(GenData genData)
         {
             GenData = genData;
+            Classes.Add("Class");
+            Classes.Add("SubClass");
+            Classes.Add("Property");
+            SubClasses.Add("Class");
             base.GenObject = genData.Root;
-		}
+        }
 
         public static GenDataDef GetDefinition()
         {
@@ -27,8 +31,10 @@ namespace org.xpangen.Generator.Data.Model.Minimal
             f.AddSubClass("Class", "SubClass");
             f.AddSubClass("Class", "Property");
             f.Classes[1].InstanceProperties.Add("Name");
+            f.Classes[1].InstanceProperties.Add("Inheritance");
             f.Classes[2].InstanceProperties.Add("Name");
             f.Classes[2].InstanceProperties.Add("Reference");
+            f.Classes[2].InstanceProperties.Add("Relationship");
             f.Classes[3].InstanceProperties.Add("Name");
             return f;
         }
@@ -37,15 +43,16 @@ namespace org.xpangen.Generator.Data.Model.Minimal
 
         protected override void GenObjectSetNotification()
         {
-            ClassList = new GenNamedApplicationList<Class>(this);
+            ClassList = new GenNamedApplicationList<Class>(this, 1, 0);
         }
 
-        public Class AddClass(string name)
+        public Class AddClass(string name, string inheritance = "")
         {
             var item = new Class(GenData)
                            {
                                GenObject = GenData.CreateObject("", "Class"),
-                               Name = name
+                               Name = name,
+                               Inheritance = inheritance
                            };
             ClassList.Add(item);
             return item;

@@ -11,11 +11,17 @@ namespace org.xpangen.Generator.Data.Model.Database
     {
         public Index()
         {
+            SubClasses.Add("KeyColumn");
+            SubClasses.Add("DataColumn");
+            Properties.Add("Name");
+            Properties.Add("IsPrimaryKey");
+            Properties.Add("IsUnique");
+            Properties.Add("IsClusterKey");
         }
 
-        public Index(GenData genData)
+        public Index(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -79,8 +85,10 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         protected override void GenObjectSetNotification()
         {
-            KeyColumnList = new GenNamedApplicationList<KeyColumn>(this);
-            DataColumnList = new GenNamedApplicationList<DataColumn>(this);
+            base.GenObjectSetNotification();
+            KeyColumnList = new GenNamedApplicationList<KeyColumn>(this, 11, 0);
+            base.GenObjectSetNotification();
+            DataColumnList = new GenNamedApplicationList<DataColumn>(this, 12, 1);
         }
 
         public KeyColumn AddKeyColumn(string name, string order = "")

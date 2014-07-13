@@ -11,11 +11,14 @@ namespace org.xpangen.Generator.Data.Model.Database
     {
         public Schema()
         {
+            SubClasses.Add("Object");
+            Properties.Add("Name");
+            Properties.Add("SchemaName");
         }
 
-        public Schema(GenData genData)
+        public Schema(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -46,69 +49,12 @@ namespace org.xpangen.Generator.Data.Model.Database
             }
         }
 
-        public GenNamedApplicationList<Table> TableList { get; private set; }
-        public GenNamedApplicationList<Procedure> ProcedureList { get; private set; }
-        public GenNamedApplicationList<Function> FunctionList { get; private set; }
-        public GenNamedApplicationList<View> ViewList { get; private set; }
+        public GenNamedApplicationList<Object> ObjectList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            TableList = new GenNamedApplicationList<Table>(this);
-            ProcedureList = new GenNamedApplicationList<Procedure>(this);
-            FunctionList = new GenNamedApplicationList<Function>(this);
-            ViewList = new GenNamedApplicationList<View>(this);
+            base.GenObjectSetNotification();
+            ObjectList = new GenNamedApplicationList<Object>(this, 3, 0);
         }
-
-        public Table AddTable(string name, string tableName = "")
-        {
-            var item = new Table(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Schema", "Table"),
-                               Name = name,
-                               TableName = tableName
-                           };
-            TableList.Add(item);
-            return item;
-        }
-
-
-        public Procedure AddProcedure(string name, string procedureName = "")
-        {
-            var item = new Procedure(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Schema", "Procedure"),
-                               Name = name,
-                               ProcedureName = procedureName
-                           };
-            ProcedureList.Add(item);
-            return item;
-        }
-
-
-        public Function AddFunction(string name, string functionName = "")
-        {
-            var item = new Function(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Schema", "Function"),
-                               Name = name,
-                               FunctionName = functionName
-                           };
-            FunctionList.Add(item);
-            return item;
-        }
-
-
-        public View AddView(string name, string viewName = "")
-        {
-            var item = new View(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Schema", "View"),
-                               Name = name,
-                               ViewName = viewName
-                           };
-            ViewList.Add(item);
-            return item;
-        }
-
     }
 }

@@ -11,11 +11,13 @@ namespace org.xpangen.Generator.Data.Model.Database
     {
         public View()
         {
+            Properties.Add("Name");
+            Properties.Add("ViewName");
         }
 
-        public View(GenData genData)
+        public View(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -46,31 +48,6 @@ namespace org.xpangen.Generator.Data.Model.Database
             }
         }
 
-        public GenNamedApplicationList<Column> ColumnList { get; private set; }
-
-        protected override void GenObjectSetNotification()
-        {
-            ColumnList = new GenNamedApplicationList<Column>(this);
-        }
-
-        public Column AddColumn(string name, string columnName = "", string nativeDataType = "", string oDBCDataType = "", string length = "", string precision = "", string scale = "", string isNullable = "", string isKey = "")
-        {
-            var item = new Column(GenData)
-                           {
-                               GenObject = GenData.CreateObject("View", "Column"),
-                               Name = name,
-                               ColumnName = columnName,
-                               NativeDataType = nativeDataType,
-                               ODBCDataType = oDBCDataType,
-                               Length = length,
-                               Precision = precision,
-                               Scale = scale,
-                               IsNullable = isNullable,
-                               IsKey = isKey
-                           };
-            ColumnList.Add(item);
-            return item;
-        }
 
     }
 }

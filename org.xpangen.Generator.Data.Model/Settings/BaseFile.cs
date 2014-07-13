@@ -11,11 +11,17 @@ namespace org.xpangen.Generator.Data.Model.Settings
     {
         public BaseFile()
         {
+            SubClasses.Add("Profile");
+            Properties.Add("Name");
+            Properties.Add("FileName");
+            Properties.Add("FilePath");
+            Properties.Add("Title");
+            Properties.Add("FileExtension");
         }
 
-        public BaseFile(GenData genData)
+        public BaseFile(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -92,7 +98,8 @@ namespace org.xpangen.Generator.Data.Model.Settings
 
         protected override void GenObjectSetNotification()
         {
-            ProfileList = new GenNamedApplicationList<Profile>(this);
+            base.GenObjectSetNotification();
+            ProfileList = new GenNamedApplicationList<Profile>(this, 4, 0);
         }
 
         public Profile AddProfile(string name, string fileName = "", string filePath = "", string title = "")

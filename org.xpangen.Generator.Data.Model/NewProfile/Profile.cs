@@ -11,12 +11,13 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
     {
         public Profile()
         {
+            SubClasses.Add("FragmentBody");
+            Properties.Add("Name");
         }
 
-        public Profile(GenData genData)
+        public Profile(GenData genData) : this()
         {
             GenData = genData;
-            Properties.Add("Name");
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
         protected override void GenObjectSetNotification()
         {
             base.GenObjectSetNotification();
-            FragmentBodyList = new GenNamedApplicationList<FragmentBody>(this);
+            FragmentBodyList = new GenNamedApplicationList<FragmentBody>(this, 4, 0);
         }
 
         public FragmentBody AddFragmentBody(string name)

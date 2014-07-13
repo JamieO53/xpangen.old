@@ -11,11 +11,13 @@ namespace org.xpangen.Generator.Data.Model.Database
     {
         public Default()
         {
+            Properties.Add("Name");
+            Properties.Add("Value");
         }
 
-        public Default(GenData genData)
+        public Default(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>

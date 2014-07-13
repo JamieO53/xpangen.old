@@ -11,11 +11,13 @@ namespace org.xpangen.Generator.Data.Model.Database
     {
         public KeyColumn()
         {
+            Properties.Add("Name");
+            Properties.Add("Order");
         }
 
-        public KeyColumn(GenData genData)
+        public KeyColumn(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>

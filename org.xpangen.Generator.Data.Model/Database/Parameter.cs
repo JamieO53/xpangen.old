@@ -11,11 +11,20 @@ namespace org.xpangen.Generator.Data.Model.Database
     {
         public Parameter()
         {
+            Properties.Add("Name");
+            Properties.Add("ParameterName");
+            Properties.Add("NativeDataType");
+            Properties.Add("ODBCDataType");
+            Properties.Add("Length");
+            Properties.Add("Precision");
+            Properties.Add("Scale");
+            Properties.Add("IsNullable");
+            Properties.Add("Direction");
         }
 
-        public Parameter(GenData genData)
+        public Parameter(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>

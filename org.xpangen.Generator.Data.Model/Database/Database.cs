@@ -11,11 +11,13 @@ namespace org.xpangen.Generator.Data.Model.Database
     {
         public Database()
         {
+            SubClasses.Add("Schema");
+            Properties.Add("Name");
         }
 
-        public Database(GenData genData)
+        public Database(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -36,7 +38,8 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         protected override void GenObjectSetNotification()
         {
-            SchemaList = new GenNamedApplicationList<Schema>(this);
+            base.GenObjectSetNotification();
+            SchemaList = new GenNamedApplicationList<Schema>(this, 2, 0);
         }
 
         public Schema AddSchema(string name, string schemaName = "")

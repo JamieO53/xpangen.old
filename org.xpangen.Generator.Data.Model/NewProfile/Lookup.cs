@@ -11,17 +11,17 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
     {
         public Lookup()
         {
-        }
-
-        public Lookup(GenData genData)
-        {
-            GenData = genData;
             Properties.Add("Name");
             Properties.Add("NoMatch");
             Properties.Add("Class1");
             Properties.Add("Property1");
             Properties.Add("Class2");
             Properties.Add("Property2");
+        }
+
+        public Lookup(GenData genData) : this()
+        {
+            GenData = genData;
         }
 
         /// <summary>

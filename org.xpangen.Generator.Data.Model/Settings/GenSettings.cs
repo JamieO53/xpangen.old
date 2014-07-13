@@ -11,11 +11,14 @@ namespace org.xpangen.Generator.Data.Model.Settings
     {
         public GenSettings()
         {
+            SubClasses.Add("FileGroup");
+            SubClasses.Add("BaseFile");
+            Properties.Add("HomeDir");
         }
 
-        public GenSettings(GenData genData)
+        public GenSettings(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -37,8 +40,10 @@ namespace org.xpangen.Generator.Data.Model.Settings
 
         protected override void GenObjectSetNotification()
         {
-            FileGroupList = new GenNamedApplicationList<FileGroup>(this);
-            BaseFileList = new GenNamedApplicationList<BaseFile>(this);
+            base.GenObjectSetNotification();
+            FileGroupList = new GenNamedApplicationList<FileGroup>(this, 2, 0);
+            base.GenObjectSetNotification();
+            BaseFileList = new GenNamedApplicationList<BaseFile>(this, 3, 1);
         }
 
         public FileGroup AddFileGroup(string name, string fileName = "", string filePath = "", string baseFileName = "", string profile = "", string generatedFile = "")
