@@ -17,7 +17,7 @@ namespace org.xpangen.Generator.Data
                     for (var i = ParentObject.SubClass.Count; i <= ClassIdx; i++)
                         ParentObject.SubClass.Add(new GenSubClass(ParentObject.GenDataBase, ParentObject, ClassId, null));
                 ParentSubClass = ParentObject.SubClass[ClassIdx];
-                PopulateList(parent, className);
+                PopulateList(parent);
             }
             parent.Lists.Add(className, this);
         }
@@ -34,23 +34,35 @@ namespace org.xpangen.Generator.Data
                 if (ClassIdx != -1)
                 {
                     ParentSubClass = ParentObject.SubClass[ClassIdx];
-                    PopulateList(parent, className);
+                    PopulateList(parent);
                 }
             }
             parent.Lists.Add(className, this);
         }
 
-        private void PopulateList(GenApplicationBase parent, string className)
+        public new void Add(T item)
         {
-            var list = new GenObjectList(ParentObject.SubClass[ClassIdx], ParentObject.GenDataBase,
-                                         parent.GenData.Context[parent.ClassId],
-                                         null); //parent.GenDataDef.Classes[parent.ClassId].SubClasses[ClassIdx]);
-            list.First();
-            while (!list.Eol)
-            {
-                Add(new T {GenData = parent.GenData, GenObject = list.GenObject, Parent = parent});
-                list.Next();
-            }
+            item.Parent = Parent;
+            item.Classes = Parent.Classes;
+            base.Add(item);
+        }
+
+        private void PopulateList(GenApplicationBase parent)
+        {
+            var list = ParentObject.SubClass[ClassIdx];
+            foreach (var item in list)
+                Add(new T {GenData = parent.GenData, GenObject = item, Parent = parent});
+            //var list = new GenObjectList(ParentObject.SubClass[ClassIdx], ParentObject.GenDataBase,
+            //                             parent.GenData.Context.Count > parent.ClassId
+            //                                 ? parent.GenData.Context[parent.ClassId]
+            //                                 : null,
+            //                             null);
+            //list.First();
+            //while (!list.Eol)
+            //{
+            //    Add(new T {GenData = parent.GenData, GenObject = list.GenObject, Parent = parent});
+            //    list.Next();
+            //}
         }
 
         public int ClassIdx { get; set; }

@@ -13,14 +13,16 @@ namespace org.xpangen.Generator.Data.Definition
     {
         public Class()
         {
-        }
-
-        public Class(GenData genData)
-        {
-            GenData = genData;
+            SubClasses.Add("SubClass");
+            SubClasses.Add("Property");
             Properties.Add("Name");
             Properties.Add("Title");
             Properties.Add("Inheritance");
+        }
+
+        public Class(GenData genData) : this()
+        {
+            GenData = genData;
         }
 
         /// <summary>

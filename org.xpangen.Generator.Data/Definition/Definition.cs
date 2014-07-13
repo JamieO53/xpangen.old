@@ -18,6 +18,10 @@ namespace org.xpangen.Generator.Data.Definition
         public Definition(GenData genData)
         {
             GenData = genData;
+            Classes.Add("Class");
+            Classes.Add("SubClass");
+            Classes.Add("Property");
+            SubClasses.Add("Class");
             base.GenObject = genData.Root;
         }
 

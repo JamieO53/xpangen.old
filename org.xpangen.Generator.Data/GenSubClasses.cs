@@ -16,13 +16,14 @@ namespace org.xpangen.Generator.Data
 
         private void AddSubClasses(GenDataDefClass parentDef, GenDataBase genDataBase)
         {
-            for (var i = 0; i < parentDef.SubClasses.Count; i++)
-                AddSubClass(parentDef.SubClasses[i], genDataBase);
+            if (parentDef != null)
+                foreach (var t in parentDef.SubClasses)
+                    AddSubClass(t, genDataBase);
         }
 
         private void AddInheritedSubClasses(GenDataDefClass parentDef, GenDataBase genDataBase)
         {
-            if (parentDef.IsInherited)
+            if (parentDef != null && parentDef.IsInherited)
             {
                 AddInheritedSubClasses(parentDef.Parent, genDataBase);
                 AddSubClasses(parentDef.Parent, genDataBase);

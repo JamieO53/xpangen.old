@@ -2,14 +2,12 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Data;
-
-namespace org.xpangen.Generator.Data.Model.Profile
+namespace org.xpangen.Generator.Data.Model.NewProfile
 {
     /// <summary>
     /// A fragment that forms part of the body of a container fragment
     /// </summary>
-    public class FragmentBody : GenNamedApplicationBase
+    public class FragmentBody : Fragment
     {
         public FragmentBody()
         {
@@ -46,7 +44,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
         {
             var item = new Null(GenData)
                            {
-                               GenObject = GenData.CreateObject("FragmentBody", "Null"),
+                               GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
                                Name = name
                            };
             FragmentList.Add(item);
@@ -56,7 +54,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
         {
             var item = new Text(GenData)
                            {
-                               GenObject = GenData.CreateObject("FragmentBody", "Text"),
+                               GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
                                Name = name,
                                TextValue = textValue
                            };
@@ -67,7 +65,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
         {
             var item = new Placeholder(GenData)
                            {
-                               GenObject = GenData.CreateObject("FragmentBody", "Placeholder"),
+                               GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
                                Name = name,
                                Class = @class,
                                Property = property
@@ -79,7 +77,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
         {
             var item = new ContainerFragment(GenData)
                            {
-                               GenObject = GenData.CreateObject("FragmentBody", "ContainerFragment"),
+                               GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
                                Name = name
                            };
             FragmentList.Add(item);

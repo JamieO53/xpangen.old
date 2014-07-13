@@ -77,33 +77,38 @@ namespace org.xpangen.Generator.Data
         {
             GenDataBase = genDataBase;
             Context = new GenContext(this);
-            for (var i = 0; i < GenDataDef.Classes.Count; i++)
-            {
-                var parent = GenDataDef.Classes[i].Parent;
-                var reference = "";
-                var referenceDefinition = "";
-                GenDataDefSubClass defSubClass = null;
-                if (parent != null)
+            if (GenDataDef != null)
+                foreach (var t in GenDataDef.Classes)
                 {
-                    foreach (var subClass in parent.SubClasses)
+                    var parent = t.Parent;
+                    var reference = "";
+                    var referenceDefinition = "";
+                    GenDataDefSubClass defSubClass = null;
+                    if (parent != null)
                     {
-                        if (subClass.SubClass != GenDataDef.Classes[i]) continue;
+                        foreach (var subClass in parent.SubClasses)
+                        {
+                            if (subClass.SubClass != t) continue;
 
-                        reference = subClass.Reference ?? "";
-                        referenceDefinition = subClass.ReferenceDefinition ?? "";
-                        defSubClass = subClass;
-                        break;
+                            reference = subClass.Reference ?? "";
+                            referenceDefinition = subClass.ReferenceDefinition ?? "";
+                            defSubClass = subClass;
+                            break;
+                        }
+                        foreach (var inheritor in parent.Inheritors)
+                        {
+                            if (inheritor != t) continue;
+                            reference = parent.Reference;
+                            referenceDefinition = parent.ReferenceDefinition;
+                            defSubClass = null;
+                            break;
+                        }
                     }
-                    foreach (var inheritor in parent.Inheritors)
-                    {
-                        if (inheritor != GenDataDef.Classes[i]) continue;
-                        reference = parent.Reference;
-                        referenceDefinition = parent.ReferenceDefinition;
-                        defSubClass = null;
-                        break;
-                    }
+                    Context.Add(null, t, GenDataBase, reference, referenceDefinition, defSubClass);
                 }
-                Context.Add(null, GenDataDef.Classes[i], GenDataBase, reference, referenceDefinition, defSubClass);
+            else
+            {
+                Context.Add(null, null, genDataBase, "", null, null);
             }
 
             Context[0].SubClassBase.Add(GenDataBase.Root);
@@ -216,7 +221,7 @@ namespace org.xpangen.Generator.Data
         private void SetSubClasses(int classId)
         {
             var inheritedClassId = classId;
-            if (Context[classId].DefClass.IsInherited)
+            if (Context[classId].DefClass != null && Context[classId].DefClass.IsInherited)
             {
                 classId = Context[classId].DefClass.Parent.ClassId;
                 Context[classId].Index = Context[inheritedClassId].Index;
@@ -233,7 +238,7 @@ namespace org.xpangen.Generator.Data
             if (Context[classId].GenObject == null)
                 First(classId);
             var genObject = Context[classId].GenObject;
-            if (genObject != null)
+            if (classDef != null && genObject != null)
             {
                 for (var i = 0; i < classDef.SubClasses.Count; i++)
                 {
@@ -396,7 +401,7 @@ namespace org.xpangen.Generator.Data
 
         private void CheckInheritance(int classId)
         {
-            if (!GenDataDef.Classes[classId].IsInherited) return;
+            if (GenDataDef == null || !GenDataDef.Classes[classId].IsInherited) return;
             var superClassId = GenDataDef.Classes[classId].Parent.ClassId;
             if (Context[classId].SubClassBase == Context[superClassId].SubClassBase) return;
             Context[classId].SubClassBase = Context[superClassId].SubClassBase;

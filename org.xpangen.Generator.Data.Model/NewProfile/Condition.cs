@@ -2,9 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Data;
-
-namespace org.xpangen.Generator.Data.Model.Profile
+namespace org.xpangen.Generator.Data.Model.NewProfile
 {
     /// <summary>
     /// The Condition fragment data
@@ -21,6 +19,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
             Properties.Add("Name");
             Properties.Add("Class1");
             Properties.Add("Property1");
+            Properties.Add("Comparison");
             Properties.Add("Class2");
             Properties.Add("Property2");
             Properties.Add("Lit");
@@ -65,6 +64,20 @@ namespace org.xpangen.Generator.Data.Model.Profile
             {
                 if (Property1 == value) return;
                 SetString("Property1", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+        /// <summary>
+        /// The comparison to be used
+        /// </summary>
+        public string Comparison
+        {
+            get { return AsString("Comparison"); }
+            set
+            {
+                if (Comparison == value) return;
+                SetString("Comparison", value);
                 if (!DelayedSave) SaveFields();
             }
         }

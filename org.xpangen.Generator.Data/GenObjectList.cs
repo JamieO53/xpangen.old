@@ -27,7 +27,7 @@ namespace org.xpangen.Generator.Data
             ClassId = -1;
             GenDataBase = genDataBase;
             SubClassBase = subClassBase;
-            DefClass = SubClassBase.Definition.SubClass;
+            if (SubClassBase.Definition != null) DefClass = SubClassBase.Definition.SubClass;
             ClassId = 0;
         }
 
@@ -104,7 +104,7 @@ namespace org.xpangen.Generator.Data
             get
             {
                 return SubClassBase == null || SubClassBase.Count == 0 || Index < 0 || Index >= SubClassBase.Count ||
-                       DefClass.IsInherited && GenObject.ClassId != ObjectClassId;
+                       DefClass != null && DefClass.IsInherited && GenObject.ClassId != ObjectClassId;
             }
         }
 
@@ -159,7 +159,7 @@ namespace org.xpangen.Generator.Data
             else
             {
                 Index = 0;
-                if (DefClass.IsInherited) SetInheritedIndex();
+                if (DefClass != null && DefClass.IsInherited) SetInheritedIndex();
             }
             if (!string.IsNullOrEmpty(Reference)) ReferenceData.First(RefClassId);
         }
@@ -170,7 +170,7 @@ namespace org.xpangen.Generator.Data
         public void Next()
         {
             Index++;
-            if (DefClass.IsInherited) SetInheritedIndex();
+            if (DefClass != null && DefClass.IsInherited) SetInheritedIndex();
             if (Eol)
                 Reset();
             if (!string.IsNullOrEmpty(Reference)) ReferenceData.Next(RefClassId);
@@ -182,7 +182,7 @@ namespace org.xpangen.Generator.Data
         public void Last()
         {
             Index = SubClassBase.Count - 1;
-            if (DefClass.IsInherited) SetPriorInheritedIndex();
+            if (DefClass != null && DefClass.IsInherited) SetPriorInheritedIndex();
             if (!string.IsNullOrEmpty(Reference)) ReferenceData.Last(RefClassId);
         }
 
@@ -192,7 +192,7 @@ namespace org.xpangen.Generator.Data
         public void Prior()
         {
             Index--;
-            if (DefClass.IsInherited) SetPriorInheritedIndex();
+            if (DefClass != null && DefClass.IsInherited) SetPriorInheritedIndex();
             if (Eol)
                 Reset();
             if (!string.IsNullOrEmpty(Reference)) ReferenceData.Prior(RefClassId);

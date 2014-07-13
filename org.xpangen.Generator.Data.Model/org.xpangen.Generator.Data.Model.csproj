@@ -79,6 +79,7 @@
     <Compile Include="NewProfile\FragmentBody.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NewProfile\FragmentBodyX.cs" />
     <Compile Include="NewProfile\Function.cs">
       <SubType>Code</SubType>
     </Compile>

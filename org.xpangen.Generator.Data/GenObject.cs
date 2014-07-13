@@ -17,7 +17,7 @@ namespace org.xpangen.Generator.Data
 
             if (Parent == null) return;
             GenDataBase = Parent.GenDataBase;
-            if (Definition.IsInherited)
+            if (Definition != null && Definition.IsInherited)
             {
                 Assert(Definition.Parent.Inheritors.Contains(Definition),
                        "The new object is inherited, but not from its parent");
@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Data
             }
             else
             {
-                Assert(parentSubClass.Definition.SubClass.ClassId == ClassId,
+                Assert(parentSubClass.Definition == null || parentSubClass.Definition.SubClass.ClassId == ClassId,
                        "The new object is being assigned to the wrong subclass");
             }
         }
@@ -38,8 +38,9 @@ namespace org.xpangen.Generator.Data
             {
                 if (_genDataBase == value) return;
                 _genDataBase = value;
-                for (var i = 0; i < Definition.Properties.Count; i++)
-                    Attributes.Add("");
+                if (Definition != null)
+                    for (var i = 0; i < Definition.Properties.Count; i++)
+                        Attributes.Add("");
                 SubClass = new GenSubClasses(this);
             }
         }
@@ -54,7 +55,12 @@ namespace org.xpangen.Generator.Data
 
         public GenDataDefClass Definition
         {
-            get { return GenDataBase.GenDataDef.Classes[ClassId]; }
+            get
+            {
+                if (GenDataBase != null && GenDataBase.GenDataDef != null)
+                    return GenDataBase.GenDataDef.Classes[ClassId];
+                return null;
+            }
         }
 
         public NameList Properties
