@@ -94,6 +94,13 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
             return textBlock;
         }
 
+        public static FragmentBody Body(this ContainerFragment fragment)
+        {
+            var name = fragment.Name;
+            var profile = (Profile)fragment.Parent.Parent;
+            return profile.FragmentBodyList.Find(name);
+        }
+        
         private static string CreateContainerFragmentBody(FragmentBody body)
         {
             var profile = Profile(body);
