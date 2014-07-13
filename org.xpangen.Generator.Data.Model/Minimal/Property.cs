@@ -11,11 +11,12 @@ namespace org.xpangen.Generator.Data.Model.Minimal
     {
         public Property()
         {
+            Properties.Add("Name");
         }
 
-        public Property(GenData genData)
+        public Property(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>

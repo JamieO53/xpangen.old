@@ -11,14 +11,14 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
     {
         public Placeholder()
         {
-        }
-
-        public Placeholder(GenData genData)
-        {
-            GenData = genData;
             Properties.Add("Name");
             Properties.Add("Class");
             Properties.Add("Property");
+        }
+
+        public Placeholder(GenData genData) : this()
+        {
+            GenData = genData;
         }
 
         /// <summary>

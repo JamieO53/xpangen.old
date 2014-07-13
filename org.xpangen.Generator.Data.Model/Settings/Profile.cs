@@ -11,11 +11,15 @@ namespace org.xpangen.Generator.Data.Model.Settings
     {
         public Profile()
         {
+            Properties.Add("Name");
+            Properties.Add("FileName");
+            Properties.Add("FilePath");
+            Properties.Add("Title");
         }
 
-        public Profile(GenData genData)
+        public Profile(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>

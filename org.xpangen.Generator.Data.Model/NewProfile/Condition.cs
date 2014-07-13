@@ -11,11 +11,6 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
     {
         public Condition()
         {
-        }
-
-        public Condition(GenData genData)
-        {
-            GenData = genData;
             Properties.Add("Name");
             Properties.Add("Class1");
             Properties.Add("Property1");
@@ -24,6 +19,11 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
             Properties.Add("Property2");
             Properties.Add("Lit");
             Properties.Add("UseLit");
+        }
+
+        public Condition(GenData genData) : this()
+        {
+            GenData = genData;
         }
 
         /// <summary>

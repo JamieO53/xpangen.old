@@ -11,11 +11,13 @@ namespace org.xpangen.Generator.Data.Model.Database
     {
         public ForeignKeyColumn()
         {
+            Properties.Add("Name");
+            Properties.Add("RelatedColumn");
         }
 
-        public ForeignKeyColumn(GenData genData)
+        public ForeignKeyColumn(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-`[Solution:`[Assembly:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Assembly.Name`.cs`]`]`@MapClear:`]`[Class:`@MapSet:`{`Class.Name`Inheritance`]`{ : GenNamedApplicationBase`]`]`@MapSet:`{`Class.Name`InheritanceRoot`]`{``Class.Name`]`]`]`[Class:`@MapSet:`{ClassName`]`{`Class.Name``]`]`[SubClass:`@MapSet:`{SubClassName`]`{`SubClass.Name``]`]`%Class.Name=SubClass.Name:`?Class.Inheritance=Virtual:`@MapSet:`{`@MapGet:`{SubClassName`]`]Inheritance`]`{ : `@MapGet:'ClassName'`]`]`]`]`@MapSet:`{`@MapGet:`{SubClassName`]`]InheritanceRoot`]`{`@MapGet:'ClassName'`]`]`]`]`]`]// This Source Code Form is subject to the terms of the Mozilla Public
+`[Solution:`[Assembly:`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\`Assembly.Name`.cs`]`]`@MapClear:`]`[Class:`@MapSet:`{`Class.Name`Inheritance`]`{ : GenNamedApplicationBase`]`]`@MapSet:`{`Class.Name`InheritanceRoot`]`{``Class.Name`]`]`]`@Set:`{ClassId`]`{0`]`]`[Class:`@MapSet:`{ClassName`]`{`Class.Name``]`]`@Add:`{ClassId`]`{1`]`]`@MapSet:`{`Class.Name`ClassId`]`@Get:`{ClassId`]`]`]`[SubClass:`@MapSet:`{SubClassName`]`{`SubClass.Name``]`]`%Class.Name=SubClass.Name:`?Class.Inheritance=Virtual:`@MapSet:`{`@MapGet:`{SubClassName`]`]Inheritance`]`{ : `@MapGet:'ClassName'`]`]`]`]`@MapSet:`{`@MapGet:`{SubClassName`]`]InheritanceRoot`]`{`@MapGet:'ClassName'`]`]`]`]`]`]// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -15,7 +15,9 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
 
         public `Assembly.Name`(GenData genData)
         {
-            GenData = genData;
+            GenData = genData;`[Class:
+            Classes.Add("`Class.Name`");`]`[Class':
+            SubClasses.Add("`Class.Name`");`]
             base.GenObject = genData.Root;
         }
 
@@ -33,7 +35,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
 `]`[Class':
         protected override void GenObjectSetNotification()
         {
-            `Class.Name`List = new GenNamedApplicationList<`Class.Name`>(this);
+            `Class.Name`List = new GenNamedApplicationList<`Class.Name`>(this, 1, 0);
         }
 
         public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])
@@ -60,13 +62,14 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
     public class `Class.Name``@MapGet:`{`Class.Name`Inheritance`]`]
     {
         public `Class.Name`()
-        {
+        {`[SubClass:
+            SubClasses.Add("`SubClass.Name`");`]`[Property:
+            Properties.Add("`Property.Name`");`]
         }
 
-        public `Class.Name`(GenData genData)
+        public `Class.Name`(GenData genData) : this()
         {
-            GenData = genData;`[Property:
-            Properties.Add("`Property.Name`");`]
+            GenData = genData;
         }
 
 `[Property:`?Class.Inheritance~:        /// <summary>
@@ -115,8 +118,8 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
 `]`]`]`[SubClass':
         protected override void GenObjectSetNotification()
         {
-`]`[SubClass:`%Class.Name=SubClass.Name:`?Class.Inheritance<>Virtual:            base.GenObjectSetNotification();
-            `Class.Name`List = new GenNamedApplicationList<`Class.Name`>(this);
+`]`@Set:`{SubClassIdx`]`{0`]`]`[SubClass:`%Class.Name=SubClass.Name:`?Class.Inheritance<>Virtual:            base.GenObjectSetNotification();
+            `Class.Name`List = new GenNamedApplicationList<`Class.Name`>(this, `@MapGet:`{`Class.Name`ClassId`]`], `@Get:`{SubClassIdx`]`]`@Add:`{SubClassIdx`]`]);
 `]`]`]`[SubClass':        }`]`[SubClass:`@MapSet:`{SubClassName`]`{`SubClass.Name``]`]`%Class.Name=SubClass.Name:`?Class.Inheritance~:
 
         public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])

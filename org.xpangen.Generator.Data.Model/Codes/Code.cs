@@ -11,11 +11,14 @@ namespace org.xpangen.Generator.Data.Model.Codes
     {
         public Code()
         {
+            Properties.Add("Name");
+            Properties.Add("Description");
+            Properties.Add("Value");
         }
 
-        public Code(GenData genData)
+        public Code(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>

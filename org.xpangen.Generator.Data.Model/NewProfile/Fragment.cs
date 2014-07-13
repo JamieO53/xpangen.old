@@ -11,27 +11,16 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
     {
         public Fragment()
         {
+            SubClasses.Add("Null");
+            SubClasses.Add("Text");
+            SubClasses.Add("Placeholder");
+            SubClasses.Add("ContainerFragment");
+            Properties.Add("Name");
         }
 
-        public Fragment(GenData genData)
+        public Fragment(GenData genData) : this()
         {
             GenData = genData;
-            Properties.Add("Name");
-            Properties.Add("FragmentType");
-        }
-
-        /// <summary>
-        /// The type of the fragment
-        /// </summary>
-        public string FragmentType
-        {
-            get { return AsString("FragmentType"); }
-            set
-            {
-                if (FragmentType == value) return;
-                SetString("FragmentType", value);
-                if (!DelayedSave) SaveFields();
-            }
         }
 
 

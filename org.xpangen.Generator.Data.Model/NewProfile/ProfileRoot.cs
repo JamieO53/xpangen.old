@@ -11,13 +11,15 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
     {
         public ProfileRoot()
         {
-        }
-
-        public ProfileRoot(GenData genData)
-        {
-            GenData = genData;
+            SubClasses.Add("Definition");
+            SubClasses.Add("Profile");
             Properties.Add("Name");
             Properties.Add("Title");
+        }
+
+        public ProfileRoot(GenData genData) : this()
+        {
+            GenData = genData;
         }
 
         /// <summary>
@@ -49,14 +51,14 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
         }
 
         public GenNamedApplicationList<Definition> DefinitionList { get; private set; }
-        public GenNamedApplicationList<NewProfile.Profile> ProfileList { get; private set; }
+        public GenNamedApplicationList<Profile> ProfileList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
             base.GenObjectSetNotification();
-            DefinitionList = new GenNamedApplicationList<Definition>(this);
+            DefinitionList = new GenNamedApplicationList<Definition>(this, 2, 0);
             base.GenObjectSetNotification();
-            ProfileList = new GenNamedApplicationList<NewProfile.Profile>(this);
+            ProfileList = new GenNamedApplicationList<Profile>(this, 3, 1);
         }
 
         public Definition AddDefinition(string name, string path = "")
@@ -72,9 +74,9 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
         }
 
 
-        public NewProfile.Profile AddProfile(string name)
+        public Profile AddProfile(string name)
         {
-            var item = new NewProfile.Profile(GenData)
+            var item = new Profile(GenData)
                            {
                                GenObject = GenData.CreateObject("ProfileRoot", "Profile"),
                                Name = name

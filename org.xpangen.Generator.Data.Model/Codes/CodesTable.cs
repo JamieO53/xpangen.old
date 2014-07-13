@@ -11,11 +11,14 @@ namespace org.xpangen.Generator.Data.Model.Codes
     {
         public CodesTable()
         {
+            SubClasses.Add("Code");
+            Properties.Add("Name");
+            Properties.Add("Title");
         }
 
-        public CodesTable(GenData genData)
+        public CodesTable(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -50,7 +53,8 @@ namespace org.xpangen.Generator.Data.Model.Codes
 
         protected override void GenObjectSetNotification()
         {
-            CodeList = new GenNamedApplicationList<Code>(this);
+            base.GenObjectSetNotification();
+            CodeList = new GenNamedApplicationList<Code>(this, 2, 0);
         }
 
         public Code AddCode(string name, string description = "", string value = "")

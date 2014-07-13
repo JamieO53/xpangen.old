@@ -11,11 +11,13 @@ namespace org.xpangen.Generator.Data.Model.Database
     {
         public Procedure()
         {
+            Properties.Add("Name");
+            Properties.Add("ProcedureName");
         }
 
-        public Procedure(GenData genData)
+        public Procedure(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -46,31 +48,6 @@ namespace org.xpangen.Generator.Data.Model.Database
             }
         }
 
-        public GenNamedApplicationList<Parameter> ParameterList { get; private set; }
-
-        protected override void GenObjectSetNotification()
-        {
-            ParameterList = new GenNamedApplicationList<Parameter>(this);
-        }
-
-        public Parameter AddParameter(string name, string parameterName = "", string nativeDataType = "", string oDBCDataType = "", string length = "", string precision = "", string scale = "", string isNullable = "", string direction = "")
-        {
-            var item = new Parameter(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Procedure", "Parameter"),
-                               Name = name,
-                               ParameterName = parameterName,
-                               NativeDataType = nativeDataType,
-                               ODBCDataType = oDBCDataType,
-                               Length = length,
-                               Precision = precision,
-                               Scale = scale,
-                               IsNullable = isNullable,
-                               Direction = direction
-                           };
-            ParameterList.Add(item);
-            return item;
-        }
 
     }
 }

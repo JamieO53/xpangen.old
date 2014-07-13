@@ -11,11 +11,16 @@ namespace org.xpangen.Generator.Data.Model.Database
     {
         public ForeignKey()
         {
+            SubClasses.Add("ForeignKeyColumn");
+            Properties.Add("Name");
+            Properties.Add("ReferenceTable");
+            Properties.Add("DeleteAction");
+            Properties.Add("UpdateAction");
         }
 
-        public ForeignKey(GenData genData)
+        public ForeignKey(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -78,7 +83,8 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         protected override void GenObjectSetNotification()
         {
-            ForeignKeyColumnList = new GenNamedApplicationList<ForeignKeyColumn>(this);
+            base.GenObjectSetNotification();
+            ForeignKeyColumnList = new GenNamedApplicationList<ForeignKeyColumn>(this, 14, 0);
         }
 
         public ForeignKeyColumn AddForeignKeyColumn(string name, string relatedColumn = "")

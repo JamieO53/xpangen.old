@@ -11,12 +11,12 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
     {
         public Block()
         {
+            Properties.Add("Name");
         }
 
-        public Block(GenData genData)
+        public Block(GenData genData) : this()
         {
             GenData = genData;
-            Properties.Add("Name");
         }
 
         /// <summary>

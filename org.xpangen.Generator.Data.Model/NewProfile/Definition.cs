@@ -11,13 +11,14 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
     {
         public Definition()
         {
-        }
-
-        public Definition(GenData genData)
-        {
-            GenData = genData;
+            SubClasses.Add("Class");
             Properties.Add("Name");
             Properties.Add("Path");
+        }
+
+        public Definition(GenData genData) : this()
+        {
+            GenData = genData;
         }
 
         /// <summary>

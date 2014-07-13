@@ -16,8 +16,13 @@ namespace org.xpangen.Generator.Data.Model.Settings
         public GeneratorEditor(GenData genData)
         {
             GenData = genData;
+            Classes.Add("GenSettings");
+            Classes.Add("FileGroup");
+            Classes.Add("BaseFile");
+            Classes.Add("Profile");
+            SubClasses.Add("GenSettings");
             base.GenObject = genData.Root;
-		}
+        }
 
         public static GenDataDef GetDefinition()
         {
@@ -50,7 +55,7 @@ namespace org.xpangen.Generator.Data.Model.Settings
 
         protected override void GenObjectSetNotification()
         {
-            GenSettingsList = new GenNamedApplicationList<GenSettings>(this);
+            GenSettingsList = new GenNamedApplicationList<GenSettings>(this, 1, 0);
         }
 
         public GenSettings AddGenSettings(string homeDir = "")

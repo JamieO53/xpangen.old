@@ -11,11 +11,21 @@ namespace org.xpangen.Generator.Data.Model.Database
     {
         public Column()
         {
+            SubClasses.Add("Default");
+            Properties.Add("Name");
+            Properties.Add("ColumnName");
+            Properties.Add("NativeDataType");
+            Properties.Add("ODBCDataType");
+            Properties.Add("Length");
+            Properties.Add("Precision");
+            Properties.Add("Scale");
+            Properties.Add("IsNullable");
+            Properties.Add("IsKey");
         }
 
-        public Column(GenData genData)
+        public Column(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -148,7 +158,8 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         protected override void GenObjectSetNotification()
         {
-            DefaultList = new GenNamedApplicationList<Default>(this);
+            base.GenObjectSetNotification();
+            DefaultList = new GenNamedApplicationList<Default>(this, 9, 0);
         }
 
         public Default AddDefault(string name, string value = "")

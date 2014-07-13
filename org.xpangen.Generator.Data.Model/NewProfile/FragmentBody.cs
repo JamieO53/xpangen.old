@@ -7,16 +7,17 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
     /// <summary>
     /// A fragment that forms part of the body of a container fragment
     /// </summary>
-    public class FragmentBody : Fragment
+    public class FragmentBody : GenNamedApplicationBase
     {
         public FragmentBody()
         {
+            SubClasses.Add("Fragment");
+            Properties.Add("Name");
         }
 
-        public FragmentBody(GenData genData)
+        public FragmentBody(GenData genData) : this()
         {
             GenData = genData;
-            Properties.Add("Name");
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
         protected override void GenObjectSetNotification()
         {
             base.GenObjectSetNotification();
-            FragmentList = new GenNamedApplicationList<Fragment>(this);
+            FragmentList = new GenNamedApplicationList<Fragment>(this, 5, 0);
         }
         public Null AddNull(string name)
         {

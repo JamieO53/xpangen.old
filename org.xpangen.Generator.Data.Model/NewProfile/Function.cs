@@ -11,13 +11,13 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
     {
         public Function()
         {
-        }
-
-        public Function(GenData genData)
-        {
-            GenData = genData;
             Properties.Add("Name");
             Properties.Add("FunctionName");
+        }
+
+        public Function(GenData genData) : this()
+        {
+            GenData = genData;
         }
 
         /// <summary>

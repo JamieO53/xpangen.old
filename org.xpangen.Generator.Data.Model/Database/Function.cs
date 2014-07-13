@@ -11,11 +11,13 @@ namespace org.xpangen.Generator.Data.Model.Database
     {
         public Function()
         {
+            Properties.Add("Name");
+            Properties.Add("FunctionName");
         }
 
-        public Function(GenData genData)
+        public Function(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -46,53 +48,6 @@ namespace org.xpangen.Generator.Data.Model.Database
             }
         }
 
-        public GenNamedApplicationList<Parameter> ParameterList { get; private set; }
-        public GenNamedApplicationList<Column> ColumnList { get; private set; }
-
-        protected override void GenObjectSetNotification()
-        {
-            ParameterList = new GenNamedApplicationList<Parameter>(this);
-            ColumnList = new GenNamedApplicationList<Column>(this);
-        }
-
-        public Parameter AddParameter(string name, string parameterName = "", string nativeDataType = "", string oDBCDataType = "", string length = "", string precision = "", string scale = "", string isNullable = "", string direction = "")
-        {
-            var item = new Parameter(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Function", "Parameter"),
-                               Name = name,
-                               ParameterName = parameterName,
-                               NativeDataType = nativeDataType,
-                               ODBCDataType = oDBCDataType,
-                               Length = length,
-                               Precision = precision,
-                               Scale = scale,
-                               IsNullable = isNullable,
-                               Direction = direction
-                           };
-            ParameterList.Add(item);
-            return item;
-        }
-
-
-        public Column AddColumn(string name, string columnName = "", string nativeDataType = "", string oDBCDataType = "", string length = "", string precision = "", string scale = "", string isNullable = "", string isKey = "")
-        {
-            var item = new Column(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Function", "Column"),
-                               Name = name,
-                               ColumnName = columnName,
-                               NativeDataType = nativeDataType,
-                               ODBCDataType = oDBCDataType,
-                               Length = length,
-                               Precision = precision,
-                               Scale = scale,
-                               IsNullable = isNullable,
-                               IsKey = isKey
-                           };
-            ColumnList.Add(item);
-            return item;
-        }
 
     }
 }
