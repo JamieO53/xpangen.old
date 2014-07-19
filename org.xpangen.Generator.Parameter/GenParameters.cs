@@ -71,7 +71,7 @@ namespace org.xpangen.Generator.Parameter
         {
             var def = new StringBuilder();
             def.Append("Definition=");
-            def.AppendLine(genDataDef.Definition);
+            def.AppendLine(genDataDef.DefinitionName);
             var profile = new GenProfileFragment(genDataDef);
             profile.Body.Add(new GenTextFragment(genDataDef, profile));
 
@@ -325,7 +325,7 @@ namespace org.xpangen.Generator.Parameter
                         reader.ScanWhile(ScanReader.WhiteSpace);
                         if (reader.CheckChar('=')) reader.SkipChar();
                         reader.ScanWhile(ScanReader.WhiteSpace);
-                        f.Definition = reader.ScanWhile(ScanReader.QualifiedIdentifier);
+                        f.DefinitionName = reader.ScanWhile(ScanReader.QualifiedIdentifier);
                         break;
                     case "Class":
                         reader.ScanWhile(ScanReader.WhiteSpace);
@@ -360,7 +360,7 @@ namespace org.xpangen.Generator.Parameter
                                 reader.SkipChar();
                                 reader.ScanWhile(ScanReader.WhiteSpace);
                                 var field = reader.ScanWhile(ScanReader.AlphaNumeric);
-                                f.Classes[classId].InstanceProperties.Add(field);
+                                f.Classes[classId].AddInstanceProperty(field);
                                 reader.ScanWhile(ScanReader.WhiteSpace);
                             } while (reader.CheckChar(','));
                             Assert(reader.CheckChar('}'), "Definition Error for class " + className + " fields list: } expected");
@@ -370,7 +370,7 @@ namespace org.xpangen.Generator.Parameter
                         {
                             reader.ScanWhile(ScanReader.WhiteSpace);
                             var field = reader.ScanWhile(ScanReader.AlphaNumeric);
-                            f.Classes[classId].InstanceProperties.Add(field);
+                            f.Classes[classId].AddInstanceProperty(field);
                         }
                         break;
                     case "SubClass":
@@ -498,7 +498,7 @@ namespace org.xpangen.Generator.Parameter
                     var reference = Scan.Attribute("Reference");
                     parent.SubClass[subClassIdx].Reference = reference;
                     var referenceData = DataLoader.LoadData(reference);
-                    var definition = referenceData.GenDataDef.Definition;
+                    var definition = referenceData.GenDataDef.DefinitionName;
                     GenDataDef.Cache.Internal(string.IsNullOrEmpty(definition) ? reference + "Def" : definition,
                                               referenceData.GenDataDef);
                     Cache.Internal(reference, referenceData);

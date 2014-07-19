@@ -25,14 +25,14 @@ namespace org.xpangen.Generator.Data.Model.Codes
         public static GenDataDef GetDefinition()
         {
             var f = new GenDataDef();
-            f.Definition = "CodesDefinition";
+            f.DefinitionName = "CodesDefinition";
             f.AddSubClass("", "CodesTable");
             f.AddSubClass("CodesTable", "Code");
-            f.Classes[1].InstanceProperties.Add("Name");
-            f.Classes[1].InstanceProperties.Add("Title");
-            f.Classes[2].InstanceProperties.Add("Name");
-            f.Classes[2].InstanceProperties.Add("Description");
-            f.Classes[2].InstanceProperties.Add("Value");
+            f.Classes[1].AddInstanceProperty("Name");
+            f.Classes[1].AddInstanceProperty("Title");
+            f.Classes[2].AddInstanceProperty("Name");
+            f.Classes[2].AddInstanceProperty("Description");
+            f.Classes[2].AddInstanceProperty("Value");
             return f;
         }
 

@@ -26,16 +26,16 @@ namespace org.xpangen.Generator.Data.Model.Minimal
         public static GenDataDef GetDefinition()
         {
             var f = new GenDataDef();
-            f.Definition = "Minimal";
+            f.DefinitionName = "Minimal";
             f.AddSubClass("", "Class");
             f.AddSubClass("Class", "SubClass");
             f.AddSubClass("Class", "Property");
-            f.Classes[1].InstanceProperties.Add("Name");
-            f.Classes[1].InstanceProperties.Add("Inheritance");
-            f.Classes[2].InstanceProperties.Add("Name");
-            f.Classes[2].InstanceProperties.Add("Reference");
-            f.Classes[2].InstanceProperties.Add("Relationship");
-            f.Classes[3].InstanceProperties.Add("Name");
+            f.Classes[1].AddInstanceProperty("Name");
+            f.Classes[1].AddInstanceProperty("Inheritance");
+            f.Classes[2].AddInstanceProperty("Name");
+            f.Classes[2].AddInstanceProperty("Reference");
+            f.Classes[2].AddInstanceProperty("Relationship");
+            f.Classes[3].AddInstanceProperty("Name");
             return f;
         }
 

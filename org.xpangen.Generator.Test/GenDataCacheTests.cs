@@ -18,7 +18,7 @@ namespace org.xpangen.Generator.Test
         {
             var f = new GenDataDef();
             f.AddSubClass("", "Parent");
-            f.Classes[f.Classes.IndexOf("Parent")].InstanceProperties.Add("Name");
+            f.Classes[f.Classes.IndexOf("Parent")].AddInstanceProperty("Name");
             f.AddSubClass("Parent", "Class", "Definition");
 
             var d = new GenData(f);
@@ -79,7 +79,7 @@ namespace org.xpangen.Generator.Test
         {
             var f = new GenDataDef();
             f.AddSubClass("", "Parent");
-            f.Classes[f.Classes.IndexOf("Parent")].InstanceProperties.Add("Name");
+            f.Classes[f.Classes.IndexOf("Parent")].AddInstanceProperty("Name");
             f.AddSubClass("Parent", "Class", "Definition");
 
             var d = new GenData(f);
@@ -106,7 +106,7 @@ namespace org.xpangen.Generator.Test
         {
             var f = new GenDataDef();
             f.AddSubClass("", "Parent");
-            f.Classes[f.Classes.IndexOf("Parent")].InstanceProperties.Add("Name");
+            f.Classes[f.Classes.IndexOf("Parent")].AddInstanceProperty("Name");
             f.AddSubClass("Parent", "Class", "Definition");
 
             var d = new GenData(f);
