@@ -45,6 +45,8 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
+        public string FunctionParameterSeparator { get; protected set; }
+
         protected string Dlm;
         private static ProfileFragmentSyntaxDictionary _activeProfileFragmentSyntaxDictionary;
 

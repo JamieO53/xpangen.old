@@ -4,7 +4,7 @@
 
 namespace org.xpangen.Generator.Data.Model.NewProfile
 {
-    public static class FragmentBodyX
+    public static class ProfileExtensions
     {
         public static Segment AddSegment(this FragmentBody body, string @class, string cardinality)
         {
@@ -109,9 +109,19 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
             return name;
         }
 
-        private static Profile Profile(FragmentBody body)
+        public static Profile Profile(this ProfileDefinition def)
+        {
+            return def.ProfileRootList[0].ProfileList[0];
+        }
+
+        public static Profile Profile(this FragmentBody body)
         {
             return (Profile) body.Parent;
+        }
+
+        public static FragmentBody Body(this Profile profile)
+        {
+            return profile.FragmentBodyList[0];
         }
     }
 }

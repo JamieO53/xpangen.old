@@ -20,6 +20,7 @@ namespace org.xpangen.Generator.Profile
             GenCardinalityText = new[] {">", "/", "<", "\\", "'", "+", ".", "-", "@", "^"};
             GenComparisonText = new[] {"", "~", "=", "<>", "<", "<=", ">", ">="};
             Dlm = "=<>~";
+            FunctionParameterSeparator = " ";
 
             Add(new ProfileFragmentSyntax
                     {
