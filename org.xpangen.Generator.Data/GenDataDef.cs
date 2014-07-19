@@ -227,7 +227,7 @@ namespace org.xpangen.Generator.Data
                 sc.Add(new GenDataDefSubClass {SubClass = Classes[j], Reference = ""});
             Classes[j].Parent = Classes[i];
             var c = Definition.ClassList.Find(className) ?? AddDefinitionClass(className);
-            if (c.SubClassList.Find(subClassName) == null)
+            if (!c.SubClassList.Contains(subClassName))
                 AddDefinitionSubClass(subClassName, c);
         }
 
@@ -258,6 +258,7 @@ namespace org.xpangen.Generator.Data
                                            Name = item.Name,
                                            Parent = item.Parent,
                                            ClassId = Classes.Count,
+                                           Definition = item.Definition,
                                            IsReference = true,
                                            IsInherited = item.IsInherited,
                                            RefClassId = item.ClassId,
@@ -345,7 +346,12 @@ namespace org.xpangen.Generator.Data
             GenDataDefClass inheritor;
             if (j == -1)
             {
-                inheritor = new GenDataDefClass {Name = inheritorName, ClassId = Classes.Count};
+                inheritor = new GenDataDefClass
+                            {
+                                Name = inheritorName,
+                                ClassId = Classes.Count,
+                                Definition = Definition.ClassList.Find(inheritorName)
+                            };
                 Classes.Add(inheritor);
             }
             else
@@ -376,7 +382,13 @@ namespace org.xpangen.Generator.Data
             var i = Classes.IndexOf(className);
             if (i == -1)
             {
-                Classes.Add(new GenDataDefClass {Name = className, ClassId = Classes.Count, RefClassId = Classes.Count});
+                Classes.Add(new GenDataDefClass
+                            {
+                                Name = className,
+                                ClassId = Classes.Count,
+                                RefClassId = Classes.Count,
+                                Definition = Definition != null ? Definition.ClassList.Find(className) : null
+                            });
                 i = Classes.IndexOf(className);
             }
             if (i == 0) Classes[0].CreateInstanceProperties();

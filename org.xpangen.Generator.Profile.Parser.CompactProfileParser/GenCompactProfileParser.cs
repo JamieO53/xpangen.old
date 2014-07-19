@@ -34,7 +34,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             Scan = scan;
             try
             {
-                ScanBody(ClassId, Body, this, GenData);
+                ScanBody(ClassId, Body, this);
             }
             finally
             {
@@ -43,7 +43,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             ParameterSeparator = new CharSet(" " + Scan.Delimiter);
         }
 
-        private void ScanBody(int classId, GenSegBody body, GenContainerFragmentBase parentSegment, GenData genData)
+        private void ScanBody(int classId, GenSegBody body, GenContainerFragmentBase parentSegment)
         {
             var saveClassId = GenDataDef.CurrentClassId;
             GenDataDef.CurrentClassId = classId;
@@ -64,7 +64,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                         body.Add(textBlock);
                         textBlock = null;
                     }
-                    var frag = ScanFragment(classId, ref t, out s, parentSegment, genData);
+                    var frag = ScanFragment(classId, ref t, out s, parentSegment);
                     if (t == TokenType.Name)
                     {
                         if (textBlock == null) textBlock = new GenTextBlock(GenDataDef, parentSegment);
@@ -107,7 +107,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             GenDataDef.CurrentClassId = saveClassId;
         }
 
-        private GenFragment ScanFragment(int classId, ref TokenType nextToken, out string s, GenContainerFragmentBase parentSegment, GenData genData)
+        private GenFragment ScanFragment(int classId, ref TokenType nextToken, out string s, GenContainerFragmentBase parentSegment)
         {
             GenFragment frag;
             s = "";
@@ -125,16 +125,16 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                             ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseSegmentHeading(
                                 GenDataDef, s, parentSegment);
                         frag = seg;
-                        ScanBody(seg.ClassId, seg.Body, parentSegment, genData);
+                        ScanBody(seg.ClassId, seg.Body, parentSegment);
                         break;
                     case TokenType.Block:
-                        frag = ScanBlock(classId, parentSegment, genData);
+                        frag = ScanBlock(classId, parentSegment);
                         break;
                     case TokenType.Lookup:
                         s = Scan.ScanLookup();
                         var lookup = new GenLookup(GenDataDef, s, parentSegment);
                         frag = lookup;
-                        ScanBody(lookup.ClassId, lookup.Body, parentSegment, genData);
+                        ScanBody(lookup.ClassId, lookup.Body, parentSegment);
                         break;
                     case TokenType.Condition:
                         s = Scan.ScanCondition();
@@ -143,19 +143,19 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                                                                                                              GenDataDef,
                                                                                                              s);
                         frag = cond;
-                        ScanBody(classId, cond.Body, parentSegment, genData);
+                        ScanBody(classId, cond.Body, parentSegment);
                         break;
                     case TokenType.Function:
                         s = Scan.ScanFunctionName();
                         var func = new GenFunction(GenDataDef, parentSegment) { FunctionName = s };
                         frag = func;
-                        ScanBlockParams(func.Body, parentSegment, genData);
+                        ScanBlockParams(func.Body, parentSegment);
                         break;
                     case TokenType.NoMatch:
                         s = Scan.ScanLookup();
                         var noMatch = new GenLookup(GenDataDef, s, parentSegment) { NoMatch = true };
                         frag = noMatch;
-                        ScanBody(noMatch.ClassId, noMatch.Body, parentSegment, genData);
+                        ScanBody(noMatch.ClassId, noMatch.Body, parentSegment);
                         break;
                     case TokenType.Name:
                         frag = new GenPlaceholderFragment(GenDataDef, parentSegment) { Id = GenDataDef.GetId(Scan.ScanName()) };
@@ -176,7 +176,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             return frag;
         }
 
-        private void ScanBlockParams(GenSegBody body, GenContainerFragmentBase parentSegment, GenData genData)
+        private void ScanBlockParams(GenSegBody body, GenContainerFragmentBase parentSegment)
         {
             Scan.ScanWhile(ScanReader.WhiteSpace);
 
@@ -194,7 +194,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                     if (t != TokenType.Close && t != TokenType.Unknown)
                     {
                         // Scan contained block
-                        var frag = ScanFragment(GenDataDef.CurrentClassId, ref t, out s, parentSegment, genData);
+                        var frag = ScanFragment(GenDataDef.CurrentClassId, ref t, out s, parentSegment);
                         body.Add(frag);
 
                         // Skip blank parameter separators
@@ -268,12 +268,12 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
 
         }
 
-        private GenBlock ScanBlock(int classId, GenContainerFragmentBase parentSegment, GenData genData)
+        private GenBlock ScanBlock(int classId, GenContainerFragmentBase parentSegment)
         {
             var frag = new GenBlock(GenDataDef, parentSegment);
             if (Scan.CheckChar('{'))
                 Scan.SkipChar();
-            ScanBody(classId, frag.Body, parentSegment, genData);
+            ScanBody(classId, frag.Body, parentSegment);
             return frag;
         }
     }

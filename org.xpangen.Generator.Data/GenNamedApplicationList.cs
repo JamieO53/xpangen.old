@@ -91,6 +91,16 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
+        /// Does the list contain an object with this name?
+        /// </summary>
+        /// <param name="name">The name of the sought object.</param>
+        /// <returns>Is the named object in the list?</returns>
+        public bool Contains(string name)
+        {
+            return IndexOf(name) != -1;
+        }
+        
+        /// <summary>
         /// Find the index of the object.
         /// </summary>
         /// <param name="name">The name of the sought object.</param>

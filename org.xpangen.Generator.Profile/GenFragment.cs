@@ -3,11 +3,10 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Model.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
-    public abstract class GenFragment : Fragment
+    public abstract class GenFragment : GenBase
     {
         private FragmentType _fragmentType;
 
@@ -19,22 +18,7 @@ namespace org.xpangen.Generator.Profile
             get { return _fragmentType; }
             protected set
             {
-                if (GenObject != null)
-                    base.FragmentType = value.ToString();
                 _fragmentType = value;
-            }
-        }
-
-        /// <summary>
-        /// The profile data object
-        /// </summary>
-        public new IGenObject GenObject
-        {
-            get { return (GenObject) base.GenObject; }
-            set
-            {
-                base.GenObject = value;
-                base.FragmentType = _fragmentType.ToString();
             }
         }
 
@@ -60,22 +44,12 @@ namespace org.xpangen.Generator.Profile
         /// <param name="genDataDef">The definition of the data being generated.</param>
         /// <param name="parentSegment">The class segment this fragment belongs to.</param>
         /// <param name="fragmentType">The type of fragment.</param>
-        /// <param name="genData">The profile data.</param>
-        /// <param name="profileRoot">The parent of all the profile fragments in the profile data.</param>
-        /// <param name="genObject">The data for this fragment.</param>
-        protected GenFragment(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, 
-            FragmentType fragmentType, GenData genData = null, ProfileRoot profileRoot = null, 
-            GenObject genObject = null) 
-            : base(parentSegment != null ? parentSegment.GenData : genData)
+        protected GenFragment(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, FragmentType fragmentType)
         {
             GenDataDef = genDataDef;
             ParentSegment = parentSegment;
-            ProfileRoot = profileRoot ?? (ParentSegment != null ? ParentSegment.ProfileRoot : null);
             FragmentType = fragmentType;
-            GenObject = genObject ?? (ProfileRoot != null ? ProfileRoot.AddFragment(FragmentType.ToString() + ProfileRoot.FragmentList.Count).GenObject : null);
         }
-
-        public ProfileRoot ProfileRoot { get; set; }
 
         /// <summary>
         ///     A label identifying the fragment for browsing.

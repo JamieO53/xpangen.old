@@ -2,13 +2,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
 using NUnit.Framework;
-using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Model.Profile;
 using org.xpangen.Generator.Editor.Helper;
 using org.xpangen.Generator.Parameter;
-using org.xpangen.Generator.Profile;
 
 namespace org.xpangen.Generator.Test
 {
@@ -27,12 +23,6 @@ namespace org.xpangen.Generator.Test
             var data = new GeData();
             data.Settings = data.GetDefaultSettings();
             data.SetFileGroup("GeneratorDefinitionModel");
-            Assert.IsNotNull(data.Profile.GenData);
-            var profile = data.Profile as Fragment;
-            Assert.IsNotNull(profile);
-            Assert.AreEqual("Profile", profile.FragmentType);
-            var model = new ProfileDefinition(data.Profile.GenData);
-
         }
 
         /// <summary>

@@ -1,4 +1,6 @@
-﻿namespace org.xpangen.Generator.Data
+﻿using org.xpangen.Generator.Data.Definition;
+
+namespace org.xpangen.Generator.Data
 {
     /// <summary>
     /// The definition of a generator class
@@ -10,9 +12,11 @@
         /// </summary>
         public string Name { get; set; }
 
+        public Class Definition { get; internal set; }
         /// <summary>
         /// The parent of the class
         /// </summary>
+        
         public GenDataDefClass Parent { get; set; }
         
         /// <summary>
@@ -31,17 +35,16 @@
         {
             get
             {
-                if (_instanceProperties != null) return _instanceProperties;
-                else
-                {
+                if (_instanceProperties == null)
                     CreateInstanceProperties();
-                    return _instanceProperties;
-                }
+                return _instanceProperties;
             }
         }
 
         public int AddInstanceProperty(string name)
         {
+            if (Definition != null && !Definition.PropertyList.Contains(name))
+                Definition.AddProperty(name);
             return InstanceProperties.Add(name);
         }
         
