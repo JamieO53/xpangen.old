@@ -3,22 +3,20 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Model.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
     public class GenLookup : GenContainerFragmentBase
     {
-        public string Condition { get; set; }
+        private string Condition { get; set; }
         public bool NoMatch { get; set; }
 
         public new int ClassId { get; set; }
         protected GenDataId Var2 { get; set; }
         protected GenDataId Var1 { get; set; }
 
-        public GenLookup(GenDataDef genDataDef, string condition, GenContainerFragmentBase parentSegment,
-            GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
-            : base(genDataDef, parentSegment, FragmentType.Lookup, genData, profileRoot, genObject)
+        public GenLookup(GenDataDef genDataDef, string condition, GenContainerFragmentBase parentSegment)
+            : base(genDataDef, parentSegment, FragmentType.Lookup)
         {
             Body.ParentSegment = this;
             Condition = condition;

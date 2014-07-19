@@ -5,14 +5,13 @@
 using System;
 using System.Text;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Model.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
     public class GenCondition : GenContainerFragmentBase
     {
-        public GenCondition(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
-            : base(genDataDef, parentSegment, FragmentType.Condition, genData, profileRoot, genObject)
+        public GenCondition(GenDataDef genDataDef, GenContainerFragmentBase parentSegment)
+            : base(genDataDef, parentSegment, FragmentType.Condition)
         {
         }
 

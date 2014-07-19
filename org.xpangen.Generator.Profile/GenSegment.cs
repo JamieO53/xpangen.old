@@ -5,7 +5,6 @@
 using System;
 using System.Text;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Model.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
@@ -14,10 +13,8 @@ namespace org.xpangen.Generator.Profile
         private GenBlock ItemBody { get; set; }
         private GenFragment Separator { get; set; }
 
-        public GenSegment(GenDataDef genDataDef, string className, GenCardinality cardinality,
-                          GenContainerFragmentBase parentSegment, GenData genData = null,
-                          ProfileRoot profileRoot = null, GenObject genObject = null)
-            : base(genDataDef, parentSegment, FragmentType.Segment, genData, profileRoot, genObject)
+        public GenSegment(GenDataDef genDataDef, string className, GenCardinality cardinality, GenContainerFragmentBase parentSegment)
+            : base(genDataDef, parentSegment, FragmentType.Segment)
         {
             Body.ParentSegment = this;
             ClassId = GenDataDef.Classes.IndexOf(className);

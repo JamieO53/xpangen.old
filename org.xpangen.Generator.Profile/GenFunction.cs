@@ -5,15 +5,13 @@
 using System;
 using System.IO;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Model.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
     public class GenFunction : GenContainerFragmentBase
     {
-        public GenFunction(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
-            GenData genData = null, ProfileRoot profileRoot = null, GenObject genObject = null)
-            : base(genDataDef, parentSegment, FragmentType.Function, genData, profileRoot, genObject)
+        public GenFunction(GenDataDef genDataDef, GenContainerFragmentBase parentSegment)
+            : base(genDataDef, parentSegment, FragmentType.Function)
         {
         }
 
