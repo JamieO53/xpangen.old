@@ -5,12 +5,11 @@
 
         public static Definition Create()
         {
-            //var d = new GenData(GenDataDef.CreateDefinition()) { DataName = "Definition" };
-            var d = new GenData(null) { DataName = "Definition" };
+            var d = CreateEmpty();
+
             var b = d.GenDataBase;
             var root = b.Root;
-            root.SubClass.Add(new GenSubClass(b, root, 1, null));
-
+            
             var @class = CreateDefinitionClass(root, "Class", "Class Definition", "", b);
             CreateDefinitionSubClass(@class, "SubClass", "", "");
             CreateDefinitionSubClass(@class, "Property", "", "");
@@ -47,7 +46,16 @@
             return new Definition(d);
         }
 
-        private static GenObject CreateDefinitionClass(GenObject root, string name, string title, string inheritance,
+        public static GenData CreateEmpty()
+        {
+            var d = new GenData(null) {DataName = "Definition"};
+            var b0 = d.GenDataBase;
+            var root0 = b0.Root;
+            root0.SubClass.Add(new GenSubClass(b0, root0, 1, null));
+            return d;
+        }
+
+        public static GenObject CreateDefinitionClass(GenObject root, string name, string title, string inheritance,
                                                        GenDataBase d)
         {
             var @class = new GenObject(root, root.SubClass[0], 1);
@@ -60,7 +68,7 @@
             return @class;
         }
 
-        private static void CreateDefinitionSubClass(GenObject @class, string name, string reference,
+        public static GenObject CreateDefinitionSubClass(GenObject @class, string name, string reference,
                                                      string relationship)
         {
             var subClass = new GenObject(@class, @class.SubClass[0], 2);
@@ -69,9 +77,10 @@
             SetAttribute(subClass, 1, reference);
             SetAttribute(subClass, 2, relationship);
             @class.SubClass[0].Add(subClass);
+            return subClass;
         }
 
-        private static void CreateDefinitionProperty(GenObject @class, string name, string title, string dataType,
+        public static GenObject CreateDefinitionProperty(GenObject @class, string name, string title, string dataType,
                                                      string @default = "", string lookupType = "",
                                                      string lookupDependence = "", string lookupTable = "")
         {
@@ -84,6 +93,7 @@
             SetAttribute(property, 5, lookupDependence);
             SetAttribute(property, 6, lookupTable);
             @class.SubClass[1].Add(property);
+            return property;
         }
         
         private static void SetAttribute(GenObject genObject, int index, string value)

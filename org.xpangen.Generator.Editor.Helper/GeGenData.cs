@@ -20,7 +20,7 @@ namespace org.xpangen.Generator.Editor.Helper
             {
                 DefGenData = GenData.DataLoader.LoadData(filePath);
                 var f = DefGenData.AsDef();
-                f.Definition = Path.GetFileNameWithoutExtension(filePath);
+                f.DefinitionName = Path.GetFileNameWithoutExtension(filePath);
                 var references = f.Cache.References;
                 for (var i = 0; i < references.Count; i++)
                 {

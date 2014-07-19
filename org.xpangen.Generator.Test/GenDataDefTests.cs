@@ -76,12 +76,12 @@ namespace org.xpangen.Generator.Test
                 "`]";
 
             var d = new GenDataDef();
-            d.Definition = "Root";
+            d.DefinitionName = "Root";
             var i = d.AddClass("", "Root");
             Assert.AreEqual(1, i);
             Assert.AreEqual(i, d.Classes.IndexOf("Root"));
             Assert.AreEqual(0, d.IndexOfSubClass(0, i));
-            var j = d.Classes[i].InstanceProperties.Add("Id");
+            var j = d.Classes[i].AddInstanceProperty("Id");
             Assert.AreEqual(j, d.Classes[i].Properties.IndexOf("Id"));
             Assert.AreEqual(rootProfile, GenDataDefProfile.CreateProfile(d));
 
@@ -94,7 +94,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(i, d.Classes.IndexOf("Sub"));
             Assert.AreEqual(0, d.IndexOfSubClass(1, i));
             Assert.AreEqual(1, d.Classes[i].Parent.ClassId);
-            j = d.Classes[i].InstanceProperties.Add("SubId");
+            j = d.Classes[i].AddInstanceProperty("SubId");
             Assert.AreEqual(0, j);
             Assert.AreEqual(j, d.Classes[i].Properties.IndexOf("SubId"));
 

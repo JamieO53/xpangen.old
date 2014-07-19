@@ -27,27 +27,27 @@ namespace org.xpangen.Generator.Data.Model.Settings
         public static GenDataDef GetDefinition()
         {
             var f = new GenDataDef();
-            f.Definition = "GeneratorEditor";
+            f.DefinitionName = "GeneratorEditor";
             f.AddSubClass("", "GenSettings");
             f.AddSubClass("GenSettings", "FileGroup");
             f.AddSubClass("GenSettings", "BaseFile");
             f.AddSubClass("BaseFile", "Profile");
-            f.Classes[1].InstanceProperties.Add("HomeDir");
-            f.Classes[2].InstanceProperties.Add("Name");
-            f.Classes[2].InstanceProperties.Add("FileName");
-            f.Classes[2].InstanceProperties.Add("FilePath");
-            f.Classes[2].InstanceProperties.Add("BaseFileName");
-            f.Classes[2].InstanceProperties.Add("Profile");
-            f.Classes[2].InstanceProperties.Add("GeneratedFile");
-            f.Classes[3].InstanceProperties.Add("Name");
-            f.Classes[3].InstanceProperties.Add("FileName");
-            f.Classes[3].InstanceProperties.Add("FilePath");
-            f.Classes[3].InstanceProperties.Add("Title");
-            f.Classes[3].InstanceProperties.Add("FileExtension");
-            f.Classes[4].InstanceProperties.Add("Name");
-            f.Classes[4].InstanceProperties.Add("FileName");
-            f.Classes[4].InstanceProperties.Add("FilePath");
-            f.Classes[4].InstanceProperties.Add("Title");
+            f.Classes[1].AddInstanceProperty("HomeDir");
+            f.Classes[2].AddInstanceProperty("Name");
+            f.Classes[2].AddInstanceProperty("FileName");
+            f.Classes[2].AddInstanceProperty("FilePath");
+            f.Classes[2].AddInstanceProperty("BaseFileName");
+            f.Classes[2].AddInstanceProperty("Profile");
+            f.Classes[2].AddInstanceProperty("GeneratedFile");
+            f.Classes[3].AddInstanceProperty("Name");
+            f.Classes[3].AddInstanceProperty("FileName");
+            f.Classes[3].AddInstanceProperty("FilePath");
+            f.Classes[3].AddInstanceProperty("Title");
+            f.Classes[3].AddInstanceProperty("FileExtension");
+            f.Classes[4].AddInstanceProperty("Name");
+            f.Classes[4].AddInstanceProperty("FileName");
+            f.Classes[4].AddInstanceProperty("FilePath");
+            f.Classes[4].AddInstanceProperty("Title");
             return f;
         }
 

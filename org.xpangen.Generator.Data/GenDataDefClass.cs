@@ -40,6 +40,11 @@
             }
         }
 
+        public int AddInstanceProperty(string name)
+        {
+            return InstanceProperties.Add(name);
+        }
+        
         /// <summary>
         /// The class' properties
         /// </summary>

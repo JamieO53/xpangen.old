@@ -3,14 +3,16 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using org.xpangen.Generator.Data.Definition;
 
 namespace org.xpangen.Generator.Data
 {
     public class GenDataDef : GenBase
     {
         public GenDataDefClassList Classes { get; private set; }
+        public Definition.Definition Definition { get; private set; }
         public int CurrentClassId { get; set; }
-        public string Definition { get; set; }
+        public string DefinitionName { get; set; }
 
         public GenDataDefReferenceCache Cache { get; private set; }
 
@@ -20,14 +22,45 @@ namespace org.xpangen.Generator.Data
             AddClass("");
             CurrentClassId = -1;
             Cache = new GenDataDefReferenceCache(this);
+            Definition = new Definition.Definition(DefinitionCreator.CreateEmpty());
         }
 
         public int AddClass(string parent, string name)
         {
             if (Classes.Contains(name))
                 return Classes.IndexOf(name);
+            var c = CreateDefinitionClass(name);
+            CreateDefinitionSubClass(name, c);
             AddSubClass(parent, name);
             return Classes.IndexOf(name);
+        }
+
+        private static GenObject CreateDefinitionSubClass(string name, GenObject c)
+        {
+            return DefinitionCreator.CreateDefinitionSubClass(c, name, "", "");
+        }
+
+        private GenObject CreateDefinitionClass(string name)
+        {
+            return DefinitionCreator.CreateDefinitionClass(Definition.GenData.Root, name, "", "",
+                                                           Definition.GenData.GenDataBase);
+        }
+
+        private Class AddDefinitionClass(string className)
+        {
+            var c = new Class(Definition.GenData) { GenObject = CreateDefinitionClass(className) };
+            Definition.ClassList.Add(c);
+            return c;
+        }
+
+        private SubClass AddDefinitionSubClass(string subClassName, Class c)
+        {
+            var s = new SubClass(Definition.GenData)
+            {
+                GenObject = CreateDefinitionSubClass(subClassName, (GenObject)c.GenObject)
+            };
+            c.SubClassList.Add(s);
+            return s;
         }
 
         public GenDataId GetId(string name)
@@ -103,16 +136,16 @@ namespace org.xpangen.Generator.Data
 
         private static void PopulateMinimal(GenDataDef def)
         {
-            def.Definition = "Minimal";
+            def.DefinitionName = "Minimal";
             def.AddClass("", "Class");
             def.AddClass("Class", "SubClass");
             def.AddClass("Class", "Property");
-            def.Classes[def.Classes.IndexOf("Class")].InstanceProperties.Add("Name");
-            def.Classes[def.Classes.IndexOf("Class")].InstanceProperties.Add("Inheritance");
-            def.Classes[def.Classes.IndexOf("SubClass")].InstanceProperties.Add("Name");
-            def.Classes[def.Classes.IndexOf("SubClass")].InstanceProperties.Add("Reference");
-            def.Classes[def.Classes.IndexOf("SubClass")].InstanceProperties.Add("Relationship");
-            def.Classes[def.Classes.IndexOf("Property")].InstanceProperties.Add("Name");
+            def.Classes[def.Classes.IndexOf("Class")].AddInstanceProperty("Name");
+            def.Classes[def.Classes.IndexOf("Class")].AddInstanceProperty("Inheritance");
+            def.Classes[def.Classes.IndexOf("SubClass")].AddInstanceProperty("Name");
+            def.Classes[def.Classes.IndexOf("SubClass")].AddInstanceProperty("Reference");
+            def.Classes[def.Classes.IndexOf("SubClass")].AddInstanceProperty("Relationship");
+            def.Classes[def.Classes.IndexOf("Property")].AddInstanceProperty("Name");
         }
 
         public static GenDataDef CreateDefinition()
@@ -124,29 +157,29 @@ namespace org.xpangen.Generator.Data
 
         private static void PopulateDefinition(GenDataDef def)
         {
-            def.Definition = "Definition";
+            def.DefinitionName = "Definition";
             def.AddSubClass("", "Class");
             def.AddSubClass("Class", "SubClass");
             def.AddSubClass("Class", "Property");
-            def.Classes[1].InstanceProperties.Add("Name");
-            def.Classes[1].InstanceProperties.Add("Title");
-            def.Classes[1].InstanceProperties.Add("Inheritance");
-            def.Classes[2].InstanceProperties.Add("Name");
-            def.Classes[2].InstanceProperties.Add("Reference");
-            def.Classes[2].InstanceProperties.Add("Relationship");
-            def.Classes[3].InstanceProperties.Add("Name");
-            def.Classes[3].InstanceProperties.Add("Title");
-            def.Classes[3].InstanceProperties.Add("DataType");
-            def.Classes[3].InstanceProperties.Add("Default");
-            def.Classes[3].InstanceProperties.Add("LookupType");
-            def.Classes[3].InstanceProperties.Add("LookupDependence");
-            def.Classes[3].InstanceProperties.Add("LookupTable");
+            def.Classes[1].AddInstanceProperty("Name");
+            def.Classes[1].AddInstanceProperty("Title");
+            def.Classes[1].AddInstanceProperty("Inheritance");
+            def.Classes[2].AddInstanceProperty("Name");
+            def.Classes[2].AddInstanceProperty("Reference");
+            def.Classes[2].AddInstanceProperty("Relationship");
+            def.Classes[3].AddInstanceProperty("Name");
+            def.Classes[3].AddInstanceProperty("Title");
+            def.Classes[3].AddInstanceProperty("DataType");
+            def.Classes[3].AddInstanceProperty("Default");
+            def.Classes[3].AddInstanceProperty("LookupType");
+            def.Classes[3].AddInstanceProperty("LookupDependence");
+            def.Classes[3].AddInstanceProperty("LookupTable");
         }
 
         public GenData AsGenData()
         {
             var f = CreateMinimal();
-            var d = new GenData(f) {DataName = Definition};
+            var d = new GenData(f) {DataName = DefinitionName};
             var a = new GenAttributes(f, 1);
             for (var i = 1; i < Classes.Count; i++)
             {
@@ -193,8 +226,10 @@ namespace org.xpangen.Generator.Data
             if (k == -1)
                 sc.Add(new GenDataDefSubClass {SubClass = Classes[j], Reference = ""});
             Classes[j].Parent = Classes[i];
+            var c = Definition.ClassList.Find(className) ?? AddDefinitionClass(className);
+            if (c.SubClassList.Find(subClassName) == null)
+                AddDefinitionSubClass(subClassName, c);
         }
-
 
         public void AddSubClass(string className, string subClassName, string reference)
         {
@@ -231,7 +266,7 @@ namespace org.xpangen.Generator.Data
                                            ReferenceDefinition = sc.ReferenceDefinition
                                        };
                     for (var l = 0; l < item.InstanceProperties.Count; l++)
-                        newClass.InstanceProperties.Add(item.InstanceProperties[l]);
+                        newClass.AddInstanceProperty(item.InstanceProperties[l]);
                     Classes.Add(newClass);
                 }
                 else
@@ -244,7 +279,7 @@ namespace org.xpangen.Generator.Data
                     oldItem.ReferenceDefinition = sc.ReferenceDefinition;
                     oldItem.IsInherited = item.IsInherited;
                     for (var l = 0; l < item.InstanceProperties.Count; l++)
-                        oldItem.InstanceProperties.Add(item.InstanceProperties[l]);
+                        oldItem.AddInstanceProperty(item.InstanceProperties[l]);
                 }
             }
             for (var k = 1; k < rf.Classes.Count; k++)
@@ -324,7 +359,7 @@ namespace org.xpangen.Generator.Data
                 for (var k = 0; k < parent.InstanceProperties.Count; k++)
                 {
                     if (inheritor.InstanceProperties.IndexOf(parent.Properties[k]) == -1)
-                        inheritor.InstanceProperties.Add(parent.Properties[k]);
+                        inheritor.AddInstanceProperty(parent.Properties[k]);
                 }
             }
         }
@@ -355,7 +390,7 @@ namespace org.xpangen.Generator.Data
 
         public override string ToString()
         {
-            return "GenDataDef:" + Definition;
+            return "GenDataDef:" + DefinitionName;
         }
     }
 }

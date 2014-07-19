@@ -29,10 +29,10 @@ namespace org.xpangen.Generator.Test
         protected static GenData SetUpComparisonData()
         {
             var f = GenDataDef.CreateMinimal();
-            f.Classes[PropertyClassId].InstanceProperties.Add("NameLT");
-            f.Classes[PropertyClassId].InstanceProperties.Add("NameEQ");
-            f.Classes[PropertyClassId].InstanceProperties.Add("NameGT");
-            f.Classes[PropertyClassId].InstanceProperties.Add("NameBlank");
+            f.Classes[PropertyClassId].AddInstanceProperty("NameLT");
+            f.Classes[PropertyClassId].AddInstanceProperty("NameEQ");
+            f.Classes[PropertyClassId].AddInstanceProperty("NameGT");
+            f.Classes[PropertyClassId].AddInstanceProperty("NameBlank");
 
             var d = new GenData(f);
             SetUpData(d);
@@ -63,7 +63,7 @@ namespace org.xpangen.Generator.Test
         protected static GenData SetUpNumericComparisonData()
         {
             var f = GenDataDef.CreateMinimal();
-            f.Classes[PropertyClassId].InstanceProperties.Add("Number");
+            f.Classes[PropertyClassId].AddInstanceProperty("Number");
 
             var d = new GenData(f);
             var a = new GenAttributes(f, PropertyClassId);

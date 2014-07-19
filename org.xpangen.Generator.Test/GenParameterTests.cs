@@ -239,7 +239,7 @@ namespace org.xpangen.Generator.Test
             const string expected = GenDataSaveText;
 
             var f = GenDataDef.CreateMinimal();
-            f.Classes[ClassClassId].InstanceProperties.Add("Title");
+            f.Classes[ClassClassId].AddInstanceProperty("Title");
             var a = new GenAttributes(f, ClassClassId);
             var d = new GenData(f);
             SetUpData(d);

@@ -243,10 +243,10 @@ namespace org.xpangen.Generator.Test
                 "`?Class.Name>Class.NameGT:Class name is greater than Clasz `]" +
                 "`]";
             var f = GenDataDef.CreateMinimal();
-            f.Classes[ClassClassId].InstanceProperties.Add("NameLT");
-            f.Classes[ClassClassId].InstanceProperties.Add("NameEQ");
-            f.Classes[ClassClassId].InstanceProperties.Add("NameGT");
-            f.Classes[ClassClassId].InstanceProperties.Add("NameBlank");
+            f.Classes[ClassClassId].AddInstanceProperty("NameLT");
+            f.Classes[ClassClassId].AddInstanceProperty("NameEQ");
+            f.Classes[ClassClassId].AddInstanceProperty("NameGT");
+            f.Classes[ClassClassId].AddInstanceProperty("NameBlank");
 
             var d = new GenData(f);
             SetUpData(d);

@@ -97,7 +97,7 @@ namespace org.xpangen.Generator.Test
         {
             var def = new StringBuilder();
             def.Append("Definition=");
-            def.AppendLine(genDataDef.Definition);
+            def.AppendLine(genDataDef.DefinitionName);
             GenParameters.ClassDefinition(genDataDef, 0, def);
             var profile = new StringBuilder();
 

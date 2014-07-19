@@ -22,19 +22,19 @@ namespace org.xpangen.Generator.Data.Model.Profile
         public static GenDataDef GetDefinition()
         {
             var f = new GenDataDef();
-            f.Definition = "ProfileDefinition";
+            f.DefinitionName = "ProfileDefinition";
             f.AddSubClass("", "ProfileRoot");
             f.AddSubClass("ProfileRoot", "Fragment");
             f.AddSubClass("ProfileRoot", "Definition");
             f.AddSubClass("Definition", "Class");
             f.AddSubClass("Fragment", "BodyFragment");
-            f.Classes[1].InstanceProperties.Add("Name");
-            f.Classes[1].InstanceProperties.Add("Title");
-            f.Classes[2].InstanceProperties.Add("Name");
-            f.Classes[2].InstanceProperties.Add("Path");
-            f.Classes[3].InstanceProperties.Add("Name");
-            f.Classes[3].InstanceProperties.Add("FragmentType");
-            f.Classes[4].InstanceProperties.Add("Name");
+            f.Classes[1].AddInstanceProperty("Name");
+            f.Classes[1].AddInstanceProperty("Title");
+            f.Classes[2].AddInstanceProperty("Name");
+            f.Classes[2].AddInstanceProperty("Path");
+            f.Classes[3].AddInstanceProperty("Name");
+            f.Classes[3].AddInstanceProperty("FragmentType");
+            f.Classes[4].AddInstanceProperty("Name");
             return f;
         }
 

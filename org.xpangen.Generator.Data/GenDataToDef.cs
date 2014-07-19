@@ -47,7 +47,7 @@ namespace org.xpangen.Generator.Data
     
         public GenDataDef AsDef()
         {
-            var f = new GenDataDef {Definition = GenDataBase.DataName};
+            var f = new GenDataDef {DefinitionName = GenDataBase.DataName};
             Navigate(GenDataBase.Root, f);
 
             return f;
@@ -101,7 +101,7 @@ namespace org.xpangen.Generator.Data
                         var name = sc[i].SubClass[_xProperty][j].Attributes[_xPropertyName];
                         if (!@class.IsInherited || !@class.Parent.Properties.Contains(name))
                         {
-                            @class.InstanceProperties.Add(name);
+                            @class.AddInstanceProperty(name);
                             @class.Properties.Add(name);
                         }
                     }
