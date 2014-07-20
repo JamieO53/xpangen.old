@@ -6,14 +6,15 @@ using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class GenTextBlock : GenFragment
+    public class GenTextBlock : GenContainerFragmentBase
     {
         public GenSegBody Body { get; private set; }
 
-        public GenTextBlock(GenDataDef genDataDef, GenContainerFragmentBase parentSegment)
-            : base(genDataDef, parentSegment, FragmentType.TextBlock)
+        public GenTextBlock(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, 
+            GenContainerFragmentBase parentContainer)
+            : base(genDataDef, parentSegment, parentContainer, FragmentType.TextBlock)
         {
-            Body = new GenSegBody(genDataDef, parentSegment);
+            Body = new GenSegBody(genDataDef, parentSegment, parentContainer);
         }
 
         public override string ProfileLabel()

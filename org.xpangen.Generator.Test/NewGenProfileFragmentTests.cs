@@ -4,10 +4,10 @@ using System.Text;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Definition;
-using org.xpangen.Generator.Data.Model.NewProfile;
 using org.xpangen.Generator.Profile;
+using org.xpangen.Generator.Profile.Profile;
 using Definition = org.xpangen.Generator.Data.Definition.Definition;
-using Text = org.xpangen.Generator.Data.Model.NewProfile.Text;
+using Text = org.xpangen.Generator.Profile.Profile.Text;
 
 namespace org.xpangen.Generator.Test
 {
@@ -64,7 +64,7 @@ namespace org.xpangen.Generator.Test
                     switch (FragmentType)
                     {
                         case FragmentType.Profile:
-                            return typeof(Data.Model.NewProfile.Profile);
+                            return typeof(Profile.Profile.Profile);
                         case FragmentType.Null:
                             return typeof(Null);
                         case FragmentType.Text:
@@ -249,7 +249,7 @@ namespace org.xpangen.Generator.Test
             return (string) GetOutput();
         }
 
-        public string GetText(Data.Model.NewProfile.Profile profile)
+        public string GetText(Profile.Profile.Profile profile)
         {
             PrepareOutput();
             OutputBody(profile.Body());

@@ -10,8 +10,8 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenCondition : GenContainerFragmentBase
     {
-        public GenCondition(GenDataDef genDataDef, GenContainerFragmentBase parentSegment)
-            : base(genDataDef, parentSegment, FragmentType.Condition)
+        public GenCondition(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
+            : base(genDataDef, parentSegment, parentContainer, FragmentType.Condition)
         {
         }
 

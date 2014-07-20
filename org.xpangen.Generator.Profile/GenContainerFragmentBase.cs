@@ -10,11 +10,12 @@ namespace org.xpangen.Generator.Profile
     {
         private int _classId = -1;
 
-        protected GenContainerFragmentBase(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, FragmentType fragmentType)
-            : base(genDataDef, parentSegment, fragmentType)
+        protected GenContainerFragmentBase(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
+            GenContainerFragmentBase parentContainer, FragmentType fragmentType)
+            : base(genDataDef, parentSegment, parentContainer, fragmentType)
         {
             ParentSegment = parentSegment;
-            Body = new GenSegBody(genDataDef, parentSegment);
+            Body = new GenSegBody(genDataDef, parentSegment, parentContainer);
         }
 
         public GenSegBody Body { get; private set; }

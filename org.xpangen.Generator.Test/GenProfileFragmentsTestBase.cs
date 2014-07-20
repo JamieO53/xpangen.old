@@ -88,10 +88,10 @@ namespace org.xpangen.Generator.Test
             const string r = "Condition holds";
             var exp = expected ? r : "";
 
-            var g = new GenCondition(genDataDef, root);
+            var g = new GenCondition(genDataDef, root, root);
             ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseCondition(g, genDataDef, condIn);
 
-            var t = new GenTextFragment(genDataDef, root) {Text = r};
+            var t = new GenTextFragment(genDataDef, root, g) {Text = r};
             g.Body.Add(t);
             VerifyFragment(genData, g, "GenCondition", FragmentType.Condition, profileLabel,
                            String.Format("`?{0}:{1}`]", condOut, r), exp, false, -1);
@@ -164,12 +164,6 @@ namespace org.xpangen.Generator.Test
         protected static void ProcessSegment(GenData genData, string cardinalityText, GenCardinality genCardinality, string expected)
         {
             var root = new GenProfileFragment(genData.GenDataDef);
-            var fa = new List<GenFragment>
-                         {
-                             new GenPlaceholderFragment(genData.GenDataDef, root) {Id = genData.GenDataDef.GetId("Property.Name")},
-                             new GenTextFragment(genData.GenDataDef, root) {Text = ","}
-                         };
-
             var cardinality = GenCardinality.All;
             var dictionary = ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary;
             if (cardinalityText != "")
@@ -182,11 +176,17 @@ namespace org.xpangen.Generator.Test
                     break;
                 }
             }
-            var g = new GenSegment(genData.GenDataDef, "Property", cardinality, root);
+            var g = new GenSegment(genData.GenDataDef, "Property", cardinality, root, root);
             root.Body.Add(g);
             Assert.AreEqual(genCardinality, g.GenCardinality);
             Assert.AreEqual("Property", g.Definition.Name);
             Assert.AreSame(root, g.ParentSegment);
+            var fa = new List<GenFragment>
+                         {
+                             new GenPlaceholderFragment(genData.GenDataDef, g, g) {Id = genData.GenDataDef.GetId("Property.Name")},
+                             new GenTextFragment(genData.GenDataDef, g, g) {Text = ","}
+                         };
+
             foreach (var t in fa)
                 g.Body.Add(t);
             foreach (var t in fa)
@@ -200,7 +200,7 @@ namespace org.xpangen.Generator.Test
         protected static void ExecuteFunction(GenData genData, string functionName, string variableName, string variableValue, string expected)
         {
             var r = new GenProfileFragment(genData.GenDataDef);
-            var g = new GenFunction(genData.GenDataDef, r) { FunctionName = functionName };
+            var g = new GenFunction(genData.GenDataDef, r, r) { FunctionName = functionName };
             var b = SetFunctionParameters(genData, g, variableName, variableValue);
             VerifyFragment(genData, g, "GenFunction", FragmentType.Function, functionName,
                            "`@" + functionName + ':' + b + "`]", expected, false, -1);
@@ -210,13 +210,13 @@ namespace org.xpangen.Generator.Test
         {
             if (variableName == "")
                 return "";
-            
-            var p0 = new GenTextFragment(genData.GenDataDef, genFunction) {Text = variableName};
+
+            var p0 = new GenTextFragment(genData.GenDataDef, genFunction, genFunction) { Text = variableName };
             genFunction.Body.Add(p0);
             if (variableValue == "")
                 return variableName;
-            
-            var p1 = new GenTextFragment(genData.GenDataDef, genFunction) {Text = variableValue};
+
+            var p1 = new GenTextFragment(genData.GenDataDef, genFunction, genFunction) { Text = variableValue };
             genFunction.Body.Add(p1);
             return variableName + " " + variableValue;
         }
@@ -261,15 +261,15 @@ namespace org.xpangen.Generator.Test
 
         protected static GenSegment SetUpSegmentSeparatorFragment(GenDataDef f, GenCardinality cardinality, GenContainerFragmentBase parentSegment)
         {
-            var g = new GenSegment(f, "TestData", cardinality, parentSegment);
-            var cond = new GenCondition(f, g)
+            var g = new GenSegment(f, "TestData", cardinality, parentSegment, parentSegment);
+            var cond = new GenCondition(f, g, g)
                            {
                                GenComparison = GenComparison.Exists,
                                Var1 = f.GetId("TestData.Display")
                            };
             g.Body.Add(cond);
-            cond.Body.Add(new GenPlaceholderFragment(f, g) {Id = f.GetId("TestData.Name")});
-            g.Body.Add(new GenTextFragment(f, g) {Text = ", "});
+            cond.Body.Add(new GenPlaceholderFragment(f, g, cond) {Id = f.GetId("TestData.Name")});
+            g.Body.Add(new GenTextFragment(f, g, cond) {Text = ", "});
             return g;
         }
 

@@ -73,10 +73,10 @@ namespace org.xpangen.Generator.Parameter
             def.Append("Definition=");
             def.AppendLine(genDataDef.DefinitionName);
             var profile = new GenProfileFragment(genDataDef);
-            profile.Body.Add(new GenTextFragment(genDataDef, profile));
+            profile.Body.Add(new GenTextFragment(genDataDef, profile, profile));
 
             ClassDefinition(genDataDef, 0, def);
-            ClassProfile(genDataDef, 0, profile, profile);
+            ClassProfile(genDataDef, 0, profile, profile, profile);
             ((GenTextFragment) profile.Body.Fragment[0]).Text = def + ".\r\n";
             return profile;
         }
@@ -168,7 +168,8 @@ namespace org.xpangen.Generator.Parameter
                     ClassDefinition(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.ClassId, def);
         }
 
-        private static void ClassProfile(GenDataDef genDataDef, int classId, GenContainerFragmentBase profile, GenContainerFragmentBase parentSegment)
+        private static void ClassProfile(GenDataDef genDataDef, int classId, GenContainerFragmentBase profile, 
+            GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
         {
             GenSegment classProfile = null;
             if (classId != 0)
@@ -176,10 +177,10 @@ namespace org.xpangen.Generator.Parameter
                 classProfile = new GenSegment(genDataDef, genDataDef.Classes[classId].Name,
                                               genDataDef.Classes[classId].IsInherited
                                                   ? GenCardinality.Inheritance
-                                                  : GenCardinality.All, parentSegment);
+                                                  : GenCardinality.All, parentSegment, parentContainer);
 
                 if (!genDataDef.Classes[classId].IsAbstract)
-                    classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment)
+                    classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment, classProfile)
                                               {
                                                   Text =
                                                       genDataDef.Classes[classId]
@@ -195,7 +196,7 @@ namespace org.xpangen.Generator.Parameter
                         0)
                     {
                         ((GenTextFragment) classProfile.Body.Fragment[0]).Text += "=";
-                        classProfile.Body.Add(new GenPlaceholderFragment(genDataDef, parentSegment)
+                        classProfile.Body.Add(new GenPlaceholderFragment(genDataDef, parentSegment, classProfile)
                                                   {
                                                       Id =
                                                           genDataDef.GetId(
@@ -205,23 +206,23 @@ namespace org.xpangen.Generator.Parameter
                     }
                     if (genDataDef.Classes[classId].Properties.Count > j)
                     {
-                        classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment) {Text = "["});
+                        classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment, classProfile) {Text = "["});
                         var sep = "";
                         for (var i = j; i < genDataDef.Classes[classId].Properties.Count; i++)
                         {
-                            var condExists = new GenCondition(genDataDef, classProfile)
+                            var condExists = new GenCondition(genDataDef, classProfile, classProfile)
                                                  {
                                                      GenComparison = GenComparison.Exists,
                                                      Var1 = genDataDef.GetId(genDataDef.Classes[classId].Name + "." +
                                                                              genDataDef.Classes[classId].Properties[i])
                                                  };
-                            condExists.Body.Add(new GenTextFragment(genDataDef, parentSegment)
+                            condExists.Body.Add(new GenTextFragment(genDataDef, parentSegment, classProfile)
                                                     {
                                                         Text =
                                                             sep +
                                                             genDataDef.Classes[classId].Properties[i]
                                                     });
-                            var condNotTrue = new GenCondition(genDataDef, classProfile)
+                            var condNotTrue = new GenCondition(genDataDef, classProfile, classProfile)
                                                   {
                                                       GenComparison = GenComparison.Ne,
                                                       Var1 = genDataDef.GetId(genDataDef.Classes[classId].Name + "." +
@@ -229,13 +230,13 @@ namespace org.xpangen.Generator.Parameter
                                                       Lit = "True",
                                                       UseLit = true
                                                   };
-                            var functionQuote = new GenFunction(genDataDef, parentSegment)
+                            var functionQuote = new GenFunction(genDataDef, parentSegment, classProfile)
                                                     {
                                                         FunctionName =
                                                             "StringOrName"
                                                     };
-                            var param = new GenBlock(genDataDef, parentSegment);
-                            param.Body.Add(new GenPlaceholderFragment(genDataDef, parentSegment)
+                            var param = new GenBlock(genDataDef, parentSegment, classProfile);
+                            param.Body.Add(new GenPlaceholderFragment(genDataDef, parentSegment, classProfile)
                                                {
                                                    Id =
                                                        genDataDef.GetId(
@@ -243,17 +244,17 @@ namespace org.xpangen.Generator.Parameter
                                                            genDataDef.Classes[classId].Properties[i])
                                                });
                             functionQuote.Body.Add(param);
-                            condNotTrue.Body.Add(new GenTextFragment(genDataDef, parentSegment) {Text = "="});
+                            condNotTrue.Body.Add(new GenTextFragment(genDataDef, parentSegment, classProfile) {Text = "="});
                             condNotTrue.Body.Add(functionQuote);
                             condExists.Body.Add(condNotTrue);
 
                             classProfile.Body.Add(condExists);
                             sep = ",";
                         }
-                        classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment) {Text = "]\r\n"});
+                        classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment, classProfile) {Text = "]\r\n"});
                     }
                     else
-                        classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment) {Text = "\r\n"});
+                        classProfile.Body.Add(new GenTextFragment(genDataDef, parentSegment, classProfile) {Text = "\r\n"});
                 }
 
                 profile.Body.Add(classProfile);
@@ -261,26 +262,26 @@ namespace org.xpangen.Generator.Parameter
 
             for (var i = 0; i < genDataDef.Classes[classId].Inheritors.Count; i++)
                 ClassProfile(genDataDef, genDataDef.Classes[classId].Inheritors[i].ClassId, classProfile ?? profile,
-                             parentSegment);
+                             parentSegment, parentContainer);
 
             if (!genDataDef.Classes[classId].IsAbstract)
-                SubClassProfiles(genDataDef, classId, profile, parentSegment, classProfile);
+                SubClassProfiles(genDataDef, classId, profile, parentSegment, classProfile, classProfile);
             if (genDataDef.Classes[classId].IsInherited)
-                SubClassProfiles(genDataDef, genDataDef.Classes[classId].Parent.ClassId, profile, parentSegment, classProfile);
+                SubClassProfiles(genDataDef, genDataDef.Classes[classId].Parent.ClassId, profile, parentSegment, classProfile, classProfile);
         }
 
         private static void SubClassProfiles(GenDataDef genDataDef, int classId,
                                              GenContainerFragmentBase profile, GenContainerFragmentBase parentSegment,
-                                             GenSegment classProfile)
+                                             GenContainerFragmentBase parentContainer, GenSegment classProfile)
         {
             for (var i = 0; i < genDataDef.Classes[classId].SubClasses.Count; i++)
                 if (String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[i].SubClass.Reference))
                     ClassProfile(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.ClassId,
-                                 classProfile ?? profile, parentSegment);
+                                 classProfile ?? profile, parentSegment, parentContainer);
                 else
                 {
                     var refClass = new GenSegment(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.Name,
-                                                  GenCardinality.Reference, parentSegment);
+                                                  GenCardinality.Reference, parentSegment, parentContainer);
                     (classProfile ?? profile).Body.Add(refClass);
                 }
         }

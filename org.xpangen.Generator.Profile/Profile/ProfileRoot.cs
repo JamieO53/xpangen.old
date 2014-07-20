@@ -2,7 +2,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-namespace org.xpangen.Generator.Data.Model.Profile
+using org.xpangen.Generator.Data;
+
+namespace org.xpangen.Generator.Profile.Profile
 {
     /// <summary>
     /// The root node of the profile
@@ -11,11 +13,15 @@ namespace org.xpangen.Generator.Data.Model.Profile
     {
         public ProfileRoot()
         {
+            SubClasses.Add("Definition");
+            SubClasses.Add("Profile");
+            Properties.Add("Name");
+            Properties.Add("Title");
         }
 
-        public ProfileRoot(GenData genData)
+        public ProfileRoot(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
@@ -46,27 +52,16 @@ namespace org.xpangen.Generator.Data.Model.Profile
             }
         }
 
-        public GenNamedApplicationList<Fragment> FragmentList { get; private set; }
         public GenNamedApplicationList<Definition> DefinitionList { get; private set; }
+        public GenNamedApplicationList<Profile> ProfileList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            FragmentList = new GenNamedApplicationList<Fragment>(this);
-            DefinitionList = new GenNamedApplicationList<Definition>(this);
+            base.GenObjectSetNotification();
+            DefinitionList = new GenNamedApplicationList<Definition>(this, 2, 0);
+            base.GenObjectSetNotification();
+            ProfileList = new GenNamedApplicationList<Profile>(this, 3, 1);
         }
-
-        public Fragment AddFragment(string name, string fragmentType = "")
-        {
-            var item = new Fragment(GenData)
-                           {
-                               GenObject = GenData.CreateObject("ProfileRoot", "Fragment"),
-                               Name = name,
-                               FragmentType = fragmentType
-                           };
-            FragmentList.Add(item);
-            return item;
-        }
-
 
         public Definition AddDefinition(string name, string path = "")
         {
@@ -79,5 +74,18 @@ namespace org.xpangen.Generator.Data.Model.Profile
             DefinitionList.Add(item);
             return item;
         }
+
+
+        public Profile AddProfile(string name)
+        {
+            var item = new Profile(GenData)
+                           {
+                               GenObject = GenData.CreateObject("ProfileRoot", "Profile"),
+                               Name = name
+                           };
+            ProfileList.Add(item);
+            return item;
+        }
+
     }
 }

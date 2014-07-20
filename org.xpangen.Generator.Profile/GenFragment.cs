@@ -2,13 +2,48 @@
 // // License, v. 2.0. If a copy of the MPL was not distributed with this
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
     public abstract class GenFragment : GenBase
     {
         private FragmentType _fragmentType;
+        private Fragment _fragment;
+        private ContainerFragment _containerFragment;
+
+        /// <summary>
+        /// The fragment object holding the fragment's data
+        /// </summary>
+        protected Fragment Fragment
+        {
+            get { return _fragment; }
+            set
+            {
+                _fragment = value;
+                CheckFragmentType(value);
+            }
+        }
+
+        private void CheckFragmentType(Fragment fragment)
+        {
+            Enum.TryParse(fragment.GetType().Name, out _fragmentType);
+        }
+
+        /// <summary>
+        /// The container of this fragment
+        /// </summary>
+        protected ContainerFragment ContainerFragment
+        {
+            get { return _containerFragment; }
+            set
+            {
+                _containerFragment = value;
+                CheckFragment(FragmentType);
+            }
+        }
 
         /// <summary>
         ///     The fragment type.
@@ -19,6 +54,49 @@ namespace org.xpangen.Generator.Profile
             protected set
             {
                 _fragmentType = value;
+                CheckFragment(value);
+            }
+        }
+
+        private void CheckFragment(FragmentType fragmentType)
+        {
+            if (ContainerFragment == null || Fragment != null) return;
+            switch (fragmentType)
+            {
+                case FragmentType.Profile:
+                    Fragment = new ContainerFragment();
+                    break;
+                case FragmentType.Null:
+                    Fragment = new Null();
+                    break;
+                case FragmentType.Text:
+                    Fragment = new Text();
+                    break;
+                case FragmentType.Placeholder:
+                    Fragment = new Placeholder();
+                    break;
+                    //case FragmentType.Body:
+                    //    break;
+                case FragmentType.Segment:
+                    Fragment = new Segment();
+                    break;
+                case FragmentType.Block:
+                    Fragment = new Block();
+                    break;
+                case FragmentType.Lookup:
+                    Fragment = new Lookup();
+                    break;
+                case FragmentType.Condition:
+                    Fragment = new Condition();
+                    break;
+                case FragmentType.Function:
+                    Fragment = new Function();
+                    break;
+                case FragmentType.TextBlock:
+                    Fragment = new TextBlock();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("fragmentType");
             }
         }
 
@@ -37,17 +115,21 @@ namespace org.xpangen.Generator.Profile
         }
 
         public GenContainerFragmentBase ParentSegment { get; set; }
+        public GenContainerFragmentBase ParentContainer { get; set; }
 
         /// <summary>
         ///     Create a new <see cref="GenFragment" /> object.
         /// </summary>
         /// <param name="genDataDef">The definition of the data being generated.</param>
         /// <param name="parentSegment">The class segment this fragment belongs to.</param>
+        /// <param name="parentContainer"></param>
         /// <param name="fragmentType">The type of fragment.</param>
-        protected GenFragment(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, FragmentType fragmentType)
+        protected GenFragment(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, 
+            GenContainerFragmentBase parentContainer, FragmentType fragmentType)
         {
             GenDataDef = genDataDef;
             ParentSegment = parentSegment;
+            ParentContainer = parentContainer;
             FragmentType = fragmentType;
         }
 
