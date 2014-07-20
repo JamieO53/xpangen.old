@@ -2,19 +2,21 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-namespace org.xpangen.Generator.Data.Model.NewProfile
+using org.xpangen.Generator.Data;
+
+namespace org.xpangen.Generator.Profile.Profile
 {
     /// <summary>
-    /// The data content of the Null fragment
+    /// The Block fragment data
     /// </summary>
-    public class Null : Fragment
+    public class Block : ContainerFragment
     {
-        public Null()
+        public Block()
         {
             Properties.Add("Name");
         }
 
-        public Null(GenData genData) : this()
+        public Block(GenData genData) : this()
         {
             GenData = genData;
         }

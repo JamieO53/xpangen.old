@@ -13,8 +13,9 @@ namespace org.xpangen.Generator.Profile
         private GenBlock ItemBody { get; set; }
         private GenFragment Separator { get; set; }
 
-        public GenSegment(GenDataDef genDataDef, string className, GenCardinality cardinality, GenContainerFragmentBase parentSegment)
-            : base(genDataDef, parentSegment, FragmentType.Segment)
+        public GenSegment(GenDataDef genDataDef, string className, GenCardinality cardinality, 
+            GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
+            : base(genDataDef, parentSegment, parentContainer, FragmentType.Segment)
         {
             Body.ParentSegment = this;
             ClassId = GenDataDef.Classes.IndexOf(className);
@@ -153,7 +154,7 @@ namespace org.xpangen.Generator.Profile
                 case GenCardinality.AllDlm:
                     CheckDelimiter();
                     isEmpty = true;
-                    myPrefix = new GenBlock(GenDataDef, this);
+                    myPrefix = new GenBlock(GenDataDef, this, ParentContainer);
                     if (prefix != null)
                         myPrefix.Body.Add(prefix);
                     genData.First(ClassId);
@@ -181,7 +182,7 @@ namespace org.xpangen.Generator.Profile
                 case GenCardinality.BackDlm:
                     CheckDelimiter();
                     isEmpty = true;
-                    myPrefix = new GenBlock(GenDataDef, this);
+                    myPrefix = new GenBlock(GenDataDef, this, ParentContainer);
                     genData.Last(ClassId);
                     while (!genData.Eol(ClassId))
                     {
@@ -246,7 +247,7 @@ namespace org.xpangen.Generator.Profile
             if (Separator != null) return;
 
             // Optimization: This is done once when this method is first called
-            ItemBody = new GenBlock(GenDataDef, this);
+            ItemBody = new GenBlock(GenDataDef, this, ParentContainer);
 
             for (var i = 0; i < Body.Count - 1; i++)
                 ItemBody.Body.Add(Body.Fragment[i]);
@@ -255,14 +256,14 @@ namespace org.xpangen.Generator.Profile
             var lastText = last as GenTextBlock;
             if (last is GenTextBlock && lastText.Body.Count > 1)
             {
-                var newText = new GenTextBlock(GenDataDef, this);
+                var newText = new GenTextBlock(GenDataDef, this, this);
                 for (var i = 0; i < lastText.Body.Count - 1; i++)
                     newText.Body.Add(lastText.Body.Fragment[i]);
                 Separator = lastText.Body.Fragment[lastText.Body.Count - 1];
                 ItemBody.Body.Add(newText);
             }
             else
-                Separator = Body.Count > 0 ? last : new GenNullFragment(GenDataDef, this);
+                Separator = Body.Count > 0 ? last : new GenNullFragment(GenDataDef, this, ParentContainer);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Profile
     public class GenProfileFragment : GenContainerFragmentBase
     {
         public GenProfileFragment(GenDataDef genDataDef)
-            : base(genDataDef, null, FragmentType.Profile)
+            : base(genDataDef, null, null, FragmentType.Profile)
         {
             ClassId = 0;
             Body.ParentSegment = this;

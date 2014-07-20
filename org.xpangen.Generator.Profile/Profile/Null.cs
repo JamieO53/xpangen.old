@@ -2,24 +2,27 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-namespace org.xpangen.Generator.Data.Model.Profile
+using org.xpangen.Generator.Data;
+
+namespace org.xpangen.Generator.Profile.Profile
 {
     /// <summary>
-    /// A fragment that forms part of the body of a container fragment
+    /// The data content of the Null fragment
     /// </summary>
-    public class BodyFragment : GenNamedApplicationBase
+    public class Null : Fragment
     {
-        public BodyFragment()
+        public Null()
         {
+            Properties.Add("Name");
         }
 
-        public BodyFragment(GenData genData)
+        public Null(GenData genData) : this()
         {
-			GenData = genData;
+            GenData = genData;
         }
 
         /// <summary>
-        /// The name of the body fragment
+        /// Generated name of the fragment
         /// </summary>
         public override string Name
         {
@@ -31,6 +34,7 @@ namespace org.xpangen.Generator.Data.Model.Profile
                 if (!DelayedSave) SaveFields();
             }
         }
+
 
     }
 }

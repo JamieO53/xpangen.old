@@ -15,8 +15,9 @@ namespace org.xpangen.Generator.Profile
         protected GenDataId Var2 { get; set; }
         protected GenDataId Var1 { get; set; }
 
-        public GenLookup(GenDataDef genDataDef, string condition, GenContainerFragmentBase parentSegment)
-            : base(genDataDef, parentSegment, FragmentType.Lookup)
+        public GenLookup(GenDataDef genDataDef, string condition, GenContainerFragmentBase parentSegment, 
+            GenContainerFragmentBase parentContainer)
+            : base(genDataDef, parentSegment, parentContainer, FragmentType.Lookup)
         {
             Body.ParentSegment = this;
             Condition = condition;

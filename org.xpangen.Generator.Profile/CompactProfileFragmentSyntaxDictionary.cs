@@ -132,8 +132,7 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
-        public override GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass,
-                                                       GenContainerFragmentBase parentSegment)
+        public override GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
         {
             var s = segmentClass.Substring(segmentClass.Length - 1);
             var c = segmentClass;
@@ -145,7 +144,7 @@ namespace org.xpangen.Generator.Profile
                 c = segmentClass.Substring(0, segmentClass.Length - 1);
                 break;
             }
-            return new GenSegment(genDataDef, c, cardinality, parentSegment);
+            return new GenSegment(genDataDef, c, cardinality, parentSegment, parentContainer);
         }
     }
 }

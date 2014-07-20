@@ -2,27 +2,28 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-namespace org.xpangen.Generator.Data.Model.NewProfile
+using org.xpangen.Generator.Data;
+
+namespace org.xpangen.Generator.Profile.Profile
 {
     /// <summary>
-    /// The definition of the data file being generated
+    /// The Text fragment data
     /// </summary>
-    public class Definition : GenNamedApplicationBase
+    public class Text : Fragment
     {
-        public Definition()
+        public Text()
         {
-            SubClasses.Add("Class");
             Properties.Add("Name");
-            Properties.Add("Path");
+            Properties.Add("TextValue");
         }
 
-        public Definition(GenData genData) : this()
+        public Text(GenData genData) : this()
         {
             GenData = genData;
         }
 
         /// <summary>
-        /// The name of the definition
+        /// Generated name of the fragment
         /// </summary>
         public override string Name
         {
@@ -36,22 +37,19 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
         }
 
         /// <summary>
-        /// The location of the definition
+        /// The plain text being generated
         /// </summary>
-        public string Path
+        public string TextValue
         {
-            get { return AsString("Path"); }
+            get { return AsString("TextValue"); }
             set
             {
-                if (Path == value) return;
-                SetString("Path", value);
+                if (TextValue == value) return;
+                SetString("TextValue", value);
                 if (!DelayedSave) SaveFields();
             }
         }
 
 
-        protected override void GenObjectSetNotification()
-        {
-        }
     }
 }

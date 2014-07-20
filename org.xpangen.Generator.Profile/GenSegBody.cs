@@ -12,8 +12,9 @@ namespace org.xpangen.Generator.Profile
     {
         private readonly List<GenFragment> _fragment;
 
-        public GenSegBody(GenDataDef genDataDef, GenContainerFragmentBase parentSegment)
-            : base(genDataDef, parentSegment, FragmentType.Body)
+        public GenSegBody(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, 
+            GenContainerFragmentBase parentContainer)
+            : base(genDataDef, parentSegment, parentContainer, FragmentType.Body)
         {
             _fragment = new List<GenFragment>();
         }
@@ -53,6 +54,7 @@ namespace org.xpangen.Generator.Profile
         {
             _fragment.Add(fragment);
             fragment.ParentSegment = ParentSegment;
+            fragment.ParentContainer = ParentSegment;
         }
 
         public int IndexOf(GenFragment fragment)

@@ -2,21 +2,23 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-namespace org.xpangen.Generator.Data.Model.NewProfile
+using org.xpangen.Generator.Data;
+
+namespace org.xpangen.Generator.Profile.Profile
 {
     /// <summary>
-    /// The Segment fragment data
+    /// The Placeholder fragment data
     /// </summary>
-    public class Segment : ContainerFragment
+    public class Placeholder : Fragment
     {
-        public Segment()
+        public Placeholder()
         {
             Properties.Add("Name");
             Properties.Add("Class");
-            Properties.Add("Cardinality");
+            Properties.Add("Property");
         }
 
-        public Segment(GenData genData) : this()
+        public Placeholder(GenData genData) : this()
         {
             GenData = genData;
         }
@@ -36,7 +38,7 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
         }
 
         /// <summary>
-        /// The class of the fragment
+        /// The class containing the value to substitute in place
         /// </summary>
         public string Class
         {
@@ -50,15 +52,15 @@ namespace org.xpangen.Generator.Data.Model.NewProfile
         }
 
         /// <summary>
-        /// How the class objects are to be generated
+        /// The property whose value is to be substituted in place
         /// </summary>
-        public string Cardinality
+        public string Property
         {
-            get { return AsString("Cardinality"); }
+            get { return AsString("Property"); }
             set
             {
-                if (Cardinality == value) return;
-                SetString("Cardinality", value);
+                if (Property == value) return;
+                SetString("Property", value);
                 if (!DelayedSave) SaveFields();
             }
         }

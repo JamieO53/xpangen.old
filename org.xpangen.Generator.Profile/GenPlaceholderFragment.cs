@@ -8,8 +8,9 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenPlaceholderFragment : GenFragment
     {
-        public GenPlaceholderFragment(GenDataDef genDataDef, GenContainerFragmentBase parentSegment) :
-            base(genDataDef, parentSegment, FragmentType.Placeholder)
+        public GenPlaceholderFragment(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, 
+            GenContainerFragmentBase parentContainer) :
+            base(genDataDef, parentSegment, parentContainer, FragmentType.Placeholder)
         {
         }
 
