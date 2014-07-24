@@ -2,7 +2,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using org.xpangen.Generator.Data;
@@ -79,18 +78,10 @@ namespace org.xpangen.Generator.Editor.Helper
         public GenCompactProfileParser Profile { get; private set; } 
         public IGenData GenDataStore { get; private set; }
         public IGenDataSettings Settings { get; set; }
-        public bool Testing { get; set; }
-        public IGenValidator Validator { get; set; }
 
         public GeData()
         {
             GenDataStore = new GeGenData();
-            Validator = new GeGridDataValidator(this);
-        }
-        public void GridKeyPress()
-        {
-            // todo: signature for key press event handler
-            throw new NotImplementedException("GridKeyPress method not implemented");
         }
 
         /// <summary>

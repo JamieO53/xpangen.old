@@ -31,22 +31,6 @@ namespace org.xpangen.Generator.Test
         }
 
         /// <summary>
-        /// Tests for the correct creation of a segment body
-        /// </summary>
-        [TestCase(Description="Generator segment body test")]
-        public void GenSegmentBodyTest()
-        {
-            var r = new GenProfileFragment(GenData.GenDataDef);
-            var g = new GenSegBody(GenDataDef, r, r);
-            var t = new GenTextFragment(GenDataDef, g.ParentSegment, r) { Text = "Text piece" };
-            g.Add(t);
-            VerifyFragment(GenData, g, "GenSegBody", FragmentType.Body, "Body", "Text piece", "Text piece", false, -1);
-            Assert.AreEqual(0, g.IndexOf(t));
-            Assert.AreEqual(t, g.Fragment[0]);
-            Assert.AreEqual(1, g.Count);
-        }
-
-        /// <summary>
         /// Tests for the correct creation of a segment
         /// </summary>
         [TestCase(Description = "Generator segment test")]

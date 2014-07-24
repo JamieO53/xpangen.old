@@ -13,6 +13,7 @@ namespace org.xpangen.Generator.Profile.Profile
     {
         public ContainerFragment()
         {
+            SubClasses.Add("Profile");
             SubClasses.Add("Segment");
             SubClasses.Add("Block");
             SubClasses.Add("Lookup");
@@ -41,9 +42,24 @@ namespace org.xpangen.Generator.Profile.Profile
             }
         }
 
+        public GenNamedApplicationList<Profile> ProfileList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
+            base.GenObjectSetNotification();
+            ProfileList = new GenNamedApplicationList<Profile>(this, 7, 0);
         }
+
+        public Profile AddProfile(string name)
+        {
+            var item = new Profile(GenData)
+                           {
+                               GenObject = GenData.CreateObject("ContainerFragment", "Profile"),
+                               Name = name
+                           };
+            ProfileList.Add(item);
+            return item;
+        }
+
     }
 }

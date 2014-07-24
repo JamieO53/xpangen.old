@@ -13,8 +13,7 @@ namespace org.xpangen.Generator.Profile.Profile
     {
         public ProfileRoot()
         {
-            SubClasses.Add("Definition");
-            SubClasses.Add("Profile");
+            SubClasses.Add("FragmentBody");
             Properties.Add("Name");
             Properties.Add("Title");
         }
@@ -52,38 +51,22 @@ namespace org.xpangen.Generator.Profile.Profile
             }
         }
 
-        public GenNamedApplicationList<Definition> DefinitionList { get; private set; }
-        public GenNamedApplicationList<Profile> ProfileList { get; private set; }
+        public GenNamedApplicationList<FragmentBody> FragmentBodyList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
             base.GenObjectSetNotification();
-            DefinitionList = new GenNamedApplicationList<Definition>(this, 2, 0);
-            base.GenObjectSetNotification();
-            ProfileList = new GenNamedApplicationList<Profile>(this, 3, 1);
+            FragmentBodyList = new GenNamedApplicationList<FragmentBody>(this, 2, 0);
         }
 
-        public Definition AddDefinition(string name, string path = "")
+        public FragmentBody AddFragmentBody(string name)
         {
-            var item = new Definition(GenData)
+            var item = new FragmentBody(GenData)
                            {
-                               GenObject = GenData.CreateObject("ProfileRoot", "Definition"),
-                               Name = name,
-                               Path = path
-                           };
-            DefinitionList.Add(item);
-            return item;
-        }
-
-
-        public Profile AddProfile(string name)
-        {
-            var item = new Profile(GenData)
-                           {
-                               GenObject = GenData.CreateObject("ProfileRoot", "Profile"),
+                               GenObject = GenData.CreateObject("ProfileRoot", "FragmentBody"),
                                Name = name
                            };
-            ProfileList.Add(item);
+            FragmentBodyList.Add(item);
             return item;
         }
 
