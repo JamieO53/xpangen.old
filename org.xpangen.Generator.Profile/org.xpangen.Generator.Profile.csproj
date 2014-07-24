@@ -43,6 +43,7 @@
     <Compile Include="GenCondition.cs" />
     <Compile Include="GenContainerFragmentBase.cs" />
     <Compile Include="GenFragment.cs" />
+    <Compile Include="GenFragmentParams.cs" />
     <Compile Include="GenFunction.cs" />
     <Compile Include="GenFunctionCounters.cs" />
     <Compile Include="GenFunctionGeneral.cs" />

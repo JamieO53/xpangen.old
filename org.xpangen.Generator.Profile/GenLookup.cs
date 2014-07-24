@@ -15,15 +15,14 @@ namespace org.xpangen.Generator.Profile
         protected GenDataId Var2 { get; set; }
         protected GenDataId Var1 { get; set; }
 
-        public GenLookup(GenDataDef genDataDef, string condition, GenContainerFragmentBase parentSegment, 
-            GenContainerFragmentBase parentContainer)
-            : base(genDataDef, parentSegment, parentContainer, FragmentType.Lookup)
+        public GenLookup(GenFragmentParams genFragmentParams, string condition)
+            : base(genFragmentParams.SetFragmentType(FragmentType.Lookup))
         {
             Body.ParentSegment = this;
             Condition = condition;
             var sa = condition.Split('=');
-            Var1 = genDataDef.GetId(sa[0]);
-            Var2 = genDataDef.GetId(sa[1]);
+            Var1 = genFragmentParams.GenDataDef.GetId(sa[0]);
+            Var2 = genFragmentParams.GenDataDef.GetId(sa[1]);
             ClassId = Var1.ClassId;
         }
 

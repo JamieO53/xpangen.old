@@ -10,9 +10,8 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenFunction : GenContainerFragmentBase
     {
-        public GenFunction(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, 
-            GenContainerFragmentBase parentContainer)
-            : base(genDataDef, parentSegment, parentContainer, FragmentType.Function)
+        public GenFunction(GenFragmentParams genFragmentParams)
+            : base(genFragmentParams.SetFragmentType(FragmentType.Function))
         {
         }
 

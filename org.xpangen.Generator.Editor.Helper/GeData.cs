@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Codes;
-using org.xpangen.Generator.Data.Definition;
 using org.xpangen.Generator.Data.Model.Settings;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
@@ -45,36 +44,6 @@ namespace org.xpangen.Generator.Editor.Helper
             get { return GenData != null ? GenData.GenDataDef : null; }
         }
 
-        private GenList<Class> ClassList
-        {
-            get
-            {
-                var def = DefGenData ?? (GenDataDef != null ? GenDataDef.AsGenData() : null);
-                if (def == null)
-                    return null;
-                
-                var list = new GenList<Class>();
-                AddClasses(def, list);
-                var references = def.Cache.References;
-                for (var i = 0; i < references.Count; i++)
-                {
-                    var reference = references[i];
-                    AddClasses(reference.GenData, list);
-                }
-                return list;
-            }
-        }
-
-        private static void AddClasses(GenData def, GenList<Class> list)
-        {
-            def.First(1);
-            while (!def.Eol(1))
-            {
-                list.Add(new Class(def) {GenObject = def.Context[1].GenObject});
-                def.Next(1);
-            }
-        }
-
         public GenCompactProfileParser Profile { get; private set; } 
         public IGenData GenDataStore { get; private set; }
         public IGenDataSettings Settings { get; set; }
@@ -82,20 +51,6 @@ namespace org.xpangen.Generator.Editor.Helper
         public GeData()
         {
             GenDataStore = new GeGenData();
-        }
-
-        /// <summary>
-        /// Find the editor properties for the class.
-        /// </summary>
-        /// <param name="classId">The ID of the class.</param>
-        /// <returns>The class definition.</returns>
-        public Class FindClassDefinition(int classId)
-        {
-            var defClass = GenDataDef.Classes[classId];
-            for (var i = 0; i < ClassList.Count; i++)
-                if (ClassList[i].Name == defClass.Name)
-                    return ClassList[i];
-            return null;
         }
 
         /// <summary>
@@ -194,7 +149,7 @@ namespace org.xpangen.Generator.Editor.Helper
             return new ComboServer(data);
         }
 
-        public ComboServer GetDesignTimeComboServer()
+        public static ComboServer GetDesignTimeComboServer()
         {
             var r = new CodesDefinition();
             var t = r.AddCodesTable("YesNo", "Select True or False values");
@@ -208,7 +163,7 @@ namespace org.xpangen.Generator.Editor.Helper
             return new ComboServer(r.GenData);
         }
 
-        protected bool SaveToDisk { get; set; }
+        private bool SaveToDisk { get; set; }
 
         public IGenDataSettings LoadSettingsFromData(GenData data)
         {
@@ -228,7 +183,7 @@ namespace org.xpangen.Generator.Editor.Helper
             SaveSettings();
         }
 
-        public ComboServer ComboServer { get; set; }
+        public ComboServer ComboServer { private get; set; }
         /// <summary>
         /// Get values to populate a data editor combo.
         /// </summary>

@@ -33,7 +33,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ComboServer.cs" />
-    <Compile Include="GeComponent.cs" />
     <Compile Include="GeData.cs" />
     <Compile Include="GeGenData.cs" />
     <Compile Include="GeComboItem.cs" />
