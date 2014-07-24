@@ -17,5 +17,5 @@ Assembly=CodesDefinition[Title='Classes allowing access to codes tables',Namespa
 Class[Reference='CodesDefinition']
 Assembly=DatabaseDefinition[Title='Classes allowing access to codes tables',Namespace='org.xpangen.Generator.Data.Model',Subfolder=Database]
 Class[Reference='DatabaseDefinition']
-Assembly=ProfileDefinition[Title='Profile data content definition',Namespace='org.xpangen.Generator.Data.Model',Subfolder=Profile]
+Assembly=ProfileDefinition[Title='Profile data content definition',Namespace='org.xpangen.Generator.Profile',Subfolder=Profile]
 Class[Reference='ProfileDefinition']

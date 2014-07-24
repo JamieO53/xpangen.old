@@ -24,7 +24,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
         public static GenDataDef GetDefinition()
         {
             var f = new GenDataDef();
-            f.Definition = "`Assembly.Name`";
+            f.DefinitionName = "`Assembly.Name`";
 `[Class':            f.AddSubClass("", "`Class.Name`");
 `]`[Class:`[SubClass:            f.AddSubClass("`Class.Name`", "`SubClass.Name`");
 `]`]`@Set:`{ClassId`]0`]`[Class:`@Add:`{ClassId`]`]`[Property:            f.Classes[`@Get:`{ClassId`]`]].AddInstanceProperty("`Property.Name`");

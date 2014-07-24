@@ -15,7 +15,7 @@ namespace org.xpangen.Generator.Profile
             : base(genDataDef, parentSegment, parentContainer, fragmentType)
         {
             ParentSegment = parentSegment;
-            Body = new GenSegBody(genDataDef, parentSegment, parentContainer);
+            Body = new GenSegBody(parentSegment, parentContainer);
         }
 
         public GenSegBody Body { get; private set; }
@@ -35,7 +35,7 @@ namespace org.xpangen.Generator.Profile
             protected set { _classId = value; }
         }
 
-        public new GenDataDefClass Definition
+        public GenDataDefClass Definition
         {
             get { return GenDataDef.Classes[ClassId]; }
         }

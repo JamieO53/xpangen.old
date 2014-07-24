@@ -6,9 +6,20 @@ namespace org.xpangen.Generator.Profile.Profile
 {
     public static class ProfileExtensions
     {
+        public static Profile AddProfile(this FragmentBody body)
+        {
+            var name = CreateContainerFragmentBody(body, "Profile");
+            var profile = new Profile(body.GenData)
+                          {
+                              GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
+                              Name = name
+                          };
+            body.FragmentList.Add(profile);
+            return profile;
+        }
         public static Segment AddSegment(this FragmentBody body, string @class, string cardinality)
         {
-            var name = CreateContainerFragmentBody(body);
+            var name = CreateContainerFragmentBody(body, "Segment");
             var segment = new Segment(body.GenData)
                               {
                                   GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
@@ -22,7 +33,7 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public static Block AddBlock(this FragmentBody body)
         {
-            var name = CreateContainerFragmentBody(body);
+            var name = CreateContainerFragmentBody(body, "Block");
             var block = new Block(body.GenData)
                             {
                                 GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
@@ -35,7 +46,7 @@ namespace org.xpangen.Generator.Profile.Profile
         public static Condition AddCondition(this FragmentBody body, string class1, string property1, string comparison,
                                              string class2, string property2, string lit, string useLit)
         {
-            var name = CreateContainerFragmentBody(body);
+            var name = CreateContainerFragmentBody(body, "Condition");
             var condition = new Condition(body.GenData)
                                 {
                                     GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
@@ -54,7 +65,7 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public static Function AddFunction(this FragmentBody body, string functionName)
         {
-            var name = CreateContainerFragmentBody(body);
+            var name = CreateContainerFragmentBody(body, "Function");
             var function = new Function(body.GenData)
                                {
                                    GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
@@ -67,7 +78,7 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public static Lookup AddLookup(this FragmentBody body, string noMatch, string class1, string property1, string class2, string property2)
         {
-            var name = CreateContainerFragmentBody(body);
+            var name = CreateContainerFragmentBody(body, "Lookup");
             var lookup = new Lookup(body.GenData)
                              {
                                  GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
@@ -84,7 +95,7 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public static TextBlock AddTextBlock(this FragmentBody body)
         {
-            var name = CreateContainerFragmentBody(body);
+            var name = CreateContainerFragmentBody(body, "TextBlock");
             var textBlock = new TextBlock(body.GenData)
                                 {
                                     GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
@@ -101,17 +112,17 @@ namespace org.xpangen.Generator.Profile.Profile
             return profile.FragmentBodyList.Find(name);
         }
         
-        private static string CreateContainerFragmentBody(FragmentBody body)
+        private static string CreateContainerFragmentBody(FragmentBody body, string prefix)
         {
             var profile = Profile(body);
-            var name = "Segment" + profile.FragmentBodyList.Count;
+            var name = prefix + profile.FragmentBodyList.Count;
             profile.AddFragmentBody(name);
             return name;
         }
 
         public static Profile Profile(this ProfileDefinition def)
         {
-            return def.ProfileRootList[0].ProfileList[0];
+            return (Profile) def.ProfileRootList[0].FragmentBodyList[0].FragmentList[0];
         }
 
         public static Profile Profile(this FragmentBody body)

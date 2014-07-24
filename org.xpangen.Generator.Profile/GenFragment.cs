@@ -48,7 +48,7 @@ namespace org.xpangen.Generator.Profile
         /// <summary>
         ///     The fragment type.
         /// </summary>
-        public new FragmentType FragmentType
+        public FragmentType FragmentType
         {
             get { return _fragmentType; }
             protected set
@@ -65,9 +65,6 @@ namespace org.xpangen.Generator.Profile
             {
                 case FragmentType.Profile:
                     Fragment = new ContainerFragment();
-                    break;
-                case FragmentType.Null:
-                    Fragment = new Null();
                     break;
                 case FragmentType.Text:
                     Fragment = new Text();
@@ -100,7 +97,7 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
-        public new GenDataDef GenDataDef { get; private set; }
+        public GenDataDef GenDataDef { get; private set; }
         /// <summary>
         ///     Is this a text fragment?
         /// </summary>

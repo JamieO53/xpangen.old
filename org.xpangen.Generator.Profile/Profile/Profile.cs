@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Profile.Profile
     /// <summary>
     /// The container fragment for the profile
     /// </summary>
-    public class Profile : GenNamedApplicationBase
+    public class Profile : Fragment
     {
         public Profile()
         {
@@ -41,7 +41,7 @@ namespace org.xpangen.Generator.Profile.Profile
         protected override void GenObjectSetNotification()
         {
             base.GenObjectSetNotification();
-            FragmentBodyList = new GenNamedApplicationList<FragmentBody>(this, 4, 0);
+            FragmentBodyList = new GenNamedApplicationList<FragmentBody>(this, 2, 0);
         }
 
         public FragmentBody AddFragmentBody(string name)

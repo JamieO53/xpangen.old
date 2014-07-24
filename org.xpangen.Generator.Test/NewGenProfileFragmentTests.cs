@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Definition;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Profile;
-using Definition = org.xpangen.Generator.Data.Definition.Definition;
 using Text = org.xpangen.Generator.Profile.Profile.Text;
 
 namespace org.xpangen.Generator.Test
@@ -17,92 +15,6 @@ namespace org.xpangen.Generator.Test
     [TestFixture]
     public class NewGenProfileFragmentTests: GenProfileFragmentsTestBase
     {
-        public class FragmentData
-        {
-            public FragmentData(FragmentType fragmentType)
-            {
-                FragmentType = fragmentType;
-            }
-
-            FragmentType FragmentType { get; set; }
-            Type FragmentProfileType
-            {
-                get
-                {
-                    switch (FragmentType)
-                    {
-                        case FragmentType.Profile:
-                            return typeof (GenProfileFragment);
-                        case FragmentType.Null:
-                            return typeof (GenNullFragment);
-                        case FragmentType.Text:
-                            return typeof(GenTextFragment);
-                        case FragmentType.Placeholder:
-                            return typeof(GenPlaceholderFragment);
-                        case FragmentType.Body:
-                            return typeof(GenSegBody);
-                        case FragmentType.Segment:
-                            return typeof (GenSegment);
-                        case FragmentType.Block:
-                            return typeof(GenBlock);
-                        case FragmentType.Lookup:
-                            return typeof(GenLookup);
-                        case FragmentType.Condition:
-                            return typeof(GenCondition);
-                        case FragmentType.Function:
-                            return typeof(GenFunction);
-                        case FragmentType.TextBlock:
-                            return typeof(GenTextBlock);
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-            }
-            Type FragmentDataType{
-                get
-                {
-                    switch (FragmentType)
-                    {
-                        case FragmentType.Profile:
-                            return typeof(Profile.Profile.Profile);
-                        case FragmentType.Null:
-                            return typeof(Null);
-                        case FragmentType.Text:
-                            return typeof(Text);
-                        case FragmentType.Placeholder:
-                            return typeof(Placeholder);
-                        case FragmentType.Body:
-                            return typeof(Fragment);
-                        case FragmentType.Segment:
-                            return typeof(Segment);
-                        case FragmentType.Block:
-                            return typeof(Block);
-                        case FragmentType.Lookup:
-                            return typeof(Lookup);
-                        case FragmentType.Condition:
-                            return typeof(Condition);
-                        case FragmentType.Function:
-                            return typeof(Function);
-                        case FragmentType.TextBlock:
-                            return typeof(TextBlock);
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-            }
-        }
-
-        private class FragmentDataList: List<FragmentData>
-        {
-            public FragmentDataList()
-            {
-                foreach (FragmentType fragmentType in Enum.GetValues(typeof(FragmentType)))
-                    Add(new FragmentData(fragmentType));
-            }
-        }
-
-        private static FragmentDataList Fragments { get { return new FragmentDataList(); }}
-
         [TestCase(Description = "Verifies that the fragment text is produced correctly from the fragment data.")]
         public void FragmentTextTest()
         {
@@ -126,7 +38,6 @@ namespace org.xpangen.Generator.Test
         {
             var p = CreateEmptyProfileDefinition();
             var pb = p.Profile().Body();
-            pb.AddNull("Null");
             pb.AddPlaceholder("PlaceHolder", "Class", "Name");
             pb.AddText("Text", "Some text");
             pb.AddSegment("Class", "All");
@@ -158,8 +69,8 @@ namespace org.xpangen.Generator.Test
         {
             var p = new ProfileDefinition();
             var r = p.AddProfileRoot("ProfileRoot");
-            var pr = r.AddProfile("Profile");
-            r.AddDefinition("Definition");
+            var fb = r.AddFragmentBody("ProfileRoot");
+            var pr = fb.AddProfile();
             pr.AddFragmentBody("Profile");
             return p;
         }

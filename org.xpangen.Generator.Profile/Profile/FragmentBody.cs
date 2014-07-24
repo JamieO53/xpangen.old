@@ -41,17 +41,7 @@ namespace org.xpangen.Generator.Profile.Profile
         protected override void GenObjectSetNotification()
         {
             base.GenObjectSetNotification();
-            FragmentList = new GenNamedApplicationList<Fragment>(this, 5, 0);
-        }
-        public Null AddNull(string name)
-        {
-            var item = new Null(GenData)
-                           {
-                               GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
-                               Name = name
-                           };
-            FragmentList.Add(item);
-            return item;
+            FragmentList = new GenNamedApplicationList<Fragment>(this, 3, 0);
         }
         public Text AddText(string name, string textValue = "")
         {

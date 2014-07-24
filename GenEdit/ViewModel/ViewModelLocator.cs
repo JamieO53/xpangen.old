@@ -3,8 +3,6 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.ComponentModel;
-using System.Diagnostics;
-using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Editor.Helper;
 
 namespace GenEdit.ViewModel
@@ -40,7 +38,6 @@ namespace GenEdit.ViewModel
             geData.Settings = IsInDesignMode ? geData.GetDesignTimeSettings() : geData.GetDefaultSettings();
             geData.ComboServer = IsInDesignMode ? geData.GetDesignTimeComboServer() : geData.GetDefaultComboServer();
 
-            geData.Testing = true;
             return geData;
         }
 

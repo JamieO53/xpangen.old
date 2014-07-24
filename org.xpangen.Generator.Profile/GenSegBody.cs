@@ -8,15 +8,15 @@ using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class GenSegBody : GenFragment
+    public class GenSegBody : GenBase
     {
         private readonly List<GenFragment> _fragment;
 
-        public GenSegBody(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, 
-            GenContainerFragmentBase parentContainer)
-            : base(genDataDef, parentSegment, parentContainer, FragmentType.Body)
+        public GenSegBody(GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
         {
             _fragment = new List<GenFragment>();
+            ParentSegment = parentSegment;
+            ParentContainer = parentContainer;
         }
 
         public IList<GenFragment> Fragment
@@ -29,12 +29,7 @@ namespace org.xpangen.Generator.Profile
             get { return _fragment.Count; }
         }
 
-        public override string ProfileLabel()
-        {
-            return "Body";
-        }
-
-        public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
+        public string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
         {
             var s = new StringBuilder();
             foreach (var fragment in Fragment)
@@ -42,7 +37,7 @@ namespace org.xpangen.Generator.Profile
             return s.ToString();
         }
 
-        public override string Expand(GenData genData)
+        public string Expand(GenData genData)
         {
             var s = new StringBuilder();
             foreach (var fragment in Fragment)
@@ -57,12 +52,15 @@ namespace org.xpangen.Generator.Profile
             fragment.ParentContainer = ParentSegment;
         }
 
+        public GenContainerFragmentBase ParentSegment { get; set; }
+        public GenContainerFragmentBase ParentContainer { get; set; }
+
         public int IndexOf(GenFragment fragment)
         {
             return _fragment.IndexOf(fragment);
         }
 
-        public override bool Generate(GenFragment prefix, GenData genData, GenWriter writer)
+        public bool Generate(GenFragment prefix, GenData genData, GenWriter writer)
         {
             var generated = false;
             foreach (var fragment in Fragment)

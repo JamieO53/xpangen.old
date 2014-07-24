@@ -64,12 +64,10 @@
     <Compile Include="Profile\Block.cs" />
     <Compile Include="Profile\Condition.cs" />
     <Compile Include="Profile\ContainerFragment.cs" />
-    <Compile Include="Profile\Definition.cs" />
     <Compile Include="Profile\Fragment.cs" />
     <Compile Include="Profile\FragmentBody.cs" />
     <Compile Include="Profile\Function.cs" />
     <Compile Include="Profile\Lookup.cs" />
-    <Compile Include="Profile\Null.cs" />
     <Compile Include="Profile\Placeholder.cs" />
     <Compile Include="Profile\Profile.cs" />
     <Compile Include="Profile\ProfileDefinition.cs" />
