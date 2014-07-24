@@ -10,8 +10,8 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenCondition : GenContainerFragmentBase
     {
-        public GenCondition(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
-            : base(genDataDef, parentSegment, parentContainer, FragmentType.Condition)
+        public GenCondition(GenFragmentParams genFragmentParams)
+            : base(genFragmentParams.SetFragmentType(FragmentType.Condition))
         {
         }
 
@@ -128,6 +128,15 @@ namespace org.xpangen.Generator.Profile
                 value1 != "" && value2 != "" &&
                 GenUtilities.IsNumeric(value1) && GenUtilities.IsNumeric(value2))
                 GenUtilities.PadShortNumericOperand(ref value1, ref value2);
+        }
+    }
+
+    public class GenConditionParams : GenFragmentParams
+    {
+        public GenConditionParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
+            GenContainerFragmentBase parentContainer)
+            : base(genDataDef, parentSegment, parentContainer)
+        {
         }
     }
 }

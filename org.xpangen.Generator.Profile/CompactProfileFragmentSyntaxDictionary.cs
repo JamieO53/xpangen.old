@@ -144,7 +144,7 @@ namespace org.xpangen.Generator.Profile
                 c = segmentClass.Substring(0, segmentClass.Length - 1);
                 break;
             }
-            return new GenSegment(genDataDef, c, cardinality, parentSegment, parentContainer);
+            return new GenSegment(new GenFragmentParams(genDataDef, parentSegment, parentContainer), c, cardinality);
         }
     }
 }

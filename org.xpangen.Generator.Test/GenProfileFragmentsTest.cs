@@ -154,7 +154,7 @@ namespace org.xpangen.Generator.Test
         public void GenTextFragmentTest()
         {
             var r = new GenProfileFragment(GenData.GenDataDef);
-            var g = new GenTextFragment(GenDataDef, r, r) { Text = "Text fragment" };
+            var g = new GenTextFragment(new GenFragmentParams(GenDataDef, r, r)) { Text = "Text fragment" };
             VerifyFragment(GenData, g, "GenTextFragment", FragmentType.Text, "Text", "Text fragment", "Text fragment", true, -1);
         }
 
@@ -165,7 +165,7 @@ namespace org.xpangen.Generator.Test
         public void GenPlaceholderTest()
         {
             var r = new GenProfileFragment(GenData.GenDataDef);
-            var g = new GenPlaceholderFragment(GenDataDef, r, r) { Id = GenDataDef.GetId("Property.Name") };
+            var g = new GenPlaceholderFragment(new GenFragmentParams(GenDataDef, r, r)) { Id = GenDataDef.GetId("Property.Name") };
             VerifyFragment(GenData, g, "GenPlaceholderFragment", FragmentType.Placeholder, "Property.Name", "`Property.Name`",
                            "Property2", true, -1);
         }
@@ -178,9 +178,9 @@ namespace org.xpangen.Generator.Test
         {
             var r = new GenProfileFragment(GenData.GenDataDef);
 
-            var g = new GenBlock(GenDataDef, r, r);
-            var p = new GenPlaceholderFragment(GenDataDef, r, g) {Id = GenDataDef.GetId("Property.Name")};
-            var t = new GenTextFragment(GenData.GenDataDef, r, g) {Text = ","};
+            var g = new GenBlock(new GenFragmentParams(GenDataDef, r, r));
+            var p = new GenPlaceholderFragment(new GenFragmentParams(GenDataDef, r, g)) {Id = GenDataDef.GetId("Property.Name")};
+            var t = new GenTextFragment(new GenFragmentParams(GenData.GenDataDef, r, g)) {Text = ","};
             g.Body.Add(p);
             g.Body.Add(t);
             VerifyFragment(GenData, g, "GenBlock", FragmentType.Block, "Block", "`{`Property.Name`,`]", "Property2,", false, -1);
@@ -195,10 +195,10 @@ namespace org.xpangen.Generator.Test
             var d = SetUpLookupData();
             var f = d.GenDataDef;
             var r = new GenProfileFragment(GenData.GenDataDef);
-            var p = new GenPlaceholderFragment(f, r, null) { Id = f.GetId("Class.Name") };
-            var t = new GenTextFragment(d.GenDataDef, r, null) { Text = "," };
+            var p = new GenPlaceholderFragment(new GenFragmentParams(f, r, null)) { Id = f.GetId("Class.Name") };
+            var t = new GenTextFragment(new GenFragmentParams(d.GenDataDef, r, null)) { Text = "," };
 
-            var g = new GenLookup(f, "Class.Name=SubClass.Name", r, r);
+            var g = new GenLookup(new GenFragmentParams(f, r, r), "Class.Name=SubClass.Name");
             g.Body.Add(p);
             g.Body.Add(t);
             Assert.IsFalse(g.NoMatch);
@@ -226,9 +226,9 @@ namespace org.xpangen.Generator.Test
             var r = new GenProfileFragment(GenData.GenDataDef);
             var d = SetUpLookupData();
             var f = d.GenDataDef;
-            var t = new GenTextFragment(f, r, null) { Text = txt };
+            var t = new GenTextFragment(new GenFragmentParams(f, r, null)) { Text = txt };
 
-            var g = new GenLookup(f, "Class.Name=SubClass.Name", r, r) {NoMatch = true};
+            var g = new GenLookup(new GenFragmentParams(f, r, r), "Class.Name=SubClass.Name") {NoMatch = true};
             g.Body.Add(t);
             Assert.AreEqual(FragmentType.Lookup, g.FragmentType);
             Assert.IsFalse(g.IsTextFragment);
@@ -260,16 +260,16 @@ namespace org.xpangen.Generator.Test
             var d = SetUpLookupContextData();
             var f = d.GenDataDef;
             var r = new GenProfileFragment(GenData.GenDataDef);
-            var p0 = new GenPlaceholderFragment(f, r, null) {Id = f.GetId("Parent.Name")};
-            var p1 = new GenPlaceholderFragment(f, r, null) {Id = f.GetId("Lookup.Name")};
-            var t0 = new GenTextFragment(f, r, null) { Text = "," };
-            var t1 = new GenTextFragment(f, r, null) { Text = "," };
+            var p0 = new GenPlaceholderFragment(new GenFragmentParams(f, r, null)) {Id = f.GetId("Parent.Name")};
+            var p1 = new GenPlaceholderFragment(new GenFragmentParams(f, r, null)) {Id = f.GetId("Lookup.Name")};
+            var t0 = new GenTextFragment(new GenFragmentParams(f, r, null)) { Text = "," };
+            var t1 = new GenTextFragment(new GenFragmentParams(f, r, null)) { Text = "," };
 
-            var b = new GenBlock(f, r, r);
+            var b = new GenBlock(new GenFragmentParams(f, r, r));
             b.Body.Add(p0);
             b.Body.Add(t0);
 
-            var g = new GenLookup(f, "Lookup.Name=Child.Lookup", r, b);
+            var g = new GenLookup(new GenFragmentParams(f, r, b), "Lookup.Name=Child.Lookup");
             Assert.IsFalse(g.NoMatch);
 
             b.Body.Add(g);

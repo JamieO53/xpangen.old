@@ -8,9 +8,8 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenTextFragment : GenFragment
     {
-        public GenTextFragment(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, 
-            GenContainerFragmentBase parentContainer) :
-            base(genDataDef, parentSegment, parentContainer, FragmentType.Text)
+        public GenTextFragment(GenFragmentParams genFragmentParams) :
+            base(genFragmentParams.SetFragmentType(FragmentType.Text))
         {
         }
 

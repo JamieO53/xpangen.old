@@ -10,7 +10,7 @@ namespace org.xpangen.Generator.Profile
     {
         public GenNullFragment(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, 
             GenContainerFragmentBase parentContainer)
-            : base(genDataDef, parentSegment, parentContainer, FragmentType.Null)
+            : base(new GenFragmentParams(genDataDef, parentSegment, parentContainer, FragmentType.Null))
         {
         }
 

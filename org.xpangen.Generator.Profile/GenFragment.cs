@@ -117,17 +117,13 @@ namespace org.xpangen.Generator.Profile
         /// <summary>
         ///     Create a new <see cref="GenFragment" /> object.
         /// </summary>
-        /// <param name="genDataDef">The definition of the data being generated.</param>
-        /// <param name="parentSegment">The class segment this fragment belongs to.</param>
-        /// <param name="parentContainer"></param>
-        /// <param name="fragmentType">The type of fragment.</param>
-        protected GenFragment(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, 
-            GenContainerFragmentBase parentContainer, FragmentType fragmentType)
+        /// <param name="genFragmentParams">Data need to create the fragment object</param>
+        protected GenFragment(GenFragmentParams genFragmentParams)
         {
-            GenDataDef = genDataDef;
-            ParentSegment = parentSegment;
-            ParentContainer = parentContainer;
-            FragmentType = fragmentType;
+            GenDataDef = genFragmentParams.GenDataDef;
+            ParentSegment = genFragmentParams.ParentSegment;
+            ParentContainer = genFragmentParams.ParentContainer;
+            FragmentType = genFragmentParams.FragmentType;
         }
 
         /// <summary>
