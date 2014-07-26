@@ -5,6 +5,7 @@
 using System;
 using System.Text;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
@@ -13,16 +14,30 @@ namespace org.xpangen.Generator.Profile
         private GenBlock ItemBody { get; set; }
         private GenFragment Separator { get; set; }
 
-        public GenSegment(GenFragmentParams genFragmentParams, string className, GenCardinality cardinality)
-            : base(genFragmentParams.SetFragmentType(FragmentType.Segment))
+        public GenSegment(GenSegmentParams genSegmentParams)
+            : base(genSegmentParams.SetFragmentType(FragmentType.Segment))
         {
             Body.ParentSegment = this;
-            ClassId = GenDataDef.Classes.IndexOf(className);
-            GenCardinality = cardinality;
+            ClassId = GenDataDef.Classes.IndexOf(genSegmentParams.ClassName);
+            GenCardinality = genSegmentParams.Cardinality;
         }
 
-        public GenCardinality GenCardinality { get; private set; }
+        public GenCardinality GenCardinality 
+        {
+            get
+            {
+                GenCardinality c;
+                Enum.TryParse(Segment.Cardinality, out c);
+                return c;
+            }
+            private set { Segment.Cardinality = value.ToString(); } 
+        }
 
+        public Segment Segment
+        {
+            get { return (Segment) Fragment; } 
+            set { Fragment = value; }
+        }
         public override string ProfileLabel()
         {
             return GenDataDef.Classes[ClassId].Name;
@@ -262,7 +277,9 @@ namespace org.xpangen.Generator.Profile
                 ItemBody.Body.Add(newText);
             }
             else
-                Separator = Body.Count > 0 ? last : new GenNullFragment(GenDataDef, this, ParentContainer);
+                Separator = Body.Count > 0
+                    ? last
+                    : new GenTextFragment(new GenTextFragmentParams(GenDataDef, this, this, ""));
         }
     }
 }

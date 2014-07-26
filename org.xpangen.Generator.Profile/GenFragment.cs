@@ -17,7 +17,7 @@ namespace org.xpangen.Generator.Profile
         /// <summary>
         /// The fragment object holding the fragment's data
         /// </summary>
-        protected Fragment Fragment
+        public Fragment Fragment
         {
             get { return _fragment; }
             set
@@ -29,7 +29,7 @@ namespace org.xpangen.Generator.Profile
 
         private void CheckFragmentType(Fragment fragment)
         {
-            Enum.TryParse(fragment.GetType().Name, out _fragmentType);
+            if (fragment != null) Enum.TryParse(fragment.GetType().Name, out _fragmentType);
         }
 
         /// <summary>
@@ -124,6 +124,8 @@ namespace org.xpangen.Generator.Profile
             ParentSegment = genFragmentParams.ParentSegment;
             ParentContainer = genFragmentParams.ParentContainer;
             FragmentType = genFragmentParams.FragmentType;
+            Fragment = genFragmentParams.Fragment;
+            Assert(Fragment != null, "The fragment was not set up");
         }
 
         /// <summary>

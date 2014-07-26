@@ -15,10 +15,9 @@ namespace org.xpangen.Generator.Profile
         /// <summary>
         ///     Parses the generator condition for this syntax.
         /// </summary>
-        /// <param name="genCondition">The condition fragment being created.</param>
         /// <param name="genDataDef">The generator data definition.</param>
         /// <param name="condition">The condition being parsed.</param>
-        public abstract void ParseCondition(GenCondition genCondition, GenDataDef genDataDef, string condition);
+        public abstract ConditionParameters ParseCondition(GenDataDef genDataDef, string condition);
 
         /// <summary>
         ///     Text for each item in the <see cref="GenCardinality" /> enumeration.

@@ -5,22 +5,73 @@
 using System;
 using System.Text;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
     public class GenCondition : GenContainerFragmentBase
     {
-        public GenCondition(GenFragmentParams genFragmentParams)
-            : base(genFragmentParams.SetFragmentType(FragmentType.Condition))
+        public GenCondition(GenConditionParams genConditionParams)
+            : base(genConditionParams.SetFragmentType(FragmentType.Condition))
         {
+            Var1 = genConditionParams.Var1;
+            Var2 = genConditionParams.Var2;
+            GenComparison = genConditionParams.GenComparison;
+            UseLit = genConditionParams.UseLit;
+            Lit = genConditionParams.Lit;
         }
 
-        public GenDataId Var1 { get; set; }
-        public GenDataId Var2 { get; set; }
-        public string Lit { get; set; }
-        public GenComparison GenComparison { get; set; }
-        public bool UseLit { get; set; }
+        public GenDataId Var1
+        {
+            get
+            {
+                return GenDataDef.GetId(Condition.Class1 + "." + Condition.Property1);
+            }
+            set
+            {
+                Condition.Class1 = value.ClassName;
+                Condition.Property1 = value.PropertyName;
+            }
+        }
+        
+        public GenDataId Var2
+        {
+            get
+            {
+                return GenDataDef.GetId(Condition.Class2 + "." + Condition.Property2);
+            }
+            set
+            {
+                Condition.Class2 = value.ClassName;
+                Condition.Property2 = value.PropertyName;
+            }
+        }
+        
+        public string Lit { get { return Condition.Lit; } set { Condition.Lit = value; } }
 
+        public GenComparison GenComparison
+        {
+            get
+            {
+                GenComparison c;
+                Enum.TryParse(Condition.Comparison, out c);
+                return c;
+            }
+            set { Condition.Comparison = value.ToString(); }
+        }
+
+        public bool UseLit
+        {
+            get { return Condition.UseLit != ""; }
+            set { Condition.UseLit = value ? "True" : ""; }
+        }
+
+        public Condition Condition
+        {
+            get { return (Condition) Fragment; }
+            set { Fragment = value; }
+        }
+        
         public override string ProfileLabel()
         {
             var s = new StringBuilder(GenDataDef.GetIdentifier(Var1));
@@ -133,10 +184,19 @@ namespace org.xpangen.Generator.Profile
 
     public class GenConditionParams : GenFragmentParams
     {
-        public GenConditionParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
-            GenContainerFragmentBase parentContainer)
+        public GenDataId Var1 { get; set; }
+        public GenDataId Var2 { get; set; }
+        public GenComparison GenComparison { get; set; }
+        public bool UseLit { get; set; }
+        public string Lit { get; set; }
+        public GenConditionParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, ConditionParameters conditionParameters)
             : base(genDataDef, parentSegment, parentContainer)
         {
+            Var1 = conditionParameters.Var1;
+            Var2 = conditionParameters.Var2;
+            GenComparison = conditionParameters.GenComparison;
+            UseLit = conditionParameters.UseLit;
+            Lit = conditionParameters.Lit;
         }
     }
 }

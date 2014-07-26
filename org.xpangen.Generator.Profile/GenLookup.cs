@@ -3,29 +3,56 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
     public class GenLookup : GenContainerFragmentBase
     {
         private string Condition { get; set; }
-        public bool NoMatch { get; set; }
 
-        public new int ClassId { get; set; }
-        protected GenDataId Var2 { get; set; }
-        protected GenDataId Var1 { get; set; }
+        public bool NoMatch
+        {
+            get { return Lookup.NoMatch != ""; } 
+            set { Lookup.NoMatch = value ? "True" : ""; }
+        }
 
-        public GenLookup(GenFragmentParams genFragmentParams, string condition)
-            : base(genFragmentParams.SetFragmentType(FragmentType.Lookup))
+        public new int ClassId { get; private set; }
+        protected GenDataId Var1
+        {
+            get { return GenDataDef.GetId(Lookup.Class1 + "." + Lookup.Property1); }
+            set
+            {
+                Lookup.Class1 = value.ClassName;
+                Lookup.Property1 = value.PropertyName;
+            } 
+        }
+        protected GenDataId Var2
+        {
+            get { return GenDataDef.GetId(Lookup.Class2 + "." + Lookup.Property2); }
+            set
+            {
+                Lookup.Class2 = value.ClassName;
+                Lookup.Property2 = value.PropertyName;
+            } 
+        }
+
+        public GenLookup(GenLookupParams genLookupParams)
+            : base(genLookupParams.SetFragmentType(FragmentType.Lookup))
         {
             Body.ParentSegment = this;
-            Condition = condition;
-            var sa = condition.Split('=');
-            Var1 = genFragmentParams.GenDataDef.GetId(sa[0]);
-            Var2 = genFragmentParams.GenDataDef.GetId(sa[1]);
+            Condition = genLookupParams.Condition;
+            var sa = genLookupParams.Condition.Split('=');
+            Var1 = GenDataDef.GetId(sa[0]);
+            Var2 = GenDataDef.GetId(sa[1]);
             ClassId = Var1.ClassId;
         }
 
+        public Lookup Lookup
+        {
+            get { return (Lookup) Fragment; }
+            set { Fragment = value; }
+        }
         public override string ProfileLabel()
         {
             return (NoMatch ? "~" : "") + GenDataDef.GetIdentifier(Var1) + "=" + GenDataDef.GetIdentifier(Var2);

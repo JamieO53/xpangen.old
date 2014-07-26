@@ -73,7 +73,7 @@ namespace org.xpangen.Generator.Parameter
             def.Append("Definition=");
             def.AppendLine(genDataDef.DefinitionName);
             var profile = new GenProfileFragment(genDataDef);
-            profile.Body.Add(new GenTextFragment(new GenFragmentParams(genDataDef, profile, profile)));
+            profile.Body.Add(new GenTextFragment(new GenTextFragmentParams(genDataDef, profile, profile, "")));
 
             ClassDefinition(genDataDef, 0, def);
             ClassProfile(genDataDef, 0, profile, profile, profile);
@@ -168,92 +168,95 @@ namespace org.xpangen.Generator.Parameter
                     ClassDefinition(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.ClassId, def);
         }
 
-        private static void ClassProfile(GenDataDef genDataDef, int classId, GenContainerFragmentBase profile, 
+        private static void ClassProfile(GenDataDef genDataDef, int classId, GenContainerFragmentBase profile,
             GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
         {
             GenSegment classProfile = null;
             if (classId != 0)
             {
-                classProfile = new GenSegment(new GenFragmentParams(genDataDef, parentSegment, parentContainer), genDataDef.Classes[classId].Name, genDataDef.Classes[classId].IsInherited
-                    ? GenCardinality.Inheritance
-                    : GenCardinality.All);
+                classProfile = new GenSegment(
+                    new GenSegmentParams(genDataDef, parentSegment, parentContainer, genDataDef.Classes[classId].Name,
+                        genDataDef.Classes[classId].IsInherited
+                            ? GenCardinality.Inheritance
+                            : GenCardinality.All));
 
                 if (!genDataDef.Classes[classId].IsAbstract)
-                    classProfile.Body.Add(new GenTextFragment(new GenFragmentParams(genDataDef, parentSegment, classProfile))
-                                              {
-                                                  Text =
-                                                      genDataDef.Classes[classId]
-                                                      .Name
-                                              });
+                    classProfile.Body.Add(
+                        new GenTextFragment(new GenTextFragmentParams(genDataDef, parentSegment, classProfile,
+                            genDataDef.Classes[classId].Name))
+                        );
 
                 if (genDataDef.Classes[classId].Properties.Count > 0 && !genDataDef.Classes[classId].IsAbstract)
                 {
                     var j = 0;
                     if (
                         String.Compare(genDataDef.Classes[classId].Properties[0], "Name",
-                                       StringComparison.OrdinalIgnoreCase) ==
+                            StringComparison.OrdinalIgnoreCase) ==
                         0)
                     {
                         ((GenTextFragment) classProfile.Body.Fragment[0]).Text += "=";
-                        classProfile.Body.Add(new GenPlaceholderFragment(new GenFragmentParams(genDataDef, parentSegment, classProfile))
-                                                  {
-                                                      Id =
-                                                          genDataDef.GetId(
-                                                              genDataDef.Classes[classId].Name + ".Name")
-                                                  });
+                        classProfile.Body.Add(
+                            new GenPlaceholderFragment(new GenPlaceholderFragmentParams(genDataDef, parentSegment, classProfile, genDataDef.GetId(genDataDef.Classes[classId].Name + ".Name"))));
                         j = 1;
                     }
                     if (genDataDef.Classes[classId].Properties.Count > j)
                     {
-                        classProfile.Body.Add(new GenTextFragment(new GenFragmentParams(genDataDef, parentSegment, classProfile)) {Text = "["});
+                        classProfile.Body.Add(
+                            new GenTextFragment(new GenTextFragmentParams(genDataDef, parentSegment, classProfile, "[")));
                         var sep = "";
                         for (var i = j; i < genDataDef.Classes[classId].Properties.Count; i++)
                         {
-                            var condExists = new GenCondition(new GenFragmentParams(genDataDef, classProfile, classProfile))
-                                                 {
-                                                     GenComparison = GenComparison.Exists,
-                                                     Var1 = genDataDef.GetId(genDataDef.Classes[classId].Name + "." +
-                                                                             genDataDef.Classes[classId].Properties[i])
-                                                 };
-                            condExists.Body.Add(new GenTextFragment(new GenFragmentParams(genDataDef, parentSegment, classProfile))
-                                                    {
-                                                        Text =
-                                                            sep +
-                                                            genDataDef.Classes[classId].Properties[i]
-                                                    });
-                            var condNotTrue = new GenCondition(new GenFragmentParams(genDataDef, classProfile, classProfile))
-                                                  {
-                                                      GenComparison = GenComparison.Ne,
-                                                      Var1 = genDataDef.GetId(genDataDef.Classes[classId].Name + "." +
-                                                                              genDataDef.Classes[classId].Properties[i]),
-                                                      Lit = "True",
-                                                      UseLit = true
-                                                  };
-                            var functionQuote = new GenFunction(new GenFragmentParams(genDataDef, parentSegment, classProfile))
-                                                    {
-                                                        FunctionName =
-                                                            "StringOrName"
-                                                    };
+                            var condExists =
+                                new GenCondition(new GenConditionParams(genDataDef, classProfile, classProfile,
+                                    new ConditionParameters
+                                    {
+                                        GenComparison = GenComparison.Exists,
+                                        Var1 = genDataDef.GetId(genDataDef.Classes[classId].Name + "." +
+                                                                genDataDef.Classes[classId].Properties[i])
+                                    }));
+                            condExists.Body.Add(
+                                new GenTextFragment(new GenTextFragmentParams(genDataDef, parentSegment, classProfile,
+                                    sep + genDataDef.Classes[classId].Properties[i])));
+                            var condNotTrue =
+                                new GenCondition(new GenConditionParams(genDataDef, classProfile, classProfile,
+                                    new ConditionParameters
+                                    {
+                                        GenComparison = GenComparison.Ne,
+                                        Var1 = genDataDef.GetId(genDataDef.Classes[classId].Name + "." +
+                                                                genDataDef.Classes[classId].Properties[i]),
+                                        Lit = "True",
+                                        UseLit = true
+                                    }));
+                            var functionQuote =
+                                new GenFunction(new GenFragmentParams(genDataDef, parentSegment, classProfile))
+                                {
+                                    FunctionName =
+                                        "StringOrName"
+                                };
                             var param = new GenBlock(new GenFragmentParams(genDataDef, parentSegment, classProfile));
-                            param.Body.Add(new GenPlaceholderFragment(new GenFragmentParams(genDataDef, parentSegment, classProfile))
-                                               {
-                                                   Id =
-                                                       genDataDef.GetId(
-                                                           genDataDef.Classes[classId].Name + "." +
-                                                           genDataDef.Classes[classId].Properties[i])
-                                               });
+                            param.Body.Add(
+                                new GenPlaceholderFragment(new GenPlaceholderFragmentParams(genDataDef, parentSegment,
+                                    classProfile,
+                                    genDataDef.GetId(genDataDef.Classes[classId].Name + "." +
+                                                     genDataDef.Classes[classId].Properties[i]))));
                             functionQuote.Body.Add(param);
-                            condNotTrue.Body.Add(new GenTextFragment(new GenFragmentParams(genDataDef, parentSegment, classProfile)) {Text = "="});
+                            condNotTrue.Body.Add(
+                                new GenTextFragment(new GenTextFragmentParams(genDataDef, parentSegment, classProfile,
+                                    "=")));
                             condNotTrue.Body.Add(functionQuote);
                             condExists.Body.Add(condNotTrue);
 
                             classProfile.Body.Add(condExists);
                             sep = ",";
                         }
-                        classProfile.Body.Add(new GenTextFragment(new GenFragmentParams(genDataDef, parentSegment, classProfile)) {Text = "]\r\n"});
+                        classProfile.Body.Add(
+                            new GenTextFragment(new GenTextFragmentParams(genDataDef, parentSegment, classProfile,
+                                "]\r\n")));
                     }
                     else
-                        classProfile.Body.Add(new GenTextFragment(new GenFragmentParams(genDataDef, parentSegment, classProfile)) {Text = "\r\n"});
+                        classProfile.Body.Add(
+                            new GenTextFragment(new GenTextFragmentParams(genDataDef, parentSegment, classProfile,
+                                "\r\n")));
                 }
 
                 profile.Body.Add(classProfile);
@@ -261,25 +264,28 @@ namespace org.xpangen.Generator.Parameter
 
             for (var i = 0; i < genDataDef.Classes[classId].Inheritors.Count; i++)
                 ClassProfile(genDataDef, genDataDef.Classes[classId].Inheritors[i].ClassId, classProfile ?? profile,
-                             parentSegment, parentContainer);
+                    parentSegment, parentContainer);
 
             if (!genDataDef.Classes[classId].IsAbstract)
-                SubClassProfiles(genDataDef, classId, profile, parentSegment, classProfile, classProfile);
+                SubClassProfiles(genDataDef, classId, profile, parentSegment, classProfile ?? profile, classProfile);
             if (genDataDef.Classes[classId].IsInherited)
-                SubClassProfiles(genDataDef, genDataDef.Classes[classId].Parent.ClassId, profile, parentSegment, classProfile, classProfile);
+                SubClassProfiles(genDataDef, genDataDef.Classes[classId].Parent.ClassId, profile, parentSegment,
+                    classProfile ?? profile, classProfile);
         }
 
         private static void SubClassProfiles(GenDataDef genDataDef, int classId,
-                                             GenContainerFragmentBase profile, GenContainerFragmentBase parentSegment,
-                                             GenContainerFragmentBase parentContainer, GenSegment classProfile)
+            GenContainerFragmentBase profile, GenContainerFragmentBase parentSegment,
+            GenContainerFragmentBase parentContainer, GenSegment classProfile)
         {
             for (var i = 0; i < genDataDef.Classes[classId].SubClasses.Count; i++)
                 if (String.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[i].SubClass.Reference))
                     ClassProfile(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.ClassId,
-                                 classProfile ?? profile, parentSegment, parentContainer);
+                        classProfile ?? profile, parentSegment, parentContainer);
                 else
                 {
-                    var refClass = new GenSegment(new GenFragmentParams(genDataDef, parentSegment, parentContainer), genDataDef.Classes[classId].SubClasses[i].SubClass.Name, GenCardinality.Reference);
+                    var refClass =
+                        new GenSegment(new GenSegmentParams(genDataDef, parentSegment, parentContainer,
+                            genDataDef.Classes[classId].SubClasses[i].SubClass.Name, GenCardinality.Reference));
                     (classProfile ?? profile).Body.Add(refClass);
                 }
         }

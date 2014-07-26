@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompactProfileFragmentSyntaxDictionary.cs" />
+    <Compile Include="ConditionParameters.cs" />
     <Compile Include="FragmentType.cs" />
     <Compile Include="GenBlock.cs" />
     <Compile Include="GenCardinality.cs" />
@@ -49,13 +50,16 @@
     <Compile Include="GenFunctionGeneral.cs" />
     <Compile Include="GenFunctionMap.cs" />
     <Compile Include="GenLookup.cs" />
-    <Compile Include="GenNullFragment.cs" />
+    <Compile Include="GenLookupParams.cs" />
     <Compile Include="GenPlaceholderFragment.cs" />
+    <Compile Include="GenPlaceholderFragmentParams.cs" />
     <Compile Include="GenProfileFragment.cs" />
     <Compile Include="GenSegment.cs" />
     <Compile Include="GenSegBody.cs" />
+    <Compile Include="GenSegmentParams.cs" />
     <Compile Include="GenTextBlock.cs" />
     <Compile Include="GenTextFragment.cs" />
+    <Compile Include="GenTextFragmentParams.cs" />
     <Compile Include="GenUtilities.cs" />
     <Compile Include="GenWriter.cs" />
     <Compile Include="IGeneratorLibrary.cs" />
