@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
@@ -15,8 +16,13 @@ namespace org.xpangen.Generator.Profile
         {
         }
 
-        public string FunctionName { get; set; }
+        public string FunctionName
+        {
+            get { return Function.FunctionName; }
+            set { Function.FunctionName = value; }
+        }
 
+        public Function Function { get { return (Function) Fragment; } set { Fragment = value; } }
         public override string ProfileLabel()
         {
             return FunctionName;

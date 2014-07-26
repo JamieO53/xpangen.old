@@ -1,60 +1,98 @@
-﻿using org.xpangen.Generator.Data;
+﻿using System;
+using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class GenFragmentParams
+    public class GenFragmentParams : GenBase
     {
-        private readonly GenDataDef _genDataDef;
-        private readonly GenContainerFragmentBase _parentSegment;
-        private readonly GenContainerFragmentBase _parentContainer;
-        private FragmentType _fragmentType;
-
         /// <summary>
         /// Parameters for creating a GenFragment
         /// </summary>
         /// <param name="genDataDef">The definition of the data being generated.</param>
         /// <param name="parentSegment">The class segment this fragment belongs to.</param>
-        /// <param name="parentContainer"></param>
+        /// <param name="parentContainer">The container fragment conataining this fragment.</param>
         /// <param name="fragmentType">The type of fragment.</param>
         public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, FragmentType fragmentType)
         {
-            _genDataDef = genDataDef;
-            _parentSegment = parentSegment;
-            _parentContainer = parentContainer;
-            _fragmentType = fragmentType;
+            GenDataDef = genDataDef;
+            ParentSegment = parentSegment;
+            ParentContainer = parentContainer;
+            SetFragmentType(fragmentType);
+            Assert(Fragment != null, "Fragment expected");
         }
 
         public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
         {
-            _genDataDef = genDataDef;
-            _parentSegment = parentSegment;
-            _parentContainer = parentContainer;
+            GenDataDef = genDataDef;
+            ParentSegment = parentSegment;
+            ParentContainer = parentContainer;
         }
 
         public GenFragmentParams SetFragmentType(FragmentType fragmentType)
         {
-            _fragmentType = fragmentType;
+            FragmentType = fragmentType;
+            CheckFragment(fragmentType);
             return this;
         }
+
+        public Fragment Fragment { get; protected set; }
         
-        public GenDataDef GenDataDef
+        public GenDataDef GenDataDef { get; private set; }
+
+        public GenContainerFragmentBase ParentSegment { get; private set; }
+
+        public GenContainerFragmentBase ParentContainer { get; private set; }
+
+        public FragmentType FragmentType { get; protected set; }
+
+        private void CheckFragment(FragmentType fragmentType)
         {
-            get { return _genDataDef; }
+            if (ParentContainer == null || ParentContainer.Fragment == null || Fragment != null) return;
+            var container = (ContainerFragment) ParentContainer.Fragment;
+            Assert(container != null, "Parent container fragment is not a container fragment");
+            switch (fragmentType)
+            {
+                case FragmentType.Profile:
+                    Fragment = container.Body().AddProfile();
+                    break;
+                case FragmentType.Text:
+                    Fragment = container.Body().AddText(GetFragmentName(container, fragmentType));
+                    break;
+                case FragmentType.Placeholder:
+                    Fragment = container.Body().AddPlaceholder(GetFragmentName(container, fragmentType));
+                    break;
+                //case FragmentType.Body:
+                //    break;
+                case FragmentType.Segment:
+                    Fragment = container.Body().AddSegment();
+                    break;
+                case FragmentType.Block:
+                    Fragment = container.Body().AddBlock();
+                    break;
+                case FragmentType.Lookup:
+                    Fragment = container.Body().AddLookup();
+                    break;
+                case FragmentType.Condition:
+                    Fragment = container.Body().AddCondition();
+                    break;
+                case FragmentType.Function:
+                    Fragment = container.Body().AddFunction();
+                    break;
+                case FragmentType.TextBlock:
+                    Fragment = container.Body().AddTextBlock();
+                    break;
+                //case FragmentType.Null:
+                //    Fragment = container.Body().AddFragment();
+                //    break;
+                default:
+                    throw new ArgumentOutOfRangeException("fragmentType");
+            }
         }
 
-        public GenContainerFragmentBase ParentSegment
+        private string GetFragmentName(ContainerFragment container, FragmentType fragmentType)
         {
-            get { return _parentSegment; }
-        }
-
-        public GenContainerFragmentBase ParentContainer
-        {
-            get { return _parentContainer; }
-        }
-
-        public FragmentType FragmentType
-        {
-            get { return _fragmentType; }
+            return fragmentType.ToString() + container.Body().FragmentList.Count;
         }
     }
 }

@@ -66,12 +66,14 @@ namespace org.xpangen.Generator.Profile.Profile
             FragmentList.Add(item);
             return item;
         }
-        public ContainerFragment AddContainerFragment(string name)
+        public ContainerFragment AddContainerFragment(string name, string primary = "", string secondary = "")
         {
             var item = new ContainerFragment(GenData)
                            {
                                GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
-                               Name = name
+                               Name = name,
+                               Primary = primary,
+                               Secondary = secondary
                            };
             FragmentList.Add(item);
             return item;

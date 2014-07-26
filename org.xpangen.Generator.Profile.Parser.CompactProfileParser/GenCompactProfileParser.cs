@@ -53,7 +53,8 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             if (s.Length > 0)
             {
                 textBlock = new GenTextBlock(new GenFragmentParams(GenDataDef, parentSegment, parentContainer));
-                textBlock.Body.Add(new GenTextFragment(new GenFragmentParams(GenDataDef, parentSegment, textBlock)) { Text = s });
+                textBlock.Body.Add(
+                    new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, textBlock, s)));
             }
             if (!Scan.Eof)
             {
@@ -68,10 +69,13 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                     var frag = ScanFragment(classId, ref t, out s, parentSegment, parentContainer);
                     if (t == TokenType.Name)
                     {
-                        if (textBlock == null) textBlock = new GenTextBlock(new GenFragmentParams(GenDataDef, parentSegment, parentContainer));
+                        if (textBlock == null)
+                            textBlock =
+                                new GenTextBlock(new GenFragmentParams(GenDataDef, parentSegment, parentContainer));
                         textBlock.Body.Add(frag);
                         if (s.Length > 0)
-                            textBlock.Body.Add(new GenTextFragment(new GenFragmentParams(GenDataDef, parentSegment, textBlock)) { Text = s });
+                            textBlock.Body.Add(
+                                new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, textBlock, s)));
                     }
                     else
                     {
@@ -79,7 +83,8 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                         if (s.Length > 0)
                         {
                             textBlock = new GenTextBlock(new GenFragmentParams(GenDataDef, parentSegment, parentContainer));
-                            textBlock.Body.Add(new GenTextFragment(new GenFragmentParams(GenDataDef, parentSegment, textBlock)) { Text = s });
+                            textBlock.Body.Add(
+                                new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, textBlock, s)));
                         }
                     }
                     t = Scan.ScanTokenType();
@@ -116,9 +121,6 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             {
                 switch (nextToken)
                 {
-                    case TokenType.Null:
-                        frag = new GenNullFragment(GenDataDef, parentSegment, parentContainer);
-                        break;
                     case TokenType.Segment:
                         s = Scan.ScanSegmentClass();
 
@@ -133,16 +135,15 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                         break;
                     case TokenType.Lookup:
                         s = Scan.ScanLookup();
-                        var lookup = new GenLookup(new GenFragmentParams(GenDataDef, parentSegment, parentContainer), s);
+                        var lookup = new GenLookup(new GenLookupParams(GenDataDef, parentSegment, parentContainer, s));
                         frag = lookup;
                         ScanBody(lookup.ClassId, lookup.Body, parentSegment, lookup);
                         break;
                     case TokenType.Condition:
                         s = Scan.ScanCondition();
-                        var cond = new GenCondition(new GenFragmentParams(GenDataDef, parentSegment, parentContainer));
-                        ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseCondition(cond,
-                                                                                                             GenDataDef,
-                                                                                                             s);
+                        var c = ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseCondition(GenDataDef, s);
+                        var cond = new GenCondition(new GenConditionParams(GenDataDef, parentSegment, parentContainer, c));
+                        
                         frag = cond;
                         ScanBody(classId, cond.Body, parentSegment, cond);
                         break;
@@ -154,28 +155,27 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                         break;
                     case TokenType.NoMatch:
                         s = Scan.ScanLookup();
-                        var noMatch = new GenLookup(new GenFragmentParams(GenDataDef, parentSegment, parentContainer), s) { NoMatch = true };
+                        var noMatch = new GenLookup(new GenLookupParams(GenDataDef, parentSegment, parentContainer, s)) { NoMatch = true };
                         frag = noMatch;
                         ScanBody(noMatch.ClassId, noMatch.Body, parentSegment, noMatch);
                         break;
                     case TokenType.Name:
-                        frag = new GenPlaceholderFragment(new GenFragmentParams(GenDataDef, parentSegment, parentContainer)) { Id = GenDataDef.GetId(Scan.ScanName()) };
+                        frag =
+                            new GenPlaceholderFragment(new GenPlaceholderFragmentParams(GenDataDef, parentSegment,
+                                parentContainer, GenDataDef.GetId(Scan.ScanName())));
                         if (Scan.CheckChar(Scan.Delimiter))
                             Scan.SkipChar();
                         break;
                     default:
-                        frag = new GenNullFragment(GenDataDef, parentSegment, parentContainer);
-                        break;
+                        throw new GeneratorException("Unknown token type: " + nextToken);
                 }
                 s = Scan.ScanText();
             }
             catch (Exception e)
             {
                 frag = new GenBlock(new GenFragmentParams(GenDataDef, parentSegment, parentContainer));
-                ((GenBlock) frag).Body.Add(new GenTextFragment(new GenFragmentParams(GenDataDef, parentSegment, parentContainer))
-                                           {
-                                               Text = e.Message
-                                           });
+                ((GenBlock) frag).Body.Add(
+                    new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, parentContainer, e.Message)));
             }
             return frag;
         }
@@ -204,7 +204,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                         // Skip blank parameter separators
                         s = s.TrimStart();
                         if (s != "")
-                            body.Add(new GenTextFragment(new GenFragmentParams(GenDataDef, parentSegment, parentContainer)) { Text = s });
+                            body.Add(new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, parentContainer, s)));
                         t = Scan.ScanTokenType();
                     }
                 }
@@ -232,9 +232,13 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                             {
                                 if (w != "")
                                     // Add Text up to first delimiter
-                                    block.Body.Add(new GenTextFragment(new GenFragmentParams(GenDataDef, parentSegment, parentContainer)) {Text = w});
+                                    block.Body.Add(
+                                        new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment,
+                                            parentContainer, w)));
                                 w = s.Substring(0, i - 1); // Text between initial two delimiters
-                                block.Body.Add(new GenPlaceholderFragment(new GenFragmentParams(GenDataDef, parentSegment, parentContainer)) { Id = GenDataDef.GetId(w) });
+                                block.Body.Add(
+                                    new GenPlaceholderFragment(new GenPlaceholderFragmentParams(GenDataDef,
+                                        parentSegment, parentContainer, GenDataDef.GetId(w))));
 
                                 s = s.Substring(i + 1);
                                 i = s.IndexOf(Scan.Delimiter);
@@ -242,21 +246,26 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                             else
                             {
                                 // No matching delimiter: output delimiter with text
-                                block.Body.Add(new GenTextFragment(new GenFragmentParams(GenDataDef, parentSegment, parentContainer)) { Text = w + Scan.Delimiter + s });
+                                block.Body.Add(
+                                    new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment,
+                                        parentContainer, w + Scan.Delimiter + s)));
                                 s = "";
                             }
                         }
                         else
                         {
                             // No text after initial delimiter: output delimiter with text
-                            block.Body.Add(new GenTextFragment(new GenFragmentParams(GenDataDef, parentSegment, parentContainer)) { Text = w + Scan.Delimiter });
+                            block.Body.Add(
+                                new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, parentContainer,
+                                    w + Scan.Delimiter)));
                             i = -1;
                         }
                     }
 
                     if (s != "" || block.Body.Count == 0)
                         // Text without placeholders
-                        block.Body.Add(new GenTextFragment(new GenFragmentParams(GenDataDef, parentSegment, parentContainer)) { Text = s });
+                        block.Body.Add(
+                            new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, parentContainer, s)));
 
                     body.Add(block);
 

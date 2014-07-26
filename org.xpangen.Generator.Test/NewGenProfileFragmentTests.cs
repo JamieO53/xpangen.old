@@ -68,10 +68,7 @@ namespace org.xpangen.Generator.Test
         private static ProfileDefinition CreateEmptyProfileDefinition()
         {
             var p = new ProfileDefinition();
-            var r = p.AddProfileRoot("ProfileRoot");
-            var fb = r.AddFragmentBody("ProfileRoot");
-            var pr = fb.AddProfile();
-            pr.AddFragmentBody("Profile");
+            p.Setup();
             return p;
         }
     }
@@ -91,7 +88,7 @@ namespace org.xpangen.Generator.Test
 
         public object Expand()
         {
-            var list = Data.Lists[Segment.Class + "List"];
+            var list = Data.Lists[Segment.Class];
             foreach (var item in list)
             {
                 

@@ -3,6 +3,7 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
@@ -13,6 +14,7 @@ namespace org.xpangen.Generator.Profile
         {
         }
 
+        public Block Block { get { return (Block) Fragment; } private set { Fragment = value; } }
         public override string ProfileLabel()
         {
             return "Block";

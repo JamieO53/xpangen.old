@@ -9,11 +9,10 @@ namespace org.xpangen.Generator.Profile.Profile
     /// <summary>
     /// The container fragment for the profile
     /// </summary>
-    public class Profile : Fragment
+    public class Profile : ContainerFragment
     {
         public Profile()
         {
-            SubClasses.Add("FragmentBody");
             Properties.Add("Name");
         }
 
@@ -36,24 +35,6 @@ namespace org.xpangen.Generator.Profile.Profile
             }
         }
 
-        public GenNamedApplicationList<FragmentBody> FragmentBodyList { get; private set; }
-
-        protected override void GenObjectSetNotification()
-        {
-            base.GenObjectSetNotification();
-            FragmentBodyList = new GenNamedApplicationList<FragmentBody>(this, 2, 0);
-        }
-
-        public FragmentBody AddFragmentBody(string name)
-        {
-            var item = new FragmentBody(GenData)
-                           {
-                               GenObject = GenData.CreateObject("Profile", "FragmentBody"),
-                               Name = name
-                           };
-            FragmentBodyList.Add(item);
-            return item;
-        }
 
     }
 }

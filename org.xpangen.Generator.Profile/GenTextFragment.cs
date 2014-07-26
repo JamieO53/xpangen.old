@@ -3,17 +3,25 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
     public class GenTextFragment : GenFragment
     {
-        public GenTextFragment(GenFragmentParams genFragmentParams) :
-            base(genFragmentParams.SetFragmentType(FragmentType.Text))
+        public GenTextFragment(GenTextFragmentParams genTextFragmentParams) :
+            base(genTextFragmentParams.SetFragmentType(FragmentType.Text))
         {
+            Text = genTextFragmentParams.Text;
         }
 
-        public string Text { get; set; }
+        public Text TextFragment { get { return (Text) Fragment; }}
+
+        public string Text
+        {
+            get { return TextFragment.TextValue; } 
+            set { TextFragment.TextValue = value; }
+        }
 
         public override string ProfileLabel()
         {

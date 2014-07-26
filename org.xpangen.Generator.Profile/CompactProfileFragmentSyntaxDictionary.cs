@@ -74,11 +74,11 @@ namespace org.xpangen.Generator.Profile
         /// <summary>
         ///     Parses the generator condition for this syntax.
         /// </summary>
-        /// <param name="genCondition">The condition fragment being created.</param>
         /// <param name="genDataDef">The generator data definition.</param>
         /// <param name="condition">The condition being parsed.</param>
-        public override void ParseCondition(GenCondition genCondition, GenDataDef genDataDef, string condition)
+        public override ConditionParameters ParseCondition(GenDataDef genDataDef, string condition)
         {
+            var genCondition = new ConditionParameters();
             var s = condition.Trim();
             var i = s.ToLowerInvariant().IndexOf(" exists", StringComparison.Ordinal);
             if (i > 0)
@@ -130,6 +130,7 @@ namespace org.xpangen.Generator.Profile
                     genCondition.GenComparison = GenComparison.Exists;
                 }
             }
+            return genCondition;
         }
 
         public override GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
@@ -144,7 +145,7 @@ namespace org.xpangen.Generator.Profile
                 c = segmentClass.Substring(0, segmentClass.Length - 1);
                 break;
             }
-            return new GenSegment(new GenFragmentParams(genDataDef, parentSegment, parentContainer), c, cardinality);
+            return new GenSegment(new GenSegmentParams(genDataDef, parentSegment, parentContainer, c, cardinality));
         }
     }
 }

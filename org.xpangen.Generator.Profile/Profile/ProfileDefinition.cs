@@ -53,7 +53,6 @@ namespace org.xpangen.Generator.Profile.Profile
             f.AddSubClass("ContainerFragment", "Condition");
             f.AddSubClass("ContainerFragment", "Function");
             f.AddSubClass("ContainerFragment", "TextBlock");
-            f.AddSubClass("Profile", "FragmentBody");
             f.Classes[1].AddInstanceProperty("Name");
             f.Classes[1].AddInstanceProperty("Title");
             f.Classes[2].AddInstanceProperty("Name");
@@ -64,6 +63,8 @@ namespace org.xpangen.Generator.Profile.Profile
             f.Classes[5].AddInstanceProperty("Class");
             f.Classes[5].AddInstanceProperty("Property");
             f.Classes[6].AddInstanceProperty("Name");
+            f.Classes[6].AddInstanceProperty("Primary");
+            f.Classes[6].AddInstanceProperty("Secondary");
             f.Classes[7].AddInstanceProperty("Name");
             f.Classes[8].AddInstanceProperty("Name");
             f.Classes[8].AddInstanceProperty("Class");

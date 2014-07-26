@@ -21,6 +21,8 @@ namespace org.xpangen.Generator.Profile.Profile
             SubClasses.Add("Function");
             SubClasses.Add("TextBlock");
             Properties.Add("Name");
+            Properties.Add("Primary");
+            Properties.Add("Secondary");
         }
 
         public ContainerFragment(GenData genData) : this()
@@ -42,24 +44,37 @@ namespace org.xpangen.Generator.Profile.Profile
             }
         }
 
-        public GenNamedApplicationList<Profile> ProfileList { get; private set; }
+        /// <summary>
+        /// The primary fragment body of the container fragment
+        /// </summary>
+        public string Primary
+        {
+            get { return AsString("Primary"); }
+            set
+            {
+                if (Primary == value) return;
+                SetString("Primary", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+        /// <summary>
+        /// The secondary fragment body of the container fragment
+        /// </summary>
+        public string Secondary
+        {
+            get { return AsString("Secondary"); }
+            set
+            {
+                if (Secondary == value) return;
+                SetString("Secondary", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
 
         protected override void GenObjectSetNotification()
         {
-            base.GenObjectSetNotification();
-            ProfileList = new GenNamedApplicationList<Profile>(this, 7, 0);
         }
-
-        public Profile AddProfile(string name)
-        {
-            var item = new Profile(GenData)
-                           {
-                               GenObject = GenData.CreateObject("ContainerFragment", "Profile"),
-                               Name = name
-                           };
-            ProfileList.Add(item);
-            return item;
-        }
-
     }
 }
