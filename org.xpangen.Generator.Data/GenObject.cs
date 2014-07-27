@@ -65,12 +65,12 @@ namespace org.xpangen.Generator.Data
 
         public NameList Properties
         {
-            get { return Definition.Properties; }
+            get { return Definition != null ? Definition.Properties : null; }
         }
 
         public string ClassName
         {
-            get { return Definition.Name; }
+            get { return Definition != null ? Definition.Name : ""; }
         }
 
         public override string ToString()

@@ -42,7 +42,10 @@
     <Compile Include="Definition\Property.cs" />
     <Compile Include="Definition\SubClass.cs" />
     <Compile Include="GenApplicationBase.cs" />
+    <Compile Include="GenApplicationData.cs" />
+    <Compile Include="GenApplicationGenObject.cs" />
     <Compile Include="GenApplicationList.cs" />
+    <Compile Include="GenApplicationSubClass.cs" />
     <Compile Include="GenAttributes.cs" />
     <Compile Include="GenBase.cs" />
     <Compile Include="GenContext.cs" />
@@ -69,6 +72,7 @@
     <Compile Include="GenObject.cs" />
     <Compile Include="GenObjectList.cs" />
     <Compile Include="GenSubClass.cs" />
+    <Compile Include="IGenApplicationData.cs" />
     <Compile Include="SubClassReference.cs" />
     <Compile Include="GenSavedContext.cs" />
     <Compile Include="GenSubClasses.cs" />
