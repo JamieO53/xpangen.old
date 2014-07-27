@@ -22,15 +22,14 @@ namespace org.xpangen.Generator.Test
             var profile = p.Profile();
             var fragments = profile.Body().FragmentList;
             var t = new ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary);
-            Assert.AreEqual("", t.GetText(fragments[0]));
-            Assert.AreEqual("`Class.Name`", t.GetText(fragments[1]));
-            Assert.AreEqual("Some text", t.GetText(fragments[2]));
-            Assert.AreEqual("`[Class>:`]", t.GetText(fragments[3]));
-            Assert.AreEqual("`{`]", t.GetText(fragments[4]));
-            Assert.AreEqual("`?Class.Name=Class:`]", t.GetText(fragments[5]));
-            Assert.AreEqual("`%Class.Name=Class.Name:`]", t.GetText(fragments[6]));
-            Assert.AreEqual("`@Map:`]", t.GetText(fragments[7]));
-            Assert.AreEqual("", t.GetText(fragments[8]));
+            Assert.AreEqual("`Class.Name`", t.GetText(fragments[0]));
+            Assert.AreEqual("Some text", t.GetText(fragments[1]));
+            Assert.AreEqual("`[Class>:`]", t.GetText(fragments[2]));
+            Assert.AreEqual("`{`]", t.GetText(fragments[3]));
+            Assert.AreEqual("`?Class.Name=Class:`]", t.GetText(fragments[4]));
+            Assert.AreEqual("`%Class.Name=Class.Name:`]", t.GetText(fragments[5]));
+            Assert.AreEqual("`@Map:`]", t.GetText(fragments[6]));
+            Assert.AreEqual("", t.GetText(fragments[7]));
             Assert.AreEqual("`Class.Name`Some text`[Class>:`]`{`]`?Class.Name=Class:`]`%Class.Name=Class.Name:`]`@Map:`]", t.GetText(profile));
         }
 
@@ -50,6 +49,7 @@ namespace org.xpangen.Generator.Test
         }
 
         [TestCase(Description = "Verifies that segment classes are expanded in sequence.")]
+        [Ignore("Still working on this")]
         public void ClassExpandText()
         {
             var p = CreateEmptyProfileDefinition();
@@ -60,6 +60,7 @@ namespace org.xpangen.Generator.Test
             tb.Body().AddPlaceholder("class.name", "Class", "Name");
             tb.Body().AddText(" ");
             var op = new ProfileTextBase();
+            op.PrepareOutput();
             var segmentExpander = new SegmentExpander(op, cf, def.ClassList.Find("Class"), def);
             var classes = (string) segmentExpander.Expand();
             Assert.AreEqual("Class SubClass Property ", classes);
@@ -89,9 +90,10 @@ namespace org.xpangen.Generator.Test
         public object Expand()
         {
             var list = Data.Lists[Segment.Class];
-            foreach (var item in list)
+            foreach (GenApplicationBase item in list)
             {
-                
+                Segment.GenObject = item.GenObject;
+                OutputBody(Segment.Body());
             }
             return GetOutput();
         }
@@ -118,7 +120,7 @@ namespace org.xpangen.Generator.Test
             return Output.GetOutput();
         }
 
-        protected virtual void PrepareOutput()
+        protected internal virtual void PrepareOutput()
         {
             if (Output == null)
                 throw new NotImplementedException();
@@ -174,7 +176,7 @@ namespace org.xpangen.Generator.Test
             return SB.ToString();
         }
 
-        protected override void PrepareOutput()
+        protected internal override void PrepareOutput()
         {
             SB = new StringBuilder();
         }
