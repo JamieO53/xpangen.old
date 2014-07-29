@@ -31,7 +31,7 @@ namespace org.xpangen.Generator.Profile.Profile
             Classes.Add("Function");
             Classes.Add("TextBlock");
             SubClasses.Add("FragmentBody");
-            base.GenObject = genData.Root;
+            GenObject = genData.Root;
         }
 
         public static GenDataDef GetDefinition()
