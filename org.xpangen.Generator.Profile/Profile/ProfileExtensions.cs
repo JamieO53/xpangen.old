@@ -122,46 +122,46 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public static FragmentBody Body(this ContainerFragment containerFragment)
         {
-            return containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList.Find(containerFragment.Primary);
+            return containerFragment.ProfileDefinition().FragmentBodyList.Find(containerFragment.Primary);
         }
 
         public static FragmentBody SecondaryBody(this ContainerFragment containerFragment)
         {
-            return containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList.Find(containerFragment.Secondary);
+            return containerFragment.ProfileDefinition().FragmentBodyList.Find(containerFragment.Secondary);
         }
 
+        public static string Name(this ContainerFragment containerFragment, FragmentType fragmentType)
+        {
+            return fragmentType.ToString() + containerFragment.Body().FragmentList.Count;
+        }
+        
         public static FragmentBody CheckBody(this ContainerFragment containerFragment)
         {
-            var root = containerFragment.ProfileDefinition().ProfileRoot();
+            var def = containerFragment.ProfileDefinition();
             if (containerFragment.Primary == "Empty1")
-                containerFragment.Primary = CreateContainerFragmentBody(root, containerFragment.GetType().Name);
-            return root.FragmentBodyList.Find(containerFragment.Primary);
+                containerFragment.Primary = CreateContainerFragmentBody(def, containerFragment.GetType().Name);
+            return def.FragmentBodyList.Find(containerFragment.Primary);
         }
 
         public static FragmentBody CheckSecondaryBody(this ContainerFragment containerFragment)
         {
-            var root = containerFragment.ProfileDefinition().ProfileRoot();
+            var def = containerFragment.ProfileDefinition();
             if (containerFragment.Secondary == "Empty1")
-                containerFragment.Secondary = CreateContainerFragmentBody(root, containerFragment.GetType().Name);
-            return root.FragmentBodyList.Find(containerFragment.Secondary);
+                containerFragment.Secondary = CreateContainerFragmentBody(def, containerFragment.GetType().Name);
+            return def.FragmentBodyList.Find(containerFragment.Secondary);
         }
 
         private static string CreateContainerFragmentBody(FragmentBody body, string prefix)
         {
-            var root = body.ProfileDefinition().ProfileRoot();
-            return CreateContainerFragmentBody(root, prefix);
+            var def = body.ProfileDefinition();
+            return CreateContainerFragmentBody(def, prefix);
         }
 
-        private static string CreateContainerFragmentBody(ProfileRoot root, string prefix)
+        private static string CreateContainerFragmentBody(ProfileDefinition def, string prefix)
         {
-            var name = prefix + root.FragmentBodyList.Count;
-            root.AddFragmentBody(name);
+            var name = prefix + def.FragmentBodyList.Count;
+            def.AddFragmentBody(name);
             return name;
-        }
-
-        public static ProfileRoot ProfileRoot(this ProfileDefinition def)
-        {
-            return def.ProfileRootList[0];
         }
 
         public static Profile Profile(this ProfileDefinition def)
@@ -171,7 +171,7 @@ namespace org.xpangen.Generator.Profile.Profile
 
         private static FragmentBody ProfileFragmentBody(ProfileDefinition def)
         {
-            return def.ProfileRoot().FragmentBodyList[0];
+            return def.FragmentBodyList[0];
         }
 
         public static Profile Profile(this Fragment fragment)
@@ -186,7 +186,7 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public static ProfileDefinition ProfileDefinition(this FragmentBody body)
         {
-            return (ProfileDefinition) body.Parent.Parent;
+            return (ProfileDefinition) body.Parent;
         }
 
         public static ProfileDefinition ProfileDefinition(this Fragment fragment)
@@ -201,11 +201,10 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public static void Setup(this ProfileDefinition def)
         {
-            var root = def.AddProfileRoot("");
-            var rootBody = root.AddFragmentBody("Root0");
-            var emptyBody = root.AddFragmentBody("Empty1");
+            var rootBody = def.AddFragmentBody("Root0");
+            var emptyBody = def.AddFragmentBody("Empty1");
             var profile = rootBody.AddProfile();
-            var profileBody = root.AddFragmentBody("Profile2");
+            var profileBody = def.AddFragmentBody("Profile2");
             profile.Primary = "Profile2";
             profile.Secondary = "Empty1";
         }
