@@ -17,7 +17,7 @@ namespace org.xpangen.Generator.Profile
         /// </summary>
         /// <param name="genDataDef">The generator data definition.</param>
         /// <param name="condition">The condition being parsed.</param>
-        public abstract ConditionParameters ParseCondition(GenDataDef genDataDef, string condition);
+        public abstract ConditionParameters ParseCondition(IGenDataDef genDataDef, string condition);
 
         /// <summary>
         ///     Text for each item in the <see cref="GenCardinality" /> enumeration.
@@ -117,7 +117,6 @@ namespace org.xpangen.Generator.Profile
         /// <param name="parentSegment"></param>
         /// <param name="parentContainer"></param>
         /// <returns></returns>
-        public abstract GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass,
-            GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer);
+        public abstract GenSegment ParseSegmentHeading(IGenDataDef genDataDef, string segmentClass, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer);
     }
 }

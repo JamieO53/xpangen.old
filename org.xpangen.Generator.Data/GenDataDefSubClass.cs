@@ -3,9 +3,9 @@
     /// <summary>
     /// A sub class reference
     /// </summary>
-    public class GenDataDefSubClass
+    public class GenDataDefSubClass : IGenDataDefSubClass
     {
-        public GenDataDefClass SubClass { get; set; }
+        public IGenDataDefClass SubClass { get; set; }
 
         public string Reference { get; set; }
 

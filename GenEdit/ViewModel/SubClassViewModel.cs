@@ -7,7 +7,7 @@ namespace GenEdit.ViewModel
         private ObservableCollection<FieldViewModelBase> _fields;
 
         public SubClassViewModel(ISubClassBase parent, ISubClassBase subClassBase,
-                                 GenNamedApplicationBase def, GenDataDefSubClass subClassDef,
+                                 GenNamedApplicationBase def, IGenDataDefSubClass subClassDef,
                                  GenSavedContext savedContext, bool isReadOnly)
         {
             Parent = parent;
@@ -19,11 +19,11 @@ namespace GenEdit.ViewModel
             SavedReference = Parent != null ? Parent.Reference : "";
         }
 
-        public GenDataDefSubClass SubClassDef { get; private set; }
+        private IGenDataDefSubClass SubClassDef { get; set; }
 
-        public ISubClassBase SubClassBase { get; private set; }
+        private ISubClassBase SubClassBase { get; set; }
 
-        public ISubClassBase Parent { get; private set; }
+        private ISubClassBase Parent { get; set; }
 
         private string SavedReference { get; set; }
 

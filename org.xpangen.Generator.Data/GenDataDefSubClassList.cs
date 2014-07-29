@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenDataDefSubClassList : List<GenDataDefSubClass>
+    public class GenDataDefSubClassList : List<IGenDataDefSubClass>
     {
         public int IndexOf(string name)
         {
-            for (var index = 0; index < this.Count; index++)
+            for (var index = 0; index < Count; index++)
             {
                 var item = this[index];
                 if (item.SubClass.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
@@ -18,7 +18,7 @@ namespace org.xpangen.Generator.Data
 
         public int IndexOf(int subClassId)
         {
-            for (var index = 0; index < this.Count; index++)
+            for (var index = 0; index < Count; index++)
             {
                 var item = this[index];
                 if (item.SubClass.ClassId.Equals(subClassId))

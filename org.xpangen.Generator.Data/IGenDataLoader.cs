@@ -15,6 +15,6 @@
         /// <param name="dataDef">The definition of the data being loaded.</param>
         /// <param name="path">The path of the data to be loaded.</param>
         /// <returns>The loaded data.</returns>
-        GenData LoadData(GenDataDef dataDef, string path);
+        GenData LoadData(IGenDataDef dataDef, string path);
     }
 }
