@@ -1,13 +1,11 @@
 using System;
-using System.Collections;
-using System.IO;
 using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
     public class GenDataDefReferenceCache
     {
-        private Dictionary<string, GenDataDef> _localCache;
+        private Dictionary<string, IGenDataDef> _localCache;
         private GenDataDef Self { get; set; }
 
         public GenDataDefReferenceCache(GenDataDef genData)
@@ -20,7 +18,7 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         /// <param name="defPath">The data's definition location.</param>
         /// <returns></returns>
-        public GenDataDef this[string defPath]
+        public IGenDataDef this[string defPath]
         {
             get
             {
@@ -49,9 +47,9 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        private Dictionary<string, GenDataDef> LocalCache
+        private Dictionary<string, IGenDataDef> LocalCache
         {
-            get { return _localCache ?? (_localCache = new Dictionary<string, GenDataDef>()); }
+            get { return _localCache ?? (_localCache = new Dictionary<string, IGenDataDef>()); }
         }
 
         public int Count
@@ -62,11 +60,10 @@ namespace org.xpangen.Generator.Data
         /// <summary>
         /// Cache a data file programatically.
         /// </summary>
-        /// <param name="def">The definition of the definition data.</param>
         /// <param name="name">The name of the cached data.</param>
-        /// <param name="genData">The data being cached.</param>
+        /// <param name="genDataDef">The data being cached.</param>
         /// <returns></returns>
-        public GenDataDef Internal(string name, GenDataDef genDataDef)
+        public IGenDataDef Internal(string name, IGenDataDef genDataDef)
         {
             var n = name.ToLowerInvariant().Replace('/', '\\');
             if (n.Equals("self"))
@@ -76,15 +73,25 @@ namespace org.xpangen.Generator.Data
             return genDataDef;
         }
 
-        private GenDataDef AddDef(string def)
+        private IGenDataDef AddDef(string def)
         {
             var f = def.ToLowerInvariant().Replace('/', '\\');
-            GenDataDef d;
+            IGenDataDef d;
             if (f.Equals("minimal"))
             {
                 if (!LocalCache.ContainsKey(f))
                 {
                     d = GenDataDef.CreateMinimal();
+                    LocalCache.Add(f, d);
+                }
+                else
+                    d = LocalCache[f];
+            }
+            else if (f.Equals("definition"))
+            {
+                if (!LocalCache.ContainsKey(f))
+                {
+                    d = GenDataDef.CreateDefinition();
                     LocalCache.Add(f, d);
                 }
                 else
@@ -114,13 +121,13 @@ namespace org.xpangen.Generator.Data
 
     public struct GenDataDefReferenceCacheItem
     {
-        public GenDataDefReferenceCacheItem(string path, GenDataDef genDataDef) : this()
+        public GenDataDefReferenceCacheItem(string path, IGenDataDef genDataDef) : this()
         {
             GenDataDef = genDataDef;
             Path = path;
         }
 
         public string Path { get; private set; }
-        public GenDataDef GenDataDef { get; private set; }
+        public IGenDataDef GenDataDef { get; private set; }
     }
 }

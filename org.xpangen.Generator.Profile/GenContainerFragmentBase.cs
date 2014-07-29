@@ -34,7 +34,7 @@ namespace org.xpangen.Generator.Profile
             protected set { _classId = value; }
         }
 
-        public GenDataDefClass Definition
+        public IGenDataDefClass Definition
         {
             get { return GenDataDef.Classes[ClassId]; }
         }

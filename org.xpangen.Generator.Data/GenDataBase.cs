@@ -4,14 +4,14 @@
     {
         private GenDataBaseReferences _references;
 
-        public GenDataBase(GenDataDef genDataDef)
+        public GenDataBase(IGenDataDef genDataDef)
         {
             GenDataDef = genDataDef;
             IgnorePropertyValidation = true;
             Root = new GenObject(null, null, 0) { GenDataBase = this };
         }
 
-        public GenDataDef GenDataDef { get; private set; }
+        public IGenDataDef GenDataDef { get; private set; }
         public GenObject Root { get; private set; }
         public GenDataBaseReferences References
         {
@@ -37,7 +37,7 @@
             RaisePropertyChanged(className + '.' + propertyName);
         }
 
-        public GenDataDef AsDef()
+        public IGenDataDef AsDef()
         {
             var x = new GenDataToDef(this);
             return x.AsDef();

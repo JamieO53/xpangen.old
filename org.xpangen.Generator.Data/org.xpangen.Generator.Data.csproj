@@ -73,6 +73,9 @@
     <Compile Include="GenObjectList.cs" />
     <Compile Include="GenSubClass.cs" />
     <Compile Include="IGenApplicationData.cs" />
+    <Compile Include="IGenDataDef.cs" />
+    <Compile Include="IGenDataDefClass.cs" />
+    <Compile Include="IGenDataDefSubClass.cs" />
     <Compile Include="SubClassReference.cs" />
     <Compile Include="GenSavedContext.cs" />
     <Compile Include="GenSubClasses.cs" />

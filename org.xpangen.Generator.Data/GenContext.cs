@@ -38,8 +38,8 @@ namespace org.xpangen.Generator.Data
                               };
         }
 
-        public void Add(GenObjectList item, GenDataDefClass defClass, GenDataBase genDataBase, string reference,
-                        string referenceDefinition, GenDataDefSubClass defSubClass)
+        public void Add(GenObjectList item, IGenDataDefClass defClass, GenDataBase genDataBase, string reference,
+                        string referenceDefinition, IGenDataDefSubClass defSubClass)
         {
             if (defClass != null && defClass.ClassId != 0 && this[0].Count > 0 && this[0].Index == -1) this[0].Index = 0;
             GenObjectList myList;

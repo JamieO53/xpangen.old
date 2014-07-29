@@ -2,7 +2,7 @@
 {
     public class GenApplicationGenObject : GenApplicationData
     {
-        private GenDataDef GenDataDef { get; set; }
+        private IGenDataDef GenDataDef { get; set; }
         private GenObject GenObject { get; set; }
 
         public GenApplicationGenObject(GenObject genObject)

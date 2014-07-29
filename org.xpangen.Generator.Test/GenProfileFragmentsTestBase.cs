@@ -260,7 +260,7 @@ namespace org.xpangen.Generator.Test
             return d;
         }
 
-        protected static GenSegment SetUpSegmentSeparatorFragment(GenDataDef f, GenCardinality cardinality, GenContainerFragmentBase parentSegment)
+        protected static GenSegment SetUpSegmentSeparatorFragment(IGenDataDef f, GenCardinality cardinality, GenContainerFragmentBase parentSegment)
         {
             var g = new GenSegment(new GenSegmentParams(f, parentSegment, parentSegment, "TestData", cardinality));
             var cond =

@@ -25,7 +25,7 @@ namespace GenEdit.Controls
         /// <summary>
         /// The data definition of this class.
         /// </summary>
-        public GenDataDefClass ClassDef { get; private set; }
+        public IGenDataDefClass ClassDef { get; private set; }
 
         /// <summary>
         /// The Definition of the class.

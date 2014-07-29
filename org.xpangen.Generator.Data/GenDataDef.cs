@@ -7,10 +7,10 @@ using org.xpangen.Generator.Data.Definition;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenDataDef : GenBase
+    public class GenDataDef : GenBase, IGenDataDef
     {
         public GenDataDefClassList Classes { get; private set; }
-        public Definition.Definition Definition { get; private set; }
+        private Definition.Definition Definition { get; set; }
         public int CurrentClassId { get; set; }
         public string DefinitionName { get; set; }
 
@@ -343,7 +343,7 @@ namespace org.xpangen.Generator.Data
         {
             var i = Classes.IndexOf(className);
             var j = Classes.IndexOf(inheritorName);
-            GenDataDefClass inheritor;
+            IGenDataDefClass inheritor;
             if (j == -1)
             {
                 inheritor = new GenDataDefClass
@@ -370,7 +370,7 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        private static void ParseReference(string reference, GenDataDefSubClass sc)
+        private static void ParseReference(string reference, IGenDataDefSubClass sc)
         {
             sc.Reference = reference;
             var ra = reference.Split(':');

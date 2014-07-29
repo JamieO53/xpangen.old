@@ -7,7 +7,7 @@ namespace org.xpangen.Generator.Test
 {
     public static class GenDataDefProfile
     {
-        private static void ClassProfile(GenDataDef genDataDef, int classId, StringBuilder profile)
+        private static void ClassProfile(IGenDataDef genDataDef, int classId, StringBuilder profile)
         {
             if (classId != 0)
             {
@@ -82,7 +82,7 @@ namespace org.xpangen.Generator.Test
                 profile.Append("`]");
         }
 
-        private static void SubClassProfiles(GenDataDef genDataDef, int classId, StringBuilder profile)
+        private static void SubClassProfiles(IGenDataDef genDataDef, int classId, StringBuilder profile)
         {
             for (var i = 0; i < genDataDef.Classes[classId].SubClasses.Count; i++)
             {
@@ -93,7 +93,7 @@ namespace org.xpangen.Generator.Test
             }
         }
 
-        public static string CreateProfile(GenDataDef genDataDef)
+        public static string CreateProfile(IGenDataDef genDataDef)
         {
             var def = new StringBuilder();
             def.Append("Definition=");

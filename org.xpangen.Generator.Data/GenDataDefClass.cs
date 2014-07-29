@@ -5,7 +5,7 @@ namespace org.xpangen.Generator.Data
     /// <summary>
     /// The definition of a generator class
     /// </summary>
-    public class GenDataDefClass : GenBase
+    public class GenDataDefClass : GenBase, IGenDataDefClass
     {
         /// <summary>
         /// The name of the class
@@ -17,7 +17,7 @@ namespace org.xpangen.Generator.Data
         /// The parent of the class
         /// </summary>
         
-        public GenDataDefClass Parent { get; set; }
+        public IGenDataDefClass Parent { get; set; }
         
         /// <summary>
         /// Format the object as a string.
@@ -56,36 +56,34 @@ namespace org.xpangen.Generator.Data
             get
             {
                 if (_properties != null) return _properties;
+                Assert(_instanceProperties != null, "The instance properties have not been initialized");
+                NameList nameList;
+                if (RefDef != null && RefClassId >= 0 && RefClassId < RefDef.Classes.Count)
+                    nameList = RefDef.Classes[RefClassId].Properties;
                 else
                 {
-                    Assert(_instanceProperties != null, "The instance properties have not been initialized");
-                    NameList nameList;
-                    if (RefDef != null && RefClassId >= 0 && RefClassId < RefDef.Classes.Count)
-                        nameList = RefDef.Classes[RefClassId].Properties;
-                    else
-                    {
-                        nameList = new NameList();
-                        if (IsInherited)
-                            CopyInheritedProperties(nameList);
-                        CopyInstanceProperties(nameList);
-                    }
-                    return _properties = nameList;
+                    nameList = new NameList();
+                    if (IsInherited)
+                        CopyInheritedProperties(nameList);
+                    CopyInstanceProperties(nameList);
                 }
+                return _properties = nameList;
             }
         }
 
         private void CopyInstanceProperties(NameList nameList)
         {
-            for (var i = 0; i < InstanceProperties.Count; i++)
-                if (!nameList.Contains(InstanceProperties[i]))
-                    nameList.Add(InstanceProperties[i]);
+            foreach (var instanceProperty in InstanceProperties)
+                if (!nameList.Contains(instanceProperty))
+                    nameList.Add(instanceProperty);
         }
 
         private void CopyInheritedProperties(NameList nameList)
         {
-            if (Parent.IsInherited)
-                Parent.CopyInheritedProperties(nameList);
-            Parent.CopyInstanceProperties(nameList);
+            var parent = (GenDataDefClass) Parent;
+            if (parent.IsInherited)
+                parent.CopyInheritedProperties(nameList);
+            parent.CopyInstanceProperties(nameList);
         }
 
         public int ClassId { get; set; }
@@ -94,15 +92,15 @@ namespace org.xpangen.Generator.Data
 
         public int RefClassId { get; set; }
 
-        public GenDataDef RefDef { get; set; }
+        public IGenDataDef RefDef { get; set; }
 
         public string ReferenceDefinition { get; set; }
 
         public string Reference { get; set; }
 
-        public readonly GenDataDefSubClassList SubClasses;
+        public GenDataDefSubClassList SubClasses { get; private set; }
 
-        public readonly GenDataDefClassList Inheritors;
+        public GenDataDefClassList Inheritors { get; private set; }
 
         private NameList _properties;
 

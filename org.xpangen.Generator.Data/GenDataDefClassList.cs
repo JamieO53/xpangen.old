@@ -6,7 +6,7 @@ namespace org.xpangen.Generator.Data
     /// <summary>
     /// A list of generator class definitions
     /// </summary>
-    public class GenDataDefClassList : List<GenDataDefClass>
+    public class GenDataDefClassList : List<IGenDataDefClass>
     {
         /// <summary>
         /// Checks if the list contains a class with the given name.
@@ -23,7 +23,7 @@ namespace org.xpangen.Generator.Data
 
         public int IndexOf(string name)
         {
-            for (var index = 0; index < this.Count; index++)
+            for (var index = 0; index < Count; index++)
             {
                 var item = this[index];
                 if (item.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))

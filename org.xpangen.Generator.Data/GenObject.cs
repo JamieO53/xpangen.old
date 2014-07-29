@@ -53,7 +53,7 @@ namespace org.xpangen.Generator.Data
         public GenObject Parent { get; private set; }
         public GenSubClasses SubClass { get; private set; }
 
-        public GenDataDefClass Definition
+        public IGenDataDefClass Definition
         {
             get
             {

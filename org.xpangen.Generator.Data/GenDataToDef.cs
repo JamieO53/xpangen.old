@@ -23,7 +23,7 @@ namespace org.xpangen.Generator.Data
         private readonly int _xPropertyName;
 
         private GenDataBase GenDataBase { get; set; }
-        private GenDataDef GenDataDef { get; set; }
+        private IGenDataDef GenDataDef { get; set; }
 
         public GenDataToDef(GenDataBase genData)
         {
