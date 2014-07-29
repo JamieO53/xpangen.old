@@ -12,8 +12,6 @@ namespace org.xpangen.Generator.Data
     internal class GenDataToDef
     {
         private readonly int _nClass;
-        private readonly int _nSubClass;
-        private readonly int _nProperty;
         private readonly int _xSubClass;
         private readonly int _xProperty;
         private readonly int _xClassName;
@@ -30,19 +28,19 @@ namespace org.xpangen.Generator.Data
             GenDataBase = genData;
             GenDataDef = GenDataBase.GenDataDef;
             _nClass = GenDataDef.Classes.IndexOf("Class");
-            _nSubClass = GenDataDef.Classes.IndexOf("SubClass");
-            _nProperty = GenDataDef.Classes.IndexOf("Property");
+            var nSubClass = GenDataDef.Classes.IndexOf("SubClass");
+            var nProperty = GenDataDef.Classes.IndexOf("Property");
             _xClassName = GenDataDef.Classes[_nClass].Properties.IndexOf("Name");
-            _xSubClassName = GenDataDef.Classes[_nSubClass].Properties.IndexOf("Name");
-            _xSubClassRelationship = GenDataDef.Classes[_nSubClass].Properties.IndexOf("Relationship");
-            _xSubClassReference = GenDataDef.Classes[_nSubClass].Properties.IndexOf("Reference");
-            _xPropertyName = GenDataDef.Classes[_nProperty].Properties.IndexOf("Name");
+            _xSubClassName = GenDataDef.Classes[nSubClass].Properties.IndexOf("Name");
+            _xSubClassRelationship = GenDataDef.Classes[nSubClass].Properties.IndexOf("Relationship");
+            _xSubClassReference = GenDataDef.Classes[nSubClass].Properties.IndexOf("Reference");
+            _xPropertyName = GenDataDef.Classes[nProperty].Properties.IndexOf("Name");
 
-            if (_nClass == -1 || _nSubClass == -1 || _nProperty == -1)
+            if (_nClass == -1 || nSubClass == -1 || nProperty == -1)
                 return;
 
-            _xSubClass = GenDataDef.IndexOfSubClass(_nClass, _nSubClass);
-            _xProperty = GenDataDef.IndexOfSubClass(_nClass, _nProperty);
+            _xSubClass = GenDataDef.IndexOfSubClass(_nClass, nSubClass);
+            _xProperty = GenDataDef.IndexOfSubClass(_nClass, nProperty);
         }
     
         public GenDataDef AsDef()

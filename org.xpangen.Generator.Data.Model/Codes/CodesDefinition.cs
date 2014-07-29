@@ -19,7 +19,7 @@ namespace org.xpangen.Generator.Data.Model.Codes
             Classes.Add("CodesTable");
             Classes.Add("Code");
             SubClasses.Add("CodesTable");
-            base.GenObject = genData.Root;
+            GenObject = genData.Root;
         }
 
         public static GenDataDef GetDefinition()
