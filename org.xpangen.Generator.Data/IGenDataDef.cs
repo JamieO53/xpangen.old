@@ -20,6 +20,5 @@ namespace org.xpangen.Generator.Data
         void AddInheritor(string className, string inheritorName);
         int AddClass(string className);
         string GetIdentifier(GenDataId genDataId);
-        string ToString();
     }
 }
