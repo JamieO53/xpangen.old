@@ -6,7 +6,7 @@ namespace org.xpangen.Generator.Data
 {
     public interface IGenDataDef
     {
-        GenDataDefClassList Classes { get; }
+        IGenDataDefClassList Classes { get; }
         int CurrentClassId { get; set; }
         string DefinitionName { get; set; }
         GenDataDefReferenceCache Cache { get; }

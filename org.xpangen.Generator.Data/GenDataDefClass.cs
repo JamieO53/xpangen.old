@@ -102,9 +102,9 @@ namespace org.xpangen.Generator.Data
 
         public string Reference { get; set; }
 
-        public GenDataDefSubClassList SubClasses { get; private set; }
+        public IGenDataDefSubClassList SubClasses { get; private set; }
 
-        public GenDataDefClassList Inheritors { get; private set; }
+        public IGenDataDefClassList Inheritors { get; private set; }
 
         private NameList _properties;
 

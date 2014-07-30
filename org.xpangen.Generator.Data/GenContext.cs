@@ -11,7 +11,7 @@ namespace org.xpangen.Generator.Data
             Classes = new GenDataDefClassList();
         }
 
-        public GenDataDefClassList Classes { get; private set; }
+        public IGenDataDefClassList Classes { get; private set; }
 
         public GenDataReferenceCache Cache { get; private set; }
 

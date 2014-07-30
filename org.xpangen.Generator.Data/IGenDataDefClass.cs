@@ -36,8 +36,8 @@ namespace org.xpangen.Generator.Data
         IGenDataDef RefDef { get; set; }
         string ReferenceDefinition { get; set; }
         string Reference { get; set; }
-        GenDataDefSubClassList SubClasses { get; }
-        GenDataDefClassList Inheritors { get; }
+        IGenDataDefSubClassList SubClasses { get; }
+        IGenDataDefClassList Inheritors { get; }
         bool IsInherited { get; set; }
         bool IsAbstract { get; }
         int AddInstanceProperty(string name);

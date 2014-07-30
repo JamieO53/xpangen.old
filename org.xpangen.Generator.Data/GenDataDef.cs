@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data
 {
     public class GenDataDef : GenBase, IGenDataDef
     {
-        public GenDataDefClassList Classes { get; private set; }
+        public IGenDataDefClassList Classes { get; private set; }
         private Definition.Definition Definition { get; set; }
         public int CurrentClassId { get; set; }
         public string DefinitionName { get; set; }
