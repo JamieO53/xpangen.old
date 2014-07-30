@@ -40,13 +40,6 @@ namespace org.xpangen.Generator.Data
         GenDataDefClassList Inheritors { get; }
         bool IsInherited { get; set; }
         bool IsAbstract { get; }
-
-        /// <summary>
-        /// Format the object as a string.
-        /// </summary>
-        /// <returns>The formatted object.</returns>
-        string ToString();
-
         int AddInstanceProperty(string name);
         bool IsPseudo(int propertyId);
         void SetPseudo(int propertyId);
