@@ -44,9 +44,15 @@ namespace org.xpangen.Generator.Profile
                 );
         }
 
+        private GenObject GetGenObject(GenData genData)
+        {
+            return genData.Context[ParentSegment.ClassId].GenObject;
+        }
+        
         public override string Expand(GenData genData)
         {
-            return genData.GetValue(Id);
+            return GetGenObject(genData).GetValue(Id);
+            //return genData.GetValue(Id);
         }
     }
 }

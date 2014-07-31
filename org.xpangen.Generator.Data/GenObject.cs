@@ -77,5 +77,17 @@ namespace org.xpangen.Generator.Data
         {
             return GenDataBase + "." + Definition.Name + "." + Attributes[0];
         }
+
+        public string GetValue(GenDataId id)
+        {
+            if (id.ClassName == ClassName)
+            {
+                var idx = Definition.Properties.IndexOf(id.PropertyName);
+                if (idx == -1) return "<<<< Invalid Lookup: " + id + " Property not found >>>>";
+                return Attributes[idx];
+            }
+            if (Parent != null) return Parent.GetValue(id);
+            return "<<<< Invalid Lookup: " + id + " Class not found >>>>";
+        }
     }
 }
