@@ -46,9 +46,11 @@ namespace org.xpangen.Generator.Profile
 
         private GenObject GetGenObject(GenData genData)
         {
-            return genData.Context[ParentSegment.ClassId].GenObject;
+            //var genObject = genData.Context[ParentSegment.ClassId].GenObject ??
+            //                genData.Context[ParentSegment.ParentSegment.ClassId].GenObject;
+            return ParentSegment.GenObject;
         }
-        
+
         public override string Expand(GenData genData)
         {
             return GetGenObject(genData).GetValue(Id);

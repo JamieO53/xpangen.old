@@ -66,6 +66,7 @@ namespace org.xpangen.Generator.Profile
                     genData.First(ClassId);
                     while (!genData.Eol(ClassId))
                     {
+                        GenObject = genData.Context[ClassId].GenObject;
                         s.Append(Body.Expand(genData));
                         genData.Next(ClassId);
                     }
@@ -75,6 +76,7 @@ namespace org.xpangen.Generator.Profile
                     genData.First(ClassId);
                     while (!genData.Eol(ClassId))
                     {
+                        GenObject = genData.Context[ClassId].GenObject;
                         expanded = ItemBody.Expand(genData);
                         if (!isEmpty && expanded != "")
                             s.Append(Separator.Expand(genData));
@@ -87,6 +89,7 @@ namespace org.xpangen.Generator.Profile
                     genData.Last(ClassId);
                     while (!genData.Eol(ClassId))
                     {
+                        GenObject = genData.Context[ClassId].GenObject;
                         s.Append(Body.Expand(genData));
                         genData.Prior(ClassId);
                     }
@@ -96,6 +99,7 @@ namespace org.xpangen.Generator.Profile
                     genData.Last(ClassId);
                     while (!genData.Eol(ClassId))
                     {
+                        GenObject = genData.Context[ClassId].GenObject;
                         expanded = ItemBody.Expand(genData);
                         if (!isEmpty && expanded != "")
                             s.Append(Separator.Expand(genData));
@@ -106,6 +110,7 @@ namespace org.xpangen.Generator.Profile
                     break;
                 case GenCardinality.First:
                     genData.First(ClassId);
+                    GenObject = genData.Context[ClassId].GenObject;
                     if (!genData.Eol(ClassId))
                         s.Append(Body.Expand(genData));
                     break;
@@ -114,12 +119,14 @@ namespace org.xpangen.Generator.Profile
                     genData.Next(ClassId);
                     while (!genData.Eol(ClassId))
                     {
+                        GenObject = genData.Context[ClassId].GenObject;
                         s.Append(Body.Expand(genData));
                         genData.Next(ClassId);
                     }
                     break;
                 case GenCardinality.Last:
                     genData.Last(ClassId);
+                    GenObject = genData.Context[ClassId].GenObject;
                     if (!genData.Eol(ClassId))
                         s.Append(Body.Expand(genData));
                     break;
@@ -128,6 +135,7 @@ namespace org.xpangen.Generator.Profile
                     genData.Prior(ClassId);
                     while (!genData.Eol(ClassId))
                     {
+                        GenObject = genData.Context[ClassId].GenObject;
                         s.Append(Body.Expand(genData));
                         genData.Prior(ClassId);
                     }
@@ -140,6 +148,7 @@ namespace org.xpangen.Generator.Profile
                     break;
                 case GenCardinality.Inheritance:
                     genData.SetInheritance(ClassId);
+                    GenObject = genData.Context[ClassId].GenObject;
                     if (!genData.Eol(ClassId))
                         s.Append(Body.Expand(genData));
                     break;
@@ -161,6 +170,7 @@ namespace org.xpangen.Generator.Profile
                     genData.First(ClassId);
                     while (!genData.Eol(ClassId))
                     {
+                        GenObject = genData.Context[ClassId].GenObject;
                         generated |= Body.Generate(prefix, genData, writer);
                         genData.Next(ClassId);
                     }
@@ -174,6 +184,7 @@ namespace org.xpangen.Generator.Profile
                     genData.First(ClassId);
                     while (!genData.Eol(ClassId))
                     {
+                        GenObject = genData.Context[ClassId].GenObject;
                         generatedItem = ItemBody.Generate(myPrefix, genData, writer);
                         if (isEmpty && generatedItem)
                         {
@@ -189,6 +200,7 @@ namespace org.xpangen.Generator.Profile
                     genData.Last(ClassId);
                     while (!genData.Eol(ClassId))
                     {
+                        GenObject = genData.Context[ClassId].GenObject;
                         generated |= Body.Generate(prefix, genData, writer);
                         genData.Prior(ClassId);
                     }
@@ -200,6 +212,7 @@ namespace org.xpangen.Generator.Profile
                     genData.Last(ClassId);
                     while (!genData.Eol(ClassId))
                     {
+                        GenObject = genData.Context[ClassId].GenObject;
                         generatedItem = ItemBody.Generate(myPrefix, genData, writer);
                         if (isEmpty && generatedItem)
                         {
@@ -213,6 +226,7 @@ namespace org.xpangen.Generator.Profile
                     break;
                 case GenCardinality.First:
                     genData.First(ClassId);
+                    GenObject = genData.Context[ClassId].GenObject;
                     if (!genData.Eol(ClassId))
                         generated |= Body.Generate(prefix, genData, writer);
                     break;
@@ -221,12 +235,14 @@ namespace org.xpangen.Generator.Profile
                     genData.Next(ClassId);
                     while (!genData.Eol(ClassId))
                     {
+                        GenObject = genData.Context[ClassId].GenObject;
                         generated |= Body.Generate(prefix, genData, writer);
                         genData.Next(ClassId);
                     }
                     break;
                 case GenCardinality.Last:
                     genData.Last(ClassId);
+                    GenObject = genData.Context[ClassId].GenObject;
                     if (!genData.Eol(ClassId))
                         generated |= Body.Generate(prefix, genData, writer);
                     break;
@@ -235,6 +251,7 @@ namespace org.xpangen.Generator.Profile
                     genData.Prior(ClassId);
                     while (!genData.Eol(ClassId))
                     {
+                        GenObject = genData.Context[ClassId].GenObject;
                         generated |= Body.Generate(prefix, genData, writer);
                         genData.Prior(ClassId);
                     }
@@ -247,6 +264,7 @@ namespace org.xpangen.Generator.Profile
                     break;
                 case GenCardinality.Inheritance:
                     genData.SetInheritance(ClassId);
+                    GenObject = genData.Context[ClassId].GenObject;
                     if (!genData.Eol(ClassId))
                         generated |= Body.Generate(prefix, genData, writer);
                     break;

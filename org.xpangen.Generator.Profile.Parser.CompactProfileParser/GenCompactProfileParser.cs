@@ -128,7 +128,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                             ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseSegmentHeading(
                                 GenDataDef, s, parentSegment, parentContainer);
                         frag = seg;
-                        ScanBody(seg.ClassId, seg.Body, parentSegment, seg);
+                        ScanBody(seg.ClassId, seg.Body, seg, seg);
                         break;
                     case TokenType.Block:
                         frag = ScanBlock(classId, parentSegment, parentContainer);
@@ -137,7 +137,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                         s = Scan.ScanLookup();
                         var lookup = new GenLookup(new GenLookupParams(GenDataDef, parentSegment, parentContainer, s));
                         frag = lookup;
-                        ScanBody(lookup.ClassId, lookup.Body, parentSegment, lookup);
+                        ScanBody(lookup.ClassId, lookup.Body, lookup, lookup);
                         break;
                     case TokenType.Condition:
                         s = Scan.ScanCondition();
