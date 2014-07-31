@@ -80,6 +80,7 @@ namespace org.xpangen.Generator.Profile
                 if (genData.Eol(Var2.ClassId))
                 {
                     contextData.Reset(Var1.ClassId);
+                    GenObject = contextData.Context[ClassId].GenObject;
                     result = Body.Expand(contextData);
                 }
                 else
@@ -87,7 +88,10 @@ namespace org.xpangen.Generator.Profile
                     var v = contextData.GetValue(Var2);
                     SearchFor(contextData, ClassId, Var1, v);
                     if (contextData.Eol(ClassId))
+                    {
+                        GenObject = contextData.Context[ClassId].GenObject;
                         result = Body.Expand(contextData);
+                    }
                 }
             }
             else
@@ -98,7 +102,10 @@ namespace org.xpangen.Generator.Profile
                     var v = contextData.GetValue(Var2);
                     SearchFor(contextData, ClassId, Var1, v);
                     if (!contextData.Eol(ClassId))
+                    {
+                        GenObject = contextData.Context[ClassId].GenObject;
                         result = Body.Expand(contextData);
+                    }
                 }
             }
             return result;

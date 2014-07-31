@@ -17,6 +17,7 @@ namespace org.xpangen.Generator.Profile
             Body = new GenSegBody(genFragmentParams.ParentSegment, genFragmentParams.ParentContainer);
         }
 
+        public GenObject GenObject { get; set; }
         public GenSegBody Body { get; private set; }
 
         public int ClassId
