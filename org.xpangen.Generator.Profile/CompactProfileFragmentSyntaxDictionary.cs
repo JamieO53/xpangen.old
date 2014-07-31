@@ -76,7 +76,7 @@ namespace org.xpangen.Generator.Profile
         /// </summary>
         /// <param name="genDataDef">The generator data definition.</param>
         /// <param name="condition">The condition being parsed.</param>
-        public override ConditionParameters ParseCondition(IGenDataDef genDataDef, string condition)
+        public override ConditionParameters ParseCondition(GenDataDef genDataDef, string condition)
         {
             var genCondition = new ConditionParameters();
             var s = condition.Trim();
@@ -133,7 +133,7 @@ namespace org.xpangen.Generator.Profile
             return genCondition;
         }
 
-        public override GenSegment ParseSegmentHeading(IGenDataDef genDataDef, string segmentClass, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
+        public override GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
         {
             var s = segmentClass.Substring(segmentClass.Length - 1);
             var c = segmentClass;

@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenProfileFragment : GenContainerFragmentBase
     {
-        public GenProfileFragment(IGenDataDef genDataDef)
+        public GenProfileFragment(GenDataDef genDataDef)
             : base(new GenProfileParams(genDataDef))
         {
             ClassId = 0;
@@ -44,7 +44,7 @@ namespace org.xpangen.Generator.Profile
 
     public class GenProfileParams : GenFragmentParams
     {
-        public GenProfileParams(IGenDataDef genDataDef) : base(genDataDef, null, null)
+        public GenProfileParams(GenDataDef genDataDef) : base(genDataDef, null, null)
         {
             ProfileDefinition = new ProfileDefinition();
             ProfileDefinition.Setup();

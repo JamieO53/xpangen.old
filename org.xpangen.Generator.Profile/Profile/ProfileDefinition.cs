@@ -18,6 +18,7 @@ namespace org.xpangen.Generator.Profile.Profile
         public ProfileDefinition(GenData genData)
         {
             GenData = genData;
+            Classes.Add("ProfileRoot");
             Classes.Add("FragmentBody");
             Classes.Add("Fragment");
             Classes.Add("Text");
@@ -30,15 +31,16 @@ namespace org.xpangen.Generator.Profile.Profile
             Classes.Add("Condition");
             Classes.Add("Function");
             Classes.Add("TextBlock");
-            SubClasses.Add("FragmentBody");
-            GenObject = genData.Root;
+            SubClasses.Add("ProfileRoot");
+            base.GenObject = genData.Root;
         }
 
         public static GenDataDef GetDefinition()
         {
             var f = new GenDataDef();
             f.DefinitionName = "ProfileDefinition";
-            f.AddSubClass("", "FragmentBody");
+            f.AddSubClass("", "ProfileRoot");
+            f.AddSubClass("ProfileRoot", "FragmentBody");
             f.AddSubClass("FragmentBody", "Fragment");
             f.AddSubClass("Fragment", "Null");
             f.AddSubClass("Fragment", "Text");
@@ -52,55 +54,58 @@ namespace org.xpangen.Generator.Profile.Profile
             f.AddSubClass("ContainerFragment", "Function");
             f.AddSubClass("ContainerFragment", "TextBlock");
             f.Classes[1].AddInstanceProperty("Name");
+            f.Classes[1].AddInstanceProperty("Title");
             f.Classes[2].AddInstanceProperty("Name");
             f.Classes[3].AddInstanceProperty("Name");
-            f.Classes[3].AddInstanceProperty("TextValue");
             f.Classes[4].AddInstanceProperty("Name");
-            f.Classes[4].AddInstanceProperty("Class");
-            f.Classes[4].AddInstanceProperty("Property");
+            f.Classes[4].AddInstanceProperty("TextValue");
             f.Classes[5].AddInstanceProperty("Name");
-            f.Classes[5].AddInstanceProperty("Primary");
-            f.Classes[5].AddInstanceProperty("Secondary");
+            f.Classes[5].AddInstanceProperty("Class");
+            f.Classes[5].AddInstanceProperty("Property");
             f.Classes[6].AddInstanceProperty("Name");
+            f.Classes[6].AddInstanceProperty("Primary");
+            f.Classes[6].AddInstanceProperty("Secondary");
             f.Classes[7].AddInstanceProperty("Name");
-            f.Classes[7].AddInstanceProperty("Class");
-            f.Classes[7].AddInstanceProperty("Cardinality");
             f.Classes[8].AddInstanceProperty("Name");
+            f.Classes[8].AddInstanceProperty("Class");
+            f.Classes[8].AddInstanceProperty("Cardinality");
             f.Classes[9].AddInstanceProperty("Name");
-            f.Classes[9].AddInstanceProperty("NoMatch");
-            f.Classes[9].AddInstanceProperty("Class1");
-            f.Classes[9].AddInstanceProperty("Property1");
-            f.Classes[9].AddInstanceProperty("Class2");
-            f.Classes[9].AddInstanceProperty("Property2");
             f.Classes[10].AddInstanceProperty("Name");
+            f.Classes[10].AddInstanceProperty("NoMatch");
             f.Classes[10].AddInstanceProperty("Class1");
             f.Classes[10].AddInstanceProperty("Property1");
-            f.Classes[10].AddInstanceProperty("Comparison");
             f.Classes[10].AddInstanceProperty("Class2");
             f.Classes[10].AddInstanceProperty("Property2");
-            f.Classes[10].AddInstanceProperty("Lit");
-            f.Classes[10].AddInstanceProperty("UseLit");
             f.Classes[11].AddInstanceProperty("Name");
-            f.Classes[11].AddInstanceProperty("FunctionName");
+            f.Classes[11].AddInstanceProperty("Class1");
+            f.Classes[11].AddInstanceProperty("Property1");
+            f.Classes[11].AddInstanceProperty("Comparison");
+            f.Classes[11].AddInstanceProperty("Class2");
+            f.Classes[11].AddInstanceProperty("Property2");
+            f.Classes[11].AddInstanceProperty("Lit");
+            f.Classes[11].AddInstanceProperty("UseLit");
             f.Classes[12].AddInstanceProperty("Name");
+            f.Classes[12].AddInstanceProperty("FunctionName");
+            f.Classes[13].AddInstanceProperty("Name");
             return f;
         }
 
-        public GenNamedApplicationList<FragmentBody> FragmentBodyList { get; private set; }
+        public GenNamedApplicationList<ProfileRoot> ProfileRootList { get; private set; }
 
         protected override void GenObjectSetNotification()
         {
-            FragmentBodyList = new GenNamedApplicationList<FragmentBody>(this, 1, 0);
+            ProfileRootList = new GenNamedApplicationList<ProfileRoot>(this, 1, 0);
         }
 
-        public FragmentBody AddFragmentBody(string name)
+        public ProfileRoot AddProfileRoot(string name, string title = "")
         {
-            var item = new FragmentBody(GenData)
+            var item = new ProfileRoot(GenData)
                            {
-                               GenObject = GenData.CreateObject("", "FragmentBody"),
-                               Name = name
+                               GenObject = GenData.CreateObject("", "ProfileRoot"),
+                               Name = name,
+                               Title = title
                            };
-            FragmentBodyList.Add(item);
+            ProfileRootList.Add(item);
             return item;
         }
     }

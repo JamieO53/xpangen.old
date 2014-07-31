@@ -13,7 +13,7 @@ namespace org.xpangen.Generator.Profile
         /// <param name="parentSegment">The class segment this fragment belongs to.</param>
         /// <param name="parentContainer">The container fragment conataining this fragment.</param>
         /// <param name="text"></param>
-        public GenTextFragmentParams(IGenDataDef genDataDef, GenContainerFragmentBase parentSegment,
+        public GenTextFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
             GenContainerFragmentBase parentContainer, string text) : base(genDataDef, parentSegment, parentContainer)
         {
             Text = text;

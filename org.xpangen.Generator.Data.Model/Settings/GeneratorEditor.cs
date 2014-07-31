@@ -21,7 +21,7 @@ namespace org.xpangen.Generator.Data.Model.Settings
             Classes.Add("BaseFile");
             Classes.Add("Profile");
             SubClasses.Add("GenSettings");
-            GenObject = genData.Root;
+            base.GenObject = genData.Root;
         }
 
         public static GenDataDef GetDefinition()

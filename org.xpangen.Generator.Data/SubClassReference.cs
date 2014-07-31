@@ -6,7 +6,7 @@ namespace org.xpangen.Generator.Data
     {
         private string _reference;
 
-        public SubClassReference(GenDataBase genDataBase, GenObject parent, int classId, IGenDataDefSubClass subClassDef)
+        public SubClassReference(GenDataBase genDataBase, GenObject parent, int classId, GenDataDefSubClass subClassDef)
         {
             GenDataBase = genDataBase;
             Definition = subClassDef;
@@ -17,7 +17,7 @@ namespace org.xpangen.Generator.Data
         public GenDataBase GenDataBase { get; private set; }
         public GenObject Parent { get; private set; }
         public int ClassId { get; private set; }
-        public IGenDataDefSubClass Definition { get; private set; }
+        public GenDataDefSubClass Definition { get; private set; }
 
         /// <summary>
         /// The relationship between the subclass and the class

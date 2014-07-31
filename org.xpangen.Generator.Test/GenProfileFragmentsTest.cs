@@ -15,7 +15,7 @@ namespace org.xpangen.Generator.Test
 	[TestFixture]
     public class GenProfileFragmentsTest : GenProfileFragmentsTestBase
     {
-        private IGenDataDef GenDataDef { get; set; }
+        private GenDataDef GenDataDef { get; set; }
 
         private GenData GenData { get; set; }
 

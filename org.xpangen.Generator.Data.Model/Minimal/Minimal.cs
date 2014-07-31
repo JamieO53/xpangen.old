@@ -20,7 +20,7 @@ namespace org.xpangen.Generator.Data.Model.Minimal
             Classes.Add("SubClass");
             Classes.Add("Property");
             SubClasses.Add("Class");
-            GenObject = genData.Root;
+            base.GenObject = genData.Root;
         }
 
         public static GenDataDef GetDefinition()

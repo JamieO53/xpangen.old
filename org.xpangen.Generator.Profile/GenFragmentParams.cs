@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Profile
             Assert(Fragment != null, "Fragment expected");
         }
 
-        public GenFragmentParams(IGenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
+        public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
         {
             GenDataDef = genDataDef;
             ParentSegment = parentSegment;
@@ -38,7 +38,7 @@ namespace org.xpangen.Generator.Profile
 
         public Fragment Fragment { get; protected set; }
         
-        public IGenDataDef GenDataDef { get; private set; }
+        public GenDataDef GenDataDef { get; private set; }
 
         public GenContainerFragmentBase ParentSegment { get; private set; }
 

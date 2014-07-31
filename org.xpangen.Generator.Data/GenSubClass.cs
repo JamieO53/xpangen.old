@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
@@ -11,7 +12,7 @@ namespace org.xpangen.Generator.Data
         /// <param name="parent">The generator object owning the list.</param>
         /// <param name="classId">The ID of objects in the list.</param>
         /// <param name="subClassDef">The definition of the subclass</param>
-        public GenSubClass(GenDataBase data, GenObject parent, int classId, IGenDataDefSubClass subClassDef)
+        public GenSubClass(GenDataBase data, GenObject parent, int classId, GenDataDefSubClass subClassDef)
         {
             Properties = new NameList {"Reference", "Relationship"};
             Attributes = new TextList {"", ""};
@@ -58,7 +59,7 @@ namespace org.xpangen.Generator.Data
             set { Attributes[RelationshipIdx] = value; }
         }
 
-        public IGenDataDefSubClass Definition { get; private set; }
+        public GenDataDefSubClass Definition { get; private set; }
         public bool IsReset { get; set; }
 
         public void Reset()

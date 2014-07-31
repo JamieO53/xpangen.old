@@ -18,9 +18,9 @@ namespace GenEdit.Utilities
             Dat.First(0);
         }
 
-        private GeData Data { get; set; }
-        private IGenDataDef Def { get; set; }
-        private GenData Dat { get; set; }
+        protected GeData Data { get; private set; }
+        protected GenDataDef Def { get; private set; }
+        protected GenData Dat { get; private set; }
 
         /// <summary>
         /// Create a new tree node.

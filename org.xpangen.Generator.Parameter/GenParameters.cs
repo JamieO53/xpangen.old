@@ -34,7 +34,7 @@ namespace org.xpangen.Generator.Parameter
         /// </summary>
         /// <param name="genDataDef">The definition of the generator data.</param>
         /// <param name="text">The text data being loaded.</param>
-        public GenParameters(IGenDataDef genDataDef, string text) : base(genDataDef)
+        public GenParameters(GenDataDef genDataDef, string text) : base(genDataDef)
         {
             Scan = new ParameterScanner(text);
             Parse();
@@ -45,7 +45,7 @@ namespace org.xpangen.Generator.Parameter
         /// </summary>
         /// <param name="genDataDef">The definition of the generator data.</param>
         /// <param name="stream">The stream data being loaded.</param>
-        public GenParameters(IGenDataDef genDataDef, Stream stream) : base(genDataDef)
+        public GenParameters(GenDataDef genDataDef, Stream stream) : base(genDataDef)
         {
             Scan = new ParameterScanner(stream);
             Parse();
@@ -67,7 +67,7 @@ namespace org.xpangen.Generator.Parameter
             }
         }
 
-        public static GenProfileFragment CreateProfile(IGenDataDef genDataDef)
+        public static GenProfileFragment CreateProfile(GenDataDef genDataDef)
         {
             var def = new StringBuilder();
             def.Append("Definition=");
@@ -81,7 +81,7 @@ namespace org.xpangen.Generator.Parameter
             return profile;
         }
 
-        public static void ClassDefinition(IGenDataDef genDataDef, int classId, StringBuilder def)
+        public static void ClassDefinition(GenDataDef genDataDef, int classId, StringBuilder def)
         {
             if (classId != 0)
             {
@@ -168,7 +168,7 @@ namespace org.xpangen.Generator.Parameter
                     ClassDefinition(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.ClassId, def);
         }
 
-        private static void ClassProfile(IGenDataDef genDataDef, int classId, GenContainerFragmentBase profile,
+        private static void ClassProfile(GenDataDef genDataDef, int classId, GenContainerFragmentBase profile,
             GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
         {
             GenSegment classProfile = null;
@@ -273,7 +273,7 @@ namespace org.xpangen.Generator.Parameter
                     classProfile ?? profile, classProfile);
         }
 
-        private static void SubClassProfiles(IGenDataDef genDataDef, int classId,
+        private static void SubClassProfiles(GenDataDef genDataDef, int classId,
             GenContainerFragmentBase profile, GenContainerFragmentBase parentSegment,
             GenContainerFragmentBase parentContainer, GenSegment classProfile)
         {

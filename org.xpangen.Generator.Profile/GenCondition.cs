@@ -189,7 +189,7 @@ namespace org.xpangen.Generator.Profile
         public GenComparison GenComparison { get; set; }
         public bool UseLit { get; set; }
         public string Lit { get; set; }
-        public GenConditionParams(IGenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, ConditionParameters conditionParameters)
+        public GenConditionParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, ConditionParameters conditionParameters)
             : base(genDataDef, parentSegment, parentContainer)
         {
             Var1 = conditionParameters.Var1;

@@ -39,7 +39,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <summary>
         /// The open data file's definition.
         /// </summary>
-        public IGenDataDef GenDataDef
+        public GenDataDef GenDataDef
         {
             get { return GenData != null ? GenData.GenDataDef : null; }
         }

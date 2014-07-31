@@ -97,7 +97,7 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
-        public IGenDataDef GenDataDef { get; private set; }
+        public GenDataDef GenDataDef { get; private set; }
         /// <summary>
         ///     Is this a text fragment?
         /// </summary>
