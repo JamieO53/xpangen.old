@@ -27,7 +27,7 @@ namespace org.xpangen.Generator.Data
         /// <summary>
         /// The definition of the subclass
         /// </summary>
-        IGenDataDefSubClass Definition { get; }
+        GenDataDefSubClass Definition { get; }
 
         /// <summary>
         /// The relationship between the subclass and the class

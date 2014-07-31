@@ -234,7 +234,7 @@ Child[Reference='child']
             CreateGenObject(d, "Class", "SubClass", name);
         }
 
-        protected static void VerifyAsDef(IGenDataDef f)
+        protected static void VerifyAsDef(GenDataDef f)
         {
             Assert.AreEqual(0, f.Classes.IndexOf(""));
             Assert.AreEqual(ClassClassId, f.Classes.IndexOf("Class"));
@@ -404,7 +404,7 @@ Child[Reference='child']
         }
 
         protected static GenDataDef SetUpParentChildReferenceDef(string parentClassName, string childClassName,
-                                                               string childDefName, IGenDataDef defChild)
+                                                               string childDefName, GenDataDef defChild)
         {
             var def = new GenDataDef();
             def.DefinitionName = parentClassName;
@@ -483,7 +483,7 @@ Child[Reference='child']
             Assert.AreEqual("SubClass" + order[2], d.GetValue(id), action + " third item");
         }
 
-        protected static void CompareGenDataDef(IGenDataDef expected, IGenDataDef actual, string path)
+        protected static void CompareGenDataDef(GenDataDef expected, GenDataDef actual, string path)
         {
             //Assert.AreEqual(expected.Definition, actual.Definition);
             Assert.AreEqual(expected.Classes.Count, actual.Classes.Count, path);

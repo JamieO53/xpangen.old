@@ -32,7 +32,7 @@ namespace org.xpangen.Generator.Data.Model.Database
             Classes.Add("ForeignKeyColumn");
             Classes.Add("Parameter");
             SubClasses.Add("Database");
-            GenObject = genData.Root;
+            base.GenObject = genData.Root;
         }
 
         public static GenDataDef GetDefinition()

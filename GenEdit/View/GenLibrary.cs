@@ -1,8 +1,4 @@
-﻿// // This Source Code Form is subject to the terms of the Mozilla Public
-// // License, v. 2.0. If a copy of the MPL was not distributed with this
-// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
-using System;
+﻿using System;
 using System.IO;
 using System.Windows.Forms;
 using GenEdit.ViewModel;
@@ -50,7 +46,8 @@ namespace GenEdit.View
             if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null) return;
 
             var changed = GenDataEditorViewModel.Data.GenDataStore.Changed;
-            EnableControls(false, true, changed, true, false, ProfileIsSpecified());
+            EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: changed,
+                           saveAsEnabled: true, fileGroupEnabled: false, generateEnabled: ProfileIsSpecified());
         }
 
         private bool ProfileIsSpecified()

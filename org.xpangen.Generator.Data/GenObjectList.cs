@@ -20,7 +20,7 @@ namespace org.xpangen.Generator.Data
         /// <param name="parentList">The parent list.</param>
         /// <param name="defSubClass">The subclass definition.</param>
         public GenObjectList(ISubClassBase subClassBase, GenDataBase genDataBase, GenObjectList parentList,
-                             IGenDataDefSubClass defSubClass)
+                             GenDataDefSubClass defSubClass)
         {
             DefSubClass = defSubClass;
             ParentList = parentList;
@@ -80,8 +80,8 @@ namespace org.xpangen.Generator.Data
         public int RefClassId { get; set; }
 
         private GenDataBase GenDataBase { get; set; }
-        public IGenDataDefClass DefClass { get; private set; }
-        public IGenDataDefSubClass DefSubClass { get; private set; }
+        public GenDataDefClass DefClass { get; private set; }
+        public GenDataDefSubClass DefSubClass { get; private set; }
 
         public GenObject this[int index]
         {

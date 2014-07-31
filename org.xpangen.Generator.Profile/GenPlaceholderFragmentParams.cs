@@ -6,7 +6,7 @@ namespace org.xpangen.Generator.Profile
     {
         public GenDataId Id { get; set; }
 
-        public GenPlaceholderFragmentParams(IGenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, GenDataId id) 
+        public GenPlaceholderFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, GenDataId id) 
             : base(genDataDef, parentSegment, parentContainer)
         {
             Id = id;

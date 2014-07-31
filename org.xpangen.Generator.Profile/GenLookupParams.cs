@@ -6,7 +6,7 @@ namespace org.xpangen.Generator.Profile
     {
         private string _condition;
 
-        public GenLookupParams(IGenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, string condition)
+        public GenLookupParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, string condition)
             : base(genDataDef, parentSegment, parentContainer)
         {
             _condition = condition;

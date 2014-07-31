@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Data
         /// <summary>
         ///     The definition of the data.
         /// </summary>
-        public IGenDataDef GenDataDef
+        public GenDataDef GenDataDef
         {
             get { return GenDataBase.GenDataDef; }
         }
@@ -69,7 +69,7 @@ namespace org.xpangen.Generator.Data
         ///     Create a new <see cref="GenData" /> container for the specified definition.
         /// </summary>
         /// <param name="genDataDef">The data definition.</param>
-        public GenData(IGenDataDef genDataDef) : this(new GenDataBase(genDataDef))
+        public GenData(GenDataDef genDataDef) : this(new GenDataBase(genDataDef))
         {
         }
 
@@ -83,7 +83,7 @@ namespace org.xpangen.Generator.Data
                     var parent = t.Parent;
                     var reference = "";
                     var referenceDefinition = "";
-                    IGenDataDefSubClass defSubClass = null;
+                    GenDataDefSubClass defSubClass = null;
                     if (parent != null)
                     {
                         foreach (var subClass in parent.SubClasses)
@@ -301,7 +301,7 @@ namespace org.xpangen.Generator.Data
         // defined, and SubClass and Property are sub-classes of Class.
         // If defined, the definition is built up by walking the structure and finding
         // all the classes and summarising the result.
-        public IGenDataDef AsDef()
+        public GenDataDef AsDef()
         {
             return GenDataBase.AsDef();
         }

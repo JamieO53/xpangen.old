@@ -53,7 +53,7 @@ namespace org.xpangen.Generator.Data
         public GenObject Parent { get; private set; }
         public GenSubClasses SubClass { get; private set; }
 
-        public IGenDataDefClass Definition
+        public GenDataDefClass Definition
         {
             get
             {
@@ -65,12 +65,12 @@ namespace org.xpangen.Generator.Data
 
         public NameList Properties
         {
-            get { return Definition != null ? Definition.Properties : null; }
+            get { return Definition.Properties; }
         }
 
         public string ClassName
         {
-            get { return Definition != null ? Definition.Name : ""; }
+            get { return Definition.Name; }
         }
 
         public override string ToString()

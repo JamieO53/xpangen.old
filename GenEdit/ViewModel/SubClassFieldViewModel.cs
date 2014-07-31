@@ -13,7 +13,7 @@ namespace GenEdit.ViewModel
         /// <summary>
         /// The Definition of the subclass.
         /// </summary>
-        public IGenDataDefSubClass GenDataDefSubClass { get; private set; }
+        public GenDataDefSubClass GenDataDefSubClass { get; private set; }
         /// <summary>
         /// The field being updated.
         /// </summary>
@@ -62,7 +62,7 @@ namespace GenEdit.ViewModel
             }
         }
 
-        public SubClassFieldViewModel(ISubClassBase parent, IGenDataDefSubClass genDataDefSubClass, ISubClassBase subClass,
+        public SubClassFieldViewModel(ISubClassBase parent, GenDataDefSubClass genDataDefSubClass, ISubClassBase subClass,
                                       SubClassField subClassField, bool isReadOnly)
         {
             IgnorePropertyValidation = true;

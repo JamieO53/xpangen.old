@@ -95,7 +95,7 @@ namespace org.xpangen.Generator.Data
             SubClasses = new NameList();
         }
 
-        public GenAttributes(IGenDataDef genDataDef, int classId) : this()
+        public GenAttributes(GenDataDef genDataDef, int classId) : this()
         {
             ClassId = classId;
             foreach (var c in genDataDef.Classes)

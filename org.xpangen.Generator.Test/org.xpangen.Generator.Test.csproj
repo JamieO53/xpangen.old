@@ -64,6 +64,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\org.xpangen.Generator.Application\org.xpangen.Generator.Application.csproj">
+      <Project>{A6C5CC30-C8D2-4C3E-A57F-7F3C603E67FB}</Project>
+      <Name>org.xpangen.Generator.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\org.xpangen.Generator.Data.Model\org.xpangen.Generator.Data.Model.csproj">
       <Project>{63E5078F-95AB-44B4-9124-6EFF9A48325A}</Project>
       <Name>org.xpangen.Generator.Data.Model</Name>

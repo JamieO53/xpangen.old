@@ -1,8 +1,4 @@
-﻿// // This Source Code Form is subject to the terms of the Mozilla Public
-// // License, v. 2.0. If a copy of the MPL was not distributed with this
-// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using GenEdit.Controls;
@@ -136,7 +132,7 @@ namespace GenEdit.View
            }
         }
 
-        private void GenDataDataGrid_SelectionChanged(object sender, EventArgs e)
+        private void GenDataDataGrid_SelectionChanged(object sender, System.EventArgs e)
         {
             if (GenDataDataGrid.CurrentRow == null)
             {
@@ -150,22 +146,22 @@ namespace GenEdit.View
             GenDataDataGrid.CurrentCell.Selected = true;
         }
 
-        private void MoveToTopButton_Click(object sender, EventArgs e)
+        private void MoveToTopButton_Click(object sender, System.EventArgs e)
         {
             MoveItem(ListMove.ToTop);
         }
 
-        private void MoveUpButton_Click(object sender, EventArgs e)
+        private void MoveUpButton_Click(object sender, System.EventArgs e)
         {
             MoveItem(ListMove.Up);
         }
 
-        private void MoveDownButton_Click(object sender, EventArgs e)
+        private void MoveDownButton_Click(object sender, System.EventArgs e)
         {
             MoveItem(ListMove.Down);
         }
 
-        private void MoveToBottomButton_Click(object sender, EventArgs e)
+        private void MoveToBottomButton_Click(object sender, System.EventArgs e)
         {
             MoveItem(ListMove.ToBottom);
         }

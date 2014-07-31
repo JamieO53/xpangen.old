@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{63F6122C-817E-4476-A11A-5ECC2AFBCA1E}</ProjectGuid>
+    <ProjectGuid>{A6C5CC30-C8D2-4C3E-A57F-7F3C603E67FB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>org.xpangen.Generator.Profile.Parser.CompactProfileParser</RootNamespace>
-    <AssemblyName>Generator.Profile.Parser.CompactProfileParser</AssemblyName>
+    <RootNamespace>org.xpangen.Generator.Application</RootNamespace>
+    <AssemblyName>Generator.Application</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -35,33 +35,12 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GenCompactProfileParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\org.xpangen.Generator.Application\org.xpangen.Generator.Application.csproj">
-      <Project>{A6C5CC30-C8D2-4C3E-A57F-7F3C603E67FB}</Project>
-      <Name>org.xpangen.Generator.Application</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Data.Model\org.xpangen.Generator.Data.Model.csproj">
-      <Project>{63E5078F-95AB-44B4-9124-6EFF9A48325A}</Project>
-      <Name>org.xpangen.Generator.Data.Model</Name>
-    </ProjectReference>
     <ProjectReference Include="..\org.xpangen.Generator.Data\org.xpangen.Generator.Data.csproj">
       <Project>{879183A8-0A57-494A-B645-27366F1D912E}</Project>
       <Name>org.xpangen.Generator.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Profile.Scanner\org.xpangen.Generator.Profile.Scanner.csproj">
-      <Project>{3E376268-5166-42B4-964D-EED99122C68C}</Project>
-      <Name>org.xpangen.Generator.Profile.Scanner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Profile\org.xpangen.Generator.Profile.csproj">
-      <Project>{BC2435D5-863A-4EC4-AB98-6DD124A04179}</Project>
-      <Name>org.xpangen.Generator.Profile</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Scanner\org.xpangen.Generator.Scanner.csproj">
-      <Project>{116BF740-18A1-4612-8CB0-8C2127821F6F}</Project>
-      <Name>org.xpangen.Generator.Scanner</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -7,7 +7,7 @@ namespace org.xpangen.Generator.Profile
         private string _className;
         private GenCardinality _cardinality;
 
-        public GenSegmentParams(IGenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, string className, GenCardinality cardinality)
+        public GenSegmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, string className, GenCardinality cardinality)
             : base(genDataDef, parentSegment, parentContainer)
         {
             _className = className;
