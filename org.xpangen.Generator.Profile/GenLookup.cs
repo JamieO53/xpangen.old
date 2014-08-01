@@ -18,7 +18,7 @@ namespace org.xpangen.Generator.Profile
         }
 
         public new int ClassId { get; private set; }
-        protected GenDataId Var1
+        protected internal GenDataId Var1
         {
             get { return GenDataDef.GetId(Lookup.Class1 + "." + Lookup.Property1); }
             set
@@ -27,7 +27,7 @@ namespace org.xpangen.Generator.Profile
                 Lookup.Property1 = value.PropertyName;
             } 
         }
-        protected GenDataId Var2
+        protected internal GenDataId Var2
         {
             get { return GenDataDef.GetId(Lookup.Class2 + "." + Lookup.Property2); }
             set
@@ -111,7 +111,7 @@ namespace org.xpangen.Generator.Profile
             return result;
         }
 
-        private static void SearchFor(GenData genData, int classId, GenDataId id, string value)
+        internal static void SearchFor(GenData genData, int classId, GenDataId id, string value)
         {
             genData.First(classId);
             while (!genData.Eol(classId) && genData.GetValue(id) != value)

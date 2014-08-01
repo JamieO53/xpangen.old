@@ -10,9 +10,20 @@ namespace org.xpangen.Generator.Profile
 {
     public abstract class GenFragment : GenBase
     {
+        public static GenNullFragment NullFragment
+        {
+            get
+            {
+                if (_nullFragment == null)
+                    _nullFragment = new GenNullFragment();
+                return _nullFragment;
+            }
+        }
+
         private FragmentType _fragmentType;
         private Fragment _fragment;
         private ContainerFragment _containerFragment;
+        private static GenNullFragment _nullFragment;
         public int ClassID { get; private set; }
 
         /// <summary>
@@ -158,13 +169,10 @@ namespace org.xpangen.Generator.Profile
         /// <param name="genData">The generator data.</param>
         /// <param name="writer">The writer for the generated output.</param>
         /// <returns>The generated fragment was not empty.</returns>
-        public virtual bool Generate(GenFragment prefix, GenData genData, GenWriter writer)
+        public virtual bool Generate(GenFragmentGenerator genFragmentGenerator)
         {
-            var expanded = Expand(genData);
-            if (expanded != "" && prefix != null)
-                prefix.Generate(null, genData, writer);
-            writer.Write(expanded);
-            return expanded != "";
+            genFragmentGenerator.Fragment = this;
+            return genFragmentGenerator.Generate();
         }
     }
 }

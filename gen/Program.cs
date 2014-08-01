@@ -114,7 +114,7 @@ namespace gen
             {
                 //try
                 {
-                    p.Generate(null, d, writer);
+                    GenFragmentGenerator.Create(p, null, d, writer).Generate();
                 }
                 //catch (Exception e)
                 //{
