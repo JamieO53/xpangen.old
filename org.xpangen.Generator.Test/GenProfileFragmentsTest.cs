@@ -160,6 +160,7 @@ namespace org.xpangen.Generator.Test
             var r = new GenProfileFragment(GenData.GenDataDef);
 
             var g = new GenBlock(new GenFragmentParams(GenDataDef, r, r));
+            r.Body.Add(g);
             var p =
                 new GenPlaceholderFragment(new GenPlaceholderFragmentParams(GenDataDef, r, g,
                     GenDataDef.GetId("Property.Name")));
