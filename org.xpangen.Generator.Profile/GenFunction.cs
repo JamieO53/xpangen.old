@@ -50,7 +50,10 @@ namespace org.xpangen.Generator.Profile
             Body.GenObject = GenObject;
             var param = new string[Body.Count];
             for (var i = 0; i < Body.Count; i++)
+            {
+                Body.Fragment[i].GenObject = GenObject;
                 param[i] = Body.Fragment[i].Expand(genData);
+            }
             return LibraryManager.GetInstance().Execute(FunctionName, param);
         }
 

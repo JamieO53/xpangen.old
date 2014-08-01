@@ -131,6 +131,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(expectedClass, fragment.GetType().Name, "Fragment Class");
             Assert.AreEqual(expectedType, fragment.FragmentType, "Fragment Type");
             Assert.AreEqual(isText, fragment.IsTextFragment, "Is text fragment?");
+            fragment.GenObject = genData.Context[3].GenObject;
             Assert.AreEqual(expected, fragment.Expand(genData), "Expanded fragment");
             Assert.AreEqual(profileLabel, fragment.ProfileLabel(), "Profile label");
             Assert.AreEqual(profileText, fragment.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary), "Profile text");
@@ -202,6 +203,7 @@ namespace org.xpangen.Generator.Test
         {
             var r = new GenProfileFragment(genData.GenDataDef);
             var g = new GenFunction(new GenFragmentParams(genData.GenDataDef, r, r)) { FunctionName = functionName };
+            r.Body.Add(g);
             var b = SetFunctionParameters(genData, g, variableName, variableValue);
             VerifyFragment(genData, g, "GenFunction", FragmentType.Function, functionName,
                            "`@" + functionName + ':' + b + "`]", expected, false, -1);
