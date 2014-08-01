@@ -7,5 +7,6 @@
         int ClassId { get; }
         NameList Properties { get; }
         string ClassName { get; }
+        string GetValue(GenDataId id);
     }
 }

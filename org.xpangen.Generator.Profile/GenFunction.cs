@@ -47,6 +47,7 @@ namespace org.xpangen.Generator.Profile
 
         public override string Expand(GenData genData)
         {
+            Body.GenObject = GenObject;
             var param = new string[Body.Count];
             for (var i = 0; i < Body.Count; i++)
                 param[i] = Body.Fragment[i].Expand(genData);
@@ -55,6 +56,7 @@ namespace org.xpangen.Generator.Profile
 
         public override bool Generate(GenFragment prefix, GenData genData, GenWriter writer)
         {
+            Body.GenObject = GenObject;
             if (String.Compare(FunctionName, "File", StringComparison.OrdinalIgnoreCase) == 0 &&
                 (writer.Stream == null || writer.Stream is FileStream))
                 return (writer.FileName = Body.Expand(genData)) != "";

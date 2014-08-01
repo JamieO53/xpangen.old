@@ -33,11 +33,13 @@ namespace org.xpangen.Generator.Profile
 
         public override string Expand(GenData genData)
         {
+            Body.GenObject = (GenObject) Profile.GenObject;
             return Body.Expand(genData);
         }
 
         public override bool Generate(GenFragment prefix, GenData genData, GenWriter writer)
         {
+            Body.GenObject = (GenObject) Profile.GenObject;
             return Body.Generate(prefix, genData, writer);
         }
     }

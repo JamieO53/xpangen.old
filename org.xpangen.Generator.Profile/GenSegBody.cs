@@ -19,6 +19,7 @@ namespace org.xpangen.Generator.Profile
             ParentContainer = parentContainer;
         }
 
+        public GenObject GenObject { get; set; }
         public IList<GenFragment> Fragment
         {
             get { return _fragment; }
@@ -41,7 +42,10 @@ namespace org.xpangen.Generator.Profile
         {
             var s = new StringBuilder();
             foreach (var fragment in Fragment)
+            {
+                fragment.GenObject = GenObject;
                 s.Append(fragment.Expand(genData));
+            }
             return s.ToString();
         }
 
@@ -65,6 +69,7 @@ namespace org.xpangen.Generator.Profile
             var generated = false;
             foreach (var fragment in Fragment)
             {
+                fragment.GenObject = GenObject;
                 generated |= fragment.Generate(prefix, genData, writer);
             }
             return generated;
