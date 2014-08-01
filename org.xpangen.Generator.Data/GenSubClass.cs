@@ -41,6 +41,10 @@ namespace org.xpangen.Generator.Data
 
         public NameList Properties { get; private set; }
         public string ClassName { get { return Parent.Definition.Name + "_" + Definition.SubClass.Name; } }
+        public string GetValue(GenDataId id)
+        {
+            return Parent.GetValue(id);
+        }
 
         /// <summary>
         /// The ID of objects in the list.

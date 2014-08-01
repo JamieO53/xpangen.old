@@ -44,6 +44,7 @@ namespace GenEdit.Utilities
         public static string GetNodeExpansionText(object selectedItem, GenFragment fragment, GenData genData)
         {
             string text;
+            fragment.GenObject = genData.Context[fragment.ClassID].GenObject;
             if (GetNodeHeaderText(selectedItem) == "Text" && fragment is GenBlock)
                 text = ((GenBlock) fragment).Body.Expand(genData);
             else

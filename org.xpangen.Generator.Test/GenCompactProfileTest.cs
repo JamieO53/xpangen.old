@@ -30,7 +30,7 @@ namespace org.xpangen.Generator.Test
             var profile = new GenCompactProfileParser(d, "", txt);
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.TextBlock, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(txt, profile.Body.Expand(d), "Original text expected");
+            Assert.AreEqual(txt, profile.Expand(d), "Original text expected");
         }
 
         /// <summary>

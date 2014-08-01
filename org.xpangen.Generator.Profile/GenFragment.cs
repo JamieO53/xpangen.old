@@ -13,6 +13,7 @@ namespace org.xpangen.Generator.Profile
         private FragmentType _fragmentType;
         private Fragment _fragment;
         private ContainerFragment _containerFragment;
+        public int ClassID { get; private set; }
 
         /// <summary>
         /// The fragment object holding the fragment's data
@@ -27,6 +28,7 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
+        public GenObject GenObject { get; set; }
         private void CheckFragmentType(Fragment fragment)
         {
             if (fragment != null) Enum.TryParse(fragment.GetType().Name, out _fragmentType);
@@ -125,6 +127,7 @@ namespace org.xpangen.Generator.Profile
             ParentContainer = genFragmentParams.ParentContainer;
             FragmentType = genFragmentParams.FragmentType;
             Fragment = genFragmentParams.Fragment;
+            ClassID = genFragmentParams.ClassID;
             Assert(Fragment != null, "The fragment was not set up");
         }
 

@@ -6,6 +6,8 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenFragmentParams : GenBase
     {
+        private Fragment _fragment;
+
         /// <summary>
         /// Parameters for creating a GenFragment
         /// </summary>
@@ -27,6 +29,7 @@ namespace org.xpangen.Generator.Profile
             GenDataDef = genDataDef;
             ParentSegment = parentSegment;
             ParentContainer = parentContainer;
+            ClassID = ParentSegment == null ? 0 : ParentSegment.ClassId;
         }
 
         public GenFragmentParams SetFragmentType(FragmentType fragmentType)
@@ -36,8 +39,21 @@ namespace org.xpangen.Generator.Profile
             return this;
         }
 
-        public Fragment Fragment { get; protected set; }
-        
+        public Fragment Fragment
+        {
+            get
+            {
+                Assert(FragmentExists, "Fragment expected");
+                return _fragment;
+            }
+            protected set { _fragment = value; }
+        }
+
+        private bool FragmentExists
+        {
+            get { return _fragment != null; }
+        }
+
         public GenDataDef GenDataDef { get; private set; }
 
         public GenContainerFragmentBase ParentSegment { get; private set; }
@@ -45,10 +61,11 @@ namespace org.xpangen.Generator.Profile
         public GenContainerFragmentBase ParentContainer { get; private set; }
 
         public FragmentType FragmentType { get; protected set; }
+        public int ClassID { get; private set; }
 
         private void CheckFragment(FragmentType fragmentType)
         {
-            if (ParentContainer == null || ParentContainer.Fragment == null || Fragment != null) return;
+            if (ParentContainer == null || ParentContainer.Fragment == null || FragmentExists) return;
             var container = (ContainerFragment) ParentContainer.Fragment;
             Assert(container != null, "Parent container fragment is not a container fragment");
             switch (fragmentType)
