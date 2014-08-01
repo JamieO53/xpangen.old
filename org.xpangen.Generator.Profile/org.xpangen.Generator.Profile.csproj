@@ -42,7 +42,9 @@
     <Compile Include="GenCardinality.cs" />
     <Compile Include="GenComparison.cs" />
     <Compile Include="GenCondition.cs" />
+    <Compile Include="GenConditionParams.cs" />
     <Compile Include="GenContainerFragmentBase.cs" />
+    <Compile Include="GenFragmentGenerator.cs" />
     <Compile Include="GenFragment.cs" />
     <Compile Include="GenFragmentParams.cs" />
     <Compile Include="GenFunction.cs" />
@@ -51,6 +53,7 @@
     <Compile Include="GenFunctionMap.cs" />
     <Compile Include="GenLookup.cs" />
     <Compile Include="GenLookupParams.cs" />
+    <Compile Include="GenNullFragment.cs" />
     <Compile Include="GenPlaceholderFragment.cs" />
     <Compile Include="GenPlaceholderFragmentParams.cs" />
     <Compile Include="GenProfileFragment.cs" />

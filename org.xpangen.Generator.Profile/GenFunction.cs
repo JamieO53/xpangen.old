@@ -2,8 +2,6 @@
 // // License, v. 2.0. If a copy of the MPL was not distributed with this
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
-using System.IO;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
 
@@ -22,7 +20,8 @@ namespace org.xpangen.Generator.Profile
             set { Function.FunctionName = value; }
         }
 
-        public Function Function { get { return (Function) Fragment; } set { Fragment = value; } }
+        private Function Function { get { return (Function) Fragment; }
+        }
         public override string ProfileLabel()
         {
             return FunctionName;
@@ -55,15 +54,6 @@ namespace org.xpangen.Generator.Profile
                 param[i] = Body.Fragment[i].Expand(genData);
             }
             return LibraryManager.GetInstance().Execute(FunctionName, param);
-        }
-
-        public override bool Generate(GenFragment prefix, GenData genData, GenWriter writer)
-        {
-            Body.GenObject = GenObject;
-            if (String.Compare(FunctionName, "File", StringComparison.OrdinalIgnoreCase) == 0 &&
-                (writer.Stream == null || writer.Stream is FileStream))
-                return (writer.FileName = Body.Expand(genData)) != "";
-            return base.Generate(prefix, genData, writer);
         }
     }
 }

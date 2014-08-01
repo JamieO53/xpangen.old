@@ -11,8 +11,8 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenSegment : GenContainerFragmentBase
     {
-        private GenBlock ItemBody { get; set; }
-        private GenFragment Separator { get; set; }
+        public GenBlock ItemBody { get; private set; }
+        public GenFragment Separator { get; private set; }
 
         public GenSegment(GenSegmentParams genSegmentParams)
             : base(genSegmentParams.SetFragmentType(FragmentType.Segment))
@@ -33,10 +33,9 @@ namespace org.xpangen.Generator.Profile
             private set { Segment.Cardinality = value.ToString(); } 
         }
 
-        public Segment Segment
+        private Segment Segment
         {
-            get { return (Segment) Fragment; } 
-            set { Fragment = value; }
+            get { return (Segment) Fragment; }
         }
         public override string ProfileLabel()
         {
@@ -158,124 +157,6 @@ namespace org.xpangen.Generator.Profile
                     throw new ArgumentOutOfRangeException();
             }
             return s.ToString();
-        }
-
-        public override bool Generate(GenFragment prefix, GenData genData, GenWriter writer)
-        {
-            var generated = false;
-            bool generatedItem;
-            bool isEmpty;
-            GenBlock myPrefix;
-            switch (GenCardinality)
-            {
-                case GenCardinality.All:
-                    genData.First(ClassId);
-                    while (!genData.Eol(ClassId))
-                    {
-                        GenObject = genData.Context[ClassId].GenObject;
-                        generated |= Body.Generate(prefix, genData, writer);
-                        genData.Next(ClassId);
-                    }
-                    break;
-                case GenCardinality.AllDlm:
-                    CheckDelimiter();
-                    isEmpty = true;
-                    myPrefix = new GenBlock(new GenFragmentParams(GenDataDef, this, ParentContainer));
-                    if (prefix != null)
-                        myPrefix.Body.Add(prefix);
-                    genData.First(ClassId);
-                    while (!genData.Eol(ClassId))
-                    {
-                        GenObject = genData.Context[ClassId].GenObject;
-                        ItemBody.GenObject = GenObject;
-                        generatedItem = ItemBody.Generate(myPrefix, genData, writer);
-                        if (isEmpty && generatedItem)
-                        {
-                            isEmpty = false;
-                            if (Separator != null)
-                                myPrefix.Body.Add(Separator);
-                        }
-                        genData.Next(ClassId);
-                    }
-                    generated = !isEmpty;
-                    break;
-                case GenCardinality.Back:
-                    genData.Last(ClassId);
-                    while (!genData.Eol(ClassId))
-                    {
-                        GenObject = genData.Context[ClassId].GenObject;
-                        generated |= Body.Generate(prefix, genData, writer);
-                        genData.Prior(ClassId);
-                    }
-                    break;
-                case GenCardinality.BackDlm:
-                    CheckDelimiter();
-                    isEmpty = true;
-                    myPrefix = new GenBlock(new GenFragmentParams(GenDataDef, this, ParentContainer));
-                    genData.Last(ClassId);
-                    while (!genData.Eol(ClassId))
-                    {
-                        GenObject = genData.Context[ClassId].GenObject;
-                        ItemBody.GenObject = GenObject;
-                        generatedItem = ItemBody.Generate(myPrefix, genData, writer);
-                        if (isEmpty && generatedItem)
-                        {
-                            isEmpty = false;
-                            if (Separator != null)
-                                myPrefix.Body.Add(Separator);
-                        }
-                        genData.Prior(ClassId);
-                    }
-                    generated = !isEmpty;
-                    break;
-                case GenCardinality.First:
-                    genData.First(ClassId);
-                    GenObject = genData.Context[ClassId].GenObject;
-                    if (!genData.Eol(ClassId))
-                        generated |= Body.Generate(prefix, genData, writer);
-                    break;
-                case GenCardinality.Tail:
-                    genData.First(ClassId);
-                    genData.Next(ClassId);
-                    while (!genData.Eol(ClassId))
-                    {
-                        GenObject = genData.Context[ClassId].GenObject;
-                        generated |= Body.Generate(prefix, genData, writer);
-                        genData.Next(ClassId);
-                    }
-                    break;
-                case GenCardinality.Last:
-                    genData.Last(ClassId);
-                    GenObject = genData.Context[ClassId].GenObject;
-                    if (!genData.Eol(ClassId))
-                        generated |= Body.Generate(prefix, genData, writer);
-                    break;
-                case GenCardinality.Trunk:
-                    genData.Last(ClassId);
-                    genData.Prior(ClassId);
-                    while (!genData.Eol(ClassId))
-                    {
-                        GenObject = genData.Context[ClassId].GenObject;
-                        generated |= Body.Generate(prefix, genData, writer);
-                        genData.Prior(ClassId);
-                    }
-                    break;
-                case GenCardinality.Reference:
-                    writer.Write(genData.GenDataDef.Classes[ClassId].Name);
-                    writer.Write("[Reference='");
-                    writer.Write(genData.Context[ClassId].Reference);
-                    writer.Write("']\r\n");
-                    break;
-                case GenCardinality.Inheritance:
-                    genData.SetInheritance(ClassId);
-                    GenObject = genData.Context[ClassId].GenObject;
-                    if (!genData.Eol(ClassId))
-                        generated |= Body.Generate(prefix, genData, writer);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            return generated;
         }
 
         private void CheckDelimiter()

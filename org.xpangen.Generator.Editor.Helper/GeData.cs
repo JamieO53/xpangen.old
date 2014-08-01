@@ -208,7 +208,7 @@ namespace org.xpangen.Generator.Editor.Helper
             
             var p = new GenCompactProfileParser(d, profileFileName, "");
             using (var writer = new GenWriter(null) {FileName = Settings.GeneratedFile.Replace('/', '\\')})
-                p.Generate(null, d, writer);
+                GenFragmentGenerator.Create(p, null, d, writer).Generate();
         }
 
         public void SetProfile(Data.Model.Settings.Profile profile)
