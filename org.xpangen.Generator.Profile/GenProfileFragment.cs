@@ -40,7 +40,7 @@ namespace org.xpangen.Generator.Profile
         public virtual bool Generate(GenFragmentGenerator genFragmentGenerator)
         {
             Body.GenObject = (GenObject) Profile.GenObject;
-            return Body.Generate(genFragmentGenerator.Prefix, genFragmentGenerator.GenData, genFragmentGenerator.Writer);
+            return Body.Generate(genFragmentGenerator.GenData, genFragmentGenerator.Writer);
         }
     }
 

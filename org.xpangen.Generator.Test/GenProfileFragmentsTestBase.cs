@@ -148,7 +148,7 @@ namespace org.xpangen.Generator.Test
             var w = new GenWriter(s);
             try
             {
-                GenFragmentGenerator.Generate(fragment, null, genData, w);
+                GenFragmentGenerator.Generate(fragment, genData, w);
                 s = (MemoryStream)w.Stream;
                 w.Flush();
                 s.Seek(0, SeekOrigin.Begin);
