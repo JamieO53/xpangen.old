@@ -161,18 +161,5 @@ namespace org.xpangen.Generator.Profile
         /// <param name="genData">The generator data.</param>
         /// <returns>The expanded fragment.</returns>
         public abstract string Expand(GenData genData);
-
-        /// <summary>
-        ///     Generates the fragment to the writer.
-        /// </summary>
-        /// <param name="prefix">Generated before the fragment, if the fragment is not empty.</param>
-        /// <param name="genData">The generator data.</param>
-        /// <param name="writer">The writer for the generated output.</param>
-        /// <returns>The generated fragment was not empty.</returns>
-        public virtual bool Generate(GenFragmentGenerator genFragmentGenerator)
-        {
-            genFragmentGenerator.Fragment = this;
-            return genFragmentGenerator.Generate();
-        }
     }
 }

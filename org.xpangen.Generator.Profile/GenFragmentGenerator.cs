@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
 
@@ -8,15 +7,21 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenFragmentGenerator : GenBase
     {
-        private GenFragment _prefix;
-        private GenData _genData;
-        private GenWriter _writer;
+        private readonly GenFragment _prefix;
+        private readonly GenData _genData;
+        private readonly GenWriter _writer;
+        private readonly Fragment _fragment;
 
-        public GenFragmentGenerator(GenFragment prefix, GenData genData, GenWriter writer)
+        protected GenFragmentGenerator(GenFragment prefix, GenData genData, GenWriter writer, Fragment fragment)
         {
             _prefix = prefix;
             _genData = genData;
             _writer = writer;
+            _fragment = fragment;
+        }
+
+        protected GenFragmentGenerator()
+        {
         }
 
         public GenFragment Prefix
@@ -34,61 +39,71 @@ namespace org.xpangen.Generator.Profile
             get { return _writer; }
         }
 
-        public GenFragment Fragment { get; set; }
+        protected GenFragment GenFragment { get; set; }
 
-        public virtual bool Generate()
+        public Fragment Fragment
         {
-            var expanded = Fragment.Expand(GenData);
+            get { return _fragment; }
+        }
+
+        protected virtual bool Generate()
+        {
+            var expanded = GenFragment.Expand(GenData);
             if (expanded != "" && Prefix != null)
                 Create(Prefix, null, GenData, Writer).Generate();
             Writer.Write(expanded);
             return expanded != "";
         }
 
-        public static GenFragmentGenerator Create(GenFragment fragment, GenFragment prefix, GenData genData, GenWriter genWriter)
+        private static GenFragmentGenerator Create(GenFragment genFragment, GenFragment prefix, GenData genData, GenWriter genWriter)
         {
             FragmentType fragmentType;
-            Enum.TryParse(fragment.Fragment.GetType().Name, out fragmentType);
+            Enum.TryParse(genFragment.Fragment.GetType().Name, out fragmentType);
             switch (fragmentType)
             {
                 case FragmentType.Profile:
-                    return new GenContainerGenerator(fragment, prefix, genData, genWriter);
-                //case FragmentType.Null:
-                //    break;
-                //case FragmentType.Text:
-                //    break;
-                //case FragmentType.Placeholder:
-                //    break;
+                    return new GenContainerGenerator(genFragment, prefix, genData, genWriter);
+                case FragmentType.Null:
+                    return new GenNullGenerator();
+                case FragmentType.Text:
+                    return new GenTextGenerator(genFragment, prefix, genData, genWriter);
+                case FragmentType.Placeholder:
+                    return new GenPlaceholderGenerator(genFragment, prefix, genData, genWriter);
                 //case FragmentType.Body:
                 //    break;
                 case FragmentType.Segment:
-                    return new GenSegmentGenerator(fragment, prefix, genData, genWriter);
+                    return new GenSegmentGenerator(genFragment, prefix, genData, genWriter);
                 case FragmentType.Block:
-                    return new GenContainerGenerator(fragment, prefix, genData, genWriter);
+                    return new GenContainerGenerator(genFragment, prefix, genData, genWriter);
                 case FragmentType.Lookup:
-                    return new GenLookupGenerator(fragment, prefix, genData, genWriter);
+                    return new GenLookupGenerator(genFragment, prefix, genData, genWriter);
                 case FragmentType.Condition:
-                    return new GenConditionGenerator(fragment, prefix, genData, genWriter);
+                    return new GenConditionGenerator(genFragment, prefix, genData, genWriter);
                 case FragmentType.Function:
-                    return new GenFunctionGenerator(fragment, prefix, genData, genWriter);
+                    return new GenFunctionGenerator(genFragment, prefix, genData, genWriter);
                 case FragmentType.TextBlock:
-                    return new GenContainerGenerator(fragment, prefix, genData, genWriter);
+                    return new GenContainerGenerator(genFragment, prefix, genData, genWriter);
                 default:
-                    return new GenFragmentGenerator(prefix, genData, genWriter) {Fragment = fragment};
+                    return new GenFragmentGenerator(prefix, genData, genWriter, genFragment.Fragment) {GenFragment = genFragment};
             }
+        }
+
+        public static bool Generate(GenFragment genFragment, GenFragment prefix, GenData genData, GenWriter genWriter)
+        {
+            return Create(genFragment, prefix, genData, genWriter).Generate();
         }
     }
 
     public class GenConditionGenerator : GenFragmentGenerator
     {
-        public GenConditionGenerator(GenFragment fragment, GenFragment prefix, GenData genData, GenWriter writer) : base(prefix, genData, writer)
+        internal GenConditionGenerator(GenFragment genFragment, GenFragment prefix, GenData genData, GenWriter writer) : base(prefix, genData, writer, genFragment.Fragment)
         {
-            Fragment = fragment;
+            GenFragment = genFragment;
         }
 
-        public override bool Generate()
+        protected override bool Generate()
         {
-            var cond = (GenCondition) Fragment;
+            var cond = (GenCondition) GenFragment;
 
             cond.Body.GenObject = cond.GenObject;
             if (cond.Test(GenData)) return cond.Body.Generate(Prefix, GenData, Writer);
@@ -98,20 +113,20 @@ namespace org.xpangen.Generator.Profile
 
     public class GenContainerGenerator : GenFragmentGenerator
     {
-        public GenContainerGenerator(GenFragment fragment, GenFragment prefix, GenData genData, GenWriter genWriter) 
-            : base(prefix, genData, genWriter)
+        public GenContainerGenerator(GenFragment genFragment, GenFragment prefix, GenData genData, GenWriter genWriter) 
+            : base(prefix, genData, genWriter, genFragment.Fragment)
         {
-            Fragment = fragment;
+            GenFragment = genFragment;
         }
 
-        public override bool Generate()
+        protected override bool Generate()
         {
             var generated = false;
-            var container = (GenContainerFragmentBase) Fragment;
+            var container = (GenContainerFragmentBase) GenFragment;
             foreach (var fragment in container.Body.Fragment)
             {
                 fragment.GenObject = container.GenObject;
-                generated |= Create(fragment, Prefix, GenData, Writer).Generate();
+                generated |= Generate(fragment, Prefix, GenData, Writer);
             }
             return generated;
         }
@@ -119,16 +134,16 @@ namespace org.xpangen.Generator.Profile
 
     public class GenLookupGenerator : GenFragmentGenerator
     {
-        public GenLookupGenerator(GenFragment fragment, GenFragment prefix, GenData genData, GenWriter genWriter) 
-            : base(prefix, genData, genWriter)
+        public GenLookupGenerator(GenFragment genFragment, GenFragment prefix, GenData genData, GenWriter genWriter) 
+            : base(prefix, genData, genWriter, genFragment.Fragment)
         {
-            Fragment = fragment;
+            GenFragment = genFragment;
         }
 
-        public override bool Generate()
+        protected override bool Generate()
         {
             var generated = false;
-            var lkp = (GenLookup)Fragment;
+            var lkp = (GenLookup)GenFragment;
             if (lkp.NoMatch)
             {
                 var contextData = GenData.DuplicateContext();
@@ -179,15 +194,15 @@ namespace org.xpangen.Generator.Profile
 
     public class GenFunctionGenerator : GenFragmentGenerator
     {
-        public GenFunctionGenerator(GenFragment fragment, GenFragment prefix, GenData genData, GenWriter genWriter) 
-            : base(prefix, genData, genWriter)
+        public GenFunctionGenerator(GenFragment genFragment, GenFragment prefix, GenData genData, GenWriter genWriter) 
+            : base(prefix, genData, genWriter, genFragment.Fragment)
         {
-            Fragment = fragment;
+            GenFragment = genFragment;
         }
 
-        public override bool Generate()
+        protected override bool Generate()
         {
-            var fn = (GenFunction) Fragment;
+            var fn = (GenFunction) GenFragment;
             fn.Body.GenObject = fn.GenObject;
             if (String.Compare(fn.FunctionName, "File", StringComparison.OrdinalIgnoreCase) == 0 &&
                 (Writer.Stream == null || Writer.Stream is FileStream))
@@ -200,10 +215,10 @@ namespace org.xpangen.Generator.Profile
     {
         private GenObject _genObject;
 
-        public GenSegmentGenerator(GenFragment fragment, GenFragment prefix, GenData genData, GenWriter genWriter) 
-            : base(prefix, genData, genWriter)
+        public GenSegmentGenerator(GenFragment genFragment, GenFragment prefix, GenData genData, GenWriter genWriter) 
+            : base(prefix, genData, genWriter, genFragment.Fragment)
         {
-            Fragment = fragment;
+            GenFragment = genFragment;
         }
 
 
@@ -212,20 +227,20 @@ namespace org.xpangen.Generator.Profile
             get { return _genObject; }
             set
             {
-                ((GenSegment)Fragment).Body.GenObject = value;
+                ((GenSegment)GenFragment).Body.GenObject = value;
                 _genObject = value;
             }
         }
-        public GenBlock ItemBody { get; set; }
-        public GenFragment Separator { get; set; }
 
-        public override bool Generate()
+        private GenBlock ItemBody { get; set; }
+        private GenFragment Separator { get; set; }
+
+        protected override bool Generate()
         {
             var generated = false;
-            var seg = (GenSegment) Fragment;
-            bool generatedItem;
-            bool isEmpty;
+            var seg = (GenSegment) GenFragment;
             GenBlock myPrefix;
+            var sepText = "";
             switch (seg.GenCardinality)
             {
                 case GenCardinality.All:
@@ -239,7 +254,7 @@ namespace org.xpangen.Generator.Profile
                     break;
                 case GenCardinality.AllDlm:
                     CheckDelimiter(seg);
-                    isEmpty = true;
+                    sepText = Separator.Expand(GenData);
                     myPrefix = new GenBlock(new GenFragmentParams(seg.GenDataDef, seg, seg.ParentContainer));
                     if (Prefix != null)
                         myPrefix.Body.Add(Prefix);
@@ -248,18 +263,11 @@ namespace org.xpangen.Generator.Profile
                     {
                         GenObject = GenData.Context[seg.ClassId].GenObject;
                         seg.ItemBody.GenObject = GenObject;
-                        generatedItem =
-                            Create(seg.ItemBody, myPrefix, GenData,
-                                Writer).Generate();
-                        if (isEmpty && generatedItem)
-                        {
-                            isEmpty = false;
-                            if (seg.Separator != null)
-                                myPrefix.Body.Add(seg.Separator);
-                        }
+                        generated |= Generate(seg.ItemBody, myPrefix, GenData, Writer);
+                        if (generated) Writer.ProvisionalWrite(sepText);
                         GenData.Next(seg.ClassId);
                     }
-                    generated = !isEmpty;
+                    Writer.ClearProvisionalText();
                     break;
                 case GenCardinality.Back:
                     GenData.Last(seg.ClassId);
@@ -272,25 +280,17 @@ namespace org.xpangen.Generator.Profile
                     break;
                 case GenCardinality.BackDlm:
                     CheckDelimiter(seg);
-                    isEmpty = true;
+                    sepText = Separator.Expand(GenData);
                     myPrefix = new GenBlock(new GenFragmentParams(seg.GenDataDef, seg, seg.ParentContainer));
                     GenData.Last(seg.ClassId);
                     while (!GenData.Eol(seg.ClassId))
                     {
                         GenObject = GenData.Context[seg.ClassId].GenObject;
                         seg.ItemBody.GenObject = GenObject;
-                        generatedItem =
-                            Create(seg.ItemBody, myPrefix, GenData,
-                                Writer).Generate();
-                        if (isEmpty && generatedItem)
-                        {
-                            isEmpty = false;
-                            if (seg.Separator != null)
-                                myPrefix.Body.Add(seg.Separator);
-                        }
+                        generated |= Generate(seg.ItemBody, myPrefix, GenData, Writer);
+                        if (generated) Writer.ProvisionalWrite(sepText);
                         GenData.Prior(seg.ClassId);
                     }
-                    generated = !isEmpty;
                     break;
                 case GenCardinality.First:
                     GenData.First(seg.ClassId);
@@ -365,7 +365,50 @@ namespace org.xpangen.Generator.Profile
             else
                 Separator = seg.Body.Count > 0
                     ? last
-                    : new GenTextFragment(new GenTextFragmentParams(seg.GenDataDef, seg, seg, ""));
+                    : GenFragment.NullFragment;
+        }
+    }
+
+    public class GenTextGenerator : GenFragmentGenerator
+    {
+        public GenTextGenerator(GenFragment genFragment, GenFragment prefix, GenData genData, GenWriter genWriter) 
+            : base(prefix, genData, genWriter, genFragment.Fragment)
+        {
+            GenFragment = genFragment;
+        }
+
+        protected override bool Generate()
+        {
+            var text = (GenTextFragment) GenFragment;
+            if (text.Text == "") return false;
+            Writer.Write(text.Text);
+            return true;
+        }
+    }
+
+    public class GenPlaceholderGenerator : GenFragmentGenerator
+    {
+        public GenPlaceholderGenerator(GenFragment genFragment, GenFragment prefix, GenData genData, GenWriter genWriter) 
+            : base(prefix, genData, genWriter, genFragment.Fragment)
+        {
+            GenFragment = genFragment;
+        }
+
+        protected override bool Generate()
+        {
+            var placeholder = (GenPlaceholderFragment) GenFragment;
+            var text = placeholder.GenObject.GetValue(placeholder.Id);
+            if (text == "") return false;
+            Writer.Write(text);
+            return true;
+        }
+    }
+
+    public class GenNullGenerator : GenFragmentGenerator
+    {
+        protected override bool Generate()
+        {
+            return false;
         }
     }
 }
