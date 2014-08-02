@@ -1,3 +1,7 @@
+// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 using System;
 using System.IO;
 using org.xpangen.Generator.Data;
@@ -41,7 +45,7 @@ namespace org.xpangen.Generator.Profile
 
         protected virtual bool Generate()
         {
-            var expanded = GenFragment.Expand(GenData);
+            var expanded = GenFragmentExpander.Expand(GenFragment, GenData);
             Writer.Write(expanded);
             return expanded != "";
         }
@@ -54,14 +58,6 @@ namespace org.xpangen.Generator.Profile
             {
                 case FragmentType.Profile:
                     return new GenContainerGenerator(genFragment, genData, genWriter);
-                case FragmentType.Null:
-                    return new GenNullGenerator();
-                case FragmentType.Text:
-                    return new GenTextGenerator(genFragment, genData, genWriter);
-                case FragmentType.Placeholder:
-                    return new GenPlaceholderGenerator(genFragment, genData, genWriter);
-                //case FragmentType.Body:
-                //    break;
                 case FragmentType.Segment:
                     return new GenSegmentGenerator(genFragment, genData, genWriter);
                 case FragmentType.Block:
@@ -230,8 +226,7 @@ namespace org.xpangen.Generator.Profile
         {
             var generated = false;
             var seg = (GenSegment) GenFragment;
-            GenBlock myPrefix;
-            var sepText = "";
+            string sepText;
             switch (seg.GenCardinality)
             {
                 case GenCardinality.All:
@@ -245,13 +240,13 @@ namespace org.xpangen.Generator.Profile
                     break;
                 case GenCardinality.AllDlm:
                     CheckDelimiter(seg);
-                    sepText = Separator.Expand(GenData);
+                    sepText = GenFragmentExpander.Expand(Separator, GenData);
                     GenData.First(seg.ClassId);
                     while (!GenData.Eol(seg.ClassId))
                     {
                         GenObject = GenData.Context[seg.ClassId].GenObject;
-                        seg.ItemBody.GenObject = GenObject;
-                        generated |= Generate(seg.ItemBody, GenData, Writer);
+                        ItemBody.GenObject = GenObject;
+                        generated |= Generate(ItemBody, GenData, Writer);
                         if (generated) Writer.ProvisionalWrite(sepText);
                         GenData.Next(seg.ClassId);
                     }
@@ -268,16 +263,17 @@ namespace org.xpangen.Generator.Profile
                     break;
                 case GenCardinality.BackDlm:
                     CheckDelimiter(seg);
-                    sepText = Separator.Expand(GenData);
+                    sepText = GenFragmentExpander.Expand(Separator, GenData);
                     GenData.Last(seg.ClassId);
                     while (!GenData.Eol(seg.ClassId))
                     {
                         GenObject = GenData.Context[seg.ClassId].GenObject;
-                        seg.ItemBody.GenObject = GenObject;
-                        generated |= Generate(seg.ItemBody, GenData, Writer);
+                        ItemBody.GenObject = GenObject;
+                        generated |= Generate(ItemBody, GenData, Writer);
                         if (generated) Writer.ProvisionalWrite(sepText);
                         GenData.Prior(seg.ClassId);
                     }
+                    Writer.ClearProvisionalText();
                     break;
                 case GenCardinality.First:
                     GenData.First(seg.ClassId);
@@ -353,49 +349,6 @@ namespace org.xpangen.Generator.Profile
                 Separator = seg.Body.Count > 0
                     ? last
                     : GenFragment.NullFragment;
-        }
-    }
-
-    public class GenTextGenerator : GenFragmentGenerator
-    {
-        public GenTextGenerator(GenFragment genFragment, GenData genData, GenWriter genWriter) 
-            : base(genData, genWriter, genFragment.Fragment)
-        {
-            GenFragment = genFragment;
-        }
-
-        protected override bool Generate()
-        {
-            var text = (GenTextFragment) GenFragment;
-            if (text.Text == "") return false;
-            Writer.Write(text.Text);
-            return true;
-        }
-    }
-
-    public class GenPlaceholderGenerator : GenFragmentGenerator
-    {
-        public GenPlaceholderGenerator(GenFragment genFragment, GenData genData, GenWriter genWriter) 
-            : base(genData, genWriter, genFragment.Fragment)
-        {
-            GenFragment = genFragment;
-        }
-
-        protected override bool Generate()
-        {
-            var placeholder = (GenPlaceholderFragment) GenFragment;
-            var text = placeholder.GenObject.GetValue(placeholder.Id);
-            if (text == "") return false;
-            Writer.Write(text);
-            return true;
-        }
-    }
-
-    public class GenNullGenerator : GenFragmentGenerator
-    {
-        protected override bool Generate()
-        {
-            return false;
         }
     }
 }

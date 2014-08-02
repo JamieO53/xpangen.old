@@ -30,7 +30,7 @@ namespace org.xpangen.Generator.Test
             var profile = new GenCompactProfileParser(d, "", txt);
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.TextBlock, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(txt, profile.Expand(d), "Original text expected");
+            Assert.AreEqual(txt, GenFragmentExpander.Expand(profile, d), "Original text expected");
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class,SubClass,Property,", profile.Expand(d), "Class list expected");
+            Assert.AreEqual("Class,SubClass,Property,", GenFragmentExpander.Expand(profile, d), "Class list expected");
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Some text Class,SubClass,Property, some more text", profile.Expand(d),
+            Assert.AreEqual("Some text Class,SubClass,Property, some more text", GenFragmentExpander.Expand(profile, d),
                             "Class list in text expected");
         }
 
@@ -90,7 +90,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class,SubClass,Property", profile.Expand(d), "Class list expected");
+            Assert.AreEqual("Class,SubClass,Property", GenFragmentExpander.Expand(profile, d), "Class list expected");
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Block text", profile.Expand(d), "Block text expected");
+            Assert.AreEqual("Block text", GenFragmentExpander.Expand(profile, d), "Block text expected");
         }
 
         /// <summary>
@@ -138,7 +138,8 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class{SubClass,Property},SubClass{},Property{}", profile.Expand(d), "Class/Subclass list expected");
+            Assert.AreEqual("Class{SubClass,Property},SubClass{},Property{}", GenFragmentExpander.Expand(profile, d),
+                "Class/Subclass list expected");
         }
 
         /// <summary>
@@ -167,7 +168,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class{},SubClass{},Property{}", profile.Expand(d), "Class/Subclass list expected");
+            Assert.AreEqual("Class{},SubClass{},Property{}", GenFragmentExpander.Expand(profile, d), "Class/Subclass list expected");
         }
 
         /// <summary>
@@ -190,7 +191,8 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Name exists NoName does not exist ", profile.Expand(d), "Existence conditions expected");
+            Assert.AreEqual("Name exists NoName does not exist ", GenFragmentExpander.Expand(profile, d),
+                "Existence conditions expected");
         }
 
         /// <summary>
@@ -222,7 +224,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Class name equals Class " +
                 "Class name is greater than Clasa " +
                 "Class name is less than Clasz ",
-                profile.Expand(d), "Comparison conditions expected");
+                GenFragmentExpander.Expand(profile, d), "Comparison conditions expected");
         }
 
         /// <summary>
@@ -269,7 +271,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Class name equals Class " +
                 "Class name is greater than Clasa " +
                 "Class name is less than Clasz ",
-                profile.Expand(d), "Comparison conditions expected");
+                GenFragmentExpander.Expand(profile, d), "Comparison conditions expected");
         }
 
         /// <summary>
@@ -289,7 +291,8 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual(DateTime.Today.ToLongDateString(), profile.Expand(d), "Function output expected");
+            Assert.AreEqual(DateTime.Today.ToLongDateString(), GenFragmentExpander.Expand(profile, d),
+                "Function output expected");
         }
 
         /// <summary>
@@ -309,7 +312,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("\r\n //File: filename.txt", profile.Expand(d), "Function output expected");
+            Assert.AreEqual("\r\n //File: filename.txt", GenFragmentExpander.Expand(profile, d), "Function output expected");
         }
 
         /// <summary>
@@ -335,7 +338,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("5 10", profile.Expand(d), "Function output expected");
+            Assert.AreEqual("5 10", GenFragmentExpander.Expand(profile, d), "Function output expected");
         }
 
         /// <summary>
@@ -369,7 +372,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(expected,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("5 10", profile.Expand(d), "Function output expected");
+            Assert.AreEqual("5 10", GenFragmentExpander.Expand(profile, d), "Function output expected");
         }
 
         /// <summary>
@@ -395,7 +398,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(txt,
                             profile.Body.ProfileText(
                                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class,SubClass,Property,", profile.Expand(d), "Class list expected");
+            Assert.AreEqual("Class,SubClass,Property,", GenFragmentExpander.Expand(profile, d), "Class list expected");
         }
 
         /// <summary>

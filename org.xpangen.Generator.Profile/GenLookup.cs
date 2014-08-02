@@ -51,7 +51,6 @@ namespace org.xpangen.Generator.Profile
         public Lookup Lookup
         {
             get { return (Lookup) Fragment; }
-            set { Fragment = value; }
         }
         public override string ProfileLabel()
         {
@@ -68,56 +67,6 @@ namespace org.xpangen.Generator.Profile
                                                  Body.ProfileText(syntaxDictionary)
                                              }
                 );
-        }
-
-        public override string Expand(GenData genData)
-        {
-            var result = "";
-            if (NoMatch)
-            {
-                var contextData = genData.DuplicateContext();
-
-                if (genData.Eol(Var2.ClassId))
-                {
-                    contextData.Reset(Var1.ClassId);
-                    GenObject = contextData.Context[ClassId].GenObject;
-                    result = Body.Expand(contextData);
-                }
-                else
-                {
-                    var v = contextData.GetValue(Var2);
-                    SearchFor(contextData, ClassId, Var1, v);
-                    if (contextData.Eol(ClassId))
-                    {
-                        GenObject = contextData.Context[ClassId].GenObject;
-                        result = Body.Expand(contextData);
-                    }
-                }
-            }
-            else
-            {
-                if (!genData.Eol(Var2.ClassId))
-                {
-                    var contextData = genData.DuplicateContext();
-                    var v = contextData.GetValue(Var2);
-                    SearchFor(contextData, ClassId, Var1, v);
-                    if (!contextData.Eol(ClassId))
-                    {
-                        GenObject = contextData.Context[ClassId].GenObject;
-                        result = Body.Expand(contextData);
-                    }
-                }
-            }
-            return result;
-        }
-
-        internal static void SearchFor(GenData genData, int classId, GenDataId id, string value)
-        {
-            genData.First(classId);
-            while (!genData.Eol(classId) && genData.GetValue(id) != value)
-            {
-                genData.Next(classId);
-            }
         }
     }
 }

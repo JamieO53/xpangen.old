@@ -117,7 +117,7 @@ Child=V2I2Child2
         {
             var d = PopulateInheritanceData();
             var p = GenParameters.CreateProfile(d.GenDataDef);
-            var text = p.Expand(d);
+            var text = GenFragmentExpander.Expand(p, d);
             Assert.AreEqual(VirtualDefinitionData, text);
         }
 
@@ -180,7 +180,7 @@ Child=V2I2Child2
         {
             var d = PopulateInheritanceData();
             var p = new GenCompactProfileParser(d, "", InheritanceProfile);
-            var text = p.Expand(d);
+            var text = GenFragmentExpander.Expand(p, d);
             Assert.AreEqual(InheritanceProfileResult, text);
         }
 
@@ -263,7 +263,7 @@ Container[Reference='TestData\VirtualData']
         {
             var d = LoadVirtualParentData();
             var p = new GenCompactProfileParser(d, "", NestedInheritanceProfile);
-            var text = p.Expand(d);
+            var text = GenFragmentExpander.Expand(p, d);
             Assert.AreEqual(InheritanceProfileResult, text);
         }
 

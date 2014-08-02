@@ -12,19 +12,13 @@ namespace org.xpangen.Generator.Profile
     {
         public static GenNullFragment NullFragment
         {
-            get
-            {
-                if (_nullFragment == null)
-                    _nullFragment = new GenNullFragment();
-                return _nullFragment;
-            }
+            get { return _nullFragment ?? (_nullFragment = new GenNullFragment()); }
         }
 
         private FragmentType _fragmentType;
         private Fragment _fragment;
-        private ContainerFragment _containerFragment;
         private static GenNullFragment _nullFragment;
-        public int ClassID { get; private set; }
+        public int ClassId { get; private set; }
 
         /// <summary>
         /// The fragment object holding the fragment's data
@@ -32,7 +26,7 @@ namespace org.xpangen.Generator.Profile
         public Fragment Fragment
         {
             get { return _fragment; }
-            set
+            protected set
             {
                 _fragment = value;
                 CheckFragmentType(value);
@@ -46,68 +40,12 @@ namespace org.xpangen.Generator.Profile
         }
 
         /// <summary>
-        /// The container of this fragment
-        /// </summary>
-        protected ContainerFragment ContainerFragment
-        {
-            get { return _containerFragment; }
-            set
-            {
-                _containerFragment = value;
-                CheckFragment(FragmentType);
-            }
-        }
-
-        /// <summary>
         ///     The fragment type.
         /// </summary>
         public FragmentType FragmentType
         {
             get { return _fragmentType; }
-            protected set
-            {
-                _fragmentType = value;
-                CheckFragment(value);
-            }
-        }
-
-        private void CheckFragment(FragmentType fragmentType)
-        {
-            if (ContainerFragment == null || Fragment != null) return;
-            switch (fragmentType)
-            {
-                case FragmentType.Profile:
-                    Fragment = new ContainerFragment();
-                    break;
-                case FragmentType.Text:
-                    Fragment = new Text();
-                    break;
-                case FragmentType.Placeholder:
-                    Fragment = new Placeholder();
-                    break;
-                    //case FragmentType.Body:
-                    //    break;
-                case FragmentType.Segment:
-                    Fragment = new Segment();
-                    break;
-                case FragmentType.Block:
-                    Fragment = new Block();
-                    break;
-                case FragmentType.Lookup:
-                    Fragment = new Lookup();
-                    break;
-                case FragmentType.Condition:
-                    Fragment = new Condition();
-                    break;
-                case FragmentType.Function:
-                    Fragment = new Function();
-                    break;
-                case FragmentType.TextBlock:
-                    Fragment = new TextBlock();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("fragmentType");
-            }
+            private set { _fragmentType = value; }
         }
 
         public GenDataDef GenDataDef { get; private set; }
@@ -138,7 +76,7 @@ namespace org.xpangen.Generator.Profile
             ParentContainer = genFragmentParams.ParentContainer;
             FragmentType = genFragmentParams.FragmentType;
             Fragment = genFragmentParams.Fragment;
-            ClassID = genFragmentParams.ClassID;
+            ClassId = genFragmentParams.ClassID;
             Assert(Fragment != null, "The fragment was not set up");
         }
 
@@ -154,12 +92,5 @@ namespace org.xpangen.Generator.Profile
         /// <param name="syntaxDictionary">The dictionary defining the syntax of the profile text.</param>
         /// <returns>The fragment's profile text.</returns>
         public abstract string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary);
-
-        /// <summary>
-        ///     Expands the fragment.
-        /// </summary>
-        /// <param name="genData">The generator data.</param>
-        /// <returns>The expanded fragment.</returns>
-        public abstract string Expand(GenData genData);
     }
 }

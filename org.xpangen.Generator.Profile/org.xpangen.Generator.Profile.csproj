@@ -44,6 +44,7 @@
     <Compile Include="GenCondition.cs" />
     <Compile Include="GenConditionParams.cs" />
     <Compile Include="GenContainerFragmentBase.cs" />
+    <Compile Include="GenFragmentExpander.cs" />
     <Compile Include="GenFragmentGenerator.cs" />
     <Compile Include="GenFragment.cs" />
     <Compile Include="GenFragmentParams.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="GenPlaceholderFragment.cs" />
     <Compile Include="GenPlaceholderFragmentParams.cs" />
     <Compile Include="GenProfileFragment.cs" />
+    <Compile Include="GenProfileParams.cs" />
     <Compile Include="GenSegment.cs" />
     <Compile Include="GenSegBody.cs" />
     <Compile Include="GenSegmentParams.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="LibraryManager.cs" />
     <Compile Include="ProfileFragmentSyntax.cs" />
     <Compile Include="ProfileFragmentSyntaxDictionary.cs" />
+    <Compile Include="ProfileText.cs" />
     <Compile Include="Profile\Block.cs" />
     <Compile Include="Profile\Condition.cs" />
     <Compile Include="Profile\ContainerFragment.cs" />

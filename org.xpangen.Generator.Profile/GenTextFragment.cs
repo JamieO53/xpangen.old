@@ -33,7 +33,7 @@ namespace org.xpangen.Generator.Profile
             return Text;
         }
 
-        public override string Expand(GenData genData)
+        public virtual string Expand(GenData genData)
         {
             return Text;
         }

@@ -2,7 +2,6 @@
 // // License, v. 2.0. If a copy of the MPL was not distributed with this
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
@@ -28,12 +27,6 @@ namespace org.xpangen.Generator.Profile
                                                  Body.ProfileText(syntaxDictionary)
                                              }
                 );
-        }
-
-        public override string Expand(GenData genData)
-        {
-            Body.GenObject = GenObject;
-            return Body.Expand(genData);
         }
     }
 }
