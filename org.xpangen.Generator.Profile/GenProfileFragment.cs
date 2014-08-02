@@ -37,7 +37,7 @@ namespace org.xpangen.Generator.Profile
             return Body.Expand(genData);
         }
 
-        public override bool Generate(GenFragmentGenerator genFragmentGenerator)
+        public virtual bool Generate(GenFragmentGenerator genFragmentGenerator)
         {
             Body.GenObject = (GenObject) Profile.GenObject;
             return Body.Generate(genFragmentGenerator.Prefix, genFragmentGenerator.GenData, genFragmentGenerator.Writer);

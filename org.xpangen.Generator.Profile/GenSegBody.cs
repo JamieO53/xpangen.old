@@ -70,7 +70,7 @@ namespace org.xpangen.Generator.Profile
             foreach (var fragment in Fragment)
             {
                 fragment.GenObject = GenObject;
-                generated |= GenFragmentGenerator.Create(fragment, prefix, genData, writer).Generate();
+                generated |= GenFragmentGenerator.Generate(fragment, prefix, genData, writer);
             }
             return generated;
         }

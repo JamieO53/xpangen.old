@@ -27,7 +27,7 @@ namespace org.xpangen.Generator.Profile
 
         public string FileName
         {
-            get { return _fileName; }
+            private get { return _fileName; }
             set
             {
                 if (_fileName == value) return;
@@ -61,8 +61,25 @@ namespace org.xpangen.Generator.Profile
 
         public void Write(string text)
         {
+            if (ProvisionalText != "")
+            {
+                Writer.Write(ProvisionalText);
+                ClearProvisionalText();
+            }
             Writer.Write(text);
         }
+
+        public void ClearProvisionalText()
+        {
+            ProvisionalText = "";
+        }
+
+        public void ProvisionalWrite(string text)
+        {
+            ProvisionalText = text;
+        }
+
+        private string ProvisionalText { get; set; }
 
         public void Flush()
         {
