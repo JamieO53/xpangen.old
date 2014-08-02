@@ -64,13 +64,13 @@ namespace org.xpangen.Generator.Profile
             return _fragment.IndexOf(fragment);
         }
 
-        public bool Generate(GenFragment prefix, GenData genData, GenWriter writer)
+        public bool Generate(GenData genData, GenWriter writer)
         {
             var generated = false;
             foreach (var fragment in Fragment)
             {
                 fragment.GenObject = GenObject;
-                generated |= GenFragmentGenerator.Generate(fragment, prefix, genData, writer);
+                generated |= GenFragmentGenerator.Generate(fragment, genData, writer);
             }
             return generated;
         }

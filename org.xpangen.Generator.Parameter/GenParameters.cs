@@ -63,7 +63,7 @@ namespace org.xpangen.Generator.Parameter
             var profile = CreateProfile(genData.GenDataDef);
             using (var writer = new GenWriter(null) {FileName = fileName})
             {
-                GenFragmentGenerator.Generate(profile, null, genData, writer);
+                GenFragmentGenerator.Generate(profile, genData, writer);
             }
         }
 
