@@ -44,7 +44,7 @@ namespace org.xpangen.Generator.Profile
                 );
         }
 
-        public override string Expand(GenData genData)
+        public virtual string Expand(GenData genData)
         {
             return GenObject.GetValue(Id);
         }

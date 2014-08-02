@@ -54,7 +54,7 @@ namespace org.xpangen.Generator.Profile
                 );
         }
 
-        public override string Expand(GenData genData)
+        public virtual string Expand(GenData genData)
         {
             var s = new StringBuilder();
             var isEmpty = true;
@@ -77,9 +77,9 @@ namespace org.xpangen.Generator.Profile
                     {
                         GenObject = genData.Context[ClassId].GenObject;
                         ItemBody.GenObject = GenObject;
-                        expanded = ItemBody.Expand(genData);
+                        expanded = GenFragmentExpander.Expand(ItemBody, genData);
                         if (!isEmpty && expanded != "")
-                            s.Append(Separator.Expand(genData));
+                            s.Append(GenFragmentExpander.Expand(Separator, genData));
                         isEmpty = isEmpty && expanded == "";
                         s.Append(expanded);
                         genData.Next(ClassId);
@@ -101,9 +101,9 @@ namespace org.xpangen.Generator.Profile
                     {
                         GenObject = genData.Context[ClassId].GenObject;
                         ItemBody.GenObject = GenObject;
-                        expanded = ItemBody.Expand(genData);
+                        expanded = GenFragmentExpander.Expand(ItemBody, genData);
                         if (!isEmpty && expanded != "")
-                            s.Append(Separator.Expand(genData));
+                            s.Append(GenFragmentExpander.Expand(Separator, genData));
                         isEmpty = isEmpty && expanded == "";
                         s.Append(expanded);
                         genData.Prior(ClassId);

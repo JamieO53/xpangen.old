@@ -34,7 +34,7 @@ namespace org.xpangen.Generator.Profile
                 );
         }
 
-        public override string Expand(GenData genData)
+        public virtual string Expand(GenData genData)
         {
             Body.GenObject = GenObject;
             return Body.Expand(genData);

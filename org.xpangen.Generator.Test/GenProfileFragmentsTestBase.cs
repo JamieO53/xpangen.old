@@ -132,7 +132,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(expectedType, fragment.FragmentType, "Fragment Type");
             Assert.AreEqual(isText, fragment.IsTextFragment, "Is text fragment?");
             fragment.GenObject = genData.Context[3].GenObject;
-            Assert.AreEqual(expected, fragment.Expand(genData), "Expanded fragment");
+            Assert.AreEqual(expected, GenFragmentExpander.Expand(fragment, genData), "Expanded fragment");
             Assert.AreEqual(profileLabel, fragment.ProfileLabel(), "Profile label");
             Assert.AreEqual(profileText, fragment.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary), "Profile text");
             if (parentClassId >= 0)
@@ -143,23 +143,15 @@ namespace org.xpangen.Generator.Test
 
         protected static string GenerateFragment(GenData genData, GenFragment fragment)
         {
-            string str;
-            var s = new MemoryStream(100000);
-            var w = new GenWriter(s);
-            try
+            using (var s = new MemoryStream(100000))
             {
+                var w = new GenWriter(s);
                 GenFragmentGenerator.Generate(fragment, genData, w);
-                s = (MemoryStream)w.Stream;
                 w.Flush();
                 s.Seek(0, SeekOrigin.Begin);
                 var r = new StreamReader(s);
-                str = r.ReadToEnd();
+                return r.ReadToEnd();
             }
-            finally
-            {
-                s.Dispose();
-            }
-            return str;
         }
 
         protected static void ProcessSegment(GenData genData, string cardinalityText, GenCardinality genCardinality, string expected)
@@ -287,7 +279,7 @@ namespace org.xpangen.Generator.Test
             var d = SetUpSegmentSeparatorData(display);
             var p = parentSegment ?? new GenProfileFragment(d.GenDataDef);
             var g = SetUpSegmentSeparatorFragment(d.GenDataDef, cardinality, p);
-            Assert.AreEqual(expected, g.Expand(d));
+            Assert.AreEqual(expected, GenFragmentExpander.Expand(g, d));
             var str = GenerateFragment(d, g);
             Assert.AreEqual(expected, str);
         }
