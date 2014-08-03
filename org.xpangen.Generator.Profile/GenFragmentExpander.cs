@@ -15,26 +15,26 @@ namespace org.xpangen.Generator.Profile
         private readonly GenData _genData;
         private readonly Fragment _fragment;
 
-        protected GenFragmentExpander(GenData genData, GenFragment genFragment)
+        private GenFragmentExpander(GenData genData, GenFragment genFragment)
         {
             _genData = genData;
             GenFragment = genFragment;
             _fragment = GenFragment.Fragment;
         }
 
-        public GenData GenData
+        private GenData GenData
         {
             get { return _genData; }
         }
 
-        protected GenFragment GenFragment { get; set; }
+        private GenFragment GenFragment { get; set; }
 
         public Fragment Fragment
         {
             get { return _fragment; }
         }
 
-        protected virtual string Expand()
+        protected string Expand()
         {
             using (var s = new MemoryStream(100000))
             {
@@ -62,7 +62,7 @@ namespace org.xpangen.Generator.Profile
                 case FragmentType.Text:
                     return ((Text) fragment).TextValue;
                 case FragmentType.Placeholder:
-                    return genFragment.GenObject.GetValue(((GenPlaceholderFragment) genFragment).Id);
+                    return GetPlaceholderValue(fragment, genFragment.GenObject);
                 case FragmentType.Function:
                     var fn = ((GenFunction)genFragment);
                     fn.Body.GenObject = genFragment.GenObject;
@@ -80,13 +80,23 @@ namespace org.xpangen.Generator.Profile
                         if (f.GetType().Name == "GenTextFragment")
                             sb.Append(((Text) f.Fragment).TextValue);
                         else if (f.GetType().Name == "GenPlaceholder")
-                            sb.Append(genFragment.GenObject.GetValue(((GenPlaceholderFragment) f).Id));
+                            sb.Append(GetPlaceholderValue(f.Fragment, f.GenObject));
                     }
                     return sb.ToString();
                 default:
                     return Create(genFragment, genData).Expand();
             }
             
+        }
+
+        private static string GetPlaceholderValue(Fragment fragment, GenObject genObject)
+        {
+            return genObject.GetValue(
+                (new GenDataId
+                 {
+                     ClassName = ((Placeholder) fragment).Class,
+                     PropertyName = ((Placeholder) fragment).Property
+                 }));
         }
 
         private static GenFragmentExpander Create(GenFragment genFragment, GenData genData)
