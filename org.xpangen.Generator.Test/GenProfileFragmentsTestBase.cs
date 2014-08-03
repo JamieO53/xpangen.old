@@ -131,7 +131,6 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(expectedClass, fragment.GetType().Name, "Fragment Class");
             Assert.AreEqual(expectedType, fragment.FragmentType, "Fragment Type");
             Assert.AreEqual(isText, fragment.IsTextFragment, "Is text fragment?");
-            genData.First(1);
             fragment.GenObject = genData.Context[3].GenObject;
             Assert.AreEqual(expected, GenFragmentExpander.Expand(fragment, genData), "Expanded fragment");
             Assert.AreEqual(profileLabel, fragment.ProfileLabel(), "Profile label");
@@ -185,9 +184,8 @@ namespace org.xpangen.Generator.Test
             foreach (var t in fa)
                 g.Body.Add(t);
             foreach (var t in fa)
-            {
                 Assert.AreSame(g, t.ParentSegment);
-            }
+            genData.First(1);
             VerifyFragment(genData, g, "GenSegment", FragmentType.Segment, "Property",
                            "`[Property" + dictionary.GenCardinalityText[(int)g.GenCardinality] + ":`Property.Name`,`]", expected, false, -1);
         }

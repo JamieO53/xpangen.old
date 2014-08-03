@@ -337,7 +337,6 @@ namespace org.xpangen.Generator.Profile
             var generated = false;
             var seg = (GenSegment) GenFragment;
             string sepText;
-            //var segmentObjects = GetSegmentObjects();
 
             switch (seg.GenCardinality)
             {
@@ -433,31 +432,6 @@ namespace org.xpangen.Generator.Profile
                     throw new ArgumentOutOfRangeException();
             }
             return generated;
-        }
-
-        private ISubClassBase GetSegmentObjects()
-        {
-            var classes = GenData.GenDataDef.Classes;
-            var classId = classes.IndexOf(GenObject.ClassName);
-            while (classes[classId].IsInherited && GetSubClassIndex(classes, classId) == -1)
-                classId = classes[classId].Parent.ClassId;
-            
-            Assert(classId != -1, "Segment parent class not found: " + GenObject.ClassName);
-            
-            var subClassIdx = GetSubClassIndex(classes, classId);
-            Assert(subClassIdx != -1,
-                "Segment class is not a subclass of its parent: " + GenObject.ClassName + " -> " + Segment.Class);
-            var segmentObjects = GenObject.SubClass[subClassIdx];
-            return segmentObjects;
-        }
-
-        private int GetSubClassIndex(GenDataDefClassList classes, int classId)
-        {
-            var subClassId = classes.IndexOf(Segment.Class);
-            while (classes[subClassId].IsInherited && classes[classId].SubClasses.IndexOf(subClassId) == -1)
-                subClassId = classes[subClassId].Parent.ClassId;
-            var subClassIdx = classes[classId].SubClasses.IndexOf(subClassId);
-            return subClassIdx;
         }
 
         private void CheckDelimiter(GenSegment seg)
