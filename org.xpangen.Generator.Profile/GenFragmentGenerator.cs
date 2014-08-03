@@ -57,6 +57,9 @@ namespace org.xpangen.Generator.Profile
 
         private static GenFragmentGenerator Create(GenFragment genFragment, GenData genData, GenWriter genWriter)
         {
+            if (genFragment.FragmentType != FragmentType.Null && genFragment.FragmentType != FragmentType.Text)
+                if (genFragment.FragmentType != FragmentType.Lookup || !((GenLookup)genFragment).NoMatch)
+                    Assert(genFragment.GenObject != null, "The genObject must be set");
             FragmentType fragmentType;
             Enum.TryParse(genFragment.Fragment.GetType().Name, out fragmentType);
             switch (fragmentType)
@@ -327,20 +330,23 @@ namespace org.xpangen.Generator.Profile
 
         private GenBlock ItemBody { get; set; }
         private GenFragment Separator { get; set; }
+        private Segment Segment {get { return (Segment) Fragment; }}
 
         protected override bool Generate()
         {
             var generated = false;
             var seg = (GenSegment) GenFragment;
             string sepText;
+            //var segmentObjects = GetSegmentObjects();
+
             switch (seg.GenCardinality)
             {
                 case GenCardinality.All:
                     GenData.First(seg.ClassId);
                     while (!GenData.Eol(seg.ClassId))
                     {
-                        seg.Body.GenObject = GenData.Context[seg.ClassId].GenObject;
-                        generated |= seg.Body.Generate(GenData, Writer);
+                        OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
+                        generated |= base.Generate();
                         GenData.Next(seg.ClassId);
                     }
                     break;
@@ -361,8 +367,8 @@ namespace org.xpangen.Generator.Profile
                     GenData.Last(seg.ClassId);
                     while (!GenData.Eol(seg.ClassId))
                     {
-                        seg.Body.GenObject = GenData.Context[seg.ClassId].GenObject;
-                        generated |= seg.Body.Generate(GenData, Writer);
+                        OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
+                        generated |= base.Generate();
                         GenData.Prior(seg.ClassId);
                     }
                     break;
@@ -381,33 +387,33 @@ namespace org.xpangen.Generator.Profile
                     break;
                 case GenCardinality.First:
                     GenData.First(seg.ClassId);
-                    seg.Body.GenObject = GenData.Context[seg.ClassId].GenObject;
+                    OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
                     if (!GenData.Eol(seg.ClassId))
-                        generated |= seg.Body.Generate(GenData, Writer);
+                        generated |= base.Generate();
                     break;
                 case GenCardinality.Tail:
                     GenData.First(seg.ClassId);
                     GenData.Next(seg.ClassId);
                     while (!GenData.Eol(seg.ClassId))
                     {
-                        seg.Body.GenObject = GenData.Context[seg.ClassId].GenObject;
-                        generated |= seg.Body.Generate(GenData, Writer);
+                        OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
+                        generated |= base.Generate();
                         GenData.Next(seg.ClassId);
                     }
                     break;
                 case GenCardinality.Last:
                     GenData.Last(seg.ClassId);
-                    seg.Body.GenObject = GenData.Context[seg.ClassId].GenObject;
+                    OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
                     if (!GenData.Eol(seg.ClassId))
-                        generated |= seg.Body.Generate(GenData, Writer);
+                        generated |= base.Generate();
                     break;
                 case GenCardinality.Trunk:
                     GenData.Last(seg.ClassId);
                     GenData.Prior(seg.ClassId);
                     while (!GenData.Eol(seg.ClassId))
                     {
-                        seg.Body.GenObject = GenData.Context[seg.ClassId].GenObject;
-                        generated |= seg.Body.Generate(GenData, Writer);
+                        OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
+                        generated |= base.Generate();
                         GenData.Prior(seg.ClassId);
                     }
                     break;
@@ -419,14 +425,39 @@ namespace org.xpangen.Generator.Profile
                     break;
                 case GenCardinality.Inheritance:
                     GenData.SetInheritance(seg.ClassId);
-                    seg.Body.GenObject = GenData.Context[seg.ClassId].GenObject;
+                    OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
                     if (!GenData.Eol(seg.ClassId))
-                        generated |= seg.Body.Generate(GenData, Writer);
+                        generated |= base.Generate();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
             return generated;
+        }
+
+        private ISubClassBase GetSegmentObjects()
+        {
+            var classes = GenData.GenDataDef.Classes;
+            var classId = classes.IndexOf(GenObject.ClassName);
+            while (classes[classId].IsInherited && GetSubClassIndex(classes, classId) == -1)
+                classId = classes[classId].Parent.ClassId;
+            
+            Assert(classId != -1, "Segment parent class not found: " + GenObject.ClassName);
+            
+            var subClassIdx = GetSubClassIndex(classes, classId);
+            Assert(subClassIdx != -1,
+                "Segment class is not a subclass of its parent: " + GenObject.ClassName + " -> " + Segment.Class);
+            var segmentObjects = GenObject.SubClass[subClassIdx];
+            return segmentObjects;
+        }
+
+        private int GetSubClassIndex(GenDataDefClassList classes, int classId)
+        {
+            var subClassId = classes.IndexOf(Segment.Class);
+            while (classes[subClassId].IsInherited && classes[classId].SubClasses.IndexOf(subClassId) == -1)
+                subClassId = classes[subClassId].Parent.ClassId;
+            var subClassIdx = classes[classId].SubClasses.IndexOf(subClassId);
+            return subClassIdx;
         }
 
         private void CheckDelimiter(GenSegment seg)
@@ -446,13 +477,15 @@ namespace org.xpangen.Generator.Profile
                 var newText = new GenTextBlock(new GenFragmentParams(seg.GenDataDef, seg, seg));
                 for (var i = 0; i < lastText.Body.Count - 1; i++)
                     newText.Body.Add(lastText.Body.Fragment[i]);
-                Separator = lastText.Body.Fragment[lastText.Body.Count - 1];
                 ItemBody.Body.Add(newText);
+                Separator = lastText.Body.Fragment[lastText.Body.Count - 1];
             }
             else
                 Separator = seg.Body.Count > 0
                     ? last
                     : GenFragment.NullFragment;
+            if (Separator != null) Separator.GenObject = GenObject;
+            else Separator = GenFragment.NullFragment;
         }
     }
 }

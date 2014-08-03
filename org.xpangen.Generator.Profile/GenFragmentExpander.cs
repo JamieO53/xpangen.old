@@ -49,6 +49,9 @@ namespace org.xpangen.Generator.Profile
 
         public static string Expand(GenFragment genFragment, GenData genData)
         {
+            if (genFragment.FragmentType != FragmentType.Null && genFragment.FragmentType != FragmentType.Text)
+                if (genFragment.FragmentType != FragmentType.Lookup || !((GenLookup)genFragment).NoMatch)
+                    Assert(genFragment.GenObject != null, "The genObject must be set");
             FragmentType fragmentType;
             var fragment = genFragment.Fragment;
             Enum.TryParse(fragment.GetType().Name, out fragmentType);

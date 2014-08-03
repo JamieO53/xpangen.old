@@ -131,6 +131,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(expectedClass, fragment.GetType().Name, "Fragment Class");
             Assert.AreEqual(expectedType, fragment.FragmentType, "Fragment Type");
             Assert.AreEqual(isText, fragment.IsTextFragment, "Is text fragment?");
+            genData.First(1);
             fragment.GenObject = genData.Context[3].GenObject;
             Assert.AreEqual(expected, GenFragmentExpander.Expand(fragment, genData), "Expanded fragment");
             Assert.AreEqual(profileLabel, fragment.ProfileLabel(), "Profile label");
@@ -279,6 +280,7 @@ namespace org.xpangen.Generator.Test
             var d = SetUpSegmentSeparatorData(display);
             var p = parentSegment ?? new GenProfileFragment(d.GenDataDef);
             var g = SetUpSegmentSeparatorFragment(d.GenDataDef, cardinality, p);
+            g.GenObject = d.Root.SubClass[0][0];
             Assert.AreEqual(expected, GenFragmentExpander.Expand(g, d));
             var str = GenerateFragment(d, g);
             Assert.AreEqual(expected, str);
