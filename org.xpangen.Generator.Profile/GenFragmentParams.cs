@@ -82,7 +82,8 @@ namespace org.xpangen.Generator.Profile
                 //case FragmentType.Body:
                 //    break;
                 case FragmentType.Segment:
-                    Fragment = container.Body().AddSegment();
+                    var segmentParams = ((GenSegmentParams) this);
+                    Fragment = container.Body().AddSegment(segmentParams.ClassName, segmentParams.Cardinality.ToString());
                     break;
                 case FragmentType.Block:
                     Fragment = container.Body().AddBlock();

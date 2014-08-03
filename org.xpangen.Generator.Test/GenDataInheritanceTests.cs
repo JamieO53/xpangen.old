@@ -117,6 +117,7 @@ Child=V2I2Child2
         {
             var d = PopulateInheritanceData();
             var p = GenParameters.CreateProfile(d.GenDataDef);
+            p.GenObject = d.Root;
             var text = GenFragmentExpander.Expand(p, d);
             Assert.AreEqual(VirtualDefinitionData, text);
         }

@@ -26,6 +26,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                     : new CompactProfileScanner(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 )
         {
+            GenObject = genData.Root;
         }
 
         private GenCompactProfileParser(GenData genData, CompactProfileScanner scan) : base(genData.GenDataDef)
