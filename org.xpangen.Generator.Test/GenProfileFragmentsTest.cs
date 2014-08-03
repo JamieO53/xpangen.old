@@ -231,6 +231,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Class", d.Context[ClassClassId].GenObject.Attributes[0]);
             d.First(SubClassClassId);
             Assert.AreEqual("SubClass", d.Context[SubClassClassId].GenObject.Attributes[0]);
+            g.GenObject = d.Context[SubClassClassId].GenObject;
             str = GenerateFragment(d, g);
             Assert.AreEqual("", str);
         }

@@ -84,6 +84,7 @@ namespace org.xpangen.Generator.Data
             {
                 var idx = Definition.Properties.IndexOf(id.PropertyName);
                 if (idx == -1) return "<<<< Invalid Lookup: " + id + " Property not found >>>>";
+                if (idx >= Attributes.Count) return "";
                 return Attributes[idx];
             }
             if (Parent != null) return Parent.GetValue(id);

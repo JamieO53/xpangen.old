@@ -18,7 +18,8 @@ namespace org.xpangen.Generator.Profile
         }
 
         public new int ClassId { get; private set; }
-        protected internal GenDataId Var1
+
+        private GenDataId Var1
         {
             get { return GenDataDef.GetId(Lookup.Class1 + "." + Lookup.Property1); }
             set
@@ -27,7 +28,8 @@ namespace org.xpangen.Generator.Profile
                 Lookup.Property1 = value.PropertyName;
             } 
         }
-        protected internal GenDataId Var2
+
+        private GenDataId Var2
         {
             get { return GenDataDef.GetId(Lookup.Class2 + "." + Lookup.Property2); }
             set
@@ -48,7 +50,7 @@ namespace org.xpangen.Generator.Profile
             ClassId = Var1.ClassId;
         }
 
-        public Lookup Lookup
+        private Lookup Lookup
         {
             get { return (Lookup) Fragment; }
         }
@@ -62,8 +64,8 @@ namespace org.xpangen.Generator.Profile
             var format = syntaxDictionary[FragmentType.ToString() + (NoMatch ? "2" : "1")].Format;
             return string.Format(format, new object[]
                                              {
-                                                 GenDataDef.GetIdentifier(Var1),
-                                                 GenDataDef.GetIdentifier(Var2),
+                                                 Var1.ToString(),
+                                                 Var2.ToString(),
                                                  Body.ProfileText(syntaxDictionary)
                                              }
                 );
