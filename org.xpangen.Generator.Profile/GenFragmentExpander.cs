@@ -22,10 +22,6 @@ namespace org.xpangen.Generator.Profile
             _fragment = GenFragment.Fragment;
         }
 
-        protected GenFragmentExpander()
-        {
-        }
-
         public GenData GenData
         {
             get { return _genData; }
