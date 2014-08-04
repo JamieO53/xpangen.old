@@ -198,7 +198,7 @@ namespace org.xpangen.Generator.Data
         ///     Ensure that no object is current for the specified class.
         /// </summary>
         /// <param name="classId">The class being reset.</param>
-        public void Reset(int classId)
+        private void Reset(int classId)
         {
             if (!Eol(classId))
                 ResetSubClasses(classId);
@@ -218,7 +218,7 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        private void SetSubClasses(int classId)
+        public void SetSubClasses(int classId)
         {
             var inheritedClassId = classId;
             if (Context[classId].DefClass != null && Context[classId].DefClass.IsInherited)
@@ -270,7 +270,7 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        private void SetReferenceSubClasses(int classId, int subClassIndex, GenData data, string reference)
+        public void SetReferenceSubClasses(int classId, int subClassIndex, GenData data, string reference)
         {
             var subClass = Context.Classes[classId].SubClasses[subClassIndex].SubClass;
             var subClassId = subClass.ClassId;
