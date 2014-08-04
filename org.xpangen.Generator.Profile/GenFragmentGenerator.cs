@@ -29,9 +29,9 @@ namespace org.xpangen.Generator.Profile
         {
         }
 
-        protected GenObject GenObject { get; set; }
-        
-        protected GenData GenData
+        public GenObject GenObject { get; private set; }
+
+        public GenData GenData
         {
             get { return _genData; }
         }
@@ -41,7 +41,7 @@ namespace org.xpangen.Generator.Profile
             get { return _writer; }
         }
 
-        protected GenFragment GenFragment { get; set; }
+        protected internal GenFragment GenFragment { get; protected set; }
 
         protected Fragment Fragment
         {
@@ -199,7 +199,7 @@ namespace org.xpangen.Generator.Profile
         {
         }
 
-        protected GenObject OverrideGenObject { get; set; }
+        protected GenObject OverrideGenObject { private get; set; }
         
         protected override bool Generate()
         {
@@ -320,146 +320,330 @@ namespace org.xpangen.Generator.Profile
         }
     }
 
+    public class SenSegmentNavigator : GenBase
+    {
+        private readonly GenSegmentGenerator _generator;
+
+        public SenSegmentNavigator(GenSegmentGenerator generator)
+        {
+            GenSegment = (GenSegment) generator.GenFragment;
+            _generator = generator;
+        }
+
+        private GenSegment GenSegment { get; set; }
+
+        public string Reference()
+        {
+            return GenObjectList.Reference;
+        }
+
+        private GenObjectList GenObjectList
+        {
+            get { return GenData.Context[ClassId]; }
+        }
+
+        public string ClassName()
+        {
+            return ClassDef.Name;
+        }
+
+        private GenDataDefClass ClassDef
+        {
+            get { return GenData.GenDataDef.Classes[ClassId]; }
+        }
+
+        public GenObject GetGenObject()
+        {
+            return GenObjectList.GenObject;
+        }
+
+        public void SetInheritance()
+        {
+            GenData.SetInheritance(ClassId);
+        }
+
+        private GenData GenData
+        {
+            get { return _generator.GenData; }
+        }
+
+        public void Prior()
+        {
+            CheckInheritance();
+            GenObjectList.Prior();
+            CheckInheritance();
+            if (!GenObjectList.Eol)
+                SetSubClasses();
+        }
+
+        private void SetSubClasses()
+        {
+            int classId = ClassId;
+            var inheritedClassId = ClassId;
+            if (GenObjectList.DefClass != null && GenData.Context[classId].DefClass.IsInherited)
+            {
+                classId = GenObjectList.DefClass.Parent.ClassId;
+                GenData.Context[classId].Index = GenData.Context[inheritedClassId].Index;
+                GenData.Context[classId].ReferenceData = GenData.Context[inheritedClassId].ReferenceData;
+            }
+
+            if (GenData.Context[classId].ReferenceData != null && GenData.Context[classId].ReferenceData != GenData)
+            {
+                GenData.Context[classId].ReferenceData.Context[GenData.Context[classId].RefClassId].Index = GenData.Context[classId].Index;
+                GenData.Context[classId].ReferenceData.SetSubClasses(GenData.Context[classId].RefClassId);
+            }
+
+            var classDef = GenData.Context.Classes[classId];
+            if (GenData.Context[classId].GenObject == null)
+                GenData.First(classId);
+            var genObject = GenData.Context[classId].GenObject;
+            if (classDef != null && genObject != null)
+            {
+                for (var i = 0; i < classDef.SubClasses.Count; i++)
+                {
+                    var subClass = classDef.SubClasses[i].SubClass;
+                    var subClassId = subClass.ClassId;
+                    if (!string.IsNullOrEmpty(classDef.SubClasses[i].Reference) &&
+                        classDef.Reference != classDef.SubClasses[i].Reference)
+                    {
+                        if (genObject.SubClass[i].Reference != null)
+                            SetReferenceSubClasses(classId, i, subClassId, genObject);
+                    }
+                    else if (GenData.Context[subClassId].ReferenceData != null && GenData.Context[subClassId].ReferenceData != GenData)
+                    {
+                        var refContext = GenData.Context[subClassId].ReferenceData.Context[GenData.Context[subClassId].RefClassId];
+                        GenData.Context[subClassId].SubClassBase = refContext.SubClassBase;
+                        GenData.First(subClassId);
+                    }
+                    else
+                    {
+                        Assert(i < genObject.SubClass.Count, "The object does not have a subclass to set");
+                        GenData.Context[subClassId].SubClassBase = genObject.SubClass[i];
+                        GenData.First(subClassId);
+                    }
+                }
+            }
+        }
+
+        private void SetReferenceSubClasses(int classId, int i, int subClassId, GenObject genObject)
+        {
+            var data = GenData.Cache[GenData.Context.Classes[subClassId].ReferenceDefinition,
+                genObject.SubClass[i].Reference];
+            var reference = genObject.SubClass[i].Reference;
+            var subClass = GenData.Context.Classes[classId].SubClasses[i].SubClass;
+            var subClassId1 = subClass.ClassId;
+            var subRefClassId = subClass.RefClassId;
+            GenData.Context[subClassId1].ClassId = subClass.ClassId;
+            GenData.Context[subClassId1].RefClassId = subRefClassId;
+            GenData.Context[subClassId1].Reference = reference;
+            GenData.Context[subClassId1].ReferenceData = data;
+            GenData.Context[subClassId1].SubClassBase = data.Context[subRefClassId].SubClassBase;
+            data.First(subRefClassId);
+            GenData.Context[subClassId1].First();
+            if (!data.Eol(subRefClassId))
+                for (var i1 = 0; i1 < GenData.Context.Classes[subClassId1].SubClasses.Count; i1++)
+                    GenData.SetReferenceSubClasses(subClassId1, i1, data, reference);
+        }
+
+        private void CheckInheritance()
+        {
+            if (GenData.GenDataDef == null || !ClassDef.IsInherited) return;
+            if (GenObjectList.SubClassBase == ParentGenObjectList.SubClassBase) return;
+            GenObjectList.SubClassBase = ParentGenObjectList.SubClassBase;
+            GenObjectList.Index = ParentGenObjectList.Index;
+            GenObjectList.ReferenceData = ParentGenObjectList.ReferenceData;
+        }
+
+        private GenObjectList ParentGenObjectList
+        {
+            get
+            {
+                var superClassId = ClassDef.Parent.ClassId;
+                var genObjectList = GenData.Context[superClassId];
+                return genObjectList;
+            }
+        }
+
+        public void Last()
+        {
+            CheckInheritance();
+            GenObjectList.Last();
+            CheckInheritance();
+            if (!GenObjectList.Eol)
+                SetSubClasses();
+        }
+
+        public void Next()
+        {
+            CheckInheritance();
+            GenObjectList.Next();
+            CheckInheritance();
+            if (!GenObjectList.Eol)
+                SetSubClasses();
+        }
+
+        public bool Eol()
+        {
+            CheckInheritance();
+            return GenObjectList.Eol;
+        }
+
+        public void First()
+        {
+            CheckInheritance();
+            GenObjectList.First();
+            if (!GenData.Eol(ClassId))
+                SetSubClasses();
+        }
+
+        private int ClassId
+        {
+            get { return GenSegment.ClassId; }
+        }
+
+        public void CheckDelimiter()
+        {
+            if (_generator.Separator != null) return;
+
+            // Optimization: This is done once when this method is first called
+            _generator.ItemBody = new GenBlock(new GenFragmentParams(GenSegment.GenDataDef, GenSegment, GenSegment.ParentContainer));
+
+            for (var i = 0; i < GenSegment.Body.Count - 1; i++)
+                _generator.ItemBody.Body.Add(GenSegment.Body.Fragment[i]);
+
+            var last = GenSegment.Body.Count > 0 ? GenSegment.Body.Fragment[GenSegment.Body.Count - 1] : null;
+            var lastText = last as GenTextBlock;
+            if (last is GenTextBlock && lastText.Body.Count > 1)
+            {
+                var newText = new GenTextBlock(new GenFragmentParams(GenSegment.GenDataDef, GenSegment, GenSegment));
+                for (var i = 0; i < lastText.Body.Count - 1; i++)
+                    newText.Body.Add(lastText.Body.Fragment[i]);
+                _generator.ItemBody.Body.Add(newText);
+                _generator.Separator = lastText.Body.Fragment[lastText.Body.Count - 1];
+            }
+            else
+                _generator.Separator = GenSegment.Body.Count > 0
+                    ? last
+                    : GenFragment.NullFragment;
+            if (_generator.Separator != null) _generator.Separator.GenObject = _generator.GenObject;
+            else _generator.Separator = GenFragment.NullFragment;
+        }
+    }
+
     public class GenSegmentGenerator : GenContainerGenerator
     {
+        private readonly SenSegmentNavigator _navigator;
+
         public GenSegmentGenerator(GenFragment genFragment, GenData genData, GenWriter genWriter) 
             : base(genFragment, genData, genWriter)
         {
             GenFragment = genFragment;
+            _navigator = new SenSegmentNavigator(this);
         }
 
-        private GenBlock ItemBody { get; set; }
-        private GenFragment Separator { get; set; }
-        private Segment Segment {get { return (Segment) Fragment; }}
+        public GenBlock ItemBody { get; set; }
+        public GenFragment Separator { get; set; }
 
         protected override bool Generate()
         {
             var generated = false;
-            var seg = (GenSegment) GenFragment;
+            var genSegment = (GenSegment) GenFragment;
             string sepText;
 
-            switch (seg.GenCardinality)
+            switch (genSegment.GenCardinality)
             {
                 case GenCardinality.All:
-                    GenData.First(seg.ClassId);
-                    while (!GenData.Eol(seg.ClassId))
+                    _navigator.First();
+                    while (!_navigator.Eol())
                     {
-                        OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
+                        OverrideGenObject = _navigator.GetGenObject();
                         generated |= base.Generate();
-                        GenData.Next(seg.ClassId);
+                        _navigator.Next();
                     }
                     break;
                 case GenCardinality.AllDlm:
-                    CheckDelimiter(seg);
+                    _navigator.CheckDelimiter();
                     sepText = GenFragmentExpander.Expand(Separator, GenData);
-                    GenData.First(seg.ClassId);
-                    while (!GenData.Eol(seg.ClassId))
+                    _navigator.First();
+                    while (!_navigator.Eol())
                     {
-                        ItemBody.GenObject = GenData.Context[seg.ClassId].GenObject;
+                        ItemBody.GenObject = _navigator.GetGenObject();
                         generated |= Generate(ItemBody, GenData, Writer);
                         if (generated) Writer.ProvisionalWrite(sepText);
-                        GenData.Next(seg.ClassId);
+                        _navigator.Next();
                     }
                     Writer.ClearProvisionalText();
                     break;
                 case GenCardinality.Back:
-                    GenData.Last(seg.ClassId);
-                    while (!GenData.Eol(seg.ClassId))
+                    _navigator.Last();
+                    while (!_navigator.Eol())
                     {
-                        OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
+                        OverrideGenObject = _navigator.GetGenObject();
                         generated |= base.Generate();
-                        GenData.Prior(seg.ClassId);
+                        _navigator.Prior();
                     }
                     break;
                 case GenCardinality.BackDlm:
-                    CheckDelimiter(seg);
+                    _navigator.CheckDelimiter();
                     sepText = GenFragmentExpander.Expand(Separator, GenData);
-                    GenData.Last(seg.ClassId);
-                    while (!GenData.Eol(seg.ClassId))
+                    _navigator.Last();
+                    while (!_navigator.Eol())
                     {
-                        ItemBody.GenObject = GenData.Context[seg.ClassId].GenObject;
+                        ItemBody.GenObject = _navigator.GetGenObject();
                         generated |= Generate(ItemBody, GenData, Writer);
                         if (generated) Writer.ProvisionalWrite(sepText);
-                        GenData.Prior(seg.ClassId);
+                        _navigator.Prior();
                     }
                     Writer.ClearProvisionalText();
                     break;
                 case GenCardinality.First:
-                    GenData.First(seg.ClassId);
-                    OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
-                    if (!GenData.Eol(seg.ClassId))
+                    _navigator.First();
+                    OverrideGenObject = _navigator.GetGenObject();
+                    if (!_navigator.Eol())
                         generated |= base.Generate();
                     break;
                 case GenCardinality.Tail:
-                    GenData.First(seg.ClassId);
-                    GenData.Next(seg.ClassId);
-                    while (!GenData.Eol(seg.ClassId))
+                    _navigator.First();
+                    _navigator.Next();
+                    while (!_navigator.Eol())
                     {
-                        OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
+                        OverrideGenObject = _navigator.GetGenObject();
                         generated |= base.Generate();
-                        GenData.Next(seg.ClassId);
+                        _navigator.Next();
                     }
                     break;
                 case GenCardinality.Last:
-                    GenData.Last(seg.ClassId);
-                    OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
-                    if (!GenData.Eol(seg.ClassId))
+                    _navigator.Last();
+                    OverrideGenObject = _navigator.GetGenObject();
+                    if (!_navigator.Eol())
                         generated |= base.Generate();
                     break;
                 case GenCardinality.Trunk:
-                    GenData.Last(seg.ClassId);
-                    GenData.Prior(seg.ClassId);
-                    while (!GenData.Eol(seg.ClassId))
+                    _navigator.Last();
+                    _navigator.Prior();
+                    while (!_navigator.Eol())
                     {
-                        OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
+                        OverrideGenObject = _navigator.GetGenObject();
                         generated |= base.Generate();
-                        GenData.Prior(seg.ClassId);
+                        _navigator.Prior();
                     }
                     break;
                 case GenCardinality.Reference:
-                    Writer.Write(GenData.GenDataDef.Classes[seg.ClassId].Name);
+                    Writer.Write(_navigator.ClassName());
                     Writer.Write("[Reference='");
-                    Writer.Write(GenData.Context[seg.ClassId].Reference);
+                    Writer.Write(_navigator.Reference());
                     Writer.Write("']\r\n");
                     break;
                 case GenCardinality.Inheritance:
-                    GenData.SetInheritance(seg.ClassId);
-                    OverrideGenObject = GenData.Context[seg.ClassId].GenObject;
-                    if (!GenData.Eol(seg.ClassId))
+                    _navigator.SetInheritance();
+                    OverrideGenObject = _navigator.GetGenObject();
+                    if (!_navigator.Eol())
                         generated |= base.Generate();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
             return generated;
-        }
-
-        private void CheckDelimiter(GenSegment seg)
-        {
-            if (Separator != null) return;
-
-            // Optimization: This is done once when this method is first called
-            ItemBody = new GenBlock(new GenFragmentParams(seg.GenDataDef, seg, seg.ParentContainer));
-
-            for (var i = 0; i < seg.Body.Count - 1; i++)
-                ItemBody.Body.Add(seg.Body.Fragment[i]);
-
-            var last = seg.Body.Count > 0 ? seg.Body.Fragment[seg.Body.Count - 1] : null;
-            var lastText = last as GenTextBlock;
-            if (last is GenTextBlock && lastText.Body.Count > 1)
-            {
-                var newText = new GenTextBlock(new GenFragmentParams(seg.GenDataDef, seg, seg));
-                for (var i = 0; i < lastText.Body.Count - 1; i++)
-                    newText.Body.Add(lastText.Body.Fragment[i]);
-                ItemBody.Body.Add(newText);
-                Separator = lastText.Body.Fragment[lastText.Body.Count - 1];
-            }
-            else
-                Separator = seg.Body.Count > 0
-                    ? last
-                    : GenFragment.NullFragment;
-            if (Separator != null) Separator.GenObject = GenObject;
-            else Separator = GenFragment.NullFragment;
         }
     }
 }
