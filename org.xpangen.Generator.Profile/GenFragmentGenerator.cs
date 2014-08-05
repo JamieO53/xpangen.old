@@ -328,6 +328,32 @@ namespace org.xpangen.Generator.Profile
         {
             GenSegment = (GenSegment) generator.GenFragment;
             _generator = generator;
+            var objects = GenObjectList.SubClassBase;
+            GenObject = GenSegment.GenObject;
+            var classIdx = IndexOfSubClass();
+            var subClassBase = GenObject.SubClass[classIdx];
+        }
+
+        public GenObject GenObject { get; private set; }
+
+        private int IndexOfSubClass()
+        {
+            var classId = GenObject.ClassId;
+            var subClassId = GenSegment.ClassId;
+            var idx = IndexOfSubClass(classId, subClassId);
+            //idx = ClassDef.SubClasses.IndexOf(GenSegment.ClassId);
+            Assert(idx != -1, "SubClass not found");
+            return idx;
+        }
+
+        private int IndexOfSubClass(int classId, int subClassId)
+        {
+            while (GenData.GenDataDef.Classes[subClassId].IsInherited)
+                subClassId = GenData.GenDataDef.Classes[subClassId].Parent.ClassId;
+            while (GenData.GenDataDef.Classes[classId].IsInherited &&
+                   GenData.GenDataDef.Classes[classId].SubClasses.IndexOf(subClassId) == -1)
+                classId = GenData.GenDataDef.Classes[classId].Parent.ClassId;
+            return GenData.GenDataDef.Classes[classId].SubClasses.IndexOf(subClassId);
         }
 
         private GenSegment GenSegment { get; set; }
