@@ -331,17 +331,36 @@ namespace org.xpangen.Generator.Profile
             GenObject = GenSegment.GenObject;
             var objects = GenObjectList.SubClassBase;
             ISubClassBase subClassBase;
-            if (SubClassIsInheritor())
+            if (GenData.GenDataDef.Classes[ClassId].IsReference && 
+                !GenData.GenDataDef.Classes[ClassId].Parent.IsReference)
+            {
+                var f = GenData.Cache[GenData.GenDataDef.Classes[ClassId].ReferenceDefinition,
+                    GenObject.SubClass[IndexOfSubClass()].Reference];
+                subClassBase = f.Root.SubClass[0];
+            }
+            else if (SubClassIsInheritor())
             {
                 int classRootId;
                 int subClassRootId;
                 GetRootClassIds(out subClassRootId, out classRootId);
-                var subClasses = GenData.GenDataDef.Classes[classRootId].SubClasses;
-                subClassBase = new GenSubClass(GenData.GenDataBase, GenObject, GenSegment.ClassId, subClasses[subClasses.IndexOf(subClassRootId)]);
-                var rootSubClassBase = GenObject.SubClass[GenObject.Definition.SubClasses.IndexOf(subClassRootId)];
+                ISubClassBase rootSubClassBase;
+                if (classRootId != subClassRootId)
+                {
+                    rootSubClassBase = GenObject.SubClass[GenObject.Definition.SubClasses.IndexOf(subClassRootId)];
+                    subClassBase = new GenSubClass(GenData.GenDataBase, GenObject, ClassId,
+                        GenData.GenDataDef.Classes[classRootId].SubClasses[GenData.GenDataDef.Classes[classRootId].SubClasses.IndexOf(subClassRootId)]);}
+                else
+                {
+                    rootSubClassBase = GenObject.ParentSubClass;
+                    Assert(0 <= classRootId & classRootId < GenData.GenDataDef.Classes.Count, "Root ClassId invalid");
+                    var idx = GenData.GenDataDef.Classes[classRootId].Parent.SubClasses.IndexOf(classRootId);
+                    Assert(0 <= idx & idx < GenData.GenDataDef.Classes[classRootId].Parent.SubClasses.Count, "SubClass index out of range");
+                    subClassBase = new GenSubClass(GenData.GenDataBase, GenObject, ClassId,
+                        GenData.GenDataDef.Classes[classRootId].Parent.SubClasses[idx]);
+                }
                 foreach (var o in rootSubClassBase)
                 {
-                    if (o.ClassId == GenSegment.ClassId)
+                    if (GenObjectClassId(o) == ClassId)
                         subClassBase.Add(o);
                 }
             }
@@ -350,6 +369,11 @@ namespace org.xpangen.Generator.Profile
                 var classIdx = IndexOfSubClass();
                 subClassBase = GenObject.SubClass[classIdx];
             }
+        }
+
+        private int SegmentClassId()
+        {
+            return GenSegment.ClassId;
         }
 
         private bool SubClassIsInheritor()
@@ -374,13 +398,23 @@ namespace org.xpangen.Generator.Profile
 
         private void GetRootClassIds(out int subClassId, out int classId)
         {
-            classId = GenObject.ClassId;
-            subClassId = GenSegment.ClassId;
-            while (GenData.GenDataDef.Classes[subClassId].IsInherited)
-                subClassId = GenData.GenDataDef.Classes[subClassId].Parent.ClassId;
-            while (GenData.GenDataDef.Classes[classId].IsInherited &&
-                   GenData.GenDataDef.Classes[classId].SubClasses.IndexOf(subClassId) == -1)
-                classId = GenData.GenDataDef.Classes[classId].Parent.ClassId;
+            classId = GenObjectClassId(GenObject);
+            subClassId = ClassId;
+            var classes = GenData.GenDataDef.Classes;
+            while (classes[subClassId].IsInherited &&
+                   classes[classId].SubClasses.IndexOf(subClassId) == -1)
+                subClassId = classes[subClassId].Parent.ClassId;
+            while (classes[classId].IsInherited &&
+                   classes[classId].SubClasses.IndexOf(subClassId) == -1)
+                classId = classes[classId].Parent.ClassId;
+            Assert(subClassId != -1, "Invalid root subclass");
+            Assert(classId == subClassId || classes[classId].SubClasses.IndexOf(subClassId) != -1,
+                "Subclass is not a subclass of the class");
+        }
+
+        private int GenObjectClassId(GenObject genObject)
+        {
+            return GenData.GenDataDef.Classes.IndexOf(genObject.Definition.Name);
         }
 
         private GenSegment GenSegment { get; set; }
@@ -551,7 +585,7 @@ namespace org.xpangen.Generator.Profile
 
         private int ClassId
         {
-            get { return GenSegment.ClassId; }
+            get { return SegmentClassId(); }
         }
 
         public void CheckDelimiter()
