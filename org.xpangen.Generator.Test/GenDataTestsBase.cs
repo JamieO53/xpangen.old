@@ -345,34 +345,6 @@ Child[Reference='child']
             return d;
         }
 
-        protected static GenData SetUpReferenceData(string reference)
-        {
-            var f = CreateSelfReferenceDefinition(reference);
-
-            var d = new GenData(f);
-            CreateGenObject(d, "", "Root", "Root");
-            CreateGenObject(d, "Root", "ReferenceData", "1").Attributes[1] = "First reference";
-            CreateGenObject(d, "Root", "ReferenceData", "2").Attributes[1] = "Second reference";
-            CreateGenObject(d, "Root", "BaseData", "DataExists").Attributes[1] = "1";
-            CreateGenObject(d, "Root", "BaseData", "DataDoesNotExist").Attributes[1] = "3";
-            return d;
-        }
-
-        private static GenDataDef CreateSelfReferenceDefinition(string reference)
-        {
-            var f = new GenDataDef();
-            f.AddSubClass("", "Root");
-            f.AddSubClass("Root", "ReferenceData");
-            f.AddSubClass("Root", "BaseData");
-            f.Classes[f.Classes.IndexOf("Root")].AddInstanceProperty("Name");
-            f.Classes[f.Classes.IndexOf("ReferenceData")].AddInstanceProperty("Name");
-            f.Classes[f.Classes.IndexOf("ReferenceData")].AddInstanceProperty("Value");
-            f.Classes[f.Classes.IndexOf("BaseData")].AddInstanceProperty("Name");
-            f.Classes[f.Classes.IndexOf("BaseData")].AddInstanceProperty("ReferenceKey");
-            f.AddSubClass("BaseData", "ReferenceLookup", reference);
-            return f;
-        }
-
         private static GenData SetUpLookupData(GenDataDef f)
         {
             var d = new GenData(f);

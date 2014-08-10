@@ -28,7 +28,7 @@ namespace org.xpangen.Generator.Profile
         }
         public GenSegBody Body { get; private set; }
 
-        public int ClassId
+        public new int ClassId
         {
             get
             {

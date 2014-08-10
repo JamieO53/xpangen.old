@@ -199,7 +199,7 @@ namespace org.xpangen.Generator.Profile
         {
         }
 
-        protected GenObject OverrideGenObject { private get; set; }
+        protected GenObject OverrideGenObject { get; set; }
         
         protected override bool Generate()
         {
@@ -254,27 +254,17 @@ namespace org.xpangen.Generator.Profile
         private Lookup Lookup { get { return (Lookup) Fragment; }}
         protected override bool Generate()
         {
-            var generated = false;
+            var notFound = GenObject == null;
+            var value2 = "";
+            if (!notFound)
+                value2 = GenObject.GetValue(Var2, out notFound);
+            
             if (NoMatch)
-            {
-                if (GenData.Eol(Var2.ClassId))
-                    generated |= base.Generate();
-                else
-                {
-                    if (GenObject == null || SearchFor(Var1, GenObject.GetValue(Var2)) == null)
-                        generated |= base.Generate();
-                }
-            }
-            else
-            {
-                if (GenData.Eol(Var2.ClassId)) return false;
-                var v = GenData.GetValue(Var2);
-                var o = SearchFor(Var1, v);
-                if (o == null) return false;
-                OverrideGenObject = o;
-                generated |= base.Generate();
-            }
-            return generated;
+                return (notFound || SearchFor(Var1, value2) == null) && base.Generate();
+            
+            if (notFound) return false;
+            OverrideGenObject = SearchFor(Var1, value2);
+            return OverrideGenObject != null && base.Generate();
         }
 
         private bool NoMatch { get { return Lookup.NoMatch != ""; } }
@@ -284,7 +274,11 @@ namespace org.xpangen.Generator.Profile
             var searchObjects = FindSearchObjects(GenObject, id.ClassName);
             if (searchObjects == null) return null;
            foreach (var searchObject in searchObjects)
-                if (searchObject.GetValue(id) == value) return searchObject;
+           {
+               bool notFound;
+               var s = searchObject.GetValue(id, out notFound);
+               if (!notFound && s == value) return searchObject;
+           }
             return null;
         }
 
