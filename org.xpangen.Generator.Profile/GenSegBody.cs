@@ -44,7 +44,7 @@ namespace org.xpangen.Generator.Profile
             foreach (var fragment in Fragment)
             {
                 fragment.GenObject = GenObject;
-                s.Append(GenFragmentExpander.Expand(fragment, genData));
+                s.Append(GenFragmentExpander.Expand(fragment, genData, fragment.GenObject, fragment.Fragment));
             }
             return s.ToString();
         }
@@ -70,7 +70,7 @@ namespace org.xpangen.Generator.Profile
             foreach (var fragment in Fragment)
             {
                 fragment.GenObject = GenObject;
-                generated |= GenFragmentGenerator.Generate(fragment, genData, writer);
+                generated |= GenFragmentGenerator.Generate(fragment, genData, writer, fragment.GenObject, fragment.Fragment);
             }
             return generated;
         }

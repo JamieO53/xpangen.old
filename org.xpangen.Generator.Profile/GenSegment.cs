@@ -77,9 +77,13 @@ namespace org.xpangen.Generator.Profile
                     {
                         GenObject = genData.Context[ClassId].GenObject;
                         ItemBody.GenObject = GenObject;
-                        expanded = GenFragmentExpander.Expand(ItemBody, genData);
+                        GenFragment genFragment1 = ItemBody;
+                        expanded = GenFragmentExpander.Expand(genFragment1, genData, genFragment1.GenObject, genFragment1.Fragment);
                         if (!isEmpty && expanded != "")
-                            s.Append(GenFragmentExpander.Expand(Separator, genData));
+                        {
+                            GenFragment genFragment = Separator;
+                            s.Append(GenFragmentExpander.Expand(genFragment, genData, genFragment.GenObject, genFragment.Fragment));
+                        }
                         isEmpty = isEmpty && expanded == "";
                         s.Append(expanded);
                         genData.Next(ClassId);
@@ -101,9 +105,13 @@ namespace org.xpangen.Generator.Profile
                     {
                         GenObject = genData.Context[ClassId].GenObject;
                         ItemBody.GenObject = GenObject;
-                        expanded = GenFragmentExpander.Expand(ItemBody, genData);
+                        GenFragment genFragment = ItemBody;
+                        expanded = GenFragmentExpander.Expand(genFragment, genData, genFragment.GenObject, genFragment.Fragment);
                         if (!isEmpty && expanded != "")
-                            s.Append(GenFragmentExpander.Expand(Separator, genData));
+                        {
+                            GenFragment genFragment1 = Separator;
+                            s.Append(GenFragmentExpander.Expand(genFragment1, genData, genFragment1.GenObject, genFragment1.Fragment));
+                        }
                         isEmpty = isEmpty && expanded == "";
                         s.Append(expanded);
                         genData.Prior(ClassId);

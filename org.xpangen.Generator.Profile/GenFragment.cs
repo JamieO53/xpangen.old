@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Profile
         public Fragment Fragment
         {
             get { return _fragment; }
-            protected set
+            protected internal set
             {
                 _fragment = value;
                 CheckFragmentType(value);
