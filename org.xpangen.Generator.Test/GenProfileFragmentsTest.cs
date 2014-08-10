@@ -189,13 +189,13 @@ namespace org.xpangen.Generator.Test
 
             d.Last(ClassClassId); // Has no subclasses
             d.First(SubClassClassId);
-
+            g.GenObject = d.Context[SubClassClassId].GenObject;
             VerifyFragment(d, g, "GenLookup", FragmentType.Lookup, "Class.Name=SubClass.Name",
                            "`%Class.Name=SubClass.Name:`Class.Name`,`]", "", false, -1);
 
             d.First(ClassClassId); // Has subclasses
             d.First(SubClassClassId);
-
+            g.GenObject = d.Context[SubClassClassId].GenObject;
             VerifyFragment(d, g, "GenLookup", FragmentType.Lookup, "Class.Name=SubClass.Name",
                            "`%Class.Name=SubClass.Name:`Class.Name`,`]", "SubClass,", false, -1);
         }
@@ -266,12 +266,13 @@ namespace org.xpangen.Generator.Test
             var childId = f.Classes.IndexOf("Child");
             d.First(parentId);
             d.First(childId); // Valid lookup
-
+            b.GenObject = d.Context[childId].GenObject;
             VerifyFragment(d, b, "GenBlock", FragmentType.Block, "Block",
                            "`{`Parent.Name`,`%Lookup.Name=Child.Lookup:`Lookup.Name`,`]`]", "Parent,Valid,", false, -1);
 
             d.First(parentId);
             d.Last(childId); // Invalid lookup
+            b.GenObject = d.Context[childId].GenObject;
             VerifyFragment(d, b, "GenBlock", FragmentType.Block, "Block",
                            "`{`Parent.Name`,`%Lookup.Name=Child.Lookup:`Lookup.Name`,`]`]", "Parent,", false, -1);
         }
