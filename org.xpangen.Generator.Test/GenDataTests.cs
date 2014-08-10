@@ -292,7 +292,7 @@ namespace org.xpangen.Generator.Test
 
             SetUpData(d);
             var id = f.GetId("Class.First");
-            Assert.AreEqual("True", d.GetValue(id));
+            Assert.AreEqual("True", d.Context.GetValue(id));
         }
 
         [TestCase(Description = "Test First property - property does not exist; second record")]
@@ -305,7 +305,7 @@ namespace org.xpangen.Generator.Test
             d.Root.SubClass[0].Add(new GenObject(d.Root, d.Root.SubClass[0], 1));
             d.Context[1].Next();
             var id = f.GetId("Class.First");
-            Assert.AreEqual("", d.GetValue(id));
+            Assert.AreEqual("", d.Context.GetValue(id));
         }
 
         [TestCase(Description = "Test First property - property exists and is empty")]
@@ -317,7 +317,7 @@ namespace org.xpangen.Generator.Test
 
             SetUpData(d);
             var id = f.GetId("Class.First");
-            Assert.AreEqual("", d.GetValue(id));
+            Assert.AreEqual("", d.Context.GetValue(id));
         }
 
         [TestCase(Description = "Test First property - property exists and is not empty")]
@@ -330,7 +330,7 @@ namespace org.xpangen.Generator.Test
             SetUpData(d);
             d.Context[1].GenObject.Attributes[idx] = "First value";
             var id = f.GetId("Class.First");
-            Assert.AreEqual("First value", d.GetValue(id));
+            Assert.AreEqual("First value", d.Context.GetValue(id));
         }
 
         [TestCase(Description = "Test Reference property - property does not exist and there is no reference")]
@@ -341,7 +341,7 @@ namespace org.xpangen.Generator.Test
 
             SetUpData(d);
             var id = f.GetId("Class.Reference");
-            Assert.AreEqual("", d.GetValue(id));
+            Assert.AreEqual("", d.Context.GetValue(id));
         }
 
         [TestCase(Description = "Test Reference property - property does not exist and there is a reference")]
@@ -353,7 +353,7 @@ namespace org.xpangen.Generator.Test
             SetUpData(d);
             d.Context[1].Reference = "Class reference";
             var id = f.GetId("Class.Reference");
-            Assert.AreEqual("Class reference", d.GetValue(id));
+            Assert.AreEqual("Class reference", d.Context.GetValue(id));
         }
 
         [TestCase(Description = "Test First property - property exists and is empty")]
@@ -365,7 +365,7 @@ namespace org.xpangen.Generator.Test
 
             SetUpData(d);
             var id = f.GetId("Class.Reference");
-            Assert.AreEqual("", d.GetValue(id));
+            Assert.AreEqual("", d.Context.GetValue(id));
         }
 
         [TestCase(Description = "Test First property - property exists and is not empty")]
@@ -378,7 +378,7 @@ namespace org.xpangen.Generator.Test
             SetUpData(d);
             var id = f.GetId("Class.Reference");
             d.Context[1].GenObject.Attributes[idx] = "Reference value";
-            Assert.AreEqual("Reference value", d.GetValue(id));
+            Assert.AreEqual("Reference value", d.Context.GetValue(id));
         }
 
         [TestCase(Description = "Test First property - property exists and is not empty and a reference exists")]
@@ -392,7 +392,7 @@ namespace org.xpangen.Generator.Test
             var id = f.GetId("Class.Reference");
             d.Context[1].Reference = "Class reference";
             d.Context[1].GenObject.Attributes[idx] = "Reference value";
-            Assert.AreEqual("Reference value", d.GetValue(id));
+            Assert.AreEqual("Reference value", d.Context.GetValue(id));
         }
 
         /// <summary>

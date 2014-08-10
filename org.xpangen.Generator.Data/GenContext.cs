@@ -96,41 +96,14 @@ namespace org.xpangen.Generator.Data
         /// <returns>The text corresponding to the id.</returns>
         public string GetValue(GenDataId id)
         {
-            try
-            {
-                if (Classes[id.ClassId].IsPseudo(id.PropertyId))
-                {
-                    if (String.Compare(Classes[id.ClassId].Properties[id.PropertyId], "First", StringComparison.OrdinalIgnoreCase) == 0)
-                        return this[id.ClassId].IsFirst() ? "True" : "";
-                    if (String.Compare(Classes[id.ClassId].Properties[id.PropertyId], "Reference", StringComparison.OrdinalIgnoreCase) == 0)
-                        return this[id.ClassId].Reference ?? "";
-                }
-                var o = this[id.ClassId].GenObject;
-                return id.PropertyId >= o.Attributes.Count ? "" : o.Attributes[id.PropertyId];
-            }
-            catch (Exception)
-            {
-                string c;
-                string p;
-
-                try
-                {
-                    c = id.ClassName;
-                }
-                catch (Exception)
-                {
-                    c = "Unknown class";
-                }
-                try
-                {
-                    p = id.PropertyName;
-                }
-                catch (Exception)
-                {
-                    p = "Unknown property";
-                }
-                return string.Format("<<<< Invalid Value Lookup: {0}.{1} >>>>", c, p);
-            }
+            bool notFound;
+            var value = this[id.ClassId].GenObject.GetValue(id, out notFound);
+            if (!notFound) return value;
+            if (String.Compare(id.PropertyName, "Reference", StringComparison.OrdinalIgnoreCase) == 0)
+                return this[id.ClassId].Reference ?? "";
+            if (String.Compare(id.PropertyName, "First", StringComparison.OrdinalIgnoreCase) == 0)
+                return this[id.ClassId].IsFirst() ? "True" : "";
+            return value;
         }
     }
 }

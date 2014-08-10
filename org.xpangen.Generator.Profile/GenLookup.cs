@@ -56,7 +56,7 @@ namespace org.xpangen.Generator.Profile
         }
         public override string ProfileLabel()
         {
-            return (NoMatch ? "~" : "") + GenDataDef.GetIdentifier(Var1) + "=" + GenDataDef.GetIdentifier(Var2);
+            return (NoMatch ? "~" : "") + Var1.Identifier + "=" + Var2.Identifier;
         }
 
         public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)

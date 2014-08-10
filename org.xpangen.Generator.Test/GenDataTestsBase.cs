@@ -257,10 +257,10 @@ Child[Reference='child']
             
             var a = new GenAttributes(d.GenDataDef, 1);
             var id = d.GenDataDef.GetId("Class.Name");
-            Assert.AreEqual("Class", d.GetValue(id));
+            Assert.AreEqual("Class", d.Context.GetValue(id));
 
             id = d.GenDataDef.GetId("SubClass.Name");
-            Assert.AreEqual("SubClass", d.GetValue(id));
+            Assert.AreEqual("SubClass", d.Context.GetValue(id));
 
             var o = d.Root.SubClass[0][0];
             a.GenObject = o;
@@ -448,11 +448,11 @@ Child[Reference='child']
             Assert.AreEqual(itemIndex, d.Context[id.ClassId].Index, "Expected index value");
             d.First(ClassClassId);
             d.First(SubClassClassId);
-            Assert.AreEqual("SubClass" + order[0], d.GetValue(id), action + " first item");
+            Assert.AreEqual("SubClass" + order[0], d.Context.GetValue(id), action + " first item");
             d.Next(SubClassClassId);
-            Assert.AreEqual("SubClass" + order[1], d.GetValue(id), action + " second item");
+            Assert.AreEqual("SubClass" + order[1], d.Context.GetValue(id), action + " second item");
             d.Next(SubClassClassId);
-            Assert.AreEqual("SubClass" + order[2], d.GetValue(id), action + " third item");
+            Assert.AreEqual("SubClass" + order[2], d.Context.GetValue(id), action + " third item");
         }
 
         protected static void CompareGenDataDef(GenDataDef expected, GenDataDef actual, string path)
