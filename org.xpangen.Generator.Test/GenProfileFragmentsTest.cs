@@ -224,7 +224,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Property", d.Context[ClassClassId].GenObject.Attributes[0]);
             d.First(SubClassClassId);
             g.GenObject = d.Context[SubClassClassId].GenObject;
-            Assert.AreEqual(txt, GenFragmentExpander.Expand(g, d));
+            Assert.AreEqual(txt, GenFragmentExpander.Expand(g, d, ((GenFragment) g).GenObject, g.Fragment));
             var str = GenerateFragment(d, g);
             Assert.AreEqual(txt, str);
 

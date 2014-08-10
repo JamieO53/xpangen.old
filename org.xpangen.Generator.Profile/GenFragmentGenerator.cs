@@ -16,13 +16,13 @@ namespace org.xpangen.Generator.Profile
         private readonly GenWriter _writer;
         private readonly Fragment _fragment;
 
-        protected GenFragmentGenerator(GenData genData, GenWriter writer, Fragment fragment, GenFragment genFragment)
+        protected GenFragmentGenerator(GenData genData, GenWriter writer, Fragment fragment, GenFragment genFragment, GenObject genObject)
         {
             _genData = genData;
             _writer = writer;
             _fragment = fragment;
             GenFragment = genFragment;
-            GenObject = GenFragment.GenObject;
+            GenObject = genObject;
         }
 
         protected GenFragmentGenerator()
@@ -50,49 +50,50 @@ namespace org.xpangen.Generator.Profile
 
         protected virtual bool Generate()
         {
-            var expanded = GenFragmentExpander.Expand(GenFragment, GenData);
+            GenFragment genFragment = GenFragment;
+            var expanded = GenFragmentExpander.Expand(genFragment, GenData, genFragment.GenObject, genFragment.Fragment);
             Writer.Write(expanded);
             return expanded != "";
         }
 
-        private static GenFragmentGenerator Create(GenFragment genFragment, GenData genData, GenWriter genWriter)
+        private static GenFragmentGenerator Create(GenFragment genFragment, GenData genData, GenWriter genWriter, GenObject genObject, Fragment fragment)
         {
             if (genFragment.FragmentType != FragmentType.Null && genFragment.FragmentType != FragmentType.Text)
                 if (genFragment.FragmentType != FragmentType.Lookup || !((GenLookup)genFragment).NoMatch)
-                    Assert(genFragment.GenObject != null, "The genObject must be set");
+                    Assert(genObject != null, "The genObject must be set");
             FragmentType fragmentType;
-            Enum.TryParse(genFragment.Fragment.GetType().Name, out fragmentType);
+            Enum.TryParse(fragment.GetType().Name, out fragmentType);
             switch (fragmentType)
             {
                 case FragmentType.Profile:
-                    return new GenContainerGenerator(genFragment, genData, genWriter);
+                    return new GenContainerGenerator(genFragment, genData, genWriter, genObject);
                 case FragmentType.Segment:
-                    return new GenSegmentGenerator(genFragment, genData, genWriter);
+                    return new GenSegmentGenerator(genFragment, genData, genWriter, genObject);
                 case FragmentType.Block:
-                    return new GenContainerGenerator(genFragment, genData, genWriter);
+                    return new GenContainerGenerator(genFragment, genData, genWriter, genObject);
                 case FragmentType.Lookup:
-                    return new GenLookupGenerator(genFragment, genData, genWriter);
+                    return new GenLookupGenerator(genFragment, genData, genWriter, genObject);
                 case FragmentType.Condition:
-                    return new GenConditionGenerator(genFragment, genData, genWriter);
+                    return new GenConditionGenerator(genFragment, genData, genWriter, genObject);
                 case FragmentType.Function:
-                    return new GenFunctionGenerator(genFragment, genData, genWriter);
+                    return new GenFunctionGenerator(genFragment, genData, genWriter, genObject);
                 case FragmentType.TextBlock:
-                    return new GenContainerGenerator(genFragment, genData, genWriter);
+                    return new GenContainerGenerator(genFragment, genData, genWriter, genObject);
                 default:
-                    return new GenFragmentGenerator(genData, genWriter, genFragment.Fragment, genFragment);
+                    return new GenFragmentGenerator(genData, genWriter, fragment, genFragment, genObject);
             }
         }
 
-        public static bool Generate(GenFragment genFragment, GenData genData, GenWriter genWriter)
+        public static bool Generate(GenFragment genFragment, GenData genData, GenWriter genWriter, GenObject genObject, Fragment fragment)
         {
-            return Create(genFragment, genData, genWriter).Generate();
+            return Create(genFragment, genData, genWriter, genObject, fragment).Generate();
         }
     }
 
     public class GenConditionGenerator : GenContainerGenerator
     {
-        internal GenConditionGenerator(GenFragment genFragment, GenData genData, GenWriter writer) 
-            : base(genFragment, genData, writer)
+        internal GenConditionGenerator(GenFragment genFragment, GenData genData, GenWriter writer, GenObject genObject) 
+            : base(genFragment, genData, writer, genObject)
         {
         }
 
@@ -194,12 +195,14 @@ namespace org.xpangen.Generator.Profile
 
     public class GenContainerGenerator : GenFragmentGenerator
     {
-        public GenContainerGenerator(GenFragment genFragment, GenData genData, GenWriter genWriter) 
-            : base(genData, genWriter, genFragment.Fragment, genFragment)
+        public GenContainerGenerator(GenFragment genFragment, GenData genData, GenWriter genWriter, GenObject genObject) 
+            : base(genData, genWriter, genFragment.Fragment, genFragment, genObject)
         {
+            ContainerFragment = (ContainerFragment) Fragment;
         }
 
         protected GenObject OverrideGenObject { get; set; }
+        protected ContainerFragment ContainerFragment { get; set; }
         
         protected override bool Generate()
         {
@@ -209,7 +212,7 @@ namespace org.xpangen.Generator.Profile
             foreach (var fragment in container.Body.Fragment)
             {
                 fragment.GenObject = genObject;
-                generated |= Generate(fragment, GenData, Writer);
+                generated |= Generate(fragment, GenData, Writer, fragment.GenObject, fragment.Fragment);
             }
             return generated;
         }
@@ -220,8 +223,8 @@ namespace org.xpangen.Generator.Profile
         private GenDataId _var1;
         private GenDataId _var2;
 
-        public GenLookupGenerator(GenFragment genFragment, GenData genData, GenWriter genWriter) 
-            : base(genFragment, genData, genWriter)
+        public GenLookupGenerator(GenFragment genFragment, GenData genData, GenWriter genWriter, GenObject genObject) 
+            : base(genFragment, genData, genWriter, genObject)
         {
         }
 
@@ -297,8 +300,8 @@ namespace org.xpangen.Generator.Profile
 
     public class GenFunctionGenerator : GenFragmentGenerator
     {
-        public GenFunctionGenerator(GenFragment genFragment, GenData genData, GenWriter genWriter) 
-            : base(genData, genWriter, genFragment.Fragment, genFragment)
+        public GenFunctionGenerator(GenFragment genFragment, GenData genData, GenWriter genWriter, GenObject genObject) 
+            : base(genData, genWriter, genFragment.Fragment, genFragment, genObject)
         {
             GenFragment = genFragment;
         }
@@ -314,18 +317,23 @@ namespace org.xpangen.Generator.Profile
         }
     }
 
-    public class SenSegmentNavigator : GenBase
+    public class SegmentNavigator : GenBase
     {
         private readonly GenSegmentGenerator _generator;
 
-        public SenSegmentNavigator(GenSegmentGenerator generator)
+        public SegmentNavigator(GenSegmentGenerator generator)
         {
             GenSegment = (GenSegment) generator.GenFragment;
             _generator = generator;
             GenObject = GenSegment.GenObject;
             var objects = GenObjectList.SubClassBase;
+            var subClassBase = GetSubClassBase();
+        }
+
+        public ISubClassBase GetSubClassBase()
+        {
             ISubClassBase subClassBase;
-            if (GenData.GenDataDef.Classes[ClassId].IsReference && 
+            if (GenData.GenDataDef.Classes[ClassId].IsReference &&
                 !GenData.GenDataDef.Classes[ClassId].Parent.IsReference)
             {
                 var f = GenData.Cache[GenData.GenDataDef.Classes[ClassId].ReferenceDefinition,
@@ -342,13 +350,16 @@ namespace org.xpangen.Generator.Profile
                 {
                     rootSubClassBase = GenObject.SubClass[GenObject.Definition.SubClasses.IndexOf(subClassRootId)];
                     subClassBase = new GenSubClass(GenData.GenDataBase, GenObject, ClassId,
-                        GenData.GenDataDef.Classes[classRootId].SubClasses[GenData.GenDataDef.Classes[classRootId].SubClasses.IndexOf(subClassRootId)]);}
+                        GenData.GenDataDef.Classes[classRootId].SubClasses[
+                            GenData.GenDataDef.Classes[classRootId].SubClasses.IndexOf(subClassRootId)]);
+                }
                 else
                 {
                     rootSubClassBase = GenObject.ParentSubClass;
                     Assert(0 <= classRootId & classRootId < GenData.GenDataDef.Classes.Count, "Root ClassId invalid");
                     var idx = GenData.GenDataDef.Classes[classRootId].Parent.SubClasses.IndexOf(classRootId);
-                    Assert(0 <= idx & idx < GenData.GenDataDef.Classes[classRootId].Parent.SubClasses.Count, "SubClass index out of range");
+                    Assert(0 <= idx & idx < GenData.GenDataDef.Classes[classRootId].Parent.SubClasses.Count,
+                        "SubClass index out of range");
                     subClassBase = new GenSubClass(GenData.GenDataBase, GenObject, ClassId,
                         GenData.GenDataDef.Classes[classRootId].Parent.SubClasses[idx]);
                 }
@@ -363,6 +374,7 @@ namespace org.xpangen.Generator.Profile
                 var classIdx = IndexOfSubClass();
                 subClassBase = GenObject.SubClass[classIdx];
             }
+            return subClassBase;
         }
 
         private int SegmentClassId()
@@ -581,49 +593,23 @@ namespace org.xpangen.Generator.Profile
         {
             get { return SegmentClassId(); }
         }
-
-        public void CheckDelimiter()
-        {
-            if (_generator.Separator != null) return;
-
-            // Optimization: This is done once when this method is first called
-            _generator.ItemBody = new GenBlock(new GenFragmentParams(GenSegment.GenDataDef, GenSegment, GenSegment.ParentContainer));
-
-            for (var i = 0; i < GenSegment.Body.Count - 1; i++)
-                _generator.ItemBody.Body.Add(GenSegment.Body.Fragment[i]);
-
-            var last = GenSegment.Body.Count > 0 ? GenSegment.Body.Fragment[GenSegment.Body.Count - 1] : null;
-            var lastText = last as GenTextBlock;
-            if (last is GenTextBlock && lastText.Body.Count > 1)
-            {
-                var newText = new GenTextBlock(new GenFragmentParams(GenSegment.GenDataDef, GenSegment, GenSegment));
-                for (var i = 0; i < lastText.Body.Count - 1; i++)
-                    newText.Body.Add(lastText.Body.Fragment[i]);
-                _generator.ItemBody.Body.Add(newText);
-                _generator.Separator = lastText.Body.Fragment[lastText.Body.Count - 1];
-            }
-            else
-                _generator.Separator = GenSegment.Body.Count > 0
-                    ? last
-                    : GenFragment.NullFragment;
-            if (_generator.Separator != null) _generator.Separator.GenObject = _generator.GenObject;
-            else _generator.Separator = GenFragment.NullFragment;
-        }
     }
 
     public class GenSegmentGenerator : GenContainerGenerator
     {
-        private readonly SenSegmentNavigator _navigator;
+        private readonly SegmentNavigator _navigator;
 
-        public GenSegmentGenerator(GenFragment genFragment, GenData genData, GenWriter genWriter) 
-            : base(genFragment, genData, genWriter)
+        public GenSegmentGenerator(GenFragment genFragment, GenData genData, GenWriter genWriter, GenObject genObject) 
+            : base(genFragment, genData, genWriter, genObject)
         {
             GenFragment = genFragment;
-            _navigator = new SenSegmentNavigator(this);
+            GenSegment =(GenSegment) GenFragment;
+            _navigator = new SegmentNavigator(this);
         }
 
-        public GenBlock ItemBody { get; set; }
-        public GenFragment Separator { get; set; }
+        private GenSegment GenSegment { get; set; }
+        private GenBlock ItemBody { get; set; }
+        private GenFragment Separator { get; set; }
 
         protected override bool Generate()
         {
@@ -643,13 +629,13 @@ namespace org.xpangen.Generator.Profile
                     }
                     break;
                 case GenCardinality.AllDlm:
-                    _navigator.CheckDelimiter();
-                    sepText = GenFragmentExpander.Expand(Separator, GenData);
+                    CheckDelimiter();
+                    sepText = GenFragmentExpander.Expand(Separator, GenData, Separator.GenObject, Separator.Fragment);
                     _navigator.First();
                     while (!_navigator.Eol())
                     {
                         ItemBody.GenObject = _navigator.GetGenObject();
-                        generated |= Generate(ItemBody, GenData, Writer);
+                        generated |= Generate(ItemBody, GenData, Writer, ((GenFragment) ItemBody).GenObject, ItemBody.Fragment);
                         if (generated) Writer.ProvisionalWrite(sepText);
                         _navigator.Next();
                     }
@@ -665,13 +651,15 @@ namespace org.xpangen.Generator.Profile
                     }
                     break;
                 case GenCardinality.BackDlm:
-                    _navigator.CheckDelimiter();
-                    sepText = GenFragmentExpander.Expand(Separator, GenData);
+                    CheckDelimiter();
+                    GenFragment genFragment2 = Separator;
+                    sepText = GenFragmentExpander.Expand(genFragment2, GenData, genFragment2.GenObject, genFragment2.Fragment);
                     _navigator.Last();
                     while (!_navigator.Eol())
                     {
                         ItemBody.GenObject = _navigator.GetGenObject();
-                        generated |= Generate(ItemBody, GenData, Writer);
+                        GenFragment genFragment = ItemBody;
+                        generated |= Generate(genFragment, GenData, Writer, genFragment.GenObject, genFragment.Fragment);
                         if (generated) Writer.ProvisionalWrite(sepText);
                         _navigator.Prior();
                     }
@@ -725,6 +713,38 @@ namespace org.xpangen.Generator.Profile
                     throw new ArgumentOutOfRangeException();
             }
             return generated;
+        }
+
+        public void CheckDelimiter()
+        {
+            if (Separator != null) return;
+
+            // Optimization: This is done once when this method is first called
+            ItemBody = new GenBlock(new GenFragmentParams(GenSegment.GenDataDef, GenSegment, GenSegment.ParentContainer));
+
+            for (var i = 0; i < GenSegment.Body.Count - 1; i++)
+                ItemBody.Body.Add(GenSegment.Body.Fragment[i]);
+
+            var last = GenSegment.Body.Count > 0 ? GenSegment.Body.Fragment[GenSegment.Body.Count - 1] : null;
+            var lastText = last as GenTextBlock;
+            if (last is GenTextBlock && lastText.Body.Count > 1)
+            {
+                var newText = new GenTextBlock(new GenFragmentParams(GenSegment.GenDataDef, GenSegment, GenSegment));
+                for (var i = 0; i < lastText.Body.Count - 1; i++)
+                    newText.Body.Add(lastText.Body.Fragment[i]);
+                ItemBody.Body.Add(newText);
+                Separator = lastText.Body.Fragment[lastText.Body.Count - 1];
+                var body = ContainerFragment.Body().FragmentList;
+                var dlm = ContainerFragment.SecondaryBody().FragmentList;
+                dlm.Add(body[body.Count-1]);
+                body.RemoveAt(body.Count - 1);
+            }
+            else
+                Separator = GenSegment.Body.Count > 0
+                    ? last
+                    : GenFragment.NullFragment;
+            if (Separator != null) Separator.GenObject = GenObject;
+            else Separator = GenFragment.NullFragment;
         }
     }
 }
