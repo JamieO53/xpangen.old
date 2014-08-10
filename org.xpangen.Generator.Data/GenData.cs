@@ -287,16 +287,6 @@ namespace org.xpangen.Generator.Data
                     SetReferenceSubClasses(subClassId, i, data, reference);
         }
 
-        /// <summary>
-        ///     Get the text value for the id.
-        /// </summary>
-        /// <param name="id">The identifier being looked up.</param>
-        /// <returns>The text corresponding to the id.</returns>
-        public string GetValue(GenDataId id)
-        {
-            return Context.GetValue(id);
-        }
-
         // The result is only defined if the Class, SubClass and Property classes are
         // defined, and SubClass and Property are sub-classes of Class.
         // If defined, the definition is built up by walking the structure and finding

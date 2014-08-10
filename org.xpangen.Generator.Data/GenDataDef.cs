@@ -395,11 +395,6 @@ namespace org.xpangen.Generator.Data
             return i;
         }
 
-        public string GetIdentifier(GenDataId genDataId)
-        {
-            return genDataId.Identifier;
-        }
-
         public override string ToString()
         {
             return "GenDataDef:" + DefinitionName;

@@ -2,6 +2,8 @@
 // // License, v. 2.0. If a copy of the MPL was not distributed with this
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
+
 namespace org.xpangen.Generator.Data
 {
     public class GenObject : GenBase, IGenObject
@@ -80,21 +82,22 @@ namespace org.xpangen.Generator.Data
 
         public string GetValue(GenDataId id)
         {
-            if (id.ClassName == ClassName)
-            {
-                var idx = Definition.Properties.IndexOf(id.PropertyName);
-                if (idx == -1) return "<<<< Invalid Lookup: " + id + " Property not found >>>>";
-                if (idx >= Attributes.Count) return "";
-                return Attributes[idx];
-            }
-            if (Parent != null) return Parent.GetValue(id);
-            return "<<<< Invalid Lookup: " + id + " Class not found >>>>";
+            bool notFound;
+            return GetValue(id, out notFound);
         }
 
         public string GetValue(GenDataId id, out bool notFound)
         {
             if (id.ClassName == ClassName)
             {
+                var classes = GenDataBase.GenDataDef.Classes;
+                var indexOfClass = classes.IndexOf(id.ClassName);
+                var indexOfProperty = classes[indexOfClass].Properties.IndexOf(id.PropertyName);
+                if (classes[indexOfClass].IsPseudo(indexOfProperty))
+                {
+                    notFound = true;
+                    return "";
+                }
                 var idx = Definition.Properties.IndexOf(id.PropertyName);
                 if (idx == -1)
                 {
