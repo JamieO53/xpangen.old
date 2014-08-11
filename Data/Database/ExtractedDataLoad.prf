@@ -1,0 +1,10 @@
+`[Database:\[Schemas:`[Schema:`?Schema.Name='dbo':\[dbo:--`Schema.Name`
+`[Object:	--`Table.Name``[ForeignKey:`[ForeignKeyColumn:
+	DECLARE @`ForeignKeyColumn.Name` int`]`]
+\[`Table.Name`:`[ForeignKey:`[ForeignKeyColumn:
+	SET @`ForeignKeyColumn.Name` = `ForeignKey.ReferenceSchema`.`ForeignKey.ReferenceTable`Map(`ForeignKeyColumn.RelatedColumn`)`]`]
+	EXEC `Schema.Name`.`Table.Name`_Add `[Column/:`{@`Column.Name``]`{, `]`]
+\]GO
+`]\]`]`]`[Schema:`?Schema.Name='Batch':\[Batch:--`Schema.Name`
+`[Object:	--`Table.Name`
+`]\]`]`]\]`]
