@@ -201,7 +201,7 @@ namespace org.xpangen.Generator.Editor.Helper
             GenParameters d;
             var data = BuildFilePath(Settings.FileGroup.FilePath, Settings.FileGroup.FileName);
             using (var dataStream = new FileStream(data, FileMode.Open))
-                d = new GenParameters(dataStream) { DataName = Path.GetFileNameWithoutExtension(data) };
+                d = new GenParameters(GenDataDef, dataStream) { DataName = Path.GetFileNameWithoutExtension(data) };
             var baseFile = Settings.GetBaseFiles().Find(Settings.FileGroup.BaseFileName);
             var profile = baseFile.ProfileList.Find(Settings.FileGroup.Profile);
             var profileFileName = BuildFilePath(profile.FilePath, profile.FileName);

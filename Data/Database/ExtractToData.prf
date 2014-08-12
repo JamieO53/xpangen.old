@@ -1,0 +1,13 @@
+`[Database:SET NOCOUNT ON
+GO
+`[Schema/:Schema=`Schema.Name``[Object/:`@MapClear:`]`[Column:`@MapSet:`{`Column.Name` Name`]`{`Column.ColumnName``]`]`@MapSet:`{`Column.Name` Table Alias`]`{[`Table.Name`]`]`]`@MapSet:`{`Column.Name` Value`]`{`?Column.NativeDataType='char':REPLACE(`@MapGet:`{`Column.Name` Table Alias`]`].[`Column.ColumnName`], '''', '''''')`]`?Column.NativeDataType='varchar':REPLACE(`@MapGet:`{`Column.Name` Table Alias`]`].[`Column.ColumnName`], '''', '''''')`]`?Column.NativeDataType='nvarchar':REPLACE(`@MapGet:`{`Column.Name` Table Alias`]`].[`Column.ColumnName`], '''', '''''')`]`?Column.NativeDataType='int':CAST(`@MapGet:`{`Column.Name` Table Alias`]`].[`Column.ColumnName`] AS VARCHAR(50))`]`?Column.NativeDataType='tinyint':CAST(`@MapGet:`{`Column.Name` Table Alias`]`].[`Column.ColumnName`] AS VARCHAR(50))`]`?Column.NativeDataType='bit':CAST(`@MapGet:`{`Column.Name` Table Alias`]`].[`Column.ColumnName`] AS VARCHAR(50))`]`?Column.NativeDataType='bigint':CAST(`@MapGet:`{`Column.Name` Table Alias`]`].[`Column.ColumnName`] AS VARCHAR(50))`]`?Column.NativeDataType='xml':CAST(`@MapGet:`{`Column.Name` Table Alias`]`].[`Column.ColumnName`] AS VARCHAR(MAX))`]`?Column.NativeDataType='datetime':CONVERT(VARCHAR(50), `@MapGet:`{`Column.Name` Table Alias`]`].[`Column.ColumnName`], 121)`]`]`]`]
+`[ForeignKey:`[ForeignKeyColumn:`@MapSet:`{`ForeignKeyColumn.Name` Name`]`{`@CutString:`{`ForeignKeyColumn.RelatedColumn``]`{ID`]`]`]`]`@MapSet:`{`ForeignKeyColumn.Name` Table Alias`]`{[`@CutString:`{`ForeignKeyColumn.Name``]`{ID`]`]]`]`]`@MapSet:`{`ForeignKeyColumn.Name` Value`]`{REPLACE(`@MapGet:`{`ForeignKeyColumn.Name` Table Alias`]`].[`@MapGet:`{`ForeignKeyColumn.Name` Name`]`]], '''', '''''')`]`]`]`]SELECT	'`Table.Name`=`Table.Name`[' +
+		`[Column:`?Column.IsIdentity~:'`@MapGet:`{`Column.Name` Name`]`]=''' + COALESCE(`@MapGet:`{`Column.Name` Value`]`], '<null>') + '''`{,' +
+		`]`]`]']' Line
+FROM	[`Schema.Name`].[`Table.Name`] [`Table.Name`]`[ForeignKey:
+JOIN	[`ForeignKey.ReferenceSchema`].[`ForeignKey.ReferenceTable`] [`@CutString:[ForeignKeyColumn':`ForeignKeyColumn.Name``]`{ID`]`]]
+	ON	`[ForeignKeyColumn/:[`@CutString:[ForeignKeyColumn':`ForeignKeyColumn.Name``]`{ID`]`]].[`ForeignKeyColumn.RelatedColumn`] = [`Table.Name`].[`ForeignKeyColumn.Name`]`{
+	AND	`]`]`]`{
+UNION ALL `]`]`{UNION ALL `]`]
+GO
+`]
