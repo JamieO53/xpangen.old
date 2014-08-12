@@ -1,9 +1,9 @@
 `[Database:\[Schemas:`[Schema:`?Schema.Name='dbo':\[dbo:--`Schema.Name`
-`[Object:	--`Table.Name``[ForeignKey:`[ForeignKeyColumn:
+`[Object:`[Column:`@MapSet:`{`Column.Name` Value`]`{'\`Table.Name`.`Column.Name`\'`]`]`]	--`Table.Name``[ForeignKey:`[ForeignKeyColumn:
 	DECLARE @`ForeignKeyColumn.Name` int`]`]
-\[`Table.Name`:`[ForeignKey:`[ForeignKeyColumn:
-	SET @`ForeignKeyColumn.Name` = `ForeignKey.ReferenceSchema`.`ForeignKey.ReferenceTable`Map(`ForeignKeyColumn.RelatedColumn`)`]`]
-	EXEC `Schema.Name`.`Table.Name`_Add `[Column/:`{@`Column.Name``]`{, `]`]
+\[`Table.Name`:`[ForeignKey:`[ForeignKeyColumn:`@MapSet:`{`ForeignKeyColumn.Name` Value`]`{@`ForeignKeyColumn.Name``]`]
+	SET @`ForeignKeyColumn.Name` = `ForeignKey.ReferenceSchema`.`ForeignKey.ReferenceTable`Map('\`Table.Name`.`@CutString:`{`ForeignKeyColumn.Name``]`{ID`]`]\')`]`]
+	EXEC `Schema.Name`.`Table.Name`_Add `[Column/:`?Column.IsIdentity~:`@MapGet:`{`Column.Name` Value`]`]`]`{, `]`]
 \]GO
 `]\]`]`]`[Schema:`?Schema.Name='Batch':\[Batch:--`Schema.Name`
 `[Object:	--`Table.Name`

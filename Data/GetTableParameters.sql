@@ -13,11 +13,12 @@ join	sys.schemas s
 where	s.name in ('dbo', 'Batch')
 	and	o.type = 'U'
 	and o.name not in ('Batch', 'BatchActor', 'BatchExtRef', 'BatchLog', 'BatchState',
-		'old_top_trans', 'results', '_logTable', 'CommandLog', 'PanQuery2', 'dataToBeSent')
+		'old_top_trans', 'results', '_logTable', 'CommandLog', 'PanQuery2', 'dataToBeSent',
+		'Partner_20121031', 'PartnerMap_20121031')
 	and o.name not like 'Arg%'
 	and o.name not like 'ECS\_%' escape('\')
 	and o.name not like 'FDMTBO%'
-	and o.name not like 'Log%'
+	and o.name not like '%Log%'
 	and o.name not like 'Shoprite%'
 	and o.name not like 'temp%'
 	and o.name not like 'tmp%'

@@ -10,8 +10,11 @@ Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
 Class=Schemas
 SubClass=Batch
 SubClass=dbo
+Property=Name[DataType=Identifier]
 `[Schema:Class=`Schema.Name`
 `[Object:SubClass=`Table.Name`
-`]`[Object:`@MapClear:`]`[Column:`@MapSet:`{`Column.Name` Name`]`{`Column.ColumnName``]`]`]`[ForeignKey:`[ForeignKeyColumn:`@MapSet:`{`ForeignKeyColumn.Name` Name`]`{`@CutString:`{`ForeignKeyColumn.RelatedColumn``]`{ID`]`]`]`]`@MapSet:`{`ForeignKeyColumn.Name` Table Alias`]`{[`@CutString:`{`ForeignKeyColumn.Name``]`{ID`]`]]`]`]`]`]Class=`Table.Name``[Column:`?Column.IsIdentity~:
-Column=`@MapGet:`{`Column.Name` Name`]`][DataType=String]`]`]
+`]Property=Name[DataType=Identifier]
+`[Object:`@MapClear:`]`[Column:`@MapSet:`{`Column.Name` Name`]`{`Column.ColumnName``]`]`]`[ForeignKey:`[ForeignKeyColumn:`@MapSet:`{`ForeignKeyColumn.Name` Name`]`{`@CutString:`{`ForeignKeyColumn.Name``]`{ID`]`]`]`]`@MapSet:`{`ForeignKeyColumn.Name` Table Alias`]`{[`@CutString:`{`ForeignKeyColumn.Name``]`{ID`]`]]`]`]`]`]Class=`Table.Name`
+Property=Name[DataType=Identifier]`[Column:`?Column.IsIdentity~:
+Property=`@MapGet:`{`Column.Name` Name`]`][DataType=String]`]`]
 `]`]`]

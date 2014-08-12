@@ -337,7 +337,7 @@ namespace org.xpangen.Generator.Parameter
                         reader.ScanWhile(ScanReader.WhiteSpace);
                         if (reader.CheckChar('=')) reader.SkipChar();
                         reader.ScanWhile(ScanReader.WhiteSpace);
-                        className = reader.ScanWhile(ScanReader.AlphaNumeric);
+                        className = reader.ScanWhile(ScanReader.Identifier);
                         classId = f.AddClass(className);
                         if (f.Classes.Count == 2)
                             f.AddSubClass("", className);
@@ -348,7 +348,7 @@ namespace org.xpangen.Generator.Parameter
                             {
                                 reader.SkipChar();
                                 reader.ScanWhile(ScanReader.WhiteSpace);
-                                var inheritorClassName = reader.ScanWhile(ScanReader.AlphaNumeric);
+                                var inheritorClassName = reader.ScanWhile(ScanReader.Identifier);
                                 f.AddInheritor(className, inheritorClassName);
                                 reader.ScanWhile(ScanReader.WhiteSpace);
                             } while (reader.CheckChar(','));
@@ -365,7 +365,7 @@ namespace org.xpangen.Generator.Parameter
                             {
                                 reader.SkipChar();
                                 reader.ScanWhile(ScanReader.WhiteSpace);
-                                var field = reader.ScanWhile(ScanReader.AlphaNumeric);
+                                var field = reader.ScanWhile(ScanReader.Identifier);
                                 f.Classes[classId].AddInstanceProperty(field);
                                 reader.ScanWhile(ScanReader.WhiteSpace);
                             } while (reader.CheckChar(','));
@@ -375,7 +375,7 @@ namespace org.xpangen.Generator.Parameter
                         else
                         {
                             reader.ScanWhile(ScanReader.WhiteSpace);
-                            var field = reader.ScanWhile(ScanReader.AlphaNumeric);
+                            var field = reader.ScanWhile(ScanReader.Identifier);
                             f.Classes[classId].AddInstanceProperty(field);
                         }
                         break;
@@ -399,7 +399,7 @@ namespace org.xpangen.Generator.Parameter
                         break;
                 }
                 reader.ScanWhile(ScanReader.WhiteSpace);
-                token = reader.ScanWhile(ScanReader.AlphaNumeric);
+                token = reader.ScanWhile(ScanReader.Identifier);
             }
             return f;
         }
