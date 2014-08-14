@@ -18,12 +18,12 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
         public readonly CharSet ParameterSeparator;
         private CompactProfileScanner Scan { get; set; }
 
-        public GenCompactProfileParser(GenData genData, string filePath, string textToScan)
+        public GenCompactProfileParser(GenData genData, string filePath, string textToScan, char delimiter = '`')
             : this(
                 genData,
                 string.IsNullOrEmpty(filePath)
-                    ? new CompactProfileScanner(textToScan)
-                    : new CompactProfileScanner(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    ? new CompactProfileScanner(textToScan) { Delimiter = delimiter }
+                    : new CompactProfileScanner(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)) { Delimiter = delimiter }
                 )
         {
             GenObject = genData.Root;
