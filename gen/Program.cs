@@ -11,10 +11,12 @@ namespace gen
     {
         static int Main(string[] args)
         {
-            var usage = new[]{"Usage:", "gen -p:\"profile path\" -d:\"parameter path\" [-o:\"output path\"]"};
+            var usage = new[]{"Usage:", "gen -p:\"profile path\" -d:\"parameter path\" [-f:\"definition path\"] [-o:\"output path\"] [-m:\"delimiter\"]"};
             var profile = "";
             var data = "";
+            var definition = "";
             var output = "";
+            var delimiter = "";
             var valid = true;
 
             foreach (var arg in args)
@@ -22,7 +24,10 @@ namespace gen
                 var s = arg.Split(':');
                 //                if (s[0] != "-p" && s[1] == "" || s[0] != "-d" && s[1] == "")
 
-                if (s.Length != 2 || s[0] != "-p" && s[0] != "-d" && s[0] != "-o" || s[0] == "-p" && s[1] == "" || s[0] == "-d" && s[1] == "")
+                if (s.Length != 2 ||
+                    s[0] != "-p" && s[0] != "-d" && s[0] != "-f" && s[0] != "-o" && s[0] != "-m" ||
+                    s[0] == "-p" && s[1] == "" ||
+                    s[0] == "-d" && s[1] == "")
                 {
                     Console.WriteLine("Invalid input: " + arg);
                     valid = false;
@@ -35,7 +40,11 @@ namespace gen
                     return -1;
                 }
 
-                if (s[0] == "-p" && profile != "" || s[0] == "-d" && data != "" || s[0] == "-o" && output != "")
+                if (s[0] == "-p" && profile != "" ||
+                    s[0] == "-d" && data != "" ||
+                    s[0] == "-f" && definition != "" ||
+                    s[0] == "-o" && output != "" ||
+                    s[0] == "-m" && delimiter != "")
                 {
                     Console.WriteLine("Duplicated parameter: " + arg);
                     foreach (var line in usage)
@@ -58,8 +67,14 @@ namespace gen
                     case 'd':
                         data = s[1];
                         break;
+                    case 'f':
+                        definition = s[1];
+                        break;
                     case 'o':
                         output = s[1];
+                        break;
+                    case 'm':
+                        delimiter = s[1];
                         break;
                 }
             }
@@ -96,6 +111,20 @@ namespace gen
                 valid = false;
             }
 
+            if (definition != "" && !File.Exists(definition))
+            {
+                Console.WriteLine("The parameter definition (-f) does not exist: " + definition);
+                valid = false;
+            }
+
+            if (delimiter.Length > 1 || delimiter.Length == 1 &&
+                ('a' <= delimiter[0] && delimiter[0] <= 'z' ||
+                'A' <= delimiter[0] && delimiter[0] <= 'Z' ||
+                '0' <= delimiter[0] && delimiter[0] <= '9'))
+            {
+                Console.WriteLine("The delimiter (-m) must be a single character, and cannot be alphanumeric");
+            }
+            
             if (!valid)
             {
                 foreach (var line in usage)
@@ -104,23 +133,34 @@ namespace gen
                 return -1;
             }
 
+            if (delimiter == "") delimiter = "`";
+
             GenDataLoader.Register();
 
             GenParameters d;
-            using (var dataStream = new FileStream(data, FileMode.Open))
-                d = new GenParameters(dataStream) {DataName = Path.GetFileNameWithoutExtension(data)};
-            var p = new GenCompactProfileParser(d, profile, "");
+            if (definition != "")
+            {
+                GenParameters f;
+                using (var definitionStream = new FileStream(data, FileMode.Open))
+                    f = new GenParameters(definitionStream) {DataName = Path.GetFileNameWithoutExtension(definition)};
+                using (var dataStream = new FileStream(data, FileMode.Open))
+                    d = new GenParameters(f.AsDef(), dataStream) {DataName = Path.GetFileNameWithoutExtension(data)};
+            }
+            else
+                using (var dataStream = new FileStream(data, FileMode.Open))
+                    d = new GenParameters(dataStream) {DataName = Path.GetFileNameWithoutExtension(data)};
+            var p = new GenCompactProfileParser(d, profile, "", delimiter[0]);
             using (var writer = new GenWriter(null) { FileName = output })
             {
-                //try
+                try
                 {
-                    GenFragmentGenerator.Generate(p, d, writer, ((GenFragment) p).GenObject, p.Fragment);
+                    GenFragmentGenerator.Generate(p, d, writer, ((GenFragment)p).GenObject, p.Fragment);
                 }
-                //catch (Exception e)
-                //{
-                //    Console.WriteLine(e);
-                //    return 2;
-                //}
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return 1;
+                }
             }
 
             return 0;
