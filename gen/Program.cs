@@ -141,7 +141,7 @@ namespace gen
             if (definition != "")
             {
                 GenParameters f;
-                using (var definitionStream = new FileStream(data, FileMode.Open))
+                using (var definitionStream = new FileStream(definition, FileMode.Open))
                     f = new GenParameters(definitionStream) {DataName = Path.GetFileNameWithoutExtension(definition)};
                 using (var dataStream = new FileStream(data, FileMode.Open))
                     d = new GenParameters(f.AsDef(), dataStream) {DataName = Path.GetFileNameWithoutExtension(data)};
