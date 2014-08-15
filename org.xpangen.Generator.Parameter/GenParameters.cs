@@ -484,9 +484,10 @@ namespace org.xpangen.Generator.Parameter
                     var parentSubClass = parent.SubClass[subClassIdx] as GenSubClass;
                     var classId = GetClassId(Scan.RecordType);
                     var child = new GenObject(parent, parentSubClass, classId);
-                    for (var i = 0; i < GenDataDef.Classes[GetClassId(Scan.RecordType)].Properties.Count; i++)
+                    var newClassId = GetClassId(Scan.RecordType);
+                    for (var i = 0; i < GenDataDef.Classes[newClassId].Properties.Count; i++)
                     {
-                        var s = Scan.Attribute(GenDataDef.Classes[GetClassId(Scan.RecordType)].Properties[i]);
+                        var s = Scan.Attribute(GenDataDef.Classes[newClassId].Properties[i]);
                         child.Attributes[i] = s;
                     }
                     parent.SubClass[subClassIdx].Add(child);

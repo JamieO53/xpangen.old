@@ -165,13 +165,14 @@ namespace org.xpangen.Generator.Profile
         private void GetOperands(out string value1, out string value2)
         {
             value1 = GenObject.GetValue(Var1);
+            var comparison = GenComparison;
             value2 = UseLit
                          ? Lit
-                         : (GenComparison == GenComparison.Exists || GenComparison == GenComparison.NotExists
+                         : (comparison == GenComparison.Exists || comparison == GenComparison.NotExists
                                 ? ""
                                 : GenObject.GetValue(Var2));
 
-            if (GenComparison != GenComparison.Exists && GenComparison != GenComparison.NotExists &&
+            if (comparison != GenComparison.Exists && comparison != GenComparison.NotExists &&
                 value1.Length != value2.Length &&
                 value1 != "" && value2 != "" &&
                 GenUtilities.IsNumeric(value1) && GenUtilities.IsNumeric(value2))
