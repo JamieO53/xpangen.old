@@ -65,8 +65,12 @@ namespace org.xpangen.Generator.Data
 
         public GenDataId GetId(string name)
         {
-            var id = GetId(name, false);
-            return id;
+            return GetId(name, false);
+        }
+
+        public GenDataId GetId(string className, string propertyName)
+        {
+            return GetId(className + "." + propertyName, false);
         }
 
         public GenDataId GetId(string name, bool createIfMissing)
@@ -108,7 +112,9 @@ namespace org.xpangen.Generator.Data
             }
 
             if (id.ClassId == -1 && id.PropertyId == -1)
+            {
                 throw new Exception("<<<<Unknown Class: " + name + ">>>>");
+            }
             if (id.PropertyId == -1 && className != "")
                 throw new Exception("<<<<Unknown Class/Property: " + name + ">>>>");
 

@@ -116,8 +116,8 @@ namespace org.xpangen.Generator.Profile
         /// <param name="segmentClass">The segment class text to be parsed.</param>
         /// <param name="parentSegment"></param>
         /// <param name="parentContainer"></param>
+        /// <param name="isPrimary"></param>
         /// <returns></returns>
-        public abstract GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass,
-            GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer);
+        public abstract GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, bool isPrimary);
     }
 }

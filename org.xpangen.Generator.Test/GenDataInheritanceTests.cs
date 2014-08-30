@@ -134,6 +134,7 @@ Child=V2I2Child2
         [TestCase(Description = "Tests the loading of data with inheritance")]
         public void InheritanceDataLoadTest()
         {
+            SetUpParametersFile(VirtualDataFile, VirtualDefinitionData);
             var d = PopulateInheritanceData();
             var x = GenData.DataLoader.LoadData(d.GenDataDef, VirtualDataFile);
             CompareGenData(d, x);
@@ -142,6 +143,7 @@ Child=V2I2Child2
         [TestCase(Description = "Tests the loading of data with inheritance without a definition")]
         public void InheritanceDataLoadSansDefinitionTest()
         {
+            SetUpParametersFile(VirtualDataFile, VirtualDefinitionData);
             var d = PopulateInheritanceData();
             var x = GenData.DataLoader.LoadData(VirtualDataFile);
             CompareGenData(d, x);

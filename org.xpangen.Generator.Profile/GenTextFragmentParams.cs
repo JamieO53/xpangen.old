@@ -1,10 +1,15 @@
+// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
     public class GenTextFragmentParams : GenFragmentParams
     {
-        public string Text { get; set; }
+        public string Text { get { return ((Text) Fragment).TextValue; } }
 
         /// <summary>
         ///     Parameters for creating a GenFragment
@@ -12,11 +17,20 @@ namespace org.xpangen.Generator.Profile
         /// <param name="genDataDef">The definition of the data being generated.</param>
         /// <param name="parentSegment">The class segment this fragment belongs to.</param>
         /// <param name="parentContainer">The container fragment conataining this fragment.</param>
-        /// <param name="text"></param>
+        /// <param name="text">The text to be generated.</param>
+        /// <param name="isPrimary">The fragment is part of the primary part of the body.</param>
         public GenTextFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
-            GenContainerFragmentBase parentContainer, string text) : base(genDataDef, parentSegment, parentContainer)
+            GenContainerFragmentBase parentContainer, string text, bool isPrimary = true) 
+            : base(genDataDef, parentSegment, parentContainer, FragmentType.Text, isPrimary)
         {
-            Text = text;
+            ((Text) Fragment).TextValue = text;
+        }
+
+        public GenTextFragmentParams(GenDataDef genDataDef, Text text) 
+            : base(genDataDef, null, null, FragmentType.Text)
+        {
+            Fragment = text;
+            FragmentType = FragmentType.Text;
         }
     }
 }

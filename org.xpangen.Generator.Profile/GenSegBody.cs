@@ -5,16 +5,19 @@
 using System.Collections.Generic;
 using System.Text;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
     public class GenSegBody : GenBase
     {
         private readonly List<GenFragment> _fragment;
+        private IList<GenFragment> _secondaryFragment;
 
         public GenSegBody(GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
         {
             _fragment = new List<GenFragment>();
+            _secondaryFragment = new List<GenFragment>();
             ParentSegment = parentSegment;
             ParentContainer = parentContainer;
         }
@@ -25,9 +28,19 @@ namespace org.xpangen.Generator.Profile
             get { return _fragment; }
         }
 
+        public IList<GenFragment> SecondaryFragment
+        {
+            get { return _secondaryFragment; }
+        }
+
         public int Count
         {
             get { return _fragment.Count; }
+        }
+
+        public int SecondaryCount
+        {
+            get { return _secondaryFragment.Count; }
         }
 
         public string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
@@ -53,26 +66,25 @@ namespace org.xpangen.Generator.Profile
         {
             _fragment.Add(fragment);
             fragment.ParentSegment = ParentSegment;
-            fragment.ParentContainer = ParentSegment;
+            fragment.ParentContainer = ParentContainer;
+        }
+
+        public void AddSecondary(GenFragment secondaryFragment)
+        {
+            _secondaryFragment.Add(secondaryFragment);
+            secondaryFragment.ParentSegment = ParentSegment;
+            secondaryFragment.ParentContainer = ParentContainer;
         }
 
         public GenContainerFragmentBase ParentSegment { get; set; }
         public GenContainerFragmentBase ParentContainer { get; set; }
 
-        public int IndexOf(GenFragment fragment)
+        public string SecondaryProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
         {
-            return _fragment.IndexOf(fragment);
-        }
-
-        public bool Generate(GenData genData, GenWriter writer)
-        {
-            var generated = false;
-            foreach (var fragment in Fragment)
-            {
-                fragment.GenObject = GenObject;
-                generated |= GenFragmentGenerator.Generate(fragment, genData, writer, fragment.GenObject, fragment.Fragment);
-            }
-            return generated;
+            var s = new StringBuilder();
+            foreach (var fragment in SecondaryFragment)
+                s.Append(fragment.ProfileText(syntaxDictionary));
+            return s.ToString();
         }
     }
 }

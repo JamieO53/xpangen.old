@@ -31,7 +31,7 @@ namespace org.xpangen.Generator.Profile
             return (string)GetOutput();
         }
 
-        public string GetText(Generator.Profile.Profile.Profile profile)
+        public string GetText(Profile.Profile profile)
         {
             PrepareOutput();
             OutputBody(profile.Body());
@@ -88,19 +88,30 @@ namespace org.xpangen.Generator.Profile
                         ));
                     break;
                 case FragmentType.Segment:
-                    format = Dictionary[fragmentType.ToString()].Format;
                     var segmentFragment = (Segment) fragment;
                     GenCardinality cardinality;
                     if (!Enum.TryParse(segmentFragment.Cardinality, out cardinality))
                         throw new GeneratorException("Invalid segment cardinality: " + segmentFragment.Cardinality,
                             GenErrorType.Assertion);
-                    OutputText(string.Format(format, new object[]
-                                                     {
-                                                         segmentFragment.Class,
-                                                         GetBodyText(segmentFragment.Body()),
-                                                         Dictionary.GenCardinalityText[(int) cardinality]
-                                                     }
-                        ));
+                    var variant = (cardinality == GenCardinality.AllDlm || cardinality == GenCardinality.BackDlm ? "2" : "1");
+                    format = Dictionary[fragmentType + variant].Format;
+                    if (variant == "1")
+                        OutputText(string.Format(format, new object[]
+                                                         {
+                                                             segmentFragment.Class,
+                                                             GetBodyText(segmentFragment.Body()),
+                                                             Dictionary.GenCardinalityText[(int) cardinality]
+                                                         }
+                            ));
+                    else
+                        OutputText(string.Format(format, new object[]
+                                                         {
+                                                             segmentFragment.Class,
+                                                             GetBodyText(segmentFragment.Body()),
+                                                             GetBodyText(segmentFragment.SecondaryBody()),
+                                                             Dictionary.GenCardinalityText[(int) cardinality]
+                                                         }
+                            ));
                     break;
                 case FragmentType.Block:
                     format = Dictionary[fragmentType.ToString()].Format;

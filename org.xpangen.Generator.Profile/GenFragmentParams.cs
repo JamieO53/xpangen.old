@@ -1,4 +1,8 @@
-﻿using System;
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using System;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
 
@@ -15,27 +19,45 @@ namespace org.xpangen.Generator.Profile
         /// <param name="parentSegment">The class segment this fragment belongs to.</param>
         /// <param name="parentContainer">The container fragment conataining this fragment.</param>
         /// <param name="fragmentType">The type of fragment.</param>
-        public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, FragmentType fragmentType)
+        /// <param name="isPrimary">Is this fragmnent in the primary body?</param>
+        public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, FragmentType fragmentType, bool isPrimary = true)
         {
             GenDataDef = genDataDef;
             ParentSegment = parentSegment;
             ParentContainer = parentContainer;
+            IsPrimary = isPrimary;
             SetFragmentType(fragmentType);
-            Assert(Fragment != null, "Fragment expected");
+            //Assert(Fragment != null, "Fragment expected");
         }
 
-        public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
+        public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, bool isPrimary = true)
         {
             GenDataDef = genDataDef;
             ParentSegment = parentSegment;
             ParentContainer = parentContainer;
-            ClassID = ParentSegment == null ? 0 : ParentSegment.ClassId;
+            IsPrimary = isPrimary;
+            ClassId = ParentSegment == null ? 0 : ParentSegment.ClassId;
+        }
+
+        public GenFragmentParams(GenDataDef genDataDef, Fragment fragment)
+        {
+            GenDataDef = genDataDef;
+            IsPrimary = true;
+            Fragment = fragment;
+            FragmentType fragmentType;
+            if (!Enum.TryParse(fragment.GetType().Name, out fragmentType))
+                throw new ArgumentException("Invalid fragment type: " + fragment.GetType().Name);
+            FragmentType = fragmentType;
         }
 
         public GenFragmentParams SetFragmentType(FragmentType fragmentType)
         {
             FragmentType = fragmentType;
-            CheckFragment(fragmentType);
+            if (ParentContainer == null || ParentContainer.Fragment == null || FragmentExists) return this;
+            var container = (ContainerFragment)ParentContainer.Fragment;
+            Assert(container != null, "Parent container fragment is not a container fragment");
+            var fragmentBody = IsPrimary ? container.CheckBody() : container.CheckSecondaryBody();
+            CheckFragment(fragmentType, fragmentBody);
             return this;
         }
 
@@ -59,58 +81,52 @@ namespace org.xpangen.Generator.Profile
         public GenContainerFragmentBase ParentSegment { get; private set; }
 
         public GenContainerFragmentBase ParentContainer { get; private set; }
+        public bool IsPrimary { get; set; }
 
         public FragmentType FragmentType { get; protected set; }
-        public int ClassID { get; private set; }
+        public int ClassId { get; private set; }
 
-        private void CheckFragment(FragmentType fragmentType)
+        private void CheckFragment(FragmentType fragmentType, FragmentBody fragmentBody)
         {
-            if (ParentContainer == null || ParentContainer.Fragment == null || FragmentExists) return;
-            var container = (ContainerFragment) ParentContainer.Fragment;
-            Assert(container != null, "Parent container fragment is not a container fragment");
+            if (FragmentExists) return;
+            
+            var fragmentName = fragmentBody.FragmentName(fragmentType);
             switch (fragmentType)
             {
                 case FragmentType.Profile:
-                    Fragment = container.Body().AddProfile();
+                    Fragment = fragmentBody.AddProfile();
                     break;
                 case FragmentType.Text:
-                    Fragment = container.Body().AddText(GetFragmentName(container, fragmentType));
+                    Fragment = fragmentBody.AddText(fragmentName);
                     break;
                 case FragmentType.Placeholder:
-                    Fragment = container.Body().AddPlaceholder(GetFragmentName(container, fragmentType));
+                    Fragment = fragmentBody.AddPlaceholder(fragmentName);
                     break;
-                //case FragmentType.Body:
-                //    break;
                 case FragmentType.Segment:
                     var segmentParams = ((GenSegmentParams) this);
-                    Fragment = container.Body().AddSegment(segmentParams.ClassName, segmentParams.Cardinality.ToString());
+                    Fragment = fragmentBody.AddSegment(segmentParams.ClassName, segmentParams.Cardinality.ToString());
                     break;
                 case FragmentType.Block:
-                    Fragment = container.Body().AddBlock();
+                    Fragment = fragmentBody.AddBlock();
                     break;
                 case FragmentType.Lookup:
-                    Fragment = container.Body().AddLookup();
+                    Fragment = fragmentBody.AddLookup();
                     break;
                 case FragmentType.Condition:
-                    Fragment = container.Body().AddCondition();
+                    Fragment = fragmentBody.AddCondition();
                     break;
                 case FragmentType.Function:
-                    Fragment = container.Body().AddFunction();
+                    Fragment = fragmentBody.AddFunction();
                     break;
                 case FragmentType.TextBlock:
-                    Fragment = container.Body().AddTextBlock();
+                    Fragment = fragmentBody.AddTextBlock();
                     break;
-                //case FragmentType.Null:
-                //    Fragment = container.Body().AddFragment();
-                //    break;
+                    //case FragmentType.Null:
+                    //    Fragment = container.Body().AddFragment();
+                    //    break;
                 default:
                     throw new ArgumentOutOfRangeException("fragmentType");
             }
-        }
-
-        private string GetFragmentName(ContainerFragment container, FragmentType fragmentType)
-        {
-            return fragmentType.ToString() + container.Body().FragmentList.Count;
         }
     }
 }

@@ -8,6 +8,7 @@ using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
+using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
 
 namespace org.xpangen.Generator.Test
 {
@@ -167,9 +168,13 @@ namespace org.xpangen.Generator.Test
         {
             var f0 = GenDataDef.CreateMinimal();
             var p = GenParameters.CreateProfile(f0);
-            Assert.AreEqual(GenDataDefProfile.CreateProfile(f0),
+            var p0 = GenDataDefProfile.CreateProfile(f0);
+            Assert.AreEqual(p0,
                             p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary)
                              .Replace(">:", ":"));
+            ValidateProfileData(p, f0);
+            //var profile = new GenCompactProfileParser(f0, "", p0);
+            //CompareGenDataBase(profile.Profile.GenData.GenDataBase, p.Profile.GenData.GenDataBase);
         }
 
         /// <summary>

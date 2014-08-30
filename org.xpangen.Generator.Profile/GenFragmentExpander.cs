@@ -36,8 +36,20 @@ namespace org.xpangen.Generator.Profile
             using (var s = new MemoryStream(100000))
             {
                 var w = new GenWriter(s);
-                GenFragment genFragment = GenFragment;
-                GenFragmentGenerator.Generate(genFragment, GenData, w, GenObject, Fragment);
+                GenFragmentGenerator.Generate(GenFragment, GenData, w, GenObject, Fragment);
+                w.Flush();
+                s.Seek(0, SeekOrigin.Begin);
+                var r = new StreamReader(s);
+                return r.ReadToEnd();
+            }
+        }
+
+        protected string ExpandSecondary()
+        {
+            using (var s = new MemoryStream(100000))
+            {
+                var w = new GenWriter(s);
+                GenFragmentGenerator.GenerateSecondary(GenFragment, GenData, w, GenObject, Fragment);
                 w.Flush();
                 s.Seek(0, SeekOrigin.Begin);
                 var r = new StreamReader(s);
@@ -63,25 +75,27 @@ namespace org.xpangen.Generator.Profile
                 case FragmentType.Placeholder:
                     return GetPlaceholderValue(fragment, genObject);
                 case FragmentType.Function:
-                    var fn = ((GenFunction)genFragment);
-                    fn.Body.GenObject = genObject;
-                    var param = new string[fn.Body.Count];
-                    for (var i = 0; i < fn.Body.Count; i++)
+                    //var fn = ((GenFunction)genFragment);
+                    //fn.Body.GenObject = genObject;
+                    //var param = new string[fn.Body.Count];
+                    //for (var i = 0; i < fn.Body.Count; i++)
+                    //{
+                    //    var genFragment1 = fn.Body.Fragment[i];
+                    //    genFragment1.GenObject = genObject;
+                    //    param[i] = Expand(genFragment1, genData, genFragment1.GenObject, genFragment1.Fragment);
+                    //}
+                    var fn = (Function) fragment;
+                    var paramFragments = fn.Body().FragmentList;
+                    var param = new string[paramFragments.Count];
+                    for (var i = 0; i < paramFragments.Count; i++)
                     {
-                        var genFragment1 = fn.Body.Fragment[i];
-                        genFragment1.GenObject = genObject;
-                        param[i] = Expand(genFragment1, genData, genFragment1.GenObject, genFragment1.Fragment);
+                        var paramFragment = paramFragments[i];
+                        param[i] = Expand(GenFragment.Create(genFragment.GenDataDef, paramFragment), genData, genObject,
+                            paramFragment);
                     }
                     return LibraryManager.GetInstance().Execute(fn.FunctionName, param);
                 case FragmentType.TextBlock:
                     var sb = new StringBuilder();
-                    //foreach (var f in ((ContainerFragment) fragment).FragmentBody().FragmentList)
-                    //{
-                    //    if (f is Text)
-                    //        sb.Append(((Text) f).TextValue);
-                    //    if (f is Placeholder)
-                    //        sb.Append(GetPlaceholderValue(f, genObject));
-                    //}
                     foreach (var f in ((GenTextBlock)genFragment).Body.Fragment)
                     {
                         if (f.GetType().Name == "GenTextFragment")
@@ -109,6 +123,13 @@ namespace org.xpangen.Generator.Profile
         private static GenFragmentExpander Create(GenFragment genFragment, GenData genData, GenObject genObject, Fragment fragment)
         {
             return new GenFragmentExpander(genData, genFragment, genObject, fragment);
+        }
+
+        public static string ExpandSecondary(GenFragment genFragment, GenData genData, GenObject genObject, Fragment fragment)
+        {
+            if (fragment is ContainerFragment)
+                return Create(genFragment, genData, genObject, fragment).ExpandSecondary();
+            return "";
         }
     }
 }

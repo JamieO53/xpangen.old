@@ -12,7 +12,7 @@ namespace org.xpangen.Generator.Profile.Scanner
         Lookup,
         Condition,
         Function,
-        NoMatch,
+        Secondary,
         Close,
         Delimiter,
         Name,
