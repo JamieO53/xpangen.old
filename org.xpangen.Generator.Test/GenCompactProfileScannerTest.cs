@@ -44,7 +44,7 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Scanner Compact Token Type test")]
         public void CompactTokenTypeTest()
         {
-            const string txt = "[{%&?@]`x~";
+            const string txt = "[{%;?@]`x~";
             var scan = new CompactProfileScanner(txt);
             Assert.AreEqual(TokenType.Segment, scan.ScanTokenType());
             scan.SkipChar();
@@ -52,7 +52,7 @@ namespace org.xpangen.Generator.Test
             scan.SkipChar();
             Assert.AreEqual(TokenType.Lookup, scan.ScanTokenType());
             scan.SkipChar();
-            Assert.AreEqual(TokenType.NoMatch, scan.ScanTokenType());
+            Assert.AreEqual(TokenType.Secondary, scan.ScanTokenType());
             scan.SkipChar();
             Assert.AreEqual(TokenType.Condition, scan.ScanTokenType());
             scan.SkipChar();
@@ -80,7 +80,7 @@ namespace org.xpangen.Generator.Test
             const string txt = "text ``string`post-text string";
             var scan = new CompactProfileScanner(txt);
             Assert.AreEqual("text `string", scan.ScanText());
-            Assert.AreEqual('p', scan.Current, "Should now be beyond the delimeter");
+            Assert.AreEqual("p", scan.Current.ToString(), "Should now be beyond the delimeter");
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
             Assert.AreEqual(TokenType.Segment, scan.ScanTokenType());
             Assert.AreEqual("Class>", scan.ScanSegmentClass(), "Should be the segement class");
-            Assert.AreEqual('S', scan.Current, "Should now be on the body of the segment");
+            Assert.AreEqual("S", scan.Current.ToString(), "Should now be on the body of the segment");
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
             Assert.AreEqual(TokenType.Condition, scan.ScanTokenType());
             Assert.AreEqual("Class.Name='Class'", scan.ScanCondition(), "Should be the condition");
-            Assert.AreEqual('C', scan.Current, "Should now be in the body of the condition");
+            Assert.AreEqual("C", scan.Current.ToString(), "Should now be in the body of the condition");
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
             Assert.AreEqual(TokenType.Lookup, scan.ScanTokenType());
             Assert.AreEqual("Class.Name=SubClass.Name", scan.ScanLookup(), "Should be the lookup condition");
-            Assert.AreEqual('L', scan.Current, "Should now be in the body of the lookup");
+            Assert.AreEqual("L", scan.Current.ToString(), "Should now be in the body of the lookup");
         }
 
         /// <summary>
@@ -131,12 +131,15 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Scanner No Match Lookup test")]
         public void NoMatchTest()
         {
-            const string txt = "`&Class.Name=SubClass.Name:No Match text`]";
+            const string txt = "`%Class.Name=SubClass.Name:`;No Match text`]";
             var scan = new CompactProfileScanner(txt);
             Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
-            Assert.AreEqual(TokenType.NoMatch, scan.ScanTokenType());
+            Assert.AreEqual(TokenType.Lookup, scan.ScanTokenType());
             Assert.AreEqual("Class.Name=SubClass.Name", scan.ScanLookup(), "Should be the lookup condition");
-            Assert.AreEqual('N', scan.Current, "Should now be in the body of the lookup");
+            Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
+            Assert.AreEqual(TokenType.Secondary, scan.ScanTokenType(), "Should be on the secondary token");
+            scan.SkipChar();
+            Assert.AreEqual("N", scan.Current.ToString(), "Should now be in the body of the lookup");
         }
 
         /// <summary>

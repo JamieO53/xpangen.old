@@ -35,8 +35,11 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompactPartialBodyParserBase.cs" />
     <Compile Include="GenCompactProfileParser.cs" />
+    <Compile Include="CompactPrimaryBodyParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CompactSecondaryBodyParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\org.xpangen.Generator.Data.Model\org.xpangen.Generator.Data.Model.csproj">

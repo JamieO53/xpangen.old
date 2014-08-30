@@ -6,6 +6,9 @@ using System;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile;
+using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
+using org.xpangen.Generator.Profile.Profile;
+using org.xpangen.Generator.Profile.Scanner;
 
 namespace org.xpangen.Generator.Test
 {
@@ -45,7 +48,7 @@ namespace org.xpangen.Generator.Test
         {
             const string display = "111";
             const string expected = "One, Two, Three";
-            VerifySegmentSeparator(display, expected, GenCardinality.AllDlm, null);
+            VerifySegmentSeparator(display, expected, GenCardinality.AllDlm);
         }
 
         /// <summary>
@@ -56,7 +59,7 @@ namespace org.xpangen.Generator.Test
         {
             const string display = "011";
             const string expected = "Two, Three";
-            VerifySegmentSeparator(display, expected, GenCardinality.AllDlm, null);
+            VerifySegmentSeparator(display, expected, GenCardinality.AllDlm);
         }
 
         /// <summary>
@@ -67,7 +70,7 @@ namespace org.xpangen.Generator.Test
         {
             const string display = "101";
             const string expected = "One, Three";
-            VerifySegmentSeparator(display, expected, GenCardinality.AllDlm, null);
+            VerifySegmentSeparator(display, expected, GenCardinality.AllDlm);
         }
 
         /// <summary>
@@ -78,7 +81,7 @@ namespace org.xpangen.Generator.Test
         {
             const string display = "110";
             const string expected = "One, Two";
-            VerifySegmentSeparator(display, expected, GenCardinality.AllDlm, null);
+            VerifySegmentSeparator(display, expected, GenCardinality.AllDlm);
         }
 
         /// <summary>
@@ -89,7 +92,7 @@ namespace org.xpangen.Generator.Test
         {
             const string display = "111";
             const string expected = "Three, Two, One";
-            VerifySegmentSeparator(display, expected, GenCardinality.BackDlm, null);
+            VerifySegmentSeparator(display, expected, GenCardinality.BackDlm);
         }
 
         /// <summary>
@@ -100,7 +103,7 @@ namespace org.xpangen.Generator.Test
         {
             const string display = "011";
             const string expected = "Three, Two";
-            VerifySegmentSeparator(display, expected, GenCardinality.BackDlm, null);
+            VerifySegmentSeparator(display, expected, GenCardinality.BackDlm);
         }
 
         /// <summary>
@@ -111,7 +114,7 @@ namespace org.xpangen.Generator.Test
         {
             const string display = "101";
             const string expected = "Three, One";
-            VerifySegmentSeparator(display, expected, GenCardinality.BackDlm, null);
+            VerifySegmentSeparator(display, expected, GenCardinality.BackDlm);
         }
 
         /// <summary>
@@ -122,7 +125,7 @@ namespace org.xpangen.Generator.Test
         {
             const string display = "110";
             const string expected = "Two, One";
-            VerifySegmentSeparator(display, expected, GenCardinality.BackDlm, null);
+            VerifySegmentSeparator(display, expected, GenCardinality.BackDlm);
         }
 
         /// <summary>
@@ -207,24 +210,33 @@ namespace org.xpangen.Generator.Test
         public void GenLookupNoMatchTest()
         {
             const string txt = "SubClass does not exist";
-            var r = new GenProfileFragment(GenData.GenDataDef);
+            var profile = "`[Class:`[SubClass:`%Class.Name=SubClass.Name:`;" + txt + "`]`]`]";
             var d = SetUpLookupData();
             var f = d.GenDataDef;
+            var p = new GenCompactProfileParser(d, "", profile);
 
-            var g = new GenLookup(new GenLookupParams(f, r, r, "Class.Name=SubClass.Name")) {NoMatch = true};
-            var t = new GenTextFragment(new GenTextFragmentParams(f, r, g, txt));
-            g.Body.Add(t);
+            var g = ((GenSegment) ((GenSegment) p.Body.Fragment[0]).Body.Fragment[0]).Body.Fragment[0];
+            //var r = new GenProfileFragment(GenData.GenDataDef);
+
+            //var g = new GenLookup(new GenLookupParams(f, r, r, "Class.Name=SubClass.Name")) {NoMatch = true};
+
+            //var lookup = (Lookup)g.Fragment;
+            //var secondaryBody = lookup.CheckSecondaryBody();
+            //var text = secondaryBody.AddText(secondaryBody.FragmentName(FragmentType.Text), txt);
+            //var t = GenFragment.Create(f, text);
+            //g.Body.AddSecondary(t);
             Assert.AreEqual(FragmentType.Lookup, g.FragmentType);
             Assert.IsFalse(g.IsTextFragment);
             Assert.AreEqual("~Class.Name=SubClass.Name", g.ProfileLabel());
-            Assert.AreEqual("`&Class.Name=SubClass.Name:" + txt + "`]",
+            Assert.AreEqual("`%Class.Name=SubClass.Name:`;" + txt + "`]",
                             g.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
 
             d.Last(ClassClassId); // Has no subclasses
             Assert.AreEqual("Property", d.Context[ClassClassId].GenObject.Attributes[0]);
             d.First(SubClassClassId);
+            g.ParentContainer.GenObject = d.Context[ClassClassId].GenObject;
             g.GenObject = d.Context[SubClassClassId].GenObject;
-            Assert.AreEqual(txt, GenFragmentExpander.Expand(g, d, ((GenFragment) g).GenObject, g.Fragment));
+            Assert.AreEqual(txt, GenFragmentExpander.Expand(g, d, g.GenObject, g.Fragment));
             var str = GenerateFragment(d, g);
             Assert.AreEqual(txt, str);
 

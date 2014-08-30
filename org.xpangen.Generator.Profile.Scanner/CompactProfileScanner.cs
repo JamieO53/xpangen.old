@@ -52,14 +52,14 @@ namespace org.xpangen.Generator.Profile.Scanner
                 result = TokenType.Block;
             else if (CheckChar('%'))
                 result = TokenType.Lookup;
-            else if (CheckChar('&'))
-                result = TokenType.NoMatch;
             else if (CheckChar('?'))
                 result = TokenType.Condition;
             else if (CheckChar('@'))
                 result = TokenType.Function;
             else if (CheckChar(']'))
                 result = TokenType.Close;
+            else if (CheckChar(';'))
+                result = TokenType.Secondary;
             else if (CheckChar(Delimiter))
                 result = TokenType.Delimiter;
             else if (CheckCharSet(AlphaNumeric))

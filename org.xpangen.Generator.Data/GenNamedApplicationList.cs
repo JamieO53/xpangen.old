@@ -1,3 +1,7 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 using System;
 
 namespace org.xpangen.Generator.Data
@@ -107,15 +111,10 @@ namespace org.xpangen.Generator.Data
         /// <returns>The index of the named object, otherwise -1.</returns>
         public int IndexOf(string name)
         {
-            var idx = -1;
             for (var i = 0; i < Count; i++)
-            {
                 if (this[i].Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    idx = i;
-                }
-            }
-            return idx;
+                    return i;
+            return -1;
         }
     }
 }

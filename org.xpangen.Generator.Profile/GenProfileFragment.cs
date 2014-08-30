@@ -9,13 +9,17 @@ namespace org.xpangen.Generator.Profile
     public class GenProfileFragment : GenContainerFragmentBase
     {
         public GenProfileFragment(GenDataDef genDataDef)
-            : base(new GenProfileParams(genDataDef))
+            : this(new GenProfileParams(genDataDef))
+        {
+        }
+
+        public GenProfileFragment(GenProfileParams genProfileParams) : base(genProfileParams)
         {
             ClassId = 0;
             Body.ParentSegment = this;
         }
 
-        private Profile.Profile Profile
+        public Profile.Profile Profile
         {
             get { return (Profile.Profile)Fragment; }
         }

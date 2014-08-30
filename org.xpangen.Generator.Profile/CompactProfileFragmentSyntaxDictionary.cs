@@ -3,6 +3,7 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Linq;
 using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Profile
@@ -47,7 +48,7 @@ namespace org.xpangen.Generator.Profile
                     {
                         FragmentType = FragmentType.Lookup,
                         Variant = 2, // Look up non-existent data
-                        Format = "`&{0}={1}:{2}`]"
+                        Format = "`%{0}={1}:{2}`;{3}`]"
                     });
             Add(new ProfileFragmentSyntax
                     {
@@ -57,8 +58,15 @@ namespace org.xpangen.Generator.Profile
             Add(new ProfileFragmentSyntax
                     {
                         FragmentType = FragmentType.Segment,
+                        Variant = 1, // Without delimiter
                         Format = "`[{0}{2}:{1}`]"
                     });
+            Add(new ProfileFragmentSyntax
+            {
+                FragmentType = FragmentType.Segment,
+                Variant = 2, // With separator
+                Format = "`[{0}{2}:{1}`;{3}`]"
+            });
             Add(new ProfileFragmentSyntax
                     {
                         FragmentType = FragmentType.TextBlock,
@@ -98,7 +106,7 @@ namespace org.xpangen.Generator.Profile
                     if (genCondition.GenComparison != GenComparison.NotExists)
                     {
                         var v2 = s;
-                        genCondition.UseLit = v2[0] == '\'' || (v2[0] >= '0' && v2[0] <= '9');
+                        genCondition.UseLit = v2[0] == '\'' || (v2[0] >= '0' && v2[0] <= '9') || !v2.ToCharArray().Contains('.');
 
                         if (!genCondition.UseLit)
                             try
@@ -133,7 +141,7 @@ namespace org.xpangen.Generator.Profile
             return genCondition;
         }
 
-        public override GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
+        public override GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, bool isPrimary)
         {
             var s = segmentClass.Substring(segmentClass.Length - 1);
             var c = segmentClass;
@@ -145,7 +153,7 @@ namespace org.xpangen.Generator.Profile
                 c = segmentClass.Substring(0, segmentClass.Length - 1);
                 break;
             }
-            return new GenSegment(new GenSegmentParams(genDataDef, parentSegment, parentContainer, c, cardinality));
+            return new GenSegment(new GenSegmentParams(genDataDef, parentSegment, parentContainer, c, cardinality, isPrimary));
         }
     }
 }

@@ -199,13 +199,17 @@ namespace org.xpangen.Generator.Profile.Profile
             return (FragmentBody)fragment.Parent;
         }
 
+        public static string FragmentName(this FragmentBody body, FragmentType fragmentType)
+        {
+            return fragmentType.ToString() + body.FragmentList.Count;
+        }
+        
         public static void Setup(this ProfileDefinition def)
         {
             var root = def.AddProfileRoot("");
             var rootBody = root.AddFragmentBody("Root0");
-            var emptyBody = root.AddFragmentBody("Empty1");
+            root.AddFragmentBody("Empty1");
             var profile = rootBody.AddProfile();
-            var profileBody = root.AddFragmentBody("Profile2");
             profile.Primary = "Profile2";
             profile.Secondary = "Empty1";
         }

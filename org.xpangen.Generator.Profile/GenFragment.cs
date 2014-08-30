@@ -76,7 +76,7 @@ namespace org.xpangen.Generator.Profile
             ParentContainer = genFragmentParams.ParentContainer;
             FragmentType = genFragmentParams.FragmentType;
             Fragment = genFragmentParams.Fragment;
-            ClassId = genFragmentParams.ClassID;
+            ClassId = genFragmentParams.ClassId;
             Assert(Fragment != null, "The fragment was not set up");
         }
 
@@ -92,5 +92,37 @@ namespace org.xpangen.Generator.Profile
         /// <param name="syntaxDictionary">The dictionary defining the syntax of the profile text.</param>
         /// <returns>The fragment's profile text.</returns>
         public abstract string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary);
+
+        public static GenFragment Create(GenDataDef genDataDef, Fragment fragment)
+        {
+            FragmentType fragmentType;
+            if (!Enum.TryParse(fragment.GetType().Name, out fragmentType))
+                throw new ArgumentException("Fragment type not known", "fragment");
+            switch (fragmentType)
+            {
+                case FragmentType.Profile:
+                    return new GenProfileFragment(new GenProfileParams(genDataDef, (Profile.Profile)fragment));
+                case FragmentType.Null:
+                    return NullFragment;
+                case FragmentType.Text:
+                    return new GenTextFragment(new GenTextFragmentParams(genDataDef, (Text)fragment));
+                case FragmentType.Placeholder:
+                    return new GenPlaceholderFragment(new GenPlaceholderFragmentParams(genDataDef, (Placeholder)fragment));
+                case FragmentType.Segment:
+                    return new GenSegment(new GenSegmentParams(genDataDef, (Segment)fragment));
+                case FragmentType.Block:
+                    return new GenBlock(new GenFragmentParams(genDataDef, fragment));
+                case FragmentType.Lookup:
+                    return new GenLookup(new GenLookupParams(genDataDef, (Lookup)fragment));
+                case FragmentType.Condition:
+                    return new GenCondition(new GenConditionParams(genDataDef, (Condition)fragment));
+                case FragmentType.Function:
+                    return new GenFunction(new GenFragmentParams(genDataDef, fragment));
+                case FragmentType.TextBlock:
+                    return new GenTextBlock(new GenFragmentParams(genDataDef, fragment));
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }

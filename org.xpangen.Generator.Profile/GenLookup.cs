@@ -13,15 +13,14 @@ namespace org.xpangen.Generator.Profile
 
         public bool NoMatch
         {
-            get { return Lookup.NoMatch != ""; } 
-            set { Lookup.NoMatch = value ? "True" : ""; }
+            get { return Body.SecondaryCount > 0; } 
         }
 
         public new int ClassId { get; private set; }
 
         private GenDataId Var1
         {
-            get { return GenDataDef.GetId(Lookup.Class1 + "." + Lookup.Property1); }
+            get { return GenDataDef.GetId(Lookup.Class1, Lookup.Property1); }
             set
             {
                 Lookup.Class1 = value.ClassName;
@@ -31,7 +30,7 @@ namespace org.xpangen.Generator.Profile
 
         private GenDataId Var2
         {
-            get { return GenDataDef.GetId(Lookup.Class2 + "." + Lookup.Property2); }
+            get { return GenDataDef.GetId(Lookup.Class2, Lookup.Property2); }
             set
             {
                 Lookup.Class2 = value.ClassName;
@@ -44,9 +43,8 @@ namespace org.xpangen.Generator.Profile
         {
             Body.ParentSegment = this;
             Condition = genLookupParams.Condition;
-            var sa = genLookupParams.Condition.Split('=');
-            Var1 = GenDataDef.GetId(sa[0]);
-            Var2 = GenDataDef.GetId(sa[1]);
+            Var1 = genLookupParams.Var1;
+            Var2 = genLookupParams.Var2;
             ClassId = Var1.ClassId;
         }
 
@@ -61,13 +59,23 @@ namespace org.xpangen.Generator.Profile
 
         public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
         {
-            var format = syntaxDictionary[FragmentType.ToString() + (NoMatch ? "2" : "1")].Format;
-            return string.Format(format, new object[]
+            var noMatch = Body.SecondaryCount > 0;
+            var format = syntaxDictionary[FragmentType + (noMatch ? "2" : "1")].Format;
+            if (!noMatch)
+                return string.Format(format, new object[]
                                              {
                                                  Var1.ToString(),
                                                  Var2.ToString(),
                                                  Body.ProfileText(syntaxDictionary)
                                              }
+                    );
+            return string.Format(format, new object[]
+                                         {
+                                             Var1.ToString(),
+                                             Var2.ToString(),
+                                             Body.ProfileText(syntaxDictionary),
+                                             Body.SecondaryProfileText(syntaxDictionary)
+                                         }
                 );
         }
     }

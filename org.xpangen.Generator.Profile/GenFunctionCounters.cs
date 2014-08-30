@@ -108,7 +108,7 @@ namespace org.xpangen.Generator.Profile
         /// <returns>The result of executing the function.</returns>
         public string Execute(string function, string[] param)
         {
-            if (param.Length < 0)
+            if (param.Length < 1)
                 return "<<<<< " + function + " Counter name missing >>>>>";
 
             var name = param[0];
