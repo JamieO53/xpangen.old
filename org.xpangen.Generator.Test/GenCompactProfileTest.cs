@@ -35,7 +35,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.TextBlock, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Original text expected");
         }
 
@@ -56,7 +56,7 @@ namespace org.xpangen.Generator.Test
                 profile.Body.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class,SubClass,Property,",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Class list expected");
         }
 
@@ -79,7 +79,7 @@ namespace org.xpangen.Generator.Test
                 profile.Body.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Some text Class,SubClass,Property, some more text",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Class list in text expected");
         }
 
@@ -101,7 +101,7 @@ namespace org.xpangen.Generator.Test
                 profile.Body.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class,SubClass,Property",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Class list expected");
         }
 
@@ -122,7 +122,7 @@ namespace org.xpangen.Generator.Test
                 profile.Body.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Block text",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Block text expected");
         }
 
@@ -156,7 +156,7 @@ namespace org.xpangen.Generator.Test
                 profile.Body.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class{SubClass,Property},SubClass{},Property{}",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Class/Subclass list expected");
         }
 
@@ -190,7 +190,7 @@ namespace org.xpangen.Generator.Test
                 profile.Body.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class{},SubClass{},Property{}",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Class/Subclass list expected");
         }
 
@@ -215,7 +215,7 @@ namespace org.xpangen.Generator.Test
                 profile.Body.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Name exists NoName does not exist ",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Existence conditions expected");
         }
 
@@ -248,7 +248,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Class name equals Class " +
                             "Class name is greater than Clasa " +
                             "Class name is less than Clasz ",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Comparison conditions expected");
         }
 
@@ -296,7 +296,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Class name equals Class " +
                             "Class name is greater than Clasa " +
                             "Class name is less than Clasz ",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Comparison conditions expected");
         }
 
@@ -318,7 +318,7 @@ namespace org.xpangen.Generator.Test
                 profile.Body.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual(DateTime.Today.ToLongDateString(),
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Function output expected");
         }
 
@@ -340,7 +340,7 @@ namespace org.xpangen.Generator.Test
                 profile.Body.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("\r\n //File: filename.txt",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Function output expected");
         }
 
@@ -368,7 +368,7 @@ namespace org.xpangen.Generator.Test
                 profile.Body.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("5 10",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Function output expected");
         }
 
@@ -405,7 +405,7 @@ namespace org.xpangen.Generator.Test
                 profile.Body.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("5 10",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Function output expected");
         }
 
@@ -433,7 +433,7 @@ namespace org.xpangen.Generator.Test
                 profile.Body.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class,SubClass,Property,",
-                GenFragmentExpander.Expand(profile, d, ((GenFragment) profile).GenObject, profile.Fragment),
+                GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
                 "Class list expected");
         }
 

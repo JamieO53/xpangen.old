@@ -48,7 +48,7 @@ namespace GenEdit.Utilities
             if (GetNodeHeaderText(selectedItem) == "Text" && fragment is GenBlock)
                 text = ((GenBlock) fragment).Body.Expand(genData);
             else
-                text = GenFragmentExpander.Expand(fragment, genData, fragment.GenObject, fragment.Fragment);
+                text = GenFragmentExpander.Expand(genData, fragment.GenObject, fragment.Fragment);
             return text;
         }
 

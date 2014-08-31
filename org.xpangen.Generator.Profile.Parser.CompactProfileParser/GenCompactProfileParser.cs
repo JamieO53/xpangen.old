@@ -108,7 +108,6 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                 {
                     case TokenType.Segment:
                         s = Scan.ScanSegmentClass();
-
                         var seg =
                             ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseSegmentHeading(
                                 GenDataDef, s, parentSegment, parentContainer, isPrimary);
