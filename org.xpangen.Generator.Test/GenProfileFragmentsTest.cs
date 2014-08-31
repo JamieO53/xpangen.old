@@ -218,7 +218,8 @@ namespace org.xpangen.Generator.Test
             var g = ((GenSegment) ((GenSegment) p.Body.Fragment[0]).Body.Fragment[0]).Body.Fragment[0];
             Assert.AreEqual(FragmentType.Lookup, g.FragmentType);
             Assert.IsFalse(g.IsTextFragment);
-            Assert.AreEqual("~Class.Name=SubClass.Name", g.ProfileLabel());
+            var genFragmentLabel = new GenFragmentLabel(g.Fragment);
+            Assert.AreEqual("~Class.Name=SubClass.Name", genFragmentLabel.ProfileLabel());
             Assert.AreEqual("`%Class.Name=SubClass.Name:`;" + txt + "`]",
                             g.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
 

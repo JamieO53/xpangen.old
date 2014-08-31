@@ -33,11 +33,12 @@ namespace GenEdit.Utilities
             return selectedItem != null ? ((TreeNode) selectedItem).Tag as GenFragment : null;
         }
 
-        private TreeNode CreateFragmentTree(GenFragment fragment)
+        private TreeNode CreateFragmentTree(GenFragment genFragment)
         {
-            var item = CreateTreeNode((int) fragment.FragmentType, fragment.ProfileLabel(), null, fragment);
-            if (fragment is GenContainerFragmentBase && !(fragment is GenFunction))
-                CreateBodyChildTrees(item.Nodes, (GenContainerFragmentBase) fragment);
+            var genFragmentLabel = new GenFragmentLabel(genFragment.Fragment);
+            var item = CreateTreeNode((int)genFragment.FragmentType, genFragmentLabel.ProfileLabel(), null, genFragment);
+            if (genFragment is GenContainerFragmentBase && !(genFragment is GenFunction))
+                CreateBodyChildTrees(item.Nodes, (GenContainerFragmentBase) genFragment);
             return item;
         }
 

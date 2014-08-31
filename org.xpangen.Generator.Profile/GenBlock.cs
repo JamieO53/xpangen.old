@@ -10,10 +10,5 @@ namespace org.xpangen.Generator.Profile
             : base(genFragmentParams.SetFragmentType(FragmentType.Block))
         {
         }
-
-        public override string ProfileLabel()
-        {
-            return "Block";
-        }
     }
 }

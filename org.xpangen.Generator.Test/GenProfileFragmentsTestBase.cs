@@ -127,18 +127,20 @@ namespace org.xpangen.Generator.Test
             TestCondition(genData, condIn + valueGt, "", "", expectedGt); // Property.Name?Namz
         }
 
-        protected static void VerifyFragment(GenData genData, GenFragment fragment, string expectedClass, FragmentType expectedType, string profileLabel, string profileText, string expected, bool isText, int parentClassId)
+        protected static void VerifyFragment(GenData genData, GenFragment genFragment, string expectedClass, FragmentType expectedType, string profileLabel, string profileText, string expected, bool isText, int parentClassId)
         {
-            Assert.AreEqual(expectedClass, fragment.GetType().Name, "Fragment Class");
-            Assert.AreEqual(expectedType, fragment.FragmentType, "Fragment Type");
-            Assert.AreEqual(isText, fragment.IsTextFragment, "Is text fragment?");
-            if (fragment.GenObject == null) fragment.GenObject = genData.Context[3].GenObject;
-            Assert.AreEqual(expected, GenFragmentExpander.Expand(genData, fragment.GenObject, fragment.Fragment), "Expanded fragment");
-            Assert.AreEqual(profileLabel, fragment.ProfileLabel(), "Profile label");
-            Assert.AreEqual(profileText, fragment.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary), "Profile text");
+            Assert.AreEqual(expectedClass, genFragment.GetType().Name, "Fragment Class");
+            Assert.AreEqual(expectedType, genFragment.FragmentType, "Fragment Type");
+            Assert.AreEqual(isText, genFragment.IsTextFragment, "Is text fragment?");
+            if (genFragment.GenObject == null) genFragment.GenObject = genData.Context[3].GenObject;
+            var fragment = genFragment.Fragment;
+            Assert.AreEqual(expected, GenFragmentExpander.Expand(genData, genFragment.GenObject, fragment), "Expanded fragment");
+            var genFragmentLabel =new GenFragmentLabel(fragment);
+            Assert.AreEqual(profileLabel, genFragmentLabel.ProfileLabel(), "Profile label");
+            Assert.AreEqual(profileText, genFragment.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary), "Profile text");
             if (parentClassId >= 0)
-                Assert.AreEqual(parentClassId, fragment.ParentSegment.ClassId, "Parent Class ID");
-            var str = GenerateFragment(genData, fragment);
+                Assert.AreEqual(parentClassId, genFragment.ParentSegment.ClassId, "Parent Class ID");
+            var str = GenerateFragment(genData, genFragment);
             Assert.AreEqual(expected, str);
         }
 
