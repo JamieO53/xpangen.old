@@ -10,7 +10,7 @@ namespace org.xpangen.Generator.Profile
 {
     public abstract class GenFragment : GenBase
     {
-        public static GenNullFragment NullFragment
+        private static GenNullFragment NullFragment
         {
             get { return _nullFragment ?? (_nullFragment = new GenNullFragment()); }
         }
@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Profile
         public Fragment Fragment
         {
             get { return _fragment; }
-            protected internal set
+            protected set
             {
                 _fragment = value;
                 CheckFragmentType(value);
@@ -91,7 +91,12 @@ namespace org.xpangen.Generator.Profile
         /// </summary>
         /// <param name="syntaxDictionary">The dictionary defining the syntax of the profile text.</param>
         /// <returns>The fragment's profile text.</returns>
-        public abstract string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary);
+        public virtual string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary = null)
+        {
+            var dictionary = syntaxDictionary ?? ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary;
+            var t = new GenProfileTextExpander(dictionary);
+            return t.GetText(Fragment);
+        }
 
         public static GenFragment Create(GenDataDef genDataDef, Fragment fragment)
         {

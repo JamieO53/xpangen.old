@@ -16,15 +16,5 @@ namespace org.xpangen.Generator.Profile
         {
             return "";
         }
-
-        public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
-        {
-            return "";
-        }
-
-        public virtual string Expand(GenData genData)
-        {
-            return "";
-        }
     }
 }

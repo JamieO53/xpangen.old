@@ -1,3 +1,7 @@
+// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 using System;
 using System.IO;
 using org.xpangen.Generator.Data;
@@ -5,9 +9,10 @@ using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class GenProfileTextExpander: GenBase
+    public class GenProfileTextExpander : GenBase
     {
         private ProfileFragmentSyntaxDictionary Dictionary { get; set; }
+
         public GenProfileTextExpander(ProfileFragmentSyntaxDictionary dictionary)
         {
             Dictionary = dictionary;
@@ -26,6 +31,7 @@ namespace org.xpangen.Generator.Profile
 
         public string GetText(Fragment fragment)
         {
+            var saveWriter = Writer;
             using (var stream = new MemoryStream(100000))
             {
                 using (var writer = new GenWriter(stream))
@@ -34,7 +40,7 @@ namespace org.xpangen.Generator.Profile
                     OutputFragment(fragment);
                     writer.Flush();
                     stream.Seek(0, SeekOrigin.Begin);
-                    Writer = null;
+                    Writer = saveWriter;
                     using (var reader = new StreamReader(stream))
                         return reader.ReadToEnd();
                 }
@@ -48,15 +54,16 @@ namespace org.xpangen.Generator.Profile
 
         private string GetBodyText(GenProfileTextExpander pt, FragmentBody body)
         {
+            var saveWriter = Writer;
             using (var stream = new MemoryStream(100000))
             {
                 using (var writer = new GenWriter(stream))
                 {
                     pt.Writer = writer;
-                    OutputBody(body);
+                    pt.OutputBody(body);
                     writer.Flush();
                     stream.Seek(0, SeekOrigin.Begin);
-                    pt.Writer = null;
+                    pt.Writer = saveWriter;
                     using (var reader = new StreamReader(stream))
                         return reader.ReadToEnd();
                 }
@@ -96,7 +103,9 @@ namespace org.xpangen.Generator.Profile
                     if (!Enum.TryParse(segmentFragment.Cardinality, out cardinality))
                         throw new GeneratorException("Invalid segment cardinality: " + segmentFragment.Cardinality,
                             GenErrorType.Assertion);
-                    var variant = (cardinality == GenCardinality.AllDlm || cardinality == GenCardinality.BackDlm ? "2" : "1");
+                    var variant = (cardinality == GenCardinality.AllDlm || cardinality == GenCardinality.BackDlm
+                        ? "2"
+                        : "1");
                     format = Dictionary[fragmentType + variant].Format;
                     if (variant == "1")
                         OutputText(string.Format(format, new object[]
@@ -111,8 +120,8 @@ namespace org.xpangen.Generator.Profile
                                                          {
                                                              segmentFragment.Class,
                                                              GetBodyText(segmentFragment.Body()),
-                                                             GetBodyText(segmentFragment.SecondaryBody()),
-                                                             Dictionary.GenCardinalityText[(int) cardinality]
+                                                             Dictionary.GenCardinalityText[(int) cardinality],
+                                                             GetBodyText(segmentFragment.SecondaryBody())
                                                          }
                             ));
                     break;
@@ -130,14 +139,25 @@ namespace org.xpangen.Generator.Profile
                     break;
                 case FragmentType.Lookup:
                     var lookupFragment = (Lookup) fragment;
-                    format = Dictionary[fragmentType.ToString() + (lookupFragment.NoMatch == "" ? "1" : "2")].Format;
-                    OutputText(string.Format(format, new object[]
-                                                     {
-                                                         lookupFragment.Class1 + "." + lookupFragment.Property1,
-                                                         lookupFragment.Class2 + "." + lookupFragment.Property2,
-                                                         GetBodyText(lookupFragment.Body())
-                                                     }
-                        ));
+                    var noMatch = lookupFragment.SecondaryBody().FragmentList.Count > 0;
+                    format = Dictionary[fragmentType + (noMatch ? "2" : "1")].Format;
+                    if (!noMatch)
+                        OutputText(string.Format(format, new object[]
+                                                         {
+                                                             FullName(lookupFragment.Class1, lookupFragment.Property1),
+                                                             FullName(lookupFragment.Class2, lookupFragment.Property2),
+                                                             GetBodyText(lookupFragment.Body())
+                                                         }
+                            ));
+                    else
+                        OutputText(string.Format(format, new object[]
+                                                         {
+                                                             FullName(lookupFragment.Class1, lookupFragment.Property1),
+                                                             FullName(lookupFragment.Class2, lookupFragment.Property2),
+                                                             GetBodyText(lookupFragment.Body()),
+                                                             GetBodyText(lookupFragment.SecondaryBody())
+                                                         }
+                            ));
                     break;
                 case FragmentType.Condition:
                     var conditionFragment = (Condition) fragment;
@@ -148,7 +168,7 @@ namespace org.xpangen.Generator.Profile
                             GenErrorType.Assertion);
                     OutputText(string.Format(format, new object[]
                                                      {
-                                                         conditionFragment.Class1 + "." + conditionFragment.Property1,
+                                                         FullName(conditionFragment.Class1, conditionFragment.Property1),
                                                          Dictionary.GenComparisonText[(int) comparison],
                                                          (comparison == GenComparison.Exists ||
                                                           comparison == GenComparison.NotExists)
@@ -186,6 +206,11 @@ namespace org.xpangen.Generator.Profile
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private static string FullName(string className, string propertyName)
+        {
+            return className + '.' + propertyName;
         }
 
         private string GetBodyText(FragmentBody body)

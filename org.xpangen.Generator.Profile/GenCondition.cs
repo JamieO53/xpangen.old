@@ -21,7 +21,7 @@ namespace org.xpangen.Generator.Profile
             Lit = genConditionParams.Lit;
         }
 
-        public GenDataId Var1
+        private GenDataId Var1
         {
             get
             {
@@ -33,8 +33,8 @@ namespace org.xpangen.Generator.Profile
                 Condition.Property1 = value.PropertyName;
             }
         }
-        
-        public GenDataId Var2
+
+        private GenDataId Var2
         {
             get
             {
@@ -46,10 +46,10 @@ namespace org.xpangen.Generator.Profile
                 Condition.Property2 = value.PropertyName;
             }
         }
-        
-        public string Lit { get { return Condition.Lit; } set { Condition.Lit = value; } }
 
-        public GenComparison GenComparison
+        private string Lit { get { return Condition.Lit; } set { Condition.Lit = value; } }
+
+        private GenComparison GenComparison
         {
             get
             {
@@ -60,13 +60,13 @@ namespace org.xpangen.Generator.Profile
             set { Condition.Comparison = value.ToString(); }
         }
 
-        public bool UseLit
+        private bool UseLit
         {
             get { return Condition.UseLit != ""; }
             set { Condition.UseLit = value ? "True" : ""; }
         }
 
-        public Condition Condition
+        private Condition Condition
         {
             get { return (Condition) Fragment; }
         }
@@ -83,24 +83,6 @@ namespace org.xpangen.Generator.Profile
                 s.Append(UseLit ? GenUtilities.StringOrName(Lit) : Var2.Identifier);
 
             return s.ToString();
-        }
-
-        public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
-        {
-            var format = syntaxDictionary[FragmentType.ToString()].Format;
-            return string.Format(format, new object[]
-                                             {
-                                                 Var1.Identifier,
-                                                 syntaxDictionary.GenComparisonText[(int) GenComparison],
-                                                 (GenComparison == GenComparison.Exists ||
-                                                  GenComparison == GenComparison.NotExists)
-                                                     ? ""
-                                                     : (UseLit
-                                                            ? GenUtilities.StringOrName(Lit)
-                                                            : Var2.Identifier),
-                                                 Body.ProfileText(syntaxDictionary)
-                                             }
-                );
         }
     }
 }

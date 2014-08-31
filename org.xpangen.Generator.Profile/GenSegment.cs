@@ -9,9 +9,6 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenSegment : GenContainerFragmentBase
     {
-        public GenBlock ItemBody { get; private set; }
-        public GenFragment Separator { get; private set; }
-
         public GenSegment(GenSegmentParams genSegmentParams)
             : base(genSegmentParams.SetFragmentType(FragmentType.Segment))
         {
@@ -38,27 +35,6 @@ namespace org.xpangen.Generator.Profile
         public override string ProfileLabel()
         {
             return GenDataDef.Classes[ClassId].Name;
-        }
-
-        public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
-        {
-            var format = syntaxDictionary[FragmentType + (Body.SecondaryCount == 0 ? "1" : "2")].Format;
-            if (Body.SecondaryCount == 0)
-                return string.Format(format, new object[]
-                                             {
-                                                 GenDataDef.Classes[ClassId].Name,
-                                                 Body.ProfileText(syntaxDictionary),
-                                                 syntaxDictionary.GenCardinalityText[(int) GenCardinality]
-                                             }
-                    );
-            return string.Format(format, new object[]
-                                             {
-                                                 GenDataDef.Classes[ClassId].Name,
-                                                 Body.ProfileText(syntaxDictionary),
-                                                 syntaxDictionary.GenCardinalityText[(int) GenCardinality],
-                                                 Body.SecondaryProfileText(syntaxDictionary)
-                                             }
-                    );
         }
     }
 }
