@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Test
             var p = CreateAllFragmentProfileDefinition();
             var profile = p.Profile();
             var fragments = profile.Body().FragmentList;
-            var t = new ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary);
+            var t = new GenProfileTextExpander(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary);
             Assert.AreEqual("`Class.Name`", t.GetText(fragments[0]));
             Assert.AreEqual("Some text", t.GetText(fragments[1]));
             Assert.AreEqual("`[Class>:`]", t.GetText(fragments[2]));

@@ -71,7 +71,7 @@
     <Compile Include="LibraryManager.cs" />
     <Compile Include="ProfileFragmentSyntax.cs" />
     <Compile Include="ProfileFragmentSyntaxDictionary.cs" />
-    <Compile Include="ProfileText.cs" />
+    <Compile Include="GenProfileTextExpander.cs" />
     <Compile Include="Profile\Block.cs" />
     <Compile Include="Profile\Condition.cs" />
     <Compile Include="Profile\ContainerFragment.cs" />

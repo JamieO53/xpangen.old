@@ -1,14 +1,14 @@
 using System;
-using System.Text;
+using System.IO;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class ProfileText
+    public class GenProfileTextExpander: GenBase
     {
         private ProfileFragmentSyntaxDictionary Dictionary { get; set; }
-        public ProfileText(ProfileFragmentSyntaxDictionary dictionary)
+        public GenProfileTextExpander(ProfileFragmentSyntaxDictionary dictionary)
         {
             Dictionary = dictionary;
         }
@@ -22,42 +22,45 @@ namespace org.xpangen.Generator.Profile
             return fragmentType;
         }
 
-        private StringBuilder StringBuilder { get; set; }
+        private GenWriter Writer { get; set; }
 
         public string GetText(Fragment fragment)
         {
-            PrepareOutput();
-            OutputFragment(fragment);
-            return (string)GetOutput();
-        }
-
-        public string GetText(Profile.Profile profile)
-        {
-            PrepareOutput();
-            OutputBody(profile.Body());
-            return (string)GetOutput();
+            using (var stream = new MemoryStream(100000))
+            {
+                using (var writer = new GenWriter(stream))
+                {
+                    Writer = writer;
+                    OutputFragment(fragment);
+                    writer.Flush();
+                    stream.Seek(0, SeekOrigin.Begin);
+                    Writer = null;
+                    using (var reader = new StreamReader(stream))
+                        return reader.ReadToEnd();
+                }
+            }
         }
 
         private void OutputText(string text)
         {
-            StringBuilder.Append(text);
+            Writer.Write(text);
         }
 
-        private object GetOutput()
+        private string GetBodyText(GenProfileTextExpander pt, FragmentBody body)
         {
-            return StringBuilder.ToString();
-        }
-
-        private void PrepareOutput()
-        {
-            StringBuilder = new StringBuilder();
-        }
-
-        private string GetBodyText(ProfileText pt, FragmentBody body)
-        {
-            pt.PrepareOutput();
-            pt.OutputBody(body);
-            return (string)pt.GetOutput();
+            using (var stream = new MemoryStream(100000))
+            {
+                using (var writer = new GenWriter(stream))
+                {
+                    pt.Writer = writer;
+                    OutputBody(body);
+                    writer.Flush();
+                    stream.Seek(0, SeekOrigin.Begin);
+                    pt.Writer = null;
+                    using (var reader = new StreamReader(stream))
+                        return reader.ReadToEnd();
+                }
+            }
         }
 
         private void OutputBody(FragmentBody body)
@@ -112,6 +115,9 @@ namespace org.xpangen.Generator.Profile
                                                              Dictionary.GenCardinalityText[(int) cardinality]
                                                          }
                             ));
+                    break;
+                case FragmentType.Profile:
+                    OutputBody(((Profile.Profile) fragment).Body());
                     break;
                 case FragmentType.Block:
                     format = Dictionary[fragmentType.ToString()].Format;
@@ -184,7 +190,7 @@ namespace org.xpangen.Generator.Profile
 
         private string GetBodyText(FragmentBody body)
         {
-            var pt = new ProfileText(Dictionary);
+            var pt = new GenProfileTextExpander(Dictionary);
             return GetBodyText(pt, body);
         }
     }
