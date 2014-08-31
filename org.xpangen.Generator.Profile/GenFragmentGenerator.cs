@@ -602,8 +602,6 @@ namespace org.xpangen.Generator.Profile
 
     public class GenSegmentGenerator : GenContainerGenerator
     {
-        private readonly SegmentNavigator _navigator;
-
         public GenSegmentGenerator(GenData genData, GenWriter genWriter, GenObject genObject, Fragment fragment) 
             : base(genData, genWriter, genObject, fragment)
         {
@@ -611,11 +609,14 @@ namespace org.xpangen.Generator.Profile
             GenCardinality cardinality;
             Assert(Enum.TryParse(Segment.Cardinality, out cardinality), "Invalid segment cardinality: " + Segment.Cardinality);
             GenCardinality = cardinality;
-            _navigator = new SegmentNavigator(this);
+            Navigator = new SegmentNavigator(this);
         }
 
         public GenCardinality GenCardinality { get; set; }
         public Segment Segment { get; set; }
+
+        public SegmentNavigator Navigator { get; private set; }
+
         protected override bool Generate()
         {
             var generated = false;
@@ -624,89 +625,89 @@ namespace org.xpangen.Generator.Profile
             switch (GenCardinality)
             {
                 case GenCardinality.All:
-                    _navigator.First();
-                    while (!_navigator.Eol())
+                    Navigator.First();
+                    while (!Navigator.Eol())
                     {
-                        OverrideGenObject = _navigator.GetGenObject();
+                        OverrideGenObject = Navigator.GetGenObject();
                         generated |= base.Generate();
-                        _navigator.Next();
+                        Navigator.Next();
                     }
                     break;
                 case GenCardinality.AllDlm:
                     sepText = GetSeparatorText();
-                    _navigator.First();
-                    while (!_navigator.Eol())
+                    Navigator.First();
+                    while (!Navigator.Eol())
                     {
-                        OverrideGenObject = _navigator.GetGenObject();
+                        OverrideGenObject = Navigator.GetGenObject();
                         generated |= base.Generate();
                         if (generated) Writer.ProvisionalWrite(sepText);
-                        _navigator.Next();
+                        Navigator.Next();
                     }
                     Writer.ClearProvisionalText();
                     break;
                 case GenCardinality.Back:
-                    _navigator.Last();
-                    while (!_navigator.Eol())
+                    Navigator.Last();
+                    while (!Navigator.Eol())
                     {
-                        OverrideGenObject = _navigator.GetGenObject();
+                        OverrideGenObject = Navigator.GetGenObject();
                         generated |= base.Generate();
-                        _navigator.Prior();
+                        Navigator.Prior();
                     }
                     break;
                 case GenCardinality.BackDlm:
                     sepText = GetSeparatorText();
-                    _navigator.Last();
-                    while (!_navigator.Eol())
+                    Navigator.Last();
+                    while (!Navigator.Eol())
                     {
-                        OverrideGenObject = _navigator.GetGenObject();
+                        OverrideGenObject = Navigator.GetGenObject();
                         generated |= base.Generate();
                         if (generated) Writer.ProvisionalWrite(sepText);
-                        _navigator.Prior();
+                        Navigator.Prior();
                     }
                     Writer.ClearProvisionalText();
                     break;
                 case GenCardinality.First:
-                    _navigator.First();
-                    OverrideGenObject = _navigator.GetGenObject();
-                    if (!_navigator.Eol())
+                    Navigator.First();
+                    OverrideGenObject = Navigator.GetGenObject();
+                    if (!Navigator.Eol())
                         generated |= base.Generate();
                     break;
                 case GenCardinality.Tail:
-                    _navigator.First();
-                    _navigator.Next();
-                    while (!_navigator.Eol())
+                    Navigator.First();
+                    Navigator.Next();
+                    while (!Navigator.Eol())
                     {
-                        OverrideGenObject = _navigator.GetGenObject();
+                        OverrideGenObject = Navigator.GetGenObject();
                         generated |= base.Generate();
-                        _navigator.Next();
+                        Navigator.Next();
                     }
                     break;
                 case GenCardinality.Last:
-                    _navigator.Last();
-                    OverrideGenObject = _navigator.GetGenObject();
-                    if (!_navigator.Eol())
+                    Navigator.Last();
+                    OverrideGenObject = Navigator.GetGenObject();
+                    if (!Navigator.Eol())
                         generated |= base.Generate();
                     break;
                 case GenCardinality.Trunk:
-                    _navigator.Last();
-                    _navigator.Prior();
-                    while (!_navigator.Eol())
+                    Navigator.Last();
+                    Navigator.Prior();
+                    while (!Navigator.Eol())
                     {
-                        OverrideGenObject = _navigator.GetGenObject();
+                        OverrideGenObject = Navigator.GetGenObject();
                         generated |= base.Generate();
-                        _navigator.Prior();
+                        Navigator.Prior();
                     }
                     break;
                 case GenCardinality.Reference:
-                    Writer.Write(_navigator.ClassName());
+                    Writer.Write(Navigator.ClassName());
                     Writer.Write("[Reference='");
-                    Writer.Write(_navigator.Reference());
+                    Writer.Write(Navigator.Reference());
                     Writer.Write("']\r\n");
                     break;
                 case GenCardinality.Inheritance:
-                    _navigator.SetInheritance();
-                    OverrideGenObject = _navigator.GetGenObject();
-                    if (!_navigator.Eol())
+                    Navigator.SetInheritance();
+                    OverrideGenObject = Navigator.GetGenObject();
+                    if (!Navigator.Eol())
                         generated |= base.Generate();
                     break;
                 default:
