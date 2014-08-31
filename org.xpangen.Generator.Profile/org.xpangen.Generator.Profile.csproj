@@ -47,6 +47,7 @@
     <Compile Include="GenFragmentExpander.cs" />
     <Compile Include="GenFragmentGenerator.cs" />
     <Compile Include="GenFragment.cs" />
+    <Compile Include="GenFragmentLabel.cs" />
     <Compile Include="GenFragmentParams.cs" />
     <Compile Include="GenFunction.cs" />
     <Compile Include="GenFunctionCounters.cs" />

@@ -11,10 +11,5 @@ namespace org.xpangen.Generator.Profile
         public GenNullFragment() : base(new GenFragmentParams(null, null, null, FragmentType.Null))
         {
         }
-
-        public override string ProfileLabel()
-        {
-            return "";
-        }
     }
 }
