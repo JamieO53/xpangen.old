@@ -132,7 +132,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(expectedType, fragment.FragmentType, "Fragment Type");
             Assert.AreEqual(isText, fragment.IsTextFragment, "Is text fragment?");
             if (fragment.GenObject == null) fragment.GenObject = genData.Context[3].GenObject;
-            Assert.AreEqual(expected, GenFragmentExpander.Expand(fragment, genData, fragment.GenObject, fragment.Fragment), "Expanded fragment");
+            Assert.AreEqual(expected, GenFragmentExpander.Expand(genData, fragment.GenObject, fragment.Fragment), "Expanded fragment");
             Assert.AreEqual(profileLabel, fragment.ProfileLabel(), "Profile label");
             Assert.AreEqual(profileText, fragment.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary), "Profile text");
             if (parentClassId >= 0)
@@ -146,7 +146,7 @@ namespace org.xpangen.Generator.Test
             using (var s = new MemoryStream(100000))
             {
                 var w = new GenWriter(s);
-                GenFragmentGenerator.Generate(fragment, genData, w, fragment.GenObject, fragment.Fragment);
+                GenFragmentGenerator.Generate(genData, w, fragment.GenObject, fragment.Fragment);
                 w.Flush();
                 s.Seek(0, SeekOrigin.Begin);
                 var r = new StreamReader(s);
@@ -263,7 +263,7 @@ namespace org.xpangen.Generator.Test
             var d = SetUpSegmentSeparatorData(display);
             var g = SetUpSegmentSeparatorFragment(d, cardinality);
             g.GenObject = d.Root.SubClass[0][0];
-            Assert.AreEqual(expected, GenFragmentExpander.Expand(g, d, ((GenFragment) g).GenObject, g.Fragment));
+            Assert.AreEqual(expected, GenFragmentExpander.Expand(d, ((GenFragment) g).GenObject, g.Fragment));
             var str = GenerateFragment(d, g);
             Assert.AreEqual(expected, str);
         }

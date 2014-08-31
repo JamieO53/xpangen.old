@@ -154,7 +154,7 @@ namespace gen
             {
                 try
                 {
-                    GenFragmentGenerator.Generate(p, d, writer, ((GenFragment)p).GenObject, p.Fragment);
+                    GenFragmentGenerator.Generate(d, writer, ((GenFragment)p).GenObject, p.Fragment);
                 }
                 catch (Exception e)
                 {

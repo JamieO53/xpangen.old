@@ -57,7 +57,7 @@ namespace org.xpangen.Generator.Profile
             foreach (var fragment in Fragment)
             {
                 fragment.GenObject = GenObject;
-                s.Append(GenFragmentExpander.Expand(fragment, genData, fragment.GenObject, fragment.Fragment));
+                s.Append(GenFragmentExpander.Expand(genData, fragment.GenObject, fragment.Fragment));
             }
             return s.ToString();
         }
