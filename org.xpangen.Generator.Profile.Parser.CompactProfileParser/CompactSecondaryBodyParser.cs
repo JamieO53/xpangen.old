@@ -17,8 +17,8 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
 
         protected override void AddFragment(GenSegBody body, GenFragment frag)
         {
-            if (!body.SecondaryFragment.Contains(frag))
-                body.AddSecondary(frag);
+            Assert(!body.SecondaryFragment.Contains(frag), "Fragment added to body again");
+            body.AddSecondary(frag);
         }
     }
 }

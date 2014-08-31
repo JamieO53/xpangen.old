@@ -39,10 +39,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             while (!Scan.Eof && t != TokenType.Close && t != TokenType.Secondary && t != TokenType.Unknown)
             {
                 if (t != TokenType.Name && textBlock != null)
-                {
-                    AddFragment(body, textBlock);
                     textBlock = null;
-                }
                 var frag = GenCompactProfileParser.ScanFragment(classId, ref t, out s, parentSegment, parentContainer, ref textBlock, IsPrimary);
                 if (t != TokenType.Name)
                     AddFragment(body, frag);
@@ -50,9 +47,6 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                     GenCompactProfileParser.AddText(parentSegment, parentContainer, ref textBlock, s, GenDataDef, IsPrimary);
                 t = Scan.ScanTokenType();
             }
-
-            if (textBlock != null)
-                AddFragment(body, textBlock);
         }
 
         private GenDataDef GenDataDef

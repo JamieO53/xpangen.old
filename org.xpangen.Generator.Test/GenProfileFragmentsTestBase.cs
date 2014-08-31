@@ -147,7 +147,7 @@ namespace org.xpangen.Generator.Test
             using (var s = new MemoryStream(100000))
             {
                 var w = new GenWriter(s);
-                GenFragmentGenerator.Generate(genData, w, fragment.GenObject, fragment.Fragment);
+                GenFragmentGenerator.Generate(genData, w, fragment.GenObject ?? genData.Root, fragment.Fragment);
                 w.Flush();
                 s.Seek(0, SeekOrigin.Begin);
                 var r = new StreamReader(s);
@@ -157,7 +157,6 @@ namespace org.xpangen.Generator.Test
 
         protected static void ProcessSegment(GenData genData, string cardinalityText, GenCardinality genCardinality, string expected)
         {
-            //var root = new GenProfileFragment(genData.GenDataDef);
             var cardinality = GenCardinality.All;
             var dictionary = ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary;
             if (cardinalityText != "")
@@ -174,7 +173,7 @@ namespace org.xpangen.Generator.Test
                           ((cardinality == GenCardinality.AllDlm || cardinality == GenCardinality.BackDlm)
                               ? "`;"
                               : "") + ",`]";
-            var p = new GenCompactProfileParser(genData, "", "`[Class':" + profile + "`]");
+            var p = new GenCompactProfileParser(genData.GenDataDef, "", "`[Class':" + profile + "`]");
             var g = (GenSegment) ((GenSegment) p.Body.Fragment[0]).Body.Fragment[0];
             Assert.AreEqual(genCardinality.ToString(), ((Segment) g.Fragment).Cardinality);
             Assert.AreEqual("Property", g.Definition.Name);
@@ -248,7 +247,7 @@ namespace org.xpangen.Generator.Test
         private static GenSegment SetUpSegmentSeparatorFragment(GenData d, GenCardinality cardinality)
         {
             var profile = "`[TestData" + (cardinality == GenCardinality.AllDlm ? "/" : "\\") + ":`?TestData.Display:`TestData.Name``]`;, `]";
-            var p = new GenCompactProfileParser(d, "", profile);
+            var p = new GenCompactProfileParser(d.GenDataDef, "", profile);
             var g = (GenSegment) p.Body.Fragment[0];
             return g;
         }

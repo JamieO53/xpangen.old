@@ -74,11 +74,12 @@ namespace org.xpangen.Generator.Parameter
             def.Append("Definition=");
             def.AppendLine(genDataDef.DefinitionName);
             var profile = new GenProfileFragment(new GenProfileParams(genDataDef));
-            profile.Body.Add(new GenTextFragment(new GenTextFragmentParams(genDataDef, profile, profile, "")));
+            var defText = new GenTextFragment(new GenTextFragmentParams(genDataDef, profile, profile, ""));
+            profile.Body.Add(defText);
 
             ClassDefinition(genDataDef, 0, def);
             ClassProfile(genDataDef, 0, profile, profile, profile);
-            ((GenTextFragment) profile.Body.Fragment[0]).Text = def + ".\r\n";
+            defText.Text = def + ".\r\n";
             return profile;
         }
 

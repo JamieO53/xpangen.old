@@ -30,12 +30,6 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             get { return _compactSecondaryBodyParser; }
         }
 
-        public GenCompactProfileParser(GenData genData, string filePath, string textToScan, char delimiter = '`')
-            : this(genData.GenDataDef, filePath, textToScan, delimiter)
-        {
-            GenObject = genData.Root;
-        }
-
         public GenCompactProfileParser(GenDataDef genDataDef, string filePath, string textToScan, char delimiter = '`')
             : this(
                 genDataDef,

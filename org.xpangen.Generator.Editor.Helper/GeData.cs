@@ -73,7 +73,7 @@ namespace org.xpangen.Generator.Editor.Helper
 
         private void SetProfile()
         {
-            Profile = Settings.Profile != "" ? new GenCompactProfileParser(GenData, Settings.Profile, "") : null;
+            Profile = Settings.Profile != "" ? new GenCompactProfileParser(GenDataDef, Settings.Profile, "") : null;
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace org.xpangen.Generator.Editor.Helper
             var profile = baseFile.ProfileList.Find(Settings.FileGroup.Profile);
             var profileFileName = BuildFilePath(profile.FilePath, profile.FileName);
             
-            var p = new GenCompactProfileParser(d, profileFileName, "");
+            var p = new GenCompactProfileParser(GenDataDef, profileFileName, "");
             using (var writer = new GenWriter(null) {FileName = Settings.GeneratedFile.Replace('/', '\\')})
                 GenFragmentGenerator.Generate(d, writer, ((GenFragment) p).GenObject, p.Fragment);
         }
