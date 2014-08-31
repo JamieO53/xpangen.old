@@ -101,12 +101,15 @@ namespace org.xpangen.Generator.Profile
 
         private static string GetPlaceholderValue(Fragment fragment, GenObject genObject)
         {
-            return genObject.GetValue(
+            bool notFound;
+            var placeholderValue = genObject.GetValue(
                 (new GenDataId
                  {
                      ClassName = ((Placeholder) fragment).Class,
                      PropertyName = ((Placeholder) fragment).Property
-                 }));
+                 }), out notFound);
+            if (notFound) return "";
+            return placeholderValue;
         }
 
         private static GenFragmentExpander Create(GenData genData, GenObject genObject, Fragment fragment)

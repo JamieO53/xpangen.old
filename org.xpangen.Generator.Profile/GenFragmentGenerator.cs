@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
+using Function = org.xpangen.Generator.Profile.Profile.Function;
 
 namespace org.xpangen.Generator.Profile
 {
@@ -98,7 +99,7 @@ namespace org.xpangen.Generator.Profile
     public class GenConditionGenerator : GenContainerGenerator
     {
         internal GenConditionGenerator(GenData genData, GenWriter writer, GenObject genObject, Fragment fragment) 
-            : base(genData, writer, genObject, fragment: fragment)
+            : base(genData, writer, genObject, fragment)
         {
         }
 
@@ -235,7 +236,7 @@ namespace org.xpangen.Generator.Profile
         private GenDataId _var2;
 
         public GenLookupGenerator(GenData genData, GenWriter genWriter, GenObject genObject, Fragment fragment) 
-            : base(genData, genWriter, genObject, fragment: fragment)
+            : base(genData, genWriter, genObject, fragment)
         {
         }
 
@@ -333,11 +334,15 @@ namespace org.xpangen.Generator.Profile
         {
             _generator = generator;
             GenObject = generator.GenObject;
-            var objects = GenObjectList.SubClassBase;
-            var subClassBase = GetSubClassBase();
+            SubClassBase = GetSubClassBase();
+            Index = -1;
         }
 
-        public ISubClassBase GetSubClassBase()
+        private int Index { get; set; }
+
+        private ISubClassBase SubClassBase { get; set; }
+
+        private ISubClassBase GetSubClassBase()
         {
             ISubClassBase subClassBase;
             if (GenData.GenDataDef.Classes[ClassId].IsReference &&
@@ -384,9 +389,9 @@ namespace org.xpangen.Generator.Profile
             return subClassBase;
         }
 
-        private int SegmentClassId()
+        private int SegmentClassId
         {
-            return GenData.GenDataDef.Classes.IndexOf(ClassName());
+            get {return GenData.GenDataDef.Classes.IndexOf(ClassName);}
         }
 
         private bool SubClassIsInheritor()
@@ -397,7 +402,7 @@ namespace org.xpangen.Generator.Profile
             return subClassId == classId;
         }
 
-        public GenObject GenObject { get; private set; }
+        private GenObject GenObject { get; set; }
 
         private int IndexOfSubClass()
         {
@@ -430,9 +435,14 @@ namespace org.xpangen.Generator.Profile
             return GenData.GenDataDef.Classes.IndexOf(genObject.Definition.Name);
         }
 
-        public string Reference()
+        public string Reference
         {
-            return GenObjectList.Reference;
+            get
+            {
+                if (GenDataDef.Classes[GenDataDef.Classes.IndexOf(ClassName)].IsReference)
+                    return GenObject.SubClass[IndexOfSubClass()].Reference;
+                return "";
+            }
         }
 
         private GenObjectList GenObjectList
@@ -440,24 +450,23 @@ namespace org.xpangen.Generator.Profile
             get { return GenData.Context[ClassId]; }
         }
 
-        public string ClassName()
-        {
-            return _generator.Segment.Class;
-        }
-
-        private GenDataDefClass ClassDef
-        {
-            get { return GenData.GenDataDef.Classes[ClassId]; }
-        }
+        public string ClassName
+        { get { return _generator.Segment.Class; }}
 
         public GenObject GetGenObject()
         {
-            return GenObjectList.GenObject;
+            if (Eol()) return null;
+            if (!Inheritance) return SubClassBase[Index];
+            if (ClassName == SubClassBase[Index].ClassName) return SubClassBase[Index];
+            return null;
         }
+
+        private bool Inheritance { get; set; }
 
         public void SetInheritance()
         {
-            GenData.SetInheritance(ClassId);
+            Inheritance = true;
+            Index = SubClassBase.IndexOf(GenObject);
         }
 
         private GenData GenData
@@ -465,138 +474,55 @@ namespace org.xpangen.Generator.Profile
             get { return _generator.GenData; }
         }
 
-        public void Prior()
+        public void First()
         {
-            CheckInheritance();
-            GenObjectList.Prior();
-            CheckInheritance();
-            if (!GenObjectList.Eol)
-                SetSubClasses();
-        }
-
-        private void SetSubClasses()
-        {
-            int classId = ClassId;
-            var inheritedClassId = ClassId;
-            if (GenObjectList.DefClass != null && GenData.Context[classId].DefClass.IsInherited)
-            {
-                classId = GenObjectList.DefClass.Parent.ClassId;
-                GenData.Context[classId].Index = GenData.Context[inheritedClassId].Index;
-                GenData.Context[classId].ReferenceData = GenData.Context[inheritedClassId].ReferenceData;
-            }
-
-            if (GenData.Context[classId].ReferenceData != null && GenData.Context[classId].ReferenceData != GenData)
-            {
-                GenData.Context[classId].ReferenceData.Context[GenData.Context[classId].RefClassId].Index = GenData.Context[classId].Index;
-                GenData.Context[classId].ReferenceData.SetSubClasses(GenData.Context[classId].RefClassId);
-            }
-
-            var classDef = GenData.Context.Classes[classId];
-            if (GenData.Context[classId].GenObject == null)
-                GenData.First(classId);
-            var genObject = GenData.Context[classId].GenObject;
-            if (classDef != null && genObject != null)
-            {
-                for (var i = 0; i < classDef.SubClasses.Count; i++)
-                {
-                    var subClass = classDef.SubClasses[i].SubClass;
-                    var subClassId = subClass.ClassId;
-                    if (!string.IsNullOrEmpty(classDef.SubClasses[i].Reference) &&
-                        classDef.Reference != classDef.SubClasses[i].Reference)
-                    {
-                        if (genObject.SubClass[i].Reference != null)
-                            SetReferenceSubClasses(classId, i, subClassId, genObject);
-                    }
-                    else if (GenData.Context[subClassId].ReferenceData != null && GenData.Context[subClassId].ReferenceData != GenData)
-                    {
-                        var refContext = GenData.Context[subClassId].ReferenceData.Context[GenData.Context[subClassId].RefClassId];
-                        GenData.Context[subClassId].SubClassBase = refContext.SubClassBase;
-                        GenData.First(subClassId);
-                    }
-                    else
-                    {
-                        Assert(i < genObject.SubClass.Count, "The object does not have a subclass to set");
-                        GenData.Context[subClassId].SubClassBase = genObject.SubClass[i];
-                        GenData.First(subClassId);
-                    }
-                }
-            }
-        }
-
-        private void SetReferenceSubClasses(int classId, int i, int subClassId, GenObject genObject)
-        {
-            var data = GenData.Cache[GenData.Context.Classes[subClassId].ReferenceDefinition,
-                genObject.SubClass[i].Reference];
-            var reference = genObject.SubClass[i].Reference;
-            var subClass = GenData.Context.Classes[classId].SubClasses[i].SubClass;
-            var subClassId1 = subClass.ClassId;
-            var subRefClassId = subClass.RefClassId;
-            GenData.Context[subClassId1].ClassId = subClass.ClassId;
-            GenData.Context[subClassId1].RefClassId = subRefClassId;
-            GenData.Context[subClassId1].Reference = reference;
-            GenData.Context[subClassId1].ReferenceData = data;
-            GenData.Context[subClassId1].SubClassBase = data.Context[subRefClassId].SubClassBase;
-            data.First(subRefClassId);
-            GenData.Context[subClassId1].First();
-            if (!data.Eol(subRefClassId))
-                for (var i1 = 0; i1 < GenData.Context.Classes[subClassId1].SubClasses.Count; i1++)
-                    GenData.SetReferenceSubClasses(subClassId1, i1, data, reference);
-        }
-
-        private void CheckInheritance()
-        {
-            if (GenData.GenDataDef == null || !ClassDef.IsInherited) return;
-            if (GenObjectList.SubClassBase == ParentGenObjectList.SubClassBase) return;
-            GenObjectList.SubClassBase = ParentGenObjectList.SubClassBase;
-            GenObjectList.Index = ParentGenObjectList.Index;
-            GenObjectList.ReferenceData = ParentGenObjectList.ReferenceData;
-        }
-
-        private GenObjectList ParentGenObjectList
-        {
-            get
-            {
-                var superClassId = ClassDef.Parent.ClassId;
-                var genObjectList = GenData.Context[superClassId];
-                return genObjectList;
-            }
-        }
-
-        public void Last()
-        {
-            CheckInheritance();
-            GenObjectList.Last();
-            CheckInheritance();
-            if (!GenObjectList.Eol)
-                SetSubClasses();
+            Index = 0;
+            if (ClassDef.IsAbstract || !ClassDef.IsInherited) return;
+            while (!Eol() && ClassName != SubClassBase[Index].ClassName) Index++;
         }
 
         public void Next()
         {
-            CheckInheritance();
-            GenObjectList.Next();
-            CheckInheritance();
-            if (!GenObjectList.Eol)
-                SetSubClasses();
+            if (!Eol()) Index++;
+            if (ClassDef.IsAbstract || !ClassDef.IsInherited) return;
+            while (!Eol() && ClassName != SubClassBase[Index].ClassName) Index++;
+        }
+
+        public void Prior()
+        {
+            if (!Eol()) Index--;
+            if (ClassDef.IsAbstract || !ClassDef.IsInherited) return;
+            while (!Eol() && ClassName != SubClassBase[Index].ClassName) Index--;
+        }
+
+        public void Last()
+        {
+            Index = SubClassBase.Count - 1;
+            if (ClassDef.IsAbstract || !ClassDef.IsInherited) return;
+            while (!Eol() && ClassName != SubClassBase[Index].ClassName) Index--;
         }
 
         public bool Eol()
         {
-            CheckInheritance();
-            return GenObjectList.Eol;
+            if (Index < 0 || Index >= SubClassBase.Count) return true;
+            if (ClassDef.IsAbstract || !ClassDef.IsInherited) return false;
+            if (Inheritance && ClassName != SubClassBase[Index].ClassName) return false;
+            return false;
         }
 
-        public void First()
+        private GenDataDefClass ClassDef
         {
-            CheckInheritance();
-            GenObjectList.First();
-            if (!GenData.Eol(ClassId))
-                SetSubClasses();
+            get { return GenDataDef.Classes[ClassId]; }
+        }
+
+        private GenDataDef GenDataDef
+        {
+            get { return GenData.GenDataDef; }
         }
 
         private int ClassId
         {
-            get { return SegmentClassId(); }
+            get { return SegmentClassId; }
         }
     }
 
@@ -612,10 +538,10 @@ namespace org.xpangen.Generator.Profile
             Navigator = new SegmentNavigator(this);
         }
 
-        public GenCardinality GenCardinality { get; set; }
-        public Segment Segment { get; set; }
+        private GenCardinality GenCardinality { get; set; }
+        public Segment Segment { get; private set; }
 
-        public SegmentNavigator Navigator { get; private set; }
+        private SegmentNavigator Navigator { get; set; }
 
         protected override bool Generate()
         {
@@ -699,9 +625,9 @@ namespace org.xpangen.Generator.Profile
                     }
                     break;
                 case GenCardinality.Reference:
-                    Writer.Write(Navigator.ClassName());
+                    Writer.Write(Navigator.ClassName);
                     Writer.Write("[Reference='");
-                    Writer.Write(Navigator.Reference());
+                    Writer.Write(Navigator.Reference);
                     Writer.Write("']\r\n");
                     break;
                 case GenCardinality.Inheritance:
