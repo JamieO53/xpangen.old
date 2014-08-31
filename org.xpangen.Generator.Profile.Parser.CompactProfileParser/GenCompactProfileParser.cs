@@ -47,7 +47,8 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
         {
         }
 
-        private GenCompactProfileParser(GenDataDef genDataDef, CompactProfileScanner scan) : base(genDataDef)
+        private GenCompactProfileParser(GenDataDef genDataDef, CompactProfileScanner scan)
+            : base(new GenProfileParams(genDataDef))
         {
             Scan = scan;
             try
@@ -139,8 +140,8 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                     case TokenType.Function:
                         s = Scan.ScanFunctionName();
                         var func =
-                            new GenFunction(new GenFragmentParams(GenDataDef, parentSegment, parentContainer,
-                                FragmentType.Function, isPrimary)) {FunctionName = s};
+                            new GenFunction(new GenFunctionParams(GenDataDef, parentSegment, parentContainer,
+                                s, FragmentType.Function, isPrimary));
                         frag = func;
                         ScanBlockParams(func.Body, parentSegment, func);
                         break;

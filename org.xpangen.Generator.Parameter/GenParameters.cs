@@ -73,7 +73,7 @@ namespace org.xpangen.Generator.Parameter
             var def = new StringBuilder();
             def.Append("Definition=");
             def.AppendLine(genDataDef.DefinitionName);
-            var profile = new GenProfileFragment(genDataDef);
+            var profile = new GenProfileFragment(new GenProfileParams(genDataDef));
             profile.Body.Add(new GenTextFragment(new GenTextFragmentParams(genDataDef, profile, profile, "")));
 
             ClassDefinition(genDataDef, 0, def);
@@ -231,10 +231,8 @@ namespace org.xpangen.Generator.Parameter
                                 new GenTextFragment(new GenTextFragmentParams(genDataDef, parentSegment, condNotTrue,
                                     "=")));
                             var functionQuote =
-                                new GenFunction(new GenFragmentParams(genDataDef, parentSegment, condNotTrue))
-                                {
-                                    FunctionName = "StringOrName"
-                                };
+                                new GenFunction(new GenFunctionParams(genDataDef, parentSegment, condNotTrue,
+                                    "StringOrName"));
                             var param = new GenBlock(new GenFragmentParams(genDataDef, parentSegment, functionQuote));
                             param.Body.Add(
                                 new GenPlaceholderFragment(new GenPlaceholderFragmentParams(genDataDef, parentSegment,

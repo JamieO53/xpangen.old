@@ -8,22 +8,10 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenFunction : GenContainerFragmentBase
     {
-        public GenFunction(GenFragmentParams genFragmentParams)
-            : base(genFragmentParams.SetFragmentType(FragmentType.Function))
+        public GenFunction(GenFunctionParams genFunctionParams)
+            : base(genFunctionParams.SetFragmentType(FragmentType.Function))
         {
-        }
-
-        public string FunctionName
-        {
-            private get { return Function.FunctionName; }
-            set { Function.FunctionName = value; }
-        }
-
-        private Function Function { get { return (Function) Fragment; }
-        }
-        public override string ProfileLabel()
-        {
-            return FunctionName;
+            ((Function) Fragment).FunctionName = genFunctionParams.FunctionName;
         }
     }
 }

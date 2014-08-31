@@ -134,7 +134,7 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Generator text fragment test")]
         public void GenTextFragmentTest()
         {
-            var r = new GenProfileFragment(GenData.GenDataDef);
+            var r = new GenProfileFragment(new GenProfileParams(GenData.GenDataDef));
             var g = new GenTextFragment(new GenTextFragmentParams(GenDataDef, r, r, "Text fragment"));
             VerifyFragment(GenData, g, "GenTextFragment", FragmentType.Text, "Text", "Text fragment", "Text fragment",
                 true, -1);
@@ -146,7 +146,7 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Generator placeholder test")]
         public void GenPlaceholderTest()
         {
-            var r = new GenProfileFragment(GenData.GenDataDef);
+            var r = new GenProfileFragment(new GenProfileParams(GenData.GenDataDef));
             var g =
                 new GenPlaceholderFragment(new GenPlaceholderFragmentParams(GenDataDef, r, r,
                     GenDataDef.GetId("Property.Name")));
@@ -160,7 +160,7 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Generator Block test")]
         public void GenBlockTest()
         {
-            var r = new GenProfileFragment(GenData.GenDataDef);
+            var r = new GenProfileFragment(new GenProfileParams(GenData.GenDataDef));
 
             var g = new GenBlock(new GenFragmentParams(GenDataDef, r, r));
             r.Body.Add(g);
@@ -181,7 +181,7 @@ namespace org.xpangen.Generator.Test
         {
             var d = SetUpLookupData();
             var f = d.GenDataDef;
-            var r = new GenProfileFragment(GenData.GenDataDef);
+            var r = new GenProfileFragment(new GenProfileParams(GenData.GenDataDef));
 
             var g = new GenLookup(new GenLookupParams(f, r, r, "Class.Name=SubClass.Name"));
             var p = new GenPlaceholderFragment(new GenPlaceholderFragmentParams(f, r, g, f.GetId("Class.Name")));
@@ -257,7 +257,7 @@ namespace org.xpangen.Generator.Test
         {
             var d = SetUpLookupContextData();
             var f = d.GenDataDef;
-            var r = new GenProfileFragment(GenData.GenDataDef);
+            var r = new GenProfileFragment(new GenProfileParams(GenData.GenDataDef));
 
             var b = new GenBlock(new GenFragmentParams(f, r, r));
             var p0 = new GenPlaceholderFragment(new GenPlaceholderFragmentParams(f, r, b, f.GetId("Parent.Name")));

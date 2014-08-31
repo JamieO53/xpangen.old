@@ -20,10 +20,5 @@ namespace org.xpangen.Generator.Profile
         {
             set { TextFragment.TextValue = value; }
         }
-
-        public override string ProfileLabel()
-        {
-            return "Text";
-        }
     }
 }

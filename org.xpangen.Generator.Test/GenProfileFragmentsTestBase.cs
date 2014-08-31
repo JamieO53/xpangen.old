@@ -8,6 +8,7 @@ using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Test
 {
@@ -84,7 +85,7 @@ namespace org.xpangen.Generator.Test
             if (condOut == "") condOut = condIn;
             if (profileLabel == "") profileLabel = condIn;
 
-            var root = new GenProfileFragment(genDataDef);
+            var root = new GenProfileFragment(new GenProfileParams(genDataDef));
             const string r = "Condition holds";
             var exp = expected ? r : "";
 
@@ -175,7 +176,7 @@ namespace org.xpangen.Generator.Test
                               : "") + ",`]";
             var p = new GenCompactProfileParser(genData, "", "`[Class':" + profile + "`]");
             var g = (GenSegment) ((GenSegment) p.Body.Fragment[0]).Body.Fragment[0];
-            Assert.AreEqual(genCardinality, g.GenCardinality);
+            Assert.AreEqual(genCardinality.ToString(), ((Segment) g.Fragment).Cardinality);
             Assert.AreEqual("Property", g.Definition.Name);
             genData.First(1);
             VerifyFragment(genData, g, "GenSegment", FragmentType.Segment, "Property", profile, expected, false, -1);
@@ -183,8 +184,8 @@ namespace org.xpangen.Generator.Test
 
         protected static void ExecuteFunction(GenData genData, string functionName, string variableName, string variableValue, string expected)
         {
-            var r = new GenProfileFragment(genData.GenDataDef);
-            var g = new GenFunction(new GenFragmentParams(genData.GenDataDef, r, r)) { FunctionName = functionName };
+            var r = new GenProfileFragment(new GenProfileParams(genData.GenDataDef));
+            var g = new GenFunction(new GenFunctionParams(genData.GenDataDef, r, r, functionName));
             r.Body.Add(g);
             var b = SetFunctionParameters(genData, g, variableName, variableValue);
             VerifyFragment(genData, g, "GenFunction", FragmentType.Function, functionName,
