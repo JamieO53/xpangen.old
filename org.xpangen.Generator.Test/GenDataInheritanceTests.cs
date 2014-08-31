@@ -118,7 +118,7 @@ Child=V2I2Child2
             var d = PopulateInheritanceData();
             var p = GenParameters.CreateProfile(d.GenDataDef);
             p.GenObject = d.Root;
-            var text = GenFragmentExpander.Expand(d, ((GenFragment) p).GenObject, p.Fragment);
+            var text = GenFragmentExpander.Expand(d, d.Root, p.Fragment);
             Assert.AreEqual(VirtualDefinitionData, text);
         }
 
@@ -182,8 +182,8 @@ Child=V2I2Child2
         public void InheritanceClassExpansionTest()
         {
             var d = PopulateInheritanceData();
-            var p = new GenCompactProfileParser(d, "", InheritanceProfile);
-            var text = GenFragmentExpander.Expand(d, ((GenFragment) p).GenObject, p.Fragment);
+            var p = new GenCompactProfileParser(d.GenDataDef, "", InheritanceProfile);
+            var text = GenFragmentExpander.Expand(d, d.Root, p.Fragment);
             Assert.AreEqual(InheritanceProfileResult, text);
         }
 
@@ -191,7 +191,7 @@ Child=V2I2Child2
         public void InheritanceClassGenerationTest()
         {
             var d = PopulateInheritanceData();
-            var p = new GenCompactProfileParser(d, "", InheritanceProfile);
+            var p = new GenCompactProfileParser(d.GenDataDef, "", InheritanceProfile);
             var text = GenerateFragment(d, p);
             Assert.AreEqual(InheritanceProfileResult, text);
         }
@@ -265,8 +265,8 @@ Container[Reference='TestData\VirtualData']
         public void NestedInheritanceClassExpansionTest()
         {
             var d = LoadVirtualParentData();
-            var p = new GenCompactProfileParser(d, "", NestedInheritanceProfile);
-            var text = GenFragmentExpander.Expand(d, ((GenFragment) p).GenObject, p.Fragment);
+            var p = new GenCompactProfileParser(d.GenDataDef, "", NestedInheritanceProfile);
+            var text = GenFragmentExpander.Expand(d, d.Root, p.Fragment);
             Assert.AreEqual(InheritanceProfileResult, text);
         }
 

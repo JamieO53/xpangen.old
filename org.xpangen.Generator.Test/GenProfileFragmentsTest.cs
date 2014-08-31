@@ -213,18 +213,9 @@ namespace org.xpangen.Generator.Test
             var profile = "`[Class:`[SubClass:`%Class.Name=SubClass.Name:`;" + txt + "`]`]`]";
             var d = SetUpLookupData();
             var f = d.GenDataDef;
-            var p = new GenCompactProfileParser(d, "", profile);
+            var p = new GenCompactProfileParser(f, "", profile);
 
             var g = ((GenSegment) ((GenSegment) p.Body.Fragment[0]).Body.Fragment[0]).Body.Fragment[0];
-            //var r = new GenProfileFragment(GenData.GenDataDef);
-
-            //var g = new GenLookup(new GenLookupParams(f, r, r, "Class.Name=SubClass.Name")) {NoMatch = true};
-
-            //var lookup = (Lookup)g.Fragment;
-            //var secondaryBody = lookup.CheckSecondaryBody();
-            //var text = secondaryBody.AddText(secondaryBody.FragmentName(FragmentType.Text), txt);
-            //var t = GenFragment.Create(f, text);
-            //g.Body.AddSecondary(t);
             Assert.AreEqual(FragmentType.Lookup, g.FragmentType);
             Assert.IsFalse(g.IsTextFragment);
             Assert.AreEqual("~Class.Name=SubClass.Name", g.ProfileLabel());
