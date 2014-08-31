@@ -81,7 +81,7 @@ namespace org.xpangen.Generator.Profile
         public GenContainerFragmentBase ParentSegment { get; private set; }
 
         public GenContainerFragmentBase ParentContainer { get; private set; }
-        public bool IsPrimary { get; set; }
+        private bool IsPrimary { get; set; }
 
         public FragmentType FragmentType { get; protected set; }
         public int ClassId { get; private set; }

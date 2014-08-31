@@ -15,7 +15,7 @@ namespace org.xpangen.Generator.Profile
             Id = genPlaceholderFragmentParams.Id;
         }
 
-        public GenDataId Id {
+        private GenDataId Id {
             get
             {
                 return GenDataDef.GetId(Placeholder.Class + "." + Placeholder.Property);
@@ -26,27 +26,11 @@ namespace org.xpangen.Generator.Profile
             } 
         }
 
-        public Placeholder Placeholder { get { return (Placeholder) Fragment; } set { Fragment = value; } }
+        private Placeholder Placeholder { get { return (Placeholder) Fragment; } }
         
         public override string ProfileLabel()
         {
             return Id.Identifier;
-        }
-
-        public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
-        {
-            var format = syntaxDictionary[FragmentType.ToString()].Format;
-            return string.Format(format, new object[]
-                                             {
-                                                 GenDataDef.Classes[Id.ClassId].Name,
-                                                 GenDataDef.Classes[Id.ClassId].Properties[Id.PropertyId]
-                                             }
-                );
-        }
-
-        public virtual string Expand(GenData genData)
-        {
-            return GenObject.GetValue(Id);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace org.xpangen.Generator.Profile
 
         public string FunctionName
         {
-            get { return Function.FunctionName; }
+            private get { return Function.FunctionName; }
             set { Function.FunctionName = value; }
         }
 
@@ -24,23 +24,6 @@ namespace org.xpangen.Generator.Profile
         public override string ProfileLabel()
         {
             return FunctionName;
-        }
-
-        public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
-        {
-            var format = syntaxDictionary[FragmentType.ToString()].Format;
-
-            var param = new string[Body.Count];
-            for (var i = 0; i < Body.Count; i++)
-                param[i] = Body.Fragment[i].ProfileText(syntaxDictionary);
-            var p = string.Join(" ", param);
-
-            return string.Format(format, new object[]
-                                             {
-                                                 FunctionName,
-                                                 p
-                                             }
-                );
         }
     }
 }

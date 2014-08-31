@@ -57,26 +57,26 @@ namespace org.xpangen.Generator.Profile
             return (NoMatch ? "~" : "") + Var1.Identifier + "=" + Var2.Identifier;
         }
 
-        public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
-        {
-            var noMatch = Body.SecondaryCount > 0;
-            var format = syntaxDictionary[FragmentType + (noMatch ? "2" : "1")].Format;
-            if (!noMatch)
-                return string.Format(format, new object[]
-                                             {
-                                                 Var1.ToString(),
-                                                 Var2.ToString(),
-                                                 Body.ProfileText(syntaxDictionary)
-                                             }
-                    );
-            return string.Format(format, new object[]
-                                         {
-                                             Var1.ToString(),
-                                             Var2.ToString(),
-                                             Body.ProfileText(syntaxDictionary),
-                                             Body.SecondaryProfileText(syntaxDictionary)
-                                         }
-                );
-        }
+        //public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
+        //{
+        //    var noMatch = Body.SecondaryCount > 0;
+        //    var format = syntaxDictionary[FragmentType + (noMatch ? "2" : "1")].Format;
+        //    if (!noMatch)
+        //        return string.Format(format, new object[]
+        //                                     {
+        //                                         Var1.ToString(),
+        //                                         Var2.ToString(),
+        //                                         Body.ProfileText(syntaxDictionary)
+        //                                     }
+        //            );
+        //    return string.Format(format, new object[]
+        //                                 {
+        //                                     Var1.ToString(),
+        //                                     Var2.ToString(),
+        //                                     Body.ProfileText(syntaxDictionary),
+        //                                     Body.SecondaryProfileText(syntaxDictionary)
+        //                                 }
+        //        );
+        //}
     }
 }

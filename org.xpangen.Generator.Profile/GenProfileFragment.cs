@@ -27,10 +27,5 @@ namespace org.xpangen.Generator.Profile
         {
             return "Profile";
         }
-
-        public override string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
-        {
-            return Body.ProfileText(syntaxDictionary);
-        }
     }
 }
