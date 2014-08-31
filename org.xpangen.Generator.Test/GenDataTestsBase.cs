@@ -778,9 +778,7 @@ Child[Reference='child']
                 genSegment.GenCardinality == GenCardinality.BackDlm)
             {
                 Assert.AreNotEqual("Empty1", segment.Secondary);
-                Assert.AreNotEqual("",
-                    genContainerFragment.Body.SecondaryProfileText(
-                        ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
+                Assert.AreNotEqual(0, segment.SecondaryBody().FragmentList.Count);
             }
         }
 

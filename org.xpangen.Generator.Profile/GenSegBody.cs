@@ -43,25 +43,6 @@ namespace org.xpangen.Generator.Profile
             get { return _secondaryFragment.Count; }
         }
 
-        public string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
-        {
-            var s = new StringBuilder();
-            foreach (var fragment in Fragment)
-                s.Append(fragment.ProfileText(syntaxDictionary));
-            return s.ToString();
-        }
-
-        public string Expand(GenData genData)
-        {
-            var s = new StringBuilder();
-            foreach (var fragment in Fragment)
-            {
-                fragment.GenObject = GenObject;
-                s.Append(GenFragmentExpander.Expand(genData, fragment.GenObject, fragment.Fragment));
-            }
-            return s.ToString();
-        }
-
         public void Add(GenFragment fragment)
         {
             _fragment.Add(fragment);
@@ -76,8 +57,8 @@ namespace org.xpangen.Generator.Profile
             secondaryFragment.ParentContainer = ParentContainer;
         }
 
-        public GenContainerFragmentBase ParentSegment { get; set; }
-        public GenContainerFragmentBase ParentContainer { get; set; }
+        public GenContainerFragmentBase ParentSegment { private get; set; }
+        public GenContainerFragmentBase ParentContainer { get; private set; }
 
         public string SecondaryProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
         {

@@ -91,7 +91,7 @@ namespace org.xpangen.Generator.Profile
         /// </summary>
         /// <param name="syntaxDictionary">The dictionary defining the syntax of the profile text.</param>
         /// <returns>The fragment's profile text.</returns>
-        public virtual string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary = null)
+        public string ProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary = null)
         {
             var dictionary = syntaxDictionary ?? ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary;
             var t = new GenProfileTextExpander(dictionary);

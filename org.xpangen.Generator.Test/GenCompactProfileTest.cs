@@ -53,7 +53,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class,SubClass,Property,",
                 GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
@@ -76,7 +76,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[1].FragmentType);
             Assert.AreEqual(FragmentType.TextBlock, profile.Body.Fragment[2].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Some text Class,SubClass,Property, some more text",
                 GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
@@ -98,7 +98,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class,SubClass,Property",
                 GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
@@ -119,7 +119,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.Block, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Block text",
                 GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
@@ -153,7 +153,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.Fragment[2].FragmentType);
             Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.SecondaryFragment[0].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class{SubClass,Property},SubClass{},Property{}",
                 GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
@@ -187,7 +187,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.Fragment[2].FragmentType);
             Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.SecondaryFragment[0].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class{},SubClass{},Property{}",
                 GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
@@ -212,7 +212,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Name exists NoName does not exist ",
                 GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
@@ -243,7 +243,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class name equals Class " +
                             "Class name is greater than Clasa " +
@@ -291,7 +291,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class name equals Class " +
                             "Class name is greater than Clasa " +
@@ -315,7 +315,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.Function, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual(DateTime.Today.ToLongDateString(),
                 GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
@@ -337,7 +337,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.Function, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("\r\n //File: filename.txt",
                 GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
@@ -365,7 +365,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(5, profile.Body.Count, "Four function calls and a blank");
             Assert.AreEqual(FragmentType.Function, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("5 10",
                 GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
@@ -402,7 +402,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(5, profile.Body.Count, "Four function calls and one blanks");
             Assert.AreEqual(FragmentType.Function, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(expected,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("5 10",
                 GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
@@ -430,7 +430,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,
-                profile.Body.ProfileText(
+                profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
             Assert.AreEqual("Class,SubClass,Property,",
                 GenFragmentExpander.Expand(d, ((GenFragment) profile).GenObject, profile.Fragment),
