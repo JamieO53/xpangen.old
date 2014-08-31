@@ -19,10 +19,8 @@ namespace org.xpangen.Generator.Profile
 
         public new GenObject GenObject
         {
-            get { return base.GenObject; }
             set
             {
-                Body.GenObject = value;
                 base.GenObject = value;
             }
         }
@@ -37,7 +35,7 @@ namespace org.xpangen.Generator.Profile
                 var classId = ParentSegment is GenSegment
                                   ? (ParentSegment).ClassId
                                   : (ParentSegment is GenLookup ? ((GenLookup) ParentSegment).ClassId : -1);
-                if (classId == -1) return 0;//Assert(classId != -1, "Unable to identify fragment class ID");
+                if (classId == -1) return 0;
                 return classId;
             }
             protected set { _classId = value; }

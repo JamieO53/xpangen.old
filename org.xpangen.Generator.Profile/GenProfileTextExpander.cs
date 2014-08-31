@@ -144,16 +144,16 @@ namespace org.xpangen.Generator.Profile
                     if (!noMatch)
                         OutputText(string.Format(format, new object[]
                                                          {
-                                                             FullName(lookupFragment.Class1, lookupFragment.Property1),
-                                                             FullName(lookupFragment.Class2, lookupFragment.Property2),
+                                                             Identifier(lookupFragment.Class1, lookupFragment.Property1),
+                                                             Identifier(lookupFragment.Class2, lookupFragment.Property2),
                                                              GetBodyText(lookupFragment.Body())
                                                          }
                             ));
                     else
                         OutputText(string.Format(format, new object[]
                                                          {
-                                                             FullName(lookupFragment.Class1, lookupFragment.Property1),
-                                                             FullName(lookupFragment.Class2, lookupFragment.Property2),
+                                                             Identifier(lookupFragment.Class1, lookupFragment.Property1),
+                                                             Identifier(lookupFragment.Class2, lookupFragment.Property2),
                                                              GetBodyText(lookupFragment.Body()),
                                                              GetBodyText(lookupFragment.SecondaryBody())
                                                          }
@@ -168,7 +168,7 @@ namespace org.xpangen.Generator.Profile
                             GenErrorType.Assertion);
                     OutputText(string.Format(format, new object[]
                                                      {
-                                                         FullName(conditionFragment.Class1, conditionFragment.Property1),
+                                                         Identifier(conditionFragment.Class1, conditionFragment.Property1),
                                                          Dictionary.GenComparisonText[(int) comparison],
                                                          (comparison == GenComparison.Exists ||
                                                           comparison == GenComparison.NotExists)
@@ -208,7 +208,7 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
-        private static string FullName(string className, string propertyName)
+        private static string Identifier(string className, string propertyName)
         {
             return className + '.' + propertyName;
         }

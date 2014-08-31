@@ -52,6 +52,7 @@
     <Compile Include="GenFunctionCounters.cs" />
     <Compile Include="GenFunctionGeneral.cs" />
     <Compile Include="GenFunctionMap.cs" />
+    <Compile Include="GenFunctionParams.cs" />
     <Compile Include="GenLookup.cs" />
     <Compile Include="GenLookupParams.cs" />
     <Compile Include="GenNullFragment.cs" />

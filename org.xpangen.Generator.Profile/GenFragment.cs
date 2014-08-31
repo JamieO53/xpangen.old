@@ -3,6 +3,7 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Text;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
 
@@ -26,7 +27,7 @@ namespace org.xpangen.Generator.Profile
         public Fragment Fragment
         {
             get { return _fragment; }
-            protected set
+            private set
             {
                 _fragment = value;
                 CheckFragmentType(value);
@@ -84,7 +85,70 @@ namespace org.xpangen.Generator.Profile
         ///     A label identifying the fragment for browsing.
         /// </summary>
         /// <returns>The fragment label.</returns>
-        public abstract string ProfileLabel();
+        public virtual string ProfileLabel()
+        {
+            var label = "";
+            switch (FragmentType)
+            {
+                case FragmentType.Profile:
+                    label = "Profile";
+                    break;
+                case FragmentType.Null:
+                    break;
+                case FragmentType.Text:
+                    label = "Text";
+                    break;
+                case FragmentType.Placeholder:
+                    label = Identifier(((Placeholder) Fragment).Class, ((Placeholder) Fragment).Property);
+                    break;
+                case FragmentType.Body:
+                    break;
+                case FragmentType.Segment:
+                    label = ((Segment) Fragment).Class;
+                    break;
+                case FragmentType.Block:
+                    break;
+                case FragmentType.Lookup:
+                    label = (((Lookup) Fragment).SecondaryBody().FragmentList.Count > 0 ? "~" : "") +
+                            Identifier(((Lookup) Fragment).Class1, ((Lookup) Fragment).Property1) + "=" +
+                            Identifier(((Lookup) Fragment).Class2, ((Lookup) Fragment).Property2);
+                    break;
+                case FragmentType.Condition:
+                {
+                    var condition = (Condition) Fragment;
+                    GenComparison comparison;
+                    Assert(Enum.TryParse(condition.Comparison, out comparison),
+                        "Invalid comparison: " + condition.Comparison);
+                    var s = new StringBuilder(Identifier(condition.Class1, condition.Property1));
+                    var x =
+                        ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.GenComparisonText[
+                            (int) comparison];
+                    s.Append(x);
+
+                    if (comparison != GenComparison.Exists && comparison != GenComparison.NotExists)
+                        s.Append(condition.UseLit != ""
+                            ? GenUtilities.StringOrName(condition.Lit)
+                            : Identifier(condition.Class2, condition.Property2));
+
+                    label = s.ToString();
+                    break;
+                }
+                case FragmentType.Function:
+                    label = ((Function) Fragment).FunctionName;
+                    break;
+                case FragmentType.TextBlock:
+                    label = "Text";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return label;
+        }
+
+        private static string Identifier(string className, string propertyName)
+        {
+            return className + '.' + propertyName;
+        }
 
         /// <summary>
         ///     Profile text equivalent to the fragment.
@@ -106,23 +170,23 @@ namespace org.xpangen.Generator.Profile
             switch (fragmentType)
             {
                 case FragmentType.Profile:
-                    return new GenProfileFragment(new GenProfileParams(genDataDef, (Profile.Profile)fragment));
+                    return new GenProfileFragment(new GenProfileParams(genDataDef, (Profile.Profile) fragment));
                 case FragmentType.Null:
                     return NullFragment;
                 case FragmentType.Text:
-                    return new GenTextFragment(new GenTextFragmentParams(genDataDef, (Text)fragment));
+                    return new GenTextFragment(new GenTextFragmentParams(genDataDef, (Text) fragment));
                 case FragmentType.Placeholder:
-                    return new GenPlaceholderFragment(new GenPlaceholderFragmentParams(genDataDef, (Placeholder)fragment));
+                    return new GenPlaceholderFragment(new GenPlaceholderFragmentParams(genDataDef, (Placeholder) fragment));
                 case FragmentType.Segment:
-                    return new GenSegment(new GenSegmentParams(genDataDef, (Segment)fragment));
+                    return new GenSegment(new GenSegmentParams(genDataDef, (Segment) fragment));
                 case FragmentType.Block:
                     return new GenBlock(new GenFragmentParams(genDataDef, fragment));
                 case FragmentType.Lookup:
-                    return new GenLookup(new GenLookupParams(genDataDef, (Lookup)fragment));
+                    return new GenLookup(new GenLookupParams(genDataDef, (Lookup) fragment));
                 case FragmentType.Condition:
-                    return new GenCondition(new GenConditionParams(genDataDef, (Condition)fragment));
+                    return new GenCondition(new GenConditionParams(genDataDef, (Condition) fragment));
                 case FragmentType.Function:
-                    return new GenFunction(new GenFragmentParams(genDataDef, fragment));
+                    return new GenFunction(new GenFunctionParams(genDataDef, (Function) fragment));
                 case FragmentType.TextBlock:
                     return new GenTextBlock(new GenFragmentParams(genDataDef, fragment));
                 default:

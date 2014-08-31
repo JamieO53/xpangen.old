@@ -3,7 +3,6 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
-using System.Text;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
 
@@ -12,7 +11,7 @@ namespace org.xpangen.Generator.Profile
     public class GenSegBody : GenBase
     {
         private readonly List<GenFragment> _fragment;
-        private IList<GenFragment> _secondaryFragment;
+        private readonly IList<GenFragment> _secondaryFragment;
 
         public GenSegBody(GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
         {
@@ -22,7 +21,6 @@ namespace org.xpangen.Generator.Profile
             ParentContainer = parentContainer;
         }
 
-        public GenObject GenObject { get; set; }
         public IList<GenFragment> Fragment
         {
             get { return _fragment; }
@@ -59,13 +57,5 @@ namespace org.xpangen.Generator.Profile
 
         public GenContainerFragmentBase ParentSegment { private get; set; }
         public GenContainerFragmentBase ParentContainer { get; private set; }
-
-        public string SecondaryProfileText(ProfileFragmentSyntaxDictionary syntaxDictionary)
-        {
-            var s = new StringBuilder();
-            foreach (var fragment in SecondaryFragment)
-                s.Append(fragment.ProfileText(syntaxDictionary));
-            return s.ToString();
-        }
     }
 }
