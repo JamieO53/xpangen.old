@@ -45,9 +45,9 @@ namespace GenEdit.Utilities
         {
             string text;
             fragment.GenObject = genData.Context[fragment.ClassId].GenObject;
-            if (GetNodeHeaderText(selectedItem) == "Text" && fragment is GenBlock)
-                text = ((GenBlock) fragment).Body.Expand(genData);
-            else
+            //if (GetNodeHeaderText(selectedItem) == "Text" && fragment is GenBlock)
+            //    text = ((GenBlock) fragment).Body.Expand(genData);
+            //else
                 text = GenFragmentExpander.Expand(genData, fragment.GenObject, fragment.Fragment);
             return text;
         }
@@ -55,9 +55,9 @@ namespace GenEdit.Utilities
         public static string GetNodeProfileText(object selectedItem, GenFragment fragment, ProfileFragmentSyntaxDictionary dictionary)
         {
             string text;
-            if (GetNodeHeaderText(selectedItem) == "Text" && fragment is GenBlock)
-                text = ((GenBlock)fragment).Body.ProfileText(dictionary);
-            else
+            //if (GetNodeHeaderText(selectedItem) == "Text" && fragment is GenBlock)
+            //    text = ((GenBlock)fragment).Body.ProfileText(dictionary);
+            //else
                 text = fragment.ProfileText(dictionary);
             return text;
         }
