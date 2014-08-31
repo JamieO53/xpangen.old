@@ -148,10 +148,13 @@ namespace org.xpangen.Generator.Profile
             var cardinality = GenCardinality.All;
             for (var i = 0; i < ActiveProfileFragmentSyntaxDictionary.GenCardinalityText.Length; i++)
             {
-                if (s != ActiveProfileFragmentSyntaxDictionary.GenCardinalityText[i]) continue;
-                cardinality = (GenCardinality) i;
-                c = segmentClass.Substring(0, segmentClass.Length - 1);
-                break;
+                var x = ActiveProfileFragmentSyntaxDictionary.GenCardinalityText[i];
+                if (s == x)
+                {
+                    cardinality = (GenCardinality) i;
+                    c = segmentClass.Substring(0, segmentClass.Length - 1);
+                    break;
+                }
             }
             return new GenSegment(new GenSegmentParams(genDataDef, parentSegment, parentContainer, c, cardinality, isPrimary));
         }

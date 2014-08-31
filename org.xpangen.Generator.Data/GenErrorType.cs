@@ -4,6 +4,7 @@
     {
         Unspecified,
         NoOutputFile,
-        Assertion
+        Assertion,
+        Input
     }
 }
