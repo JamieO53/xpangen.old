@@ -26,35 +26,39 @@ namespace org.xpangen.Generator.Profile
             get { return _genData; }
         }
 
-        public Fragment Fragment { get; set; }
+        private Fragment Fragment { get; set; }
 
-        protected string Expand()
+        private string Expand()
         {
-            using (var s = new MemoryStream(100000))
+            using (var stream = new MemoryStream(100000))
             {
-                var w = new GenWriter(s);
-                GenFragmentGenerator.Generate(GenData, w, GenObject, Fragment);
-                w.Flush();
-                s.Seek(0, SeekOrigin.Begin);
-                var r = new StreamReader(s);
-                return r.ReadToEnd();
+                using (var writer = new GenWriter(stream))
+                {
+                    GenFragmentGenerator.Generate(GenData, writer, GenObject, Fragment);
+                    writer.Flush();
+                    stream.Seek(0, SeekOrigin.Begin);
+                    using (var reader = new StreamReader(stream))
+                        return reader.ReadToEnd();
+                }
             }
         }
 
-        protected string ExpandSecondary()
+        private string ExpandSecondary()
         {
-            using (var s = new MemoryStream(100000))
+            using (var stream = new MemoryStream(100000))
             {
-                var w = new GenWriter(s);
-                GenFragmentGenerator.GenerateSecondary(GenData, w, GenObject, Fragment);
-                w.Flush();
-                s.Seek(0, SeekOrigin.Begin);
-                var r = new StreamReader(s);
-                return r.ReadToEnd();
+                using (var writer = new GenWriter(stream))
+                {
+                    GenFragmentGenerator.GenerateSecondary(GenData, writer, GenObject, Fragment);
+                    writer.Flush();
+                    stream.Seek(0, SeekOrigin.Begin);
+                    using (var reader = new StreamReader(stream))
+                        return reader.ReadToEnd();
+                }
             }
         }
 
-        protected GenObject GenObject { get; private set; }
+        private GenObject GenObject { get; set; }
 
         public static string Expand(GenData genData, GenObject genObject, Fragment fragment)
         {
