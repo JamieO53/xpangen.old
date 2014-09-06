@@ -2,8 +2,6 @@
 // // License, v. 2.0. If a copy of the MPL was not distributed with this
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
-
 namespace org.xpangen.Generator.Data
 {
     public class GenObject : GenBase, IGenObject
@@ -13,6 +11,7 @@ namespace org.xpangen.Generator.Data
         public GenObject(GenObject parent, ISubClassBase parentSubClass, int classId)
         {
             Parent = parent;
+            RefParent = null;
             ParentSubClass = parentSubClass;
             ClassId = classId;
             Attributes = new TextList();
@@ -53,6 +52,7 @@ namespace org.xpangen.Generator.Data
         public int ClassId { get; set; }
 
         public GenObject Parent { get; private set; }
+        public GenObject RefParent { get; set; }
         public GenSubClasses SubClass { get; private set; }
 
         public GenDataDefClass Definition
@@ -88,6 +88,7 @@ namespace org.xpangen.Generator.Data
 
         public string GetValue(GenDataId id, out bool notFound)
         {
+            string value = null;
             if (id.ClassName == ClassName)
             {
                 var classes = GenDataBase.GenDataDef.Classes;
@@ -100,17 +101,27 @@ namespace org.xpangen.Generator.Data
                 }
                 var idx = Definition.Properties.IndexOf(id.PropertyName);
                 if (idx == -1)
+                    value = "<<<< Invalid Lookup: " + id + " Property not found >>>>";
+                else
                 {
-                    notFound = true;
-                    return "<<<< Invalid Lookup: " + id + " Property not found >>>>";
+                    notFound = false;
+                    return idx >= Attributes.Count ? "" : Attributes[idx];
                 }
-                notFound = false;
-                if (idx >= Attributes.Count) return "";
-                return Attributes[idx];
             }
-            if (Parent != null) return Parent.GetValue(id, out notFound);
+            if (Parent != null)
+            {
+                value = Parent.GetValue(id, out notFound);
+                if (!notFound)
+                    return value;
+            }
+            if (RefParent != null)
+            {
+                value = RefParent.GetValue(id, out notFound);
+                if (!notFound)
+                    return value;
+            }
             notFound = true;
-            return "<<<< Invalid Lookup: " + id + " Class not found >>>>";
+            return value ?? "<<<< Invalid Lookup: " + id + " Class not found >>>>";
         }
     }
 }

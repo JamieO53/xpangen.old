@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
@@ -21,7 +20,6 @@ namespace org.xpangen.Generator.Data
             GenDataBase = data;
             Parent = parent;
             ClassId = classId;
-            IsReset = false;
         }
 
         private const int ReferenceIdx = 0;
@@ -64,7 +62,6 @@ namespace org.xpangen.Generator.Data
         }
 
         public GenDataDefSubClass Definition { get; private set; }
-        public bool IsReset { get; set; }
 
         public void Reset()
         {

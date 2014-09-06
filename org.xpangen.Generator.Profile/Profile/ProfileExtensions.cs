@@ -17,8 +17,10 @@ namespace org.xpangen.Generator.Profile.Profile
                               Secondary = "Empty1"
                           };
             body.FragmentList.Add(profile);
+            SetContainerLinks(body, profile);
             return profile;
         }
+
         public static Segment AddSegment(this FragmentBody body, string @class = "", string cardinality = "")
         {
             var name = CreateContainerFragmentBody(body, "Segment");
@@ -32,6 +34,7 @@ namespace org.xpangen.Generator.Profile.Profile
                                   Cardinality = cardinality
                               };
             body.FragmentList.Add(segment);
+            SetContainerLinks(body, segment);
             return segment;
         }
 
@@ -46,6 +49,7 @@ namespace org.xpangen.Generator.Profile.Profile
                                 Secondary = "Empty1"
                             };
             body.FragmentList.Add(block);
+            SetContainerLinks(body, block);
             return block;
         }
 
@@ -68,6 +72,7 @@ namespace org.xpangen.Generator.Profile.Profile
                                     UseLit = useLit
                                 };
             body.FragmentList.Add(condition);
+            SetContainerLinks(body, condition);
             return condition;
         }
 
@@ -83,6 +88,7 @@ namespace org.xpangen.Generator.Profile.Profile
                                    FunctionName = functionName
                                };
             body.FragmentList.Add(function);
+            SetContainerLinks(body, function);
             return function;
         }
 
@@ -103,6 +109,7 @@ namespace org.xpangen.Generator.Profile.Profile
                                  Property2 = property2
                              };
             body.FragmentList.Add(lookup);
+            SetContainerLinks(body, lookup);
             return lookup;
         }
 
@@ -117,24 +124,41 @@ namespace org.xpangen.Generator.Profile.Profile
                                     Secondary = "Empty1"
                                 };
             body.FragmentList.Add(textBlock);
+            SetContainerLinks(body, textBlock);
             return textBlock;
+        }
+
+        private static void SetContainerLinks(FragmentBody body, ContainerFragment containerFragment)
+        {
+            containerFragment.Links.Add("ContainerBody", body);
+            containerFragment.Links.Add("GenObject", null);
+            var bodies = containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList;
+            containerFragment.Links.Add("PrimaryBody", bodies.Find(containerFragment.Primary));
+            containerFragment.Links.Add("SecondaryBody", bodies.Find(containerFragment.Secondary));
+            containerFragment.Body().Links.Add("Parent", containerFragment);
         }
 
         public static FragmentBody Body(this ContainerFragment containerFragment)
         {
-            return containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList.Find(containerFragment.Primary);
+            //return containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList.Find(containerFragment.Primary);
+            return (FragmentBody) containerFragment.Links["PrimaryBody"];
         }
 
         public static FragmentBody SecondaryBody(this ContainerFragment containerFragment)
         {
-            return containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList.Find(containerFragment.Secondary);
+            //return containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList.Find(containerFragment.Secondary);
+            return (FragmentBody) containerFragment.Links["SecondaryBody"];
         }
 
         public static FragmentBody CheckBody(this ContainerFragment containerFragment)
         {
             var root = containerFragment.ProfileDefinition().ProfileRoot();
             if (containerFragment.Primary == "Empty1")
+            {
                 containerFragment.Primary = CreateContainerFragmentBody(root, containerFragment.GetType().Name);
+                containerFragment.Links["PrimaryBody"] =
+                    containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList.Find(containerFragment.Primary);
+            }
             return root.FragmentBodyList.Find(containerFragment.Primary);
         }
 
@@ -142,7 +166,11 @@ namespace org.xpangen.Generator.Profile.Profile
         {
             var root = containerFragment.ProfileDefinition().ProfileRoot();
             if (containerFragment.Secondary == "Empty1")
+            {
                 containerFragment.Secondary = CreateContainerFragmentBody(root, containerFragment.GetType().Name);
+                containerFragment.Links["SecondaryBody"] =
+                    containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList.Find(containerFragment.Secondary);
+            }
             return root.FragmentBodyList.Find(containerFragment.Secondary);
         }
 

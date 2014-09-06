@@ -158,6 +158,14 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Grandchild", dataParent.Context[3].GenObject.Attributes[0]);
         }
 
+        [TestCase(Description = "Verify that a referenced object can get a value from the referencing data")]
+        public void VerifyParentChildReferenceGetValue()
+        {
+            var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
+            var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", "Child", dataChild);
+            Assert.AreEqual("Parent", dataParent.Context[3].GenObject.GetValue(dataParent.GenDataDef.GetId("Parent", "Name")));
+        }
+
         [TestCase(Description = "Verify that the SetUpParentChildReferenceData method sets up the data definitions as expected")]
         public void VerifyParentChildReferenceDataDef()
         {

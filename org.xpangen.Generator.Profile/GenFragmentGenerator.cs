@@ -300,7 +300,10 @@ namespace org.xpangen.Generator.Profile
         {
             while (genObject != null)
             {
-                var idx = GenData.GenDataDef.Classes[genObject.ClassId].SubClasses.IndexOf(className);
+                if (genObject.ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase))
+                    return genObject.ParentSubClass;
+                var classId = GenData.GenDataDef.Classes.IndexOf(genObject.ClassName);
+                var idx = GenData.GenDataDef.Classes[classId].SubClasses.IndexOf(className);
                 if (idx != -1) return genObject.SubClass[idx];
                 
                 genObject = genObject.Parent;
@@ -351,6 +354,8 @@ namespace org.xpangen.Generator.Profile
                 var f = GenData.Cache[GenData.GenDataDef.Classes[ClassId].ReferenceDefinition,
                     GenObject.SubClass[IndexOfSubClass()].Reference];
                 subClassBase = f.Root.SubClass[0];
+                foreach (var o in subClassBase)
+                    o.RefParent = GenObject;
             }
             else if (SubClassIsInheritor())
             {
@@ -443,11 +448,6 @@ namespace org.xpangen.Generator.Profile
                     return GenObject.SubClass[IndexOfSubClass()].Reference;
                 return "";
             }
-        }
-
-        private GenObjectList GenObjectList
-        {
-            get { return GenData.Context[ClassId]; }
         }
 
         public string ClassName

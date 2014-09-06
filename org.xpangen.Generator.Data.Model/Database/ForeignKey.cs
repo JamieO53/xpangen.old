@@ -13,6 +13,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             SubClasses.Add("ForeignKeyColumn");
             Properties.Add("Name");
+            Properties.Add("ReferenceSchema");
             Properties.Add("ReferenceTable");
             Properties.Add("DeleteAction");
             Properties.Add("UpdateAction");
@@ -33,6 +34,20 @@ namespace org.xpangen.Generator.Data.Model.Database
             {
                 if (Name == value) return;
                 SetString("Name", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+        /// <summary>
+        /// The schema of the related table
+        /// </summary>
+        public string ReferenceSchema
+        {
+            get { return AsString("ReferenceSchema"); }
+            set
+            {
+                if (ReferenceSchema == value) return;
+                SetString("ReferenceSchema", value);
                 if (!DelayedSave) SaveFields();
             }
         }
