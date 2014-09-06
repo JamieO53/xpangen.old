@@ -108,7 +108,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
 
-        public Column AddColumn(string name, string columnName = "", string nativeDataType = "", string oDBCDataType = "", string length = "", string precision = "", string scale = "", string isNullable = "", string isKey = "")
+        public Column AddColumn(string name, string columnName = "", string nativeDataType = "", string oDBCDataType = "", string length = "", string precision = "", string scale = "", string isNullable = "", string isKey = "", string isIdentity = "")
         {
             var item = new Column(GenData)
                            {
@@ -121,7 +121,8 @@ namespace org.xpangen.Generator.Data.Model.Database
                                Precision = precision,
                                Scale = scale,
                                IsNullable = isNullable,
-                               IsKey = isKey
+                               IsKey = isKey,
+                               IsIdentity = isIdentity
                            };
             ColumnList.Add(item);
             return item;
@@ -143,12 +144,13 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
 
-        public ForeignKey AddForeignKey(string name, string referenceTable = "", string deleteAction = "", string updateAction = "")
+        public ForeignKey AddForeignKey(string name, string referenceSchema = "", string referenceTable = "", string deleteAction = "", string updateAction = "")
         {
             var item = new ForeignKey(GenData)
                            {
                                GenObject = GenData.CreateObject("Object", "ForeignKey"),
                                Name = name,
+                               ReferenceSchema = referenceSchema,
                                ReferenceTable = referenceTable,
                                DeleteAction = deleteAction,
                                UpdateAction = updateAction

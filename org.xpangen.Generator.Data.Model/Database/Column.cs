@@ -21,6 +21,7 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("Scale");
             Properties.Add("IsNullable");
             Properties.Add("IsKey");
+            Properties.Add("IsIdentity");
         }
 
         public Column(GenData genData) : this()
@@ -150,6 +151,20 @@ namespace org.xpangen.Generator.Data.Model.Database
             {
                 if (IsKey == value) return;
                 SetString("IsKey", value);
+                if (!DelayedSave) SaveFields();
+            }
+        }
+
+        /// <summary>
+        /// Is this column an Identity?
+        /// </summary>
+        public string IsIdentity
+        {
+            get { return AsString("IsIdentity"); }
+            set
+            {
+                if (IsIdentity == value) return;
+                SetString("IsIdentity", value);
                 if (!DelayedSave) SaveFields();
             }
         }

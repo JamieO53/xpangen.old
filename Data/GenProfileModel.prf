@@ -38,7 +38,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             `Class.Name`List = new GenNamedApplicationList<`Class.Name`>(this, 1, 0);
         }
 
-        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])
+        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`]`;, `])
         {
             var item = new `Class.Name`(GenData)
                            {
@@ -122,7 +122,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             `Class.Name`List = new GenNamedApplicationList<`Class.Name`>(this, `@MapGet:`{`Class.Name`ClassId`]`], `@Get:`{SubClassIdx`]`]`@Add:`{SubClassIdx`]`]);
 `]`]`]`[SubClass':        }`]`[SubClass:`@MapSet:`{SubClassName`]`{`SubClass.Name``]`]`%Class.Name=SubClass.Name:`?Class.Inheritance~:
 
-        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])
+        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`]`;, `])
         {
             var item = new `Class.Name`(GenData)
                            {
@@ -133,7 +133,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             return item;
         }
 `]`?Class.Inheritance=Abstract:`[Subclass:`%Class.Name=SubClass.Name:`?Class.Inheritance=Virtual:
-        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`], `])
+        public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`]`;, `])
         {
             var item = new `Class.Name`(GenData)
                            {

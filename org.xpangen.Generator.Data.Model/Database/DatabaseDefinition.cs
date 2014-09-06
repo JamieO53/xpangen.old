@@ -75,6 +75,7 @@ namespace org.xpangen.Generator.Data.Model.Database
             f.Classes[8].AddInstanceProperty("Scale");
             f.Classes[8].AddInstanceProperty("IsNullable");
             f.Classes[8].AddInstanceProperty("IsKey");
+            f.Classes[8].AddInstanceProperty("IsIdentity");
             f.Classes[9].AddInstanceProperty("Name");
             f.Classes[9].AddInstanceProperty("Value");
             f.Classes[10].AddInstanceProperty("Name");
@@ -85,6 +86,7 @@ namespace org.xpangen.Generator.Data.Model.Database
             f.Classes[11].AddInstanceProperty("Order");
             f.Classes[12].AddInstanceProperty("Name");
             f.Classes[13].AddInstanceProperty("Name");
+            f.Classes[13].AddInstanceProperty("ReferenceSchema");
             f.Classes[13].AddInstanceProperty("ReferenceTable");
             f.Classes[13].AddInstanceProperty("DeleteAction");
             f.Classes[13].AddInstanceProperty("UpdateAction");

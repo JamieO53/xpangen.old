@@ -10,7 +10,7 @@ namespace org.xpangen.Generator.Data
     public class GenApplicationBase: GenAttributes
     {
         private Dictionary<string, IList> _lists;
-
+        private Dictionary<string, object> _links;
 
         protected GenApplicationBase()
         {
@@ -43,6 +43,11 @@ namespace org.xpangen.Generator.Data
         public Dictionary<string, IList> Lists 
         {
             get { return _lists ?? (_lists = new Dictionary<string, IList>()); }
+        }
+
+        public Dictionary<string, object> Links 
+        {
+            get { return _links ?? (_links = new Dictionary<string, object>()); }
         }
 
         public GenApplicationBase Parent { get; set; }

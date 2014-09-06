@@ -3,16 +3,12 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
-using org.xpangen.Generator.Profile.Profile;
-using Text = org.xpangen.Generator.Profile.Profile.Text;
 
 namespace org.xpangen.Generator.Test
 {
