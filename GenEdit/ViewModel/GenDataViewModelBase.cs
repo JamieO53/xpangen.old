@@ -25,7 +25,7 @@ namespace GenEdit.ViewModel
         /// </summary>
         public abstract string Name { get; }
 
-        public GenSavedContext SavedContext { get; protected set; }
+//        public GenSavedContext SavedContext { get; protected set; }
         public bool IsNew { get; set; }
 
         /// <summary>
@@ -45,14 +45,6 @@ namespace GenEdit.ViewModel
             Changed = false;
         }
 
-        /// <summary>
-        /// Establish the context of the current object.
-        /// </summary>
-        public void EstablishContext()
-        {
-            if (SavedContext != null) SavedContext.EstablishContext();
-        }
-
         protected void FieldPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Changed = true;
@@ -64,8 +56,6 @@ namespace GenEdit.ViewModel
             var node = selectedItem as DataEditorTreeNodeBase;
             if (node == null) return null;
             var tag = node.ViewModel;
-            if (tag != null)
-                tag.EstablishContext();
             return tag;
         }
     }

@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GenEdit.Controls;
 using GenEdit.ViewModel;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Editor.Helper;
 
 namespace GenEdit.View
 {
@@ -43,7 +44,7 @@ namespace GenEdit.View
 
             if (node == null || !node.Changed) return;
 
-            if (node.IsNew) node.SavedContext.GenData.GenDataBase.Changed = true;
+            if (node.IsNew) GenDataEditorViewModel.Data.Changed = true;
 
 
             var mr = MessageBox.Show("Data editor - data changed", "Do you wish to save the changes?",
@@ -80,7 +81,6 @@ namespace GenEdit.View
             var nodeData = NodeData;
             if (nodeData != null)
             {
-                nodeData.EstablishContext();
                 GenDataDataGrid.DataSource = nodeData.Fields;
                 splitContainer1.ActiveControl = GenDataDataGrid;
             }

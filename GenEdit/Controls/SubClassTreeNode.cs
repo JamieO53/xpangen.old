@@ -37,7 +37,7 @@ namespace GenEdit.Controls
         /// <summary>
         /// The saved context.
         /// </summary>
-        public new GenSavedContext SavedContext { get { return base.SavedContext; } private set { base.SavedContext = value; } }
+//        public new GenSavedContext SavedContext { get { return base.SavedContext; } private set { base.SavedContext = value; } }
 
         /// <summary>
         /// Create a new <see cref="SubClassTreeNode"/> for the selected subclass.
@@ -52,7 +52,7 @@ namespace GenEdit.Controls
             ParentNode = parentNode;
             GenData = genData;
             SubClassBase = GenData.Context[ClassId].SubClassBase;
-            SavedContext = ClassId == 1 ? null : ParentNode.SavedContext;
+//            SavedContext = ClassId == 1 ? null : ParentNode.SavedContext;
             Definition = definition;
             
             var genDataDef = GenData.GenDataDef;
@@ -70,8 +70,7 @@ namespace GenEdit.Controls
             var genObject = GenData.Context[ClassId].GenObject;
             //if (genObject != null)
                 Tag = new SubClassViewModel(ParentNode == null ? null : ParentNode.GenObject.SubClass[i], SubClassBase, Def,
-                                            SubClassDef,
-                                            SavedContext, !string.IsNullOrEmpty(SubClassDef.Reference));
+                                            SubClassDef, !string.IsNullOrEmpty(SubClassDef.Reference));
 
             GenData.First(ClassId);
             for (var j = 0; j < SubClassBase.Count; j++)
@@ -97,8 +96,7 @@ namespace GenEdit.Controls
         {
             var parentClassName = ParentNode == null ? "" : ParentNode.ClassDef.Name;
             var className = SubClassDef.SubClass.Name;
-            if (ParentNode != null && ParentNode.ViewModel != null) ParentNode.ViewModel.EstablishContext();
-            else GenData.First(0);
+            GenData.First(0);
             if (string.IsNullOrEmpty(SubClassDef.ReferenceDefinition))
             {
                 var genObject = GenData.CreateObject(parentClassName, className);
@@ -119,7 +117,7 @@ namespace GenEdit.Controls
         /// Do nothing. Only Class nodes can be moved.
         /// </summary>
         /// <param name="move">The specified move.</param>
-        public override bool MoveItem(ListMove move)
+        public virtual bool MoveItem(ListMove move)
         {
             return false;
         }
@@ -129,7 +127,7 @@ namespace GenEdit.Controls
             var nodeData = node.ViewModel;
             if (nodeData == null) return false;
             var index = Nodes.IndexOf(node);
-            var genData = nodeData.SavedContext.GenData;
+            var genData = GenData;
             var classId = nodeData.GenAttributes.GenObject.ClassId;
             bool result;
             switch (move)

@@ -10,17 +10,17 @@ namespace GenEdit.Controls
         /// <summary>
         /// The tree node of the parent subclass of this class.
         /// </summary>
-        public DataEditorTreeNodeBase ParentNode { get; protected set; }
+        protected DataEditorTreeNodeBase ParentNode { get; set; }
 
         /// <summary>
         /// The data being navigated.
         /// </summary>
-        public GenData GenData { get; protected set; }
+        protected GenData GenData { get; set; }
 
         /// <summary>
         /// The definition data for the data being navigated.
         /// </summary>
-        public Definition Definition { get; protected set; }
+        protected Definition Definition { get; set; }
 
         /// <summary>
         /// The ID of this class.
@@ -28,14 +28,9 @@ namespace GenEdit.Controls
         public int ClassId { get; protected set; }
 
         /// <summary>
-        /// The saved context.
-        /// </summary>
-        public GenSavedContext SavedContext { get; set; }
-
-        /// <summary>
         /// The editor view model for this node
         /// </summary>
-        public virtual GenDataViewModelBase ViewModel
+        public GenDataViewModelBase ViewModel
         {
             get { return Tag as GenDataViewModelBase; }
         }
@@ -45,11 +40,5 @@ namespace GenEdit.Controls
         /// </summary>
         /// <returns>The added tree node.</returns>
         public abstract ClassTreeNode AddNewNode();
-
-        /// <summary>
-        /// Make the specified item move.
-        /// </summary>
-        /// <param name="move">The specified move.</param>
-        public abstract bool MoveItem(ListMove move);
     }
 }
