@@ -61,7 +61,7 @@ namespace GenEdit.Controls
             GenData = genData;
             ParentNode = parentNode;
             GenObject = GenData.Context[ClassId].GenObject;
-            SavedContext = GenData.SaveContext(ClassId, ParentNode.SavedContext);
+            //SavedContext = GenData.SaveContext(ClassId, ParentNode.SavedContext);
             ClassDef = GenData.GenDataDef.Classes[ClassId];
             Def = ClassId > definition.ClassList.Count ? null : definition.ClassList[ClassId-1];
             GenAttributes = new GenAttributes(GenData.GenDataDef, classId) { GenObject = GenObject };
@@ -72,7 +72,7 @@ namespace GenEdit.Controls
                 Text = GenAttributes.AsString("Name");
             ImageIndex = 1;
             ToolTipText = Def == null ? "" : Def.Title;
-            Tag = new GenObjectViewModel(GenObject, Def, SavedContext, ClassDef.IsReference);
+            Tag = new GenObjectViewModel(GenObject, Def, ClassDef.IsReference);
 
             for (var i = 0; i < ClassDef.SubClasses.Count; i++)
                 Nodes.Add(new SubClassTreeNode(this, GenData, definition, ClassDef.SubClasses[i].SubClass.ClassId));
@@ -91,7 +91,7 @@ namespace GenEdit.Controls
         /// Make the specified item move.
         /// </summary>
         /// <param name="move">The specified move.</param>
-        public override bool MoveItem(ListMove move)
+        public virtual bool MoveItem(ListMove move)
         {
             return ParentNode.MakeMove(this, move);
         }

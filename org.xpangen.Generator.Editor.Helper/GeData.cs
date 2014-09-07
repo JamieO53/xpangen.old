@@ -21,6 +21,7 @@ namespace org.xpangen.Generator.Editor.Helper
             {
                 return GenData != null && GenData.Changed;
             }
+            set { if (GenData != null) GenData.Changed = value; }
         }
 
         public GenData DefGenData

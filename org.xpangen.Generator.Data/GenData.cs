@@ -42,6 +42,7 @@ namespace org.xpangen.Generator.Data
         public bool Changed
         {
             get { return GenDataBase.Changed; }
+            set { GenDataBase.Changed = value; }
         }
 
         /// <summary>
@@ -328,59 +329,6 @@ namespace org.xpangen.Generator.Data
             d.Context.Duplicate(Context, GenDataBase);
 
             return d;
-        }
-
-        /// <summary>
-        ///     Restore the context to that saved before.
-        /// </summary>
-        /// <param name="savedContext">The context being restored.</param>
-        public void EstablishContext(GenSavedContext savedContext)
-        {
-            if (savedContext.ParentContext != null)
-                savedContext.ParentContext.EstablishContext();
-            Context[savedContext.ClassId].SubClassBase = savedContext.SubClassBase;
-            Context[savedContext.ClassId].RefClassId = savedContext.RefClassId;
-            Context[savedContext.ClassId].Reference = savedContext.Reference;
-            Context[savedContext.ClassId].ReferenceData = savedContext.ReferenceData;
-            Context[savedContext.ClassId].Index = savedContext.SubClassBase.IndexOf(savedContext.GenObject);
-
-            SetSubClasses(savedContext.ClassId);
-        }
-
-        /// <summary>
-        ///     Save the specified context, in the context of the saved parent context.
-        /// </summary>
-        /// <param name="classId">The class ID being saved.</param>
-        /// <param name="parentContext">The saved parent context.</param>
-        /// <returns>The saved context.</returns>
-        public GenSavedContext SaveContext(int classId, GenSavedContext parentContext)
-        {
-            var sc = new GenSavedContext
-                         {
-                             ParentContext = parentContext,
-                             GenData = this,
-                             ClassId = classId,
-                             GenObject = Context[classId].GenObject,
-                             SubClassBase = Context[classId].SubClassBase,
-                             Reference = Context[classId].Reference,
-                             RefClassId = Context[classId].RefClassId,
-                             ReferenceData = Context[classId].ReferenceData ?? this
-                         };
-            return sc;
-        }
-
-        /// <summary>
-        ///     Save the specified context.
-        /// </summary>
-        /// <param name="classId">The class ID being saved.</param>
-        /// <returns>The saved context.</returns>
-        public GenSavedContext SaveContext(int classId)
-        {
-            if (classId == 0)
-                return null;
-            if (Context[classId].DefClass.Parent.ClassId == 0)
-                return SaveContext(classId, null);
-            return SaveContext(classId, SaveContext(Context[classId].DefClass.Parent.ClassId));
         }
 
         public override string ToString()

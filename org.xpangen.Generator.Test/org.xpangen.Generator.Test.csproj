@@ -40,7 +40,6 @@
   <ItemGroup>
     <Compile Include="ApplicationBaseTests.cs" />
     <Compile Include="CharSetTests.cs" />
-    <Compile Include="DebugTests.cs" />
     <Compile Include="EditorHelperTests.cs" />
     <Compile Include="GenDataCacheTests.cs" />
     <Compile Include="DataModelTests.cs" />

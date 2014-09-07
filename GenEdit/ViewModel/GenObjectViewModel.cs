@@ -63,19 +63,17 @@ namespace GenEdit.ViewModel
             GenAttributes.GetFields();
             base.Cancel();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the GenObjectViewModel class.
         /// </summary>
         /// <param name="genObject">The <see cref="GenObject"/> being edited.</param>
         /// <param name="definition">The class definition of the object being edited.</param>
-        /// <param name="savedContext">The context of the object being edited</param>
         /// <param name="isReadOnly">Is this data readonly?</param>
-        public GenObjectViewModel(GenObject genObject, GenNamedApplicationBase definition, GenSavedContext savedContext,
+        public GenObjectViewModel(GenObject genObject, GenNamedApplicationBase definition,
                                   bool isReadOnly)
         {
             IsReadOnly = isReadOnly;
-            SavedContext = savedContext;
             IgnorePropertyValidation = true;
             Definition = definition;
             GenAttributes = new GenAttributes(genObject.GenDataBase.GenDataDef, genObject.ClassId) {GenObject = genObject};

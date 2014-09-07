@@ -70,7 +70,6 @@
     <Compile Include="GenObjectList.cs" />
     <Compile Include="GenSubClass.cs" />
     <Compile Include="SubClassReference.cs" />
-    <Compile Include="GenSavedContext.cs" />
     <Compile Include="GenSubClasses.cs" />
     <Compile Include="IGenDataLoader.cs" />
     <Compile Include="IGenObject.cs" />
