@@ -47,7 +47,7 @@ namespace org.xpangen.Generator.Profile.Profile
         {
             var item = new Text(GenData)
                            {
-                               GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                               GenObject = GenData.CreateObject("FragmentBody", "Text"),
                                Name = name,
                                TextValue = textValue
                            };
@@ -58,7 +58,7 @@ namespace org.xpangen.Generator.Profile.Profile
         {
             var item = new Placeholder(GenData)
                            {
-                               GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                               GenObject = GenData.CreateObject("FragmentBody", "Placeholder"),
                                Name = name,
                                Class = @class,
                                Property = property
@@ -70,7 +70,7 @@ namespace org.xpangen.Generator.Profile.Profile
         {
             var item = new ContainerFragment(GenData)
                            {
-                               GenObject = GenData.CreateObject("FragmentBody", "Fragment"),
+                               GenObject = GenData.CreateObject("FragmentBody", "ContainerFragment"),
                                Name = name,
                                Primary = primary,
                                Secondary = secondary

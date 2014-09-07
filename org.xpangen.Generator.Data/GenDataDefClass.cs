@@ -58,9 +58,9 @@ namespace org.xpangen.Generator.Data
                 if (_properties != null) return _properties;
                 else
                 {
-                    Assert(_instanceProperties != null, "The instance properties have not been initialized");
                     NameList nameList;
-                    if (RefDef != null && RefClassId >= 0 && RefClassId < RefDef.Classes.Count)
+                    if (_instanceProperties == null) nameList = new NameList();
+                    else if (RefDef != null && RefClassId >= 0 && RefClassId < RefDef.Classes.Count)
                         nameList = RefDef.Classes[RefClassId].Properties;
                     else
                     {

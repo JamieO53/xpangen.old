@@ -11,7 +11,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = CreateContainerFragmentBody(body, "Profile");
             var profile = new Profile(body.GenData)
                           {
-                              GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
+                              GenObject = body.GenData.CreateObject("FragmentBody", "Profile"),
                               Name = name,
                               Primary = name,
                               Secondary = "Empty1"
@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = CreateContainerFragmentBody(body, "Segment");
             var segment = new Segment(body.GenData)
                               {
-                                  GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
+                                  GenObject = body.GenData.CreateObject("FragmentBody", "Segment"),
                                   Name = name,
                                   Primary = name,
                                   Secondary = "Empty1",
@@ -43,7 +43,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = CreateContainerFragmentBody(body, "Block");
             var block = new Block(body.GenData)
                             {
-                                GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
+                                GenObject = body.GenData.CreateObject("FragmentBody", "Block"),
                                 Name = name,
                                 Primary = name,
                                 Secondary = "Empty1"
@@ -59,7 +59,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = CreateContainerFragmentBody(body, "Condition");
             var condition = new Condition(body.GenData)
                                 {
-                                    GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
+                                    GenObject = body.GenData.CreateObject("FragmentBody", "Condition"),
                                     Name = name,
                                     Primary = name,
                                     Secondary = "Empty1",
@@ -78,12 +78,12 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public static Function AddFunction(this FragmentBody body, string functionName = "")
         {
-            var name = CreateContainerFragmentBody(body, "Function");
+            var name = "Function" + body.FragmentList.Count;
             var function = new Function(body.GenData)
                                {
-                                   GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
+                                   GenObject = body.GenData.CreateObject("FragmentBody", "Function"),
                                    Name = name,
-                                   Primary = name,
+                                   Primary = "Empty1",
                                    Secondary = "Empty1",
                                    FunctionName = functionName
                                };
@@ -98,7 +98,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = CreateContainerFragmentBody(body, "Lookup");
             var lookup = new Lookup(body.GenData)
                              {
-                                 GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
+                                 GenObject = body.GenData.CreateObject("FragmentBody", "Lookup"),
                                  Name = name,
                                  Primary = name,
                                  Secondary = "Empty1",
@@ -118,7 +118,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = CreateContainerFragmentBody(body, "TextBlock");
             var textBlock = new TextBlock(body.GenData)
                                 {
-                                    GenObject = body.GenData.CreateObject("FragmentBody", "Fragment"),
+                                    GenObject = body.GenData.CreateObject("FragmentBody", "TextBlock"),
                                     Name = name,
                                     Primary = name,
                                     Secondary = "Empty1"
@@ -135,7 +135,8 @@ namespace org.xpangen.Generator.Profile.Profile
             var bodies = containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList;
             containerFragment.Links.Add("PrimaryBody", bodies.Find(containerFragment.Primary));
             containerFragment.Links.Add("SecondaryBody", bodies.Find(containerFragment.Secondary));
-            containerFragment.Body().Links.Add("Parent", containerFragment);
+            if (containerFragment.Primary != "Empty1")
+                containerFragment.Body().Links.Add("Parent", containerFragment);
         }
 
         public static FragmentBody Body(this ContainerFragment containerFragment)
@@ -158,6 +159,7 @@ namespace org.xpangen.Generator.Profile.Profile
                 containerFragment.Primary = CreateContainerFragmentBody(root, containerFragment.GetType().Name);
                 containerFragment.Links["PrimaryBody"] =
                     containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList.Find(containerFragment.Primary);
+                containerFragment.Body().Links.Add("Parent", containerFragment);
             }
             return root.FragmentBodyList.Find(containerFragment.Primary);
         }
@@ -170,6 +172,7 @@ namespace org.xpangen.Generator.Profile.Profile
                 containerFragment.Secondary = CreateContainerFragmentBody(root, containerFragment.GetType().Name);
                 containerFragment.Links["SecondaryBody"] =
                     containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList.Find(containerFragment.Secondary);
+                containerFragment.SecondaryBody().Links.Add("Parent", containerFragment);
             }
             return root.FragmentBodyList.Find(containerFragment.Secondary);
         }

@@ -218,7 +218,7 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        public void SetSubClasses(int classId)
+        private void SetSubClasses(int classId)
         {
             var inheritedClassId = classId;
             if (Context[classId].DefClass != null && Context[classId].DefClass.IsInherited)
@@ -248,17 +248,18 @@ namespace org.xpangen.Generator.Data
                         classDef.Reference != classDef.SubClasses[i].Reference)
                     {
                         if (genObject.SubClass[i].Reference != null)
+                        {
+                            Cache.Check(Context.Classes[subClassId].ReferenceDefinition, genObject.SubClass[i].Reference);
                             SetReferenceSubClasses(classId, i,
-                                                   Cache[
-                                                       Context.Classes[subClassId].ReferenceDefinition,
-                                                       genObject.SubClass[i].Reference],
-                                                   genObject.SubClass[i].Reference);
+                                Cache[genObject.SubClass[i].Reference],
+                                genObject.SubClass[i].Reference);
+                         }
                     }
                     else if (Context[subClassId].ReferenceData != null && Context[subClassId].ReferenceData != this)
                     {
                         var refContext = Context[subClassId].ReferenceData.Context[Context[subClassId].RefClassId];
                         Context[subClassId].SubClassBase = refContext.SubClassBase;
-                        First(subClassId);
+                       First(subClassId);
                     }
                     else
                     {
@@ -270,7 +271,7 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        public void SetReferenceSubClasses(int classId, int subClassIndex, GenData data, string reference)
+        private void SetReferenceSubClasses(int classId, int subClassIndex, GenData data, string reference)
         {
             var subClass = Context.Classes[classId].SubClasses[subClassIndex].SubClass;
             var subClassId = subClass.ClassId;
@@ -280,6 +281,9 @@ namespace org.xpangen.Generator.Data
             Context[subClassId].Reference = reference;
             Context[subClassId].ReferenceData = data;
             Context[subClassId].SubClassBase = data.Context[subRefClassId].SubClassBase;
+            if (subRefClassId == 1)
+                foreach (var o in data.Root.SubClass[0])
+                    o.RefParent = Context[classId].GenObject;
             data.First(subRefClassId);
             Context[subClassId].First();
             if (!data.Eol(subRefClassId))
@@ -302,12 +306,7 @@ namespace org.xpangen.Generator.Data
         private void CacheReferences()
         {
             foreach (var reference in GenDataBase.References.ReferenceList)
-            {
-#pragma warning disable 168
-                // Side effect: Cache saves the reference if it does not already exist
-                var dummy = Cache[reference.Definition, reference.Data];
-#pragma warning restore 168
-            }
+                Cache.Check(reference.Definition, reference.Data);
         }
 
         /// <summary>
@@ -394,16 +393,6 @@ namespace org.xpangen.Generator.Data
             if (GenDataDef == null || !GenDataDef.Classes[classId].IsInherited) return;
             var superClassId = GenDataDef.Classes[classId].Parent.ClassId;
             if (Context[classId].SubClassBase == Context[superClassId].SubClassBase) return;
-            Context[classId].SubClassBase = Context[superClassId].SubClassBase;
-            Context[classId].Index = Context[superClassId].Index;
-            Context[classId].ReferenceData = Context[superClassId].ReferenceData;
-        }
-
-        public void SetInheritance(int classId)
-        {
-            Assert(GenDataDef.Classes[classId].IsInherited,
-                   "Cannot set inheritance for a non-extension class");
-            var superClassId = GenDataDef.Classes[classId].Parent.ClassId;
             Context[classId].SubClassBase = Context[superClassId].SubClassBase;
             Context[classId].Index = Context[superClassId].Index;
             Context[classId].ReferenceData = Context[superClassId].ReferenceData;

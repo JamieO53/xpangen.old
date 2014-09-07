@@ -45,30 +45,20 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        /// <summary>
-        /// Check if the cache does not contain the data, and adds it then returns the cached data.
-        /// </summary>
-        /// <param name="defPath">The data's definition location.</param>
-        /// <param name="path">The data's locations.</param>
-        /// <returns></returns>
-        public GenData this[string defPath, string path]
+        public void Check(string defPath, string path)
         {
-            get
+            if (path.Equals("self", StringComparison.InvariantCultureIgnoreCase))
+                return;
+            var f = AddDef(defPath);
+            var p = path.ToLowerInvariant().Replace('/', '\\');
+            if (!LocalCache.ContainsKey(p))
             {
-                if (path.Equals("self", StringComparison.InvariantCultureIgnoreCase))
-                    return Self;
-                var f = AddDef(defPath);
-                var p = path.ToLowerInvariant().Replace('/', '\\');
-                if (!LocalCache.ContainsKey(p))
-                {
-                    var fullPath = Path.GetExtension(path) == "" ? p + ".dcb" : path;
-                    var d = GenData.DataLoader.LoadData(f.AsDef(), fullPath);
-                    LocalCache.Add(p, d);
-                    foreach (var reference in d.Cache.References)
-                        if (!LocalCache.ContainsKey(reference.Path))
-                            LocalCache.Add(reference.Path, reference.GenData);
-                }
-                return LocalCache[p];
+                var fullPath = Path.GetExtension(path) == "" ? p + ".dcb" : path;
+                var d = GenData.DataLoader.LoadData(f.AsDef(), fullPath);
+                LocalCache.Add(p, d);
+                foreach (var reference in d.Cache.References)
+                    if (!LocalCache.ContainsKey(reference.Path))
+                        LocalCache.Add(reference.Path, reference.GenData);
             }
         }
 

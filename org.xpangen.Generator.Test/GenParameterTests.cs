@@ -344,14 +344,10 @@ namespace org.xpangen.Generator.Test
         public void GeneratorDefinitionModelDefinitionLoadTest()
         {
             var defData = GenData.DataLoader.LoadData("ProgramDefinition");
-            //using (var stream = new FileStream("Data\\ProgramDefinition.dcb", FileMode.Open, FileAccess.Read))
-            //    defData = new GenParameters(stream) { DataName = "ProgramDefinition" };
             var def = defData.AsDef();
-            //def.Definition = "ProgramDefinition";
             var data = GenData.DataLoader.LoadData(def, "GeneratorDefinitionModel");
-            //using (var stream = new FileStream("Data\\GeneratorDefinitionModel.dcb", FileMode.Open, FileAccess.Read))
-            //    data = new GenParameters(def, stream) { DataName = "GeneratorDefinitionModel" };
-            var definition = data.Cache["definition", "definition"];
+            data.Cache.Check("definition", "definition");
+            var definition = data.Cache["definition"];
             definition.Last(1);
             Assert.AreEqual(7, definition.Context[3].Count);
             Assert.AreEqual("Property", def.Classes[5].Name);

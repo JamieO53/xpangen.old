@@ -119,18 +119,27 @@ namespace org.xpangen.Generator.Data
                 throw new Exception("<<<<Unknown Class/Property: " + name + ">>>>");
 
             id.ClassName = Classes[id.ClassId].Name;
-            //Assert(id.ClassId >= 0 && id.ClassId < Classes.Count, "Invalid ClassId in GetId: " + id);
-            //Assert(id.PropertyId >= 0 && id.PropertyId < Classes[id.ClassId].Properties.Count, "Invalid PropertyId in GetId: " + id);
             id.PropertyName = Classes[id.ClassId].Properties[id.PropertyId];
             return id;
         }
 
         public int IndexOfSubClass(int classId, int subClassId)
         {
-            var idx = Classes[classId].SubClasses.IndexOf(subClassId);
-            if (idx == -1 && Classes[classId].IsInherited)
-                idx = Classes[classId].SubClasses.Count + IndexOfSubClass(Classes[classId].Parent.ClassId, subClassId);
-            return idx;
+            var classSubClasses = Classes[classId].SubClasses;
+            if (Classes[subClassId].IsInherited)
+            {
+                var inheritanceId = subClassId;
+                while (classSubClasses.IndexOf(inheritanceId) == -1 && Classes[inheritanceId].Parent != null)
+                    inheritanceId = Classes.IndexOf(Classes[inheritanceId].Parent.Name);
+                return classSubClasses.IndexOf(inheritanceId);
+            }
+            else
+            {
+                var idx = classSubClasses.IndexOf(subClassId);
+                if (idx == -1 && Classes[classId].IsInherited)
+                    idx = classSubClasses.Count + IndexOfSubClass(Classes[classId].Parent.ClassId, subClassId);
+                return idx;
+            }
         }
 
         public static GenDataDef CreateMinimal()

@@ -142,6 +142,10 @@ namespace org.xpangen.Generator.Test
                 Assert.AreEqual(parentClassId, genFragment.ParentSegment.ClassId, "Parent Class ID");
             var str = GenerateFragment(genData, genFragment);
             Assert.AreEqual(expected, str);
+            var classes = genFragment.Fragment.GenObject.GenDataBase.GenDataDef.Classes;
+            var genDataDef = genData.GenDataDef;
+            var parentClassName = genDataDef.Classes[genFragment.ParentSegment.ClassId].Name;
+            ValidateFragmentData(classes, genDataDef, parentClassName, genFragment);
         }
 
         protected static string GenerateFragment(GenData genData, GenFragment fragment)
