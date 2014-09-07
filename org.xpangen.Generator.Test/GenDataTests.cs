@@ -48,7 +48,8 @@ namespace org.xpangen.Generator.Test
         public void ReferenceCacheSelfTest()
         {
             var d = GenDataDef.CreateMinimal().AsGenData();
-            var self = d.Cache["Minimal", "self"];
+            d.Cache.Check("Minimal", "self");
+            var self = d.Cache["self"];
             Assert.AreSame(d, self);
         }
 
@@ -103,8 +104,8 @@ namespace org.xpangen.Generator.Test
             var lookup1 = d.Cache.Internal("Minimal", "d1", d1);
             Assert.AreSame(d0, lookup0);
             Assert.AreSame(d1, lookup1);
-            lookup0 = d.Cache["Minimal", "d0"];
-            lookup1 = d.Cache["Minimal", "d1"];
+            lookup0 = d.Cache["d0"];
+            lookup1 = d.Cache["d1"];
             Assert.AreSame(d0, lookup0);
             Assert.AreSame(d1, lookup1);
             Assert.AreNotSame(lookup1, lookup0);
@@ -120,8 +121,8 @@ namespace org.xpangen.Generator.Test
             d.GenDataBase.References.Add("Data/Minimal", "Data/Minimal");
             d.GenDataBase.References.Add("Data/Definition", "Data/Minimal");
             d.LoadCache();
-            var minimal = d.Cache["Data/Minimal", "Data/Minimal"];
-            var definition = d.Cache["Data/Minimal", "Data/Definition"];
+            var minimal = d.Cache["Data/Minimal"];
+            var definition = d.Cache["Data/Definition"];
             Assert.AreNotSame(minimal, definition);
         }
 
@@ -159,11 +160,13 @@ namespace org.xpangen.Generator.Test
         }
 
         [TestCase(Description = "Verify that a referenced object can get a value from the referencing data")]
-        public void VerifyParentChildReferenceGetValue()
+        public void  VerifyParentChildReferenceGetValue()
         {
             var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
             var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", "Child", dataChild);
-            Assert.AreEqual("Parent", dataParent.Context[3].GenObject.GetValue(dataParent.GenDataDef.GetId("Parent", "Name")));
+            var genObject = dataParent.Context[3].GenObject;
+            var id = dataParent.GenDataDef.GetId("Parent", "Name");
+            Assert.AreEqual("Parent", genObject.GetValue(id));
         }
 
         [TestCase(Description = "Verify that the SetUpParentChildReferenceData method sets up the data definitions as expected")]

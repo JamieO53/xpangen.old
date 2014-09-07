@@ -41,9 +41,9 @@ namespace org.xpangen.Generator.Test
             Assert.AreSame(minimal, d.Cache.Internal("definition", "Minimal", minimal));
             Assert.AreSame(basic, d.Cache.Internal("definition", "Basic", basic));
             Assert.AreSame(newDefinition, d.Cache.Internal("definition", "Definition", definition));
-            Assert.AreSame(minimal, d.Cache["definition", "Minimal"]);
-            Assert.AreSame(basic, d.Cache["definition", "Basic"]);
-            Assert.AreSame(newDefinition, d.Cache["definition", "Definition"]);
+            Assert.AreSame(minimal, d.Cache["Minimal"]);
+            Assert.AreSame(basic, d.Cache["Basic"]);
+            Assert.AreSame(newDefinition, d.Cache["Definition"]);
             d.Cache.Merge();
 
             CreateGenObject(d, "", "Parent", "Minimal");

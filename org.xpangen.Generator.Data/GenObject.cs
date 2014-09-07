@@ -22,7 +22,8 @@ namespace org.xpangen.Generator.Data
             {
                 Assert(Definition.Parent.Inheritors.Contains(Definition),
                        "The new object is inherited, but not from its parent");
-                Assert(parentSubClass.ClassId == Definition.Parent.ClassId,
+                Assert(!Definition.Parent.IsInherited && parentSubClass.ClassId == Definition.Parent.ClassId ||
+                    Definition.Parent.IsInherited && parentSubClass.ClassId == Definition.Parent.Parent.ClassId,
                        "The new object is being added to the incorrect subclass");
             }
             else

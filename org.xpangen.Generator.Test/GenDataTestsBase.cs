@@ -636,12 +636,11 @@ Child[Reference='child']
                 expectedAttributes.GenObject = expectedObject;
                 actualAttributes.GenObject = actualObject;
                 Assert.GreaterOrEqual(expectedObject.Attributes.Count, actualObject.Attributes.Count);
-                for (var i = 0; i < actualObject.Definition.Properties.Count; i++)
-                    Assert.AreEqual(expectedAttributes.AsString(actualObject.Definition.Properties[i]),
-                                    actualAttributes.AsString(actualObject.Definition.Properties[i]),
-                                    actualObject.Definition.Properties[i] + 
-                                    " " + expectedAttributes.AsString("Name") +
-                                    " vs " + actualAttributes.AsString("Name"));
+                foreach (var property in actualObject.Definition.Properties)
+                    Assert.AreEqual(expectedAttributes.AsString(property),
+                        actualAttributes.AsString(property),
+                        property + " " + expectedAttributes.AsString("Name") + " vs " +
+                        actualAttributes.AsString("Name"));
 
                 Assert.AreEqual(expectedObject.SubClass.Count, actualObject.SubClass.Count);
                 for (var i = 0; i < actualObject.SubClass.Count; i++)
@@ -695,7 +694,10 @@ Child[Reference='child']
 
         protected static void ValidateProfileData(GenProfileFragment profile, GenDataDef genDataDef)
         {
+            var profileClasses = profile.Profile.GenData.GenDataDef.Classes;
+            VerifyObjectClass(profileClasses, "Profile", profile.Profile.GenObject);
             var profileDefinition = profile.Profile.ProfileDefinition();
+            VerifyObjectClass(profileClasses, "ProfileRoot", profileDefinition.ProfileRootList[0].GenObject);
             var fragmentBodies = profileDefinition.ProfileRootList[0].FragmentBodyList;
             Assert.AreEqual("Root0", fragmentBodies[0].Name, "Root body name");
             Assert.AreEqual(1, fragmentBodies[0].FragmentList.Count);
@@ -705,19 +707,28 @@ Child[Reference='child']
             Assert.AreEqual("Profile2", fragmentBodies[2].Name, "Profile body name");
             Assert.AreEqual("Profile2", profile.Profile.Primary, "The profile's body name");
             Assert.AreEqual("Empty1", profile.Profile.Secondary, "The profile's secondary body is empty");
-            ValidateProfileFragmentBodyList(fragmentBodies);
-            ValidateProfileContainerData(profile, genDataDef, "");
+            ValidateProfileFragmentBodyList(profileClasses, fragmentBodies);
+            ValidateProfileContainerData(profileClasses, profile, genDataDef, "");
         }
 
-        protected static void ValidateProfileFragmentBodyList(GenNamedApplicationList<FragmentBody> fragmentBodies)
+        private static void VerifyObjectClass(GenDataDefClassList classes, string className, IGenObject genObject)
+        {
+            Assert.AreEqual(classes.IndexOf(className), genObject.ClassId, className + " class ID");
+            Assert.AreEqual(className, genObject.ClassName, "Object Class name");
+        }
+
+        private static void ValidateProfileFragmentBodyList(GenDataDefClassList classes, GenNamedApplicationList<FragmentBody> fragmentBodies)
         {
             foreach (var body in fragmentBodies)
+            {
+                VerifyObjectClass(classes, "FragmentBody", body.GenObject);
                 Assert.AreEqual(1, fragmentBodies.Count(body0 => body0.Name == body.Name),
                     "Fragment body names must be unique: " + body.Name);
+            }
         }
 
-        protected static void ValidateProfileContainerData(GenContainerFragmentBase container, GenDataDef genDataDef,
-            string parentClassName)
+        private static void ValidateProfileContainerData(GenDataDefClassList classes, GenContainerFragmentBase container, 
+            GenDataDef genDataDef, string parentClassName)
         {
             Assert.IsInstanceOf(typeof (ContainerFragment), container.Fragment,
                 "Container must have a container fragment class");
@@ -726,8 +737,9 @@ Child[Reference='child']
             Assert.AreEqual(container.Body.SecondaryCount, containerFragment.SecondaryBody().FragmentList.Count,
                 "Container secondary body count");
             var containerFragmentTypeName = containerFragment.GetType().Name;
-            Assert.AreEqual(containerFragment.Primary.Substring(0, containerFragmentTypeName.Length),
-                containerFragmentTypeName);
+            if (containerFragment.Primary != "Empty1")
+                Assert.AreEqual(containerFragment.Primary.Substring(0, containerFragmentTypeName.Length),
+                    containerFragmentTypeName);
             if (container.Body.Count == 0)
                 Assert.AreEqual("Empty1", containerFragment.Primary, "Empty primary container name");
             if (container.Body.SecondaryCount == 0)
@@ -736,14 +748,14 @@ Child[Reference='child']
                 Assert.AreEqual(containerFragment.Secondary.Substring(0, containerFragmentTypeName.Length),
                     containerFragmentTypeName);
             Assert.AreEqual(container, container.Body.ParentContainer);
-            ValidateProfileContainerPartData(container.Body.Fragment, containerFragment.Body().FragmentList, genDataDef,
-                parentClassName);
-            ValidateProfileContainerPartData(container.Body.SecondaryFragment,
-                containerFragment.SecondaryBody().FragmentList, genDataDef,
-                parentClassName);
+            ValidateProfileContainerPartData(classes, container.Body.Fragment, containerFragment.Body().FragmentList,
+                genDataDef, parentClassName);
+            ValidateProfileContainerPartData(classes, container.Body.SecondaryFragment,
+                containerFragment.SecondaryBody().FragmentList, genDataDef, parentClassName);
         }
 
-        protected static void ValidateProfileContainerPartData(IList<GenFragment> genFragments, GenNamedApplicationList<Fragment> fragmentList, GenDataDef genDataDef, string parentClassName)
+        private static void ValidateProfileContainerPartData(GenDataDefClassList classes, IList<GenFragment> genFragments, 
+            List<Fragment> fragmentList, GenDataDef genDataDef, string parentClassName)
         {
             foreach (var genFragment in genFragments)
             {
@@ -752,19 +764,27 @@ Child[Reference='child']
                     "Fragments in the same order");
                 Assert.AreEqual(genFragment.FragmentType.ToString(), fragment.GetType().Name, "Fragment types");
                 Assert.Contains(fragment, fragmentList, "Fragment not in correct list");
-                var containerFragment = fragment as ContainerFragment;
-                if (containerFragment != null)
-                {
-                    var genContainerFragment = (GenContainerFragmentBase) genFragment;
-                    var className = parentClassName;
-                    ValidateProfileSegmentData(genDataDef, containerFragment, genContainerFragment, ref className);
-                    ValidateProfileTextBlockData(containerFragment, genContainerFragment);
-                    ValidateProfileContainerData(genContainerFragment, genDataDef, className);
-                }
+                ValidateFragmentData(classes, genDataDef, parentClassName, genFragment);
             }
         }
 
-        protected static void ValidateProfileSegmentData(GenDataDef genDataDef, ContainerFragment containerFragment,
+        protected static void ValidateFragmentData(GenDataDefClassList classes, GenDataDef genDataDef, string parentClassName,
+            GenFragment genFragment)
+        {
+            var fragment = genFragment.Fragment;
+            VerifyObjectClass(classes, genFragment.FragmentType.ToString(), fragment.GenObject);
+            var containerFragment = fragment as ContainerFragment;
+            if (containerFragment != null)
+            {
+                var genContainerFragment = (GenContainerFragmentBase) genFragment;
+                var className = parentClassName;
+                ValidateProfileSegmentData(genDataDef, containerFragment, genContainerFragment, ref className);
+                ValidateProfileTextBlockData(containerFragment, genContainerFragment);
+                ValidateProfileContainerData(classes, genContainerFragment, genDataDef, className);
+            }
+        }
+
+        private static void ValidateProfileSegmentData(GenDataDef genDataDef, ContainerFragment containerFragment,
             GenContainerFragmentBase genContainerFragment, ref string className)
         {
             var segment = containerFragment as Segment;
@@ -784,7 +804,7 @@ Child[Reference='child']
             }
         }
 
-        protected static void ValidateProfileTextBlockData(ContainerFragment containerFragment, 
+        private static void ValidateProfileTextBlockData(ContainerFragment containerFragment, 
             GenContainerFragmentBase genContainerFragment)
         {
             var textBlock = containerFragment as TextBlock;

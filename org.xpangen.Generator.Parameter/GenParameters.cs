@@ -527,12 +527,12 @@ namespace org.xpangen.Generator.Parameter
                 else
                 {
                     var reference = Scan.Attribute("Reference");
-                    parent.SubClass[subClassIdx].Reference = reference;
                     var referenceData = DataLoader.LoadData(reference);
                     var definition = referenceData.GenDataDef.DefinitionName;
                     GenDataDef.Cache.Internal(string.IsNullOrEmpty(definition) ? reference + "Def" : definition,
                                               referenceData.GenDataDef);
                     Cache.Internal(reference, referenceData);
+                    parent.SubClass[subClassIdx].Reference = reference;
                     Scan.ScanObject();
                 }
             }

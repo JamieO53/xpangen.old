@@ -351,8 +351,9 @@ namespace org.xpangen.Generator.Profile
             if (GenData.GenDataDef.Classes[ClassId].IsReference &&
                 !GenData.GenDataDef.Classes[ClassId].Parent.IsReference)
             {
-                var f = GenData.Cache[GenData.GenDataDef.Classes[ClassId].ReferenceDefinition,
-                    GenObject.SubClass[IndexOfSubClass()].Reference];
+                GenData.Cache.Check(GenData.GenDataDef.Classes[ClassId].ReferenceDefinition,
+                    GenObject.SubClass[IndexOfSubClass()].Reference);
+                var f = GenData.Cache[GenObject.SubClass[IndexOfSubClass()].Reference];
                 subClassBase = f.Root.SubClass[0];
                 foreach (var o in subClassBase)
                     o.RefParent = GenObject;
