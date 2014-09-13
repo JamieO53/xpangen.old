@@ -12,8 +12,6 @@ namespace org.xpangen.Generator.Data
     internal class GenDataToDef
     {
         private readonly int _nClass;
-        private readonly int _nSubClass;
-        private readonly int _nProperty;
         private readonly int _xSubClass;
         private readonly int _xProperty;
         private readonly int _xClassName;
@@ -29,20 +27,20 @@ namespace org.xpangen.Generator.Data
         {
             GenDataBase = genData;
             GenDataDef = GenDataBase.GenDataDef;
-            _nClass = GenDataDef.Classes.IndexOf("Class");
-            _nSubClass = GenDataDef.Classes.IndexOf("SubClass");
-            _nProperty = GenDataDef.Classes.IndexOf("Property");
-            _xClassName = GenDataDef.Classes[_nClass].Properties.IndexOf("Name");
-            _xSubClassName = GenDataDef.Classes[_nSubClass].Properties.IndexOf("Name");
-            _xSubClassRelationship = GenDataDef.Classes[_nSubClass].Properties.IndexOf("Relationship");
-            _xSubClassReference = GenDataDef.Classes[_nSubClass].Properties.IndexOf("Reference");
-            _xPropertyName = GenDataDef.Classes[_nProperty].Properties.IndexOf("Name");
+            _nClass = GenDataDef.GetClassId("Class");
+            var nSubClass = GenDataDef.GetClassId("SubClass");
+            var nProperty = GenDataDef.GetClassId("Property");
+            _xClassName = GenDataDef.GetClassProperties(_nClass).IndexOf("Name");
+            _xSubClassName = GenDataDef.GetClassProperties(nSubClass).IndexOf("Name");
+            _xSubClassRelationship = GenDataDef.GetClassProperties(nSubClass).IndexOf("Relationship");
+            _xSubClassReference = GenDataDef.GetClassProperties(nSubClass).IndexOf("Reference");
+            _xPropertyName = GenDataDef.GetClassProperties(nProperty).IndexOf("Name");
 
-            if (_nClass == -1 || _nSubClass == -1 || _nProperty == -1)
+            if (_nClass == -1 || nSubClass == -1 || nProperty == -1)
                 return;
 
-            _xSubClass = GenDataDef.IndexOfSubClass(_nClass, _nSubClass);
-            _xProperty = GenDataDef.IndexOfSubClass(_nClass, _nProperty);
+            _xSubClass = GenDataDef.IndexOfSubClass(_nClass, nSubClass);
+            _xProperty = GenDataDef.IndexOfSubClass(_nClass, nProperty);
         }
     
         public GenDataDef AsDef()
@@ -62,9 +60,9 @@ namespace org.xpangen.Generator.Data
             else
             {
                 var sc = c.ParentSubClass;
-                for (var i = 0; i < sc.Count; i++)
+                foreach (var pc in sc)
                 {
-                    var className = sc[i].Attributes[_xClassName];
+                    var className = pc.Attributes[_xClassName];
                     if (!f.Classes.Contains(className))
                     {
                         if (f.Classes.Count <= 1) f.AddSubClass("", className);
@@ -72,18 +70,18 @@ namespace org.xpangen.Generator.Data
                     }
                 }
 
-                for (var i = 0; i < sc.Count; i++)
+                foreach (var pc in sc)
                 {
-                    var className = sc[i].Attributes[_xClassName];
-                    for (var j = 0; j < sc[i].SubClass[_xSubClass].Count; j++)
+                    var className = pc.Attributes[_xClassName];
+                    for (var j = 0; j < pc.SubClass[_xSubClass].Count; j++)
                     {
-                        var subClassName = sc[i].SubClass[_xSubClass][j].Attributes[_xSubClassName];
+                        var subClassName = pc.SubClass[_xSubClass][j].Attributes[_xSubClassName];
                         var relationship = _xSubClassRelationship != -1
-                                               ? sc[i].SubClass[_xSubClass][j].Attributes[_xSubClassRelationship]
-                                               : "";
+                            ? pc.SubClass[_xSubClass][j].Attributes[_xSubClassRelationship]
+                            : "";
                         var reference = _xSubClassReference != -1
-                                            ? sc[i].SubClass[_xSubClass][j].Attributes[_xSubClassReference]
-                                            : "";
+                            ? pc.SubClass[_xSubClass][j].Attributes[_xSubClassReference]
+                            : "";
                         if (relationship.Equals("Extends", StringComparison.InvariantCultureIgnoreCase))
                             f.AddInheritor(className, subClassName);
                         else
@@ -91,14 +89,14 @@ namespace org.xpangen.Generator.Data
                     }
                 }
 
-                for (var i = 0; i < sc.Count; i++)
+                foreach (var pc in sc)
                 {
-                    var className = sc[i].Attributes[_xClassName];
-                    var iClass = f.Classes.IndexOf(className);
-                    var @class = f.Classes[iClass];
-                    for (var j = 0; j < sc[i].SubClass[_xProperty].Count; j++)
+                    var className = pc.Attributes[_xClassName];
+                    var iClass = f.GetClassId(className);
+                    var @class = f.GetClassDef(iClass);
+                    for (var j = 0; j < pc.SubClass[_xProperty].Count; j++)
                     {
-                        var name = sc[i].SubClass[_xProperty][j].Attributes[_xPropertyName];
+                        var name = pc.SubClass[_xProperty][j].Attributes[_xPropertyName];
                         if (!@class.IsInherited || !@class.Parent.Properties.Contains(name))
                         {
                             @class.AddInstanceProperty(name);

@@ -40,7 +40,7 @@ namespace org.xpangen.Generator.Data.Definition
         /// </summary>
         public string Reference
         {
-            get { return AsString("Reference"); }
+            private get { return AsString("Reference"); }
             set
             {
                 if (Reference == value) return;
@@ -54,7 +54,7 @@ namespace org.xpangen.Generator.Data.Definition
         /// </summary>
         public string Relationship
         {
-            get { return AsString("Relationship"); }
+            private get { return AsString("Relationship"); }
             set
             {
                 if (Relationship == value) return;

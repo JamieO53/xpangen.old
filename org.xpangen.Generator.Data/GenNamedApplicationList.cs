@@ -20,26 +20,7 @@ namespace org.xpangen.Generator.Data
                 if (ClassIdx >= ParentObject.SubClass.Count)
                     for (var i = ParentObject.SubClass.Count; i <= ClassIdx; i++)
                         ParentObject.SubClass.Add(new GenSubClass(ParentObject.GenDataBase, ParentObject, ClassId, null));
-                ParentSubClass = ParentObject.SubClass[ClassIdx];
                 PopulateList(parent);
-            }
-            parent.Lists.Add(className, this);
-        }
-        
-        public GenNamedApplicationList(GenApplicationBase parent)
-        {
-            var className = typeof(T).Name;
-            Parent = parent;
-            ParentObject = parent.GenObject as GenObject;
-            if (ParentObject != null)
-            {
-                ClassId = parent.Classes.IndexOf(className);
-                ClassIdx = parent.SubClasses.IndexOf(className);
-                if (ClassIdx != -1)
-                {
-                    ParentSubClass = ParentObject.SubClass[ClassIdx];
-                    PopulateList(parent);
-                }
             }
             parent.Lists.Add(className, this);
         }
@@ -56,32 +37,15 @@ namespace org.xpangen.Generator.Data
             var list = ParentObject.SubClass[ClassIdx];
             foreach (var item in list)
                 Add(new T {GenData = parent.GenData, GenObject = item, Parent = parent});
-            //var list = new GenObjectList(ParentObject.SubClass[ClassIdx], ParentObject.GenDataBase,
-            //                             parent.GenData.Context.Count > parent.ClassId
-            //                                 ? parent.GenData.Context[parent.ClassId]
-            //                                 : null,
-            //                             null);
-            //list.First();
-            //while (!list.Eol)
-            //{
-            //    Add(new T {GenData = parent.GenData, GenObject = list.GenObject, Parent = parent});
-            //    list.Next();
-            //}
         }
 
-        public int ClassIdx { get; set; }
+        private int ClassIdx { get; set; }
 
-        public int ClassId { get; set; }
+        private int ClassId { get; set; }
 
-        public GenObject ParentObject { get; set; }
+        private GenObject ParentObject { get; set; }
 
-        protected GenApplicationBase Parent { get; set; }
-
-        public ISubClassBase ParentSubClass { get; set; }
-
-        public GenNamedApplicationList()
-        {
-        }
+        private GenApplicationBase Parent { get; set; }
 
         /// <summary>
         /// Find the named object.
@@ -109,7 +73,7 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         /// <param name="name">The name of the sought object.</param>
         /// <returns>The index of the named object, otherwise -1.</returns>
-        public int IndexOf(string name)
+        private int IndexOf(string name)
         {
             for (var i = 0; i < Count; i++)
                 if (this[i].Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))

@@ -27,6 +27,7 @@ namespace GenEdit.ViewModel
 
 //        public GenSavedContext SavedContext { get; protected set; }
         public bool IsNew { get; set; }
+        public GenObject GenObject { get; set; }
 
         /// <summary>
         /// Saves the object data

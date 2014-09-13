@@ -61,7 +61,7 @@ namespace org.xpangen.Generator.Scanner
             GC.SuppressFinalize(this);
         }
 
-        protected void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposing) return;
             _text = null;

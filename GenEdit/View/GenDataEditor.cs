@@ -83,6 +83,7 @@ namespace GenEdit.View
             {
                 GenDataDataGrid.DataSource = nodeData.Fields;
                 splitContainer1.ActiveControl = GenDataDataGrid;
+                GenDataEditorViewModel.Data.GenObject = nodeData.GenObject;
             }
             else GenDataDataGrid.DataSource = null;
             RaiseFocusChanged();

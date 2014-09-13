@@ -1,4 +1,8 @@
-﻿using System;
+﻿// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using System;
 using System.IO;
 using System.Windows.Forms;
 using GenEdit.ViewModel;
@@ -25,7 +29,7 @@ namespace GenEdit.View
             fileGroupUserControl1.ProfileSelected += FileGroupProfileSelected;
         }
 
-        public GenDataEditorViewModel GenDataEditorViewModel { get; set; }
+        public GenDataEditorViewModel GenDataEditorViewModel { private get; set; }
 
         private bool Background { get; set; }
 
@@ -46,20 +50,12 @@ namespace GenEdit.View
             if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null) return;
 
             var changed = GenDataEditorViewModel.Data.GenDataStore.Changed;
-            EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: changed,
-                           saveAsEnabled: true, fileGroupEnabled: false, generateEnabled: ProfileIsSpecified());
+            EnableControls(false, true, changed, true, false, ProfileIsSpecified());
         }
 
         private bool ProfileIsSpecified()
         {
             return fileGroupUserControl1.Profile != null;
-        }
-
-        private void splitContainer1_Panel1_Resize(object sender, EventArgs e)
-        {
-            var s = sender as Panel;
-            var w = s.Width - 25;
-            comboBoxFileGroup.Width = w;
         }
 
         private void GenLibrary_Load(object sender, EventArgs e)
@@ -68,14 +64,13 @@ namespace GenEdit.View
 
             var data = GenDataEditorViewModel.Data;
 
-            EnableControls(newEnabled: true, closeEnabled: false, saveEnabled: false,
-                           saveAsEnabled: false, fileGroupEnabled: true, generateEnabled: false);
+            EnableControls(true, false, false, false, true, false);
             
             comboBoxFileGroup.Items.Clear();
             comboBoxFileGroup.DisplayMember = "Name";
             var fileGroups = data.Settings.GetFileGroups();
-            for (var i = 0; i < fileGroups.Count; i++)
-                comboBoxFileGroup.Items.Add(fileGroups[i]);
+            foreach (var fileGroup in fileGroups)
+                comboBoxFileGroup.Items.Add(fileGroup);
         }
 
         private void comboBoxFileGroup_SelectedValueChanged(object sender, EventArgs e)
@@ -92,8 +87,7 @@ namespace GenEdit.View
             
             data.SetFileGroup(selected.Name);
 
-            EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: false,
-                           saveAsEnabled: false, fileGroupEnabled: false, generateEnabled: ProfileIsSpecified());
+            EnableControls(false, true, false, false, false, ProfileIsSpecified());
             fileGroupUserControl1.FileGroup = selected;
             RaiseDataLoaded();
         }
@@ -102,8 +96,7 @@ namespace GenEdit.View
         {
             GenDataEditorViewModel.Data.SetFileGroup("");
             comboBoxFileGroup.SelectedIndex = -1;
-            EnableControls(newEnabled: true, closeEnabled: false, saveEnabled: false,
-                           saveAsEnabled: false, fileGroupEnabled: true, generateEnabled: false);
+            EnableControls(true, false, false, false, true, false);
 
             RaiseDataLoaded();
         }
@@ -159,8 +152,7 @@ namespace GenEdit.View
                 return;
             }
 
-            EnableControls(newEnabled: false, closeEnabled: true, saveEnabled: false,
-                            saveAsEnabled: true, fileGroupEnabled: false, generateEnabled: ProfileIsSpecified());
+            EnableControls(false, true, false, true, false, ProfileIsSpecified());
         }
 
         public int SaveOrCreateFile()

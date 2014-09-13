@@ -12,7 +12,6 @@ namespace org.xpangen.Generator.Profile
     {
         private FragmentType _fragmentType;
         private Fragment _fragment;
-        public int ClassId { get; private set; }
 
         /// <summary>
         /// The fragment object holding the fragment's data
@@ -70,7 +69,6 @@ namespace org.xpangen.Generator.Profile
             ParentContainer = genFragmentParams.ParentContainer;
             FragmentType = genFragmentParams.FragmentType;
             Fragment = genFragmentParams.Fragment;
-            ClassId = genFragmentParams.ClassId;
             Assert(Fragment != null, "The fragment was not set up");
         }
 

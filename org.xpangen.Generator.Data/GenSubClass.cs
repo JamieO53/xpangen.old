@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
@@ -23,7 +27,6 @@ namespace org.xpangen.Generator.Data
         }
 
         private const int ReferenceIdx = 0;
-        private const int RelationshipIdx = 1;
 
         /// <summary>
         /// The generator data containing the list.
@@ -39,10 +42,6 @@ namespace org.xpangen.Generator.Data
 
         public NameList Properties { get; private set; }
         public string ClassName { get { return Parent.Definition.Name + "_" + Definition.SubClass.Name; } }
-        public string GetValue(GenDataId id)
-        {
-            return Parent.GetValue(id);
-        }
 
         /// <summary>
         /// The ID of objects in the list.
@@ -53,12 +52,6 @@ namespace org.xpangen.Generator.Data
         {
             get { return Attributes[ReferenceIdx]; }
             set { Attributes[ReferenceIdx] = value; }
-        }
-
-        public string Relationship
-        {
-            get { return Attributes[RelationshipIdx]; }
-            set { Attributes[RelationshipIdx] = value; }
         }
 
         public GenDataDefSubClass Definition { get; private set; }

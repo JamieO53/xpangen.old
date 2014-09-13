@@ -27,19 +27,23 @@ namespace org.xpangen.Generator.Data
         public void Duplicate(GenContext context, GenDataBase genDataBase)
         {
             Classes.AddRange(context.Classes);
-            for (var i = 0; i < Cache.References.Count; i++)
-                context.Cache.Internal(Cache.References[i].Path, Cache.References[i].GenData);
+            foreach (var reference in Cache.References)
+                context.Cache.Internal(reference.Path, reference.GenData);
             for (var i = 0; i < context.Count; i++)
-                this[i] = new GenObjectList(context[i].SubClassBase, genDataBase,
-                                            context[i].ParentList == null ? null : this[context[i].ParentList.ClassId],
-                                            context[i].DefSubClass)
-                              {
-                                  Index = context[i].Index,
-                                  ClassId = Classes[i].ClassId,
-                                  RefClassId = Classes[i].RefClassId,
-                                  Reference = context[i].Reference,
-                                  ReferenceData = context[i].ReferenceData
-                              };
+            {
+                var classDef = Classes[i];
+                var x = context[i];
+                this[i] = new GenObjectList(x.SubClassBase, genDataBase,
+                    x.ParentList == null ? null : this[x.ParentList.ClassId],
+                    x.DefSubClass)
+                          {
+                              Index = x.Index,
+                              ClassId = classDef.ClassId,
+                              RefClassId = classDef.RefClassId,
+                              Reference = x.Reference,
+                              ReferenceData = x.ReferenceData
+                          };
+            }
         }
 
         public void Add(GenObjectList item, GenDataDefClass defClass, GenDataBase genDataBase, string reference,

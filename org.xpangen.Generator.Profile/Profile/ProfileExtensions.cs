@@ -139,15 +139,28 @@ namespace org.xpangen.Generator.Profile.Profile
                 containerFragment.Body().Links.Add("Parent", containerFragment);
         }
 
+        public static string ClassName(this Fragment fragment)
+        {
+            while (true)
+            {
+                var segment = fragment as Segment;
+                if (segment != null) return segment.Class;
+                var lookup = fragment as Lookup;
+                if (lookup != null) return lookup.Class1;
+                if (fragment is Profile) return "";
+                var parent = ((ContainerFragment) fragment.FragmentBody().Links["Parent"]);
+                if (parent == null) return "";
+                fragment = parent;
+            }
+        }
+
         public static FragmentBody Body(this ContainerFragment containerFragment)
         {
-            //return containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList.Find(containerFragment.Primary);
             return (FragmentBody) containerFragment.Links["PrimaryBody"];
         }
 
         public static FragmentBody SecondaryBody(this ContainerFragment containerFragment)
         {
-            //return containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList.Find(containerFragment.Secondary);
             return (FragmentBody) containerFragment.Links["SecondaryBody"];
         }
 
@@ -190,7 +203,7 @@ namespace org.xpangen.Generator.Profile.Profile
             return name;
         }
 
-        public static ProfileRoot ProfileRoot(this ProfileDefinition def)
+        private static ProfileRoot ProfileRoot(this ProfileDefinition def)
         {
             return def.ProfileRootList[0];
         }
@@ -205,17 +218,7 @@ namespace org.xpangen.Generator.Profile.Profile
             return def.ProfileRoot().FragmentBodyList[0];
         }
 
-        public static Profile Profile(this Fragment fragment)
-        {
-            return FragmentBody(fragment).Profile();
-        }
-
-        public static Profile Profile(this FragmentBody body)
-        {
-            return ProfileDefinition(body).Profile();
-        }
-
-        public static ProfileDefinition ProfileDefinition(this FragmentBody body)
+        private static ProfileDefinition ProfileDefinition(this FragmentBody body)
         {
             return (ProfileDefinition) body.Parent.Parent;
         }
@@ -225,7 +228,7 @@ namespace org.xpangen.Generator.Profile.Profile
             return fragment.FragmentBody().ProfileDefinition();
         }
 
-        public static FragmentBody FragmentBody(this Fragment fragment)
+        private static FragmentBody FragmentBody(this Fragment fragment)
         {
             return (FragmentBody)fragment.Parent;
         }

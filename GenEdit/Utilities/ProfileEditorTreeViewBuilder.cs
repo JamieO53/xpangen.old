@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Editor.Helper;
 using org.xpangen.Generator.Profile;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace GenEdit.Utilities
 {
@@ -27,7 +28,6 @@ namespace GenEdit.Utilities
             }
         }
 
-
         public static GenFragment GetNodeData(object selectedItem)
         {
             return selectedItem != null ? ((TreeNode) selectedItem).Tag as GenFragment : null;
@@ -42,30 +42,18 @@ namespace GenEdit.Utilities
             return item;
         }
 
-        public static string GetNodeExpansionText(object selectedItem, GenFragment fragment, GenData genData)
+        public static string GetNodeExpansionText(GenData genData, GenObject genObject, Fragment fragment)
         {
-            string text;
-            fragment.GenObject = genData.Context[fragment.ClassId].GenObject;
-            //if (GetNodeHeaderText(selectedItem) == "Text" && fragment is GenBlock)
-            //    text = ((GenBlock) fragment).Body.Expand(genData);
-            //else
-                text = GenFragmentExpander.Expand(genData, fragment.GenObject, fragment.Fragment);
-            return text;
+            var context = genData.GetContext(genObject, fragment.ClassName());
+            if (context != null)
+                return GenFragmentExpander.Expand(genData, context, fragment);
+            return "";
         }
 
-        public static string GetNodeProfileText(object selectedItem, GenFragment fragment, ProfileFragmentSyntaxDictionary dictionary)
+        public static string GetNodeProfileText(ProfileFragmentSyntaxDictionary dictionary, Fragment fragment)
         {
-            string text;
-            //if (GetNodeHeaderText(selectedItem) == "Text" && fragment is GenBlock)
-            //    text = ((GenBlock)fragment).Body.ProfileText(dictionary);
-            //else
-                text = fragment.ProfileText(dictionary);
+            var text = new GenProfileTextExpander(dictionary).GetText(fragment);
             return text;
-        }
-
-        private static string GetNodeHeaderText(object selectedItem)
-        {
-            return ((TreeNode) selectedItem).Text;
         }
     }
 }

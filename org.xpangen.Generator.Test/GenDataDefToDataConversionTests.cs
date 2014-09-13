@@ -114,8 +114,7 @@ namespace org.xpangen.Generator.Test
             d.First(ClassClassId);
             a.GenObject = d.Context[ClassClassId].GenObject;
             Assert.AreEqual("Parent", a.AsString("Name"));
-            a = new GenAttributes(d.GenDataDef, SubClassClassId);
-            a.GenObject = d.Context[SubClassClassId].GenObject;
+            a = new GenAttributes(d.GenDataDef, SubClassClassId) {GenObject = d.Context[SubClassClassId].GenObject};
             Assert.AreEqual("Child", a.AsString("Name"));
             Assert.AreEqual("ChildDef", a.AsString("Reference"));
         }

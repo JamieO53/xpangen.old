@@ -24,7 +24,7 @@ namespace org.xpangen.Generator.Profile
             lookup.Property1 = genLookupParams.Var1.PropertyName;
             lookup.Class2 = genLookupParams.Var2.ClassName;
             lookup.Property2 = genLookupParams.Var2.PropertyName;
-            ClassId = GenDataDef.Classes.IndexOf(lookup.Class1);
+            ClassId = GenDataDef.GetClassId(lookup.Class1);
         }
     }
 }

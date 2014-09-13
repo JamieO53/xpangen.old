@@ -29,7 +29,7 @@ namespace org.xpangen.Generator.Data
                         ClassId = GenObject.ClassId;
                         if (GenObject.GenDataBase.GenDataDef != null)
                         {
-                            var classDef = GenObject.GenDataBase.GenDataDef.Classes[ClassId];
+                            var classDef = GenObject.GenDataBase.GenDataDef.GetClassDef(ClassId);
                             foreach (var property in classDef.Properties)
                                 Properties.Add(property);
                             foreach (var subClass in classDef.SubClasses)
@@ -82,7 +82,7 @@ namespace org.xpangen.Generator.Data
             set { _classes = value; }
         }
 
-        public NameList SubClasses { get; private set; }
+        protected NameList SubClasses { get; private set; }
         public NameList Properties { get; private set; }
         public int ClassId { get; private set; }
 
@@ -100,9 +100,9 @@ namespace org.xpangen.Generator.Data
             ClassId = classId;
             foreach (var c in genDataDef.Classes)
                 Classes.Add(c.Name);
-            foreach (var property in genDataDef.Classes[ClassId].Properties)
+            foreach (var property in genDataDef.GetClassProperties(ClassId))
                 Properties.Add(property);
-            foreach (var sc in genDataDef.Classes[ClassId].SubClasses)
+            foreach (var sc in genDataDef.GetClassSubClasses(ClassId))
                 SubClasses.Add(sc.SubClass.Name);
         }
 

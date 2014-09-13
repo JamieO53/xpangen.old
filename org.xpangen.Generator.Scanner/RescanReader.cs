@@ -104,8 +104,8 @@ namespace org.xpangen.Generator.Scanner
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
-        protected void Dispose(bool disposing)
+
+        private void Dispose(bool disposing)
         {
             if (!disposing) return;
             while (_scanReader != null)

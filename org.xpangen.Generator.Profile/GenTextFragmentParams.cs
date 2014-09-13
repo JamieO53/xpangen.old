@@ -25,12 +25,5 @@ namespace org.xpangen.Generator.Profile
         {
             ((Text) Fragment).TextValue = text;
         }
-
-        public GenTextFragmentParams(GenDataDef genDataDef, Text text) 
-            : base(genDataDef, null, null, FragmentType.Text)
-        {
-            Fragment = text;
-            FragmentType = FragmentType.Text;
-        }
     }
 }

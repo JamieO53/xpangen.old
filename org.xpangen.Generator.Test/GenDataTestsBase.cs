@@ -43,16 +43,6 @@ Class=Property[]
 Property=Name
 ";
 
-        protected const string ReferenceGenDataSaveText =
-            @"Definition=Parent
-Class=Parent
-Field=Name
-SubClass=Child[Reference='ChildDef']
-.
-Parent=First parent
-Child[Reference='ChildDef']
-";
-
         protected const string ReferenceGenDataSaveProfile =
             @"Definition=Parent
 Class=Parent
@@ -223,36 +213,35 @@ Child[Reference='child']
             CreateProperty(d, "Name");
         }
 
-        protected static GenObject CreateGenObject(GenData d, string parentClassName, string className, string name)
+        protected static void CreateGenObject(GenData d, string parentClassName, string className, string name)
         {
             var o = d.CreateObject(parentClassName, className);
             o.Attributes[0] = name;
-            return o;
         }
 
-        internal static void CreateProperty(GenData d, string name)
+        private static void CreateProperty(GenData d, string name)
         {
             CreateGenObject(d, "Class", "Property", name);
         }
 
-        protected static void CreateSubClass(GenData d, string name)
+        private static void CreateSubClass(GenData d, string name)
         {
             CreateGenObject(d, "Class", "SubClass", name);
         }
 
         protected static void VerifyAsDef(GenDataDef f)
         {
-            Assert.AreEqual(0, f.Classes.IndexOf(""));
-            Assert.AreEqual(ClassClassId, f.Classes.IndexOf("Class"));
-            Assert.AreEqual(SubClassClassId, f.Classes.IndexOf("SubClass"));
-            Assert.AreEqual(PropertyClassId, f.Classes.IndexOf("Property"));
-            Assert.AreEqual(1, f.Classes[0].SubClasses.Count);
-            Assert.AreEqual(2, f.Classes[ClassClassId].SubClasses.Count);
-            Assert.AreEqual(0, f.Classes[SubClassClassId].SubClasses.Count);
-            Assert.AreEqual(0, f.Classes[PropertyClassId].SubClasses.Count);
-            Assert.AreEqual(ClassClassId, f.Classes[0].SubClasses[0].SubClass.ClassId);
-            Assert.AreEqual(SubClassClassId, f.Classes[ClassClassId].SubClasses[0].SubClass.ClassId);
-            Assert.AreEqual(PropertyClassId, f.Classes[ClassClassId].SubClasses[1].SubClass.ClassId);
+            Assert.AreEqual(0, f.GetClassId(""));
+            Assert.AreEqual(ClassClassId, f.GetClassId("Class"));
+            Assert.AreEqual(SubClassClassId, f.GetClassId("SubClass"));
+            Assert.AreEqual(PropertyClassId, f.GetClassId("Property"));
+            Assert.AreEqual(1, f.GetClassSubClasses(0).Count);
+            Assert.AreEqual(2, f.GetClassSubClasses(ClassClassId).Count);
+            Assert.AreEqual(0, f.GetClassSubClasses(SubClassClassId).Count);
+            Assert.AreEqual(0, f.GetClassSubClasses(PropertyClassId).Count);
+            Assert.AreEqual(ClassClassId, f.GetClassSubClasses(0)[0].SubClass.ClassId);
+            Assert.AreEqual(SubClassClassId, f.GetClassSubClasses(ClassClassId)[0].SubClass.ClassId);
+            Assert.AreEqual(PropertyClassId, f.GetClassSubClasses(ClassClassId)[1].SubClass.ClassId);
         }
 
         protected static void VerifyDataCreation(GenData d)
@@ -272,7 +261,7 @@ Child[Reference='child']
             a.GenObject = o;
             Assert.AreEqual("Class", a.AsString("Name"));
 
-            o = d.Context[d.GenDataDef.Classes.IndexOf("SubClass")][0];
+            o = d.Context[d.GenDataDef.GetClassId("SubClass")][0];
             a.GenObject = o;
             Assert.AreEqual("SubClass", a.AsString("Name"));
         }
@@ -296,13 +285,7 @@ Child[Reference='child']
             o.Attributes[0] = name;
         }
 
-        protected static void CreateGenDataSaveText(string fileName)
-        {
-            var text = GenDataSaveText;
-            CreateGenDataSaveText(fileName, text);
-        }
-
-        public static void CreateGenDataSaveText(string fileName, string text)
+        protected static void CreateGenDataSaveText(string fileName, string text = GenDataSaveText)
         {
             if (File.Exists(fileName))
                 File.Delete(fileName);
@@ -313,12 +296,12 @@ Child[Reference='child']
         {
             var f = new GenDataDef();
             var parentId = f.AddClass("", "Parent");
-            f.Classes[parentId].AddInstanceProperty("Name");
+            f.AddClassInstanceProperty(parentId, "Name");
             var childId = f.AddClass("Parent", "Child");
-            f.Classes[childId].AddInstanceProperty("Name");
-            f.Classes[childId].AddInstanceProperty("Lookup");
+            f.AddClassInstanceProperty(childId, "Name");
+            f.AddClassInstanceProperty(childId, "Lookup");
             var lookupId = f.AddClass("Parent", "Lookup");
-            f.Classes[lookupId].AddInstanceProperty("Name");
+            f.AddClassInstanceProperty(lookupId, "Name");
 
             var a = new GenAttributes(f, 1);
             var d = new GenData(f);
@@ -374,7 +357,7 @@ Child[Reference='child']
             return data;
         }
 
-        protected static void SetUpParentOtherChildReferenceData(string parentClassName, string childClassName,
+        private static void SetUpParentOtherChildReferenceData(string parentClassName, string childClassName,
                                                                  string childDataName, GenData dataChild, GenData data)
         {
             CreateGenObject(data, "", parentClassName, parentClassName);
@@ -384,11 +367,10 @@ Child[Reference='child']
         protected static GenDataDef SetUpParentChildReferenceDef(string parentClassName, string childClassName,
                                                                string childDefName, GenDataDef defChild)
         {
-            var def = new GenDataDef();
-            def.DefinitionName = parentClassName;
+            var def = new GenDataDef {DefinitionName = parentClassName};
             def.Cache.Internal(childDefName, defChild);
             def.AddSubClass("", parentClassName);
-            def.Classes[1].AddInstanceProperty("Name");
+            def.AddClassInstanceProperty(1, "Name");
             def.AddSubClass(parentClassName, childClassName, childDefName);
             return def;
         }
@@ -399,22 +381,20 @@ Child[Reference='child']
             var data = new GenData(def) { DataName = parentClassName};
             CreateGenObject(data, "", parentClassName, parentClassName);
             CreateGenObject(data, parentClassName, childClassName, childDataName);
-            //data.First(0);
             return data;
         }
 
         protected static GenDataDef SetUpParentChildDef(string parentClassName, string childClassName)
         {
-            var def = new GenDataDef();
-            def.DefinitionName = parentClassName;
+            var def = new GenDataDef {DefinitionName = parentClassName};
             def.AddSubClass("", parentClassName);
-            def.Classes[1].AddInstanceProperty("Name");
+            def.AddClassInstanceProperty(1, "Name");
             def.AddSubClass(parentClassName, childClassName);
-            def.Classes[2].AddInstanceProperty("Name");
+            def.AddClassInstanceProperty(2, "Name");
             return def;
         }
 
-        protected static void SetUpParentReference(GenData dataParent, GenData dataChild, string childDefName,
+        private static void SetUpParentReference(GenData dataParent, GenData dataChild, string childDefName,
                                                  string parentClassName, string childClassName, string childName)
         {
             dataParent.Cache.Internal("Minimal", childDefName, dataChild.GenDataDef.AsGenData());
@@ -431,11 +411,10 @@ Child[Reference='child']
         /// <param name="className">The parent class name.</param>
         /// <param name="subClassName">The childe class name.</param>
         /// <param name="reference">The reference path.</param>
-        protected static void SetSubClassReference(GenData data, string className, string subClassName, string reference)
+        private static void SetSubClassReference(GenData data, string className, string subClassName, string reference)
         {
-            var classes = data.GenDataDef.Classes;
-            var classId = classes.IndexOf(className);
-            var subClassIndex = classes[classId].SubClasses.IndexOf(classes.IndexOf(subClassName));
+            var classId = data.GenDataDef.GetClassId(className);
+            var subClassIndex = data.GenDataDef.GetClassSubClasses(classId).IndexOf(data.GenDataDef.GetClassId(subClassName));
             var sub = data.Context[classId].GenObject.SubClass[subClassIndex] as SubClassReference;
             if (sub != null)
                 sub.Reference = reference.ToLowerInvariant();
@@ -467,8 +446,8 @@ Child[Reference='child']
             Assert.AreEqual(expected.Classes.Count, actual.Classes.Count, path);
             for (var i = 0; i < expected.Classes.Count; i++)
             {
-                var expClass = expected.Classes[i];
-                var actClass = actual.Classes[i];
+                var expClass = expected.GetClassDef(i);
+                var actClass = actual.GetClassDef(i);
                 Assert.AreEqual(expClass.ToString(), actClass.ToString(), path);
                 Assert.AreEqual(expClass.Properties.Count, actClass.Properties.Count, path + '.' + expClass);
                 for (var j = 0; j < expClass.Properties.Count; j++)
@@ -486,10 +465,10 @@ Child[Reference='child']
             }
             Assert.AreEqual(expected.Cache.Count, actual.Cache.Count, path);
             var expectedReferences = expected.Cache.References;
-            for (var i = 0; i < expectedReferences.Count; i++)
+            foreach (GenDataDefReferenceCacheItem expectedReference in expectedReferences)
             {
-                CompareGenDataDef(expectedReferences[i].GenDataDef, actual.Cache[expectedReferences[i].Path],
-                                  expectedReferences[i].Path);
+                CompareGenDataDef(expectedReference.GenDataDef, actual.Cache[expectedReference.Path],
+                    expectedReference.Path);
             }
         }
 
@@ -694,10 +673,10 @@ Child[Reference='child']
 
         protected static void ValidateProfileData(GenProfileFragment profile, GenDataDef genDataDef)
         {
-            var profileClasses = profile.Profile.GenData.GenDataDef.Classes;
-            VerifyObjectClass(profileClasses, "Profile", profile.Profile.GenObject);
+            var profileDataDef = profile.Profile.GenData.GenDataDef;
+            VerifyObjectClass(profileDataDef, "Profile", profile.Profile.GenObject);
             var profileDefinition = profile.Profile.ProfileDefinition();
-            VerifyObjectClass(profileClasses, "ProfileRoot", profileDefinition.ProfileRootList[0].GenObject);
+            VerifyObjectClass(profileDataDef, "ProfileRoot", profileDefinition.ProfileRootList[0].GenObject);
             var fragmentBodies = profileDefinition.ProfileRootList[0].FragmentBodyList;
             Assert.AreEqual("Root0", fragmentBodies[0].Name, "Root body name");
             Assert.AreEqual(1, fragmentBodies[0].FragmentList.Count);
@@ -707,28 +686,27 @@ Child[Reference='child']
             Assert.AreEqual("Profile2", fragmentBodies[2].Name, "Profile body name");
             Assert.AreEqual("Profile2", profile.Profile.Primary, "The profile's body name");
             Assert.AreEqual("Empty1", profile.Profile.Secondary, "The profile's secondary body is empty");
-            ValidateProfileFragmentBodyList(profileClasses, fragmentBodies);
-            ValidateProfileContainerData(profileClasses, profile, genDataDef, "");
+            ValidateProfileFragmentBodyList(profileDataDef, fragmentBodies);
+            ValidateProfileContainerData(profile, genDataDef, "", profileDataDef);
         }
 
-        private static void VerifyObjectClass(GenDataDefClassList classes, string className, IGenObject genObject)
+        private static void VerifyObjectClass(GenDataDef profileDataDef, string className, IGenObject genObject)
         {
-            Assert.AreEqual(classes.IndexOf(className), genObject.ClassId, className + " class ID");
+            Assert.AreEqual(profileDataDef.Classes.IndexOf(className), genObject.ClassId, className + " class ID");
             Assert.AreEqual(className, genObject.ClassName, "Object Class name");
         }
 
-        private static void ValidateProfileFragmentBodyList(GenDataDefClassList classes, GenNamedApplicationList<FragmentBody> fragmentBodies)
+        private static void ValidateProfileFragmentBodyList(GenDataDef profileDataDef, GenNamedApplicationList<FragmentBody> fragmentBodies)
         {
             foreach (var body in fragmentBodies)
             {
-                VerifyObjectClass(classes, "FragmentBody", body.GenObject);
+                VerifyObjectClass(profileDataDef, "FragmentBody", body.GenObject);
                 Assert.AreEqual(1, fragmentBodies.Count(body0 => body0.Name == body.Name),
                     "Fragment body names must be unique: " + body.Name);
             }
         }
 
-        private static void ValidateProfileContainerData(GenDataDefClassList classes, GenContainerFragmentBase container, 
-            GenDataDef genDataDef, string parentClassName)
+        private static void ValidateProfileContainerData(GenContainerFragmentBase container, GenDataDef genDataDef, string parentClassName, GenDataDef profileDataDef)
         {
             Assert.IsInstanceOf(typeof (ContainerFragment), container.Fragment,
                 "Container must have a container fragment class");
@@ -748,14 +726,13 @@ Child[Reference='child']
                 Assert.AreEqual(containerFragment.Secondary.Substring(0, containerFragmentTypeName.Length),
                     containerFragmentTypeName);
             Assert.AreEqual(container, container.Body.ParentContainer);
-            ValidateProfileContainerPartData(classes, container.Body.Fragment, containerFragment.Body().FragmentList,
-                genDataDef, parentClassName);
-            ValidateProfileContainerPartData(classes, container.Body.SecondaryFragment,
-                containerFragment.SecondaryBody().FragmentList, genDataDef, parentClassName);
+            ValidateProfileContainerPartData(container.Body.Fragment, containerFragment.Body().FragmentList,
+                genDataDef, parentClassName, profileDataDef);
+            ValidateProfileContainerPartData(container.Body.SecondaryFragment,
+                containerFragment.SecondaryBody().FragmentList, genDataDef, parentClassName, profileDataDef);
         }
 
-        private static void ValidateProfileContainerPartData(GenDataDefClassList classes, IList<GenFragment> genFragments, 
-            List<Fragment> fragmentList, GenDataDef genDataDef, string parentClassName)
+        private static void ValidateProfileContainerPartData(IList<GenFragment> genFragments, List<Fragment> fragmentList, GenDataDef genDataDef, string parentClassName, GenDataDef profileDataDef)
         {
             foreach (var genFragment in genFragments)
             {
@@ -764,15 +741,14 @@ Child[Reference='child']
                     "Fragments in the same order");
                 Assert.AreEqual(genFragment.FragmentType.ToString(), fragment.GetType().Name, "Fragment types");
                 Assert.Contains(fragment, fragmentList, "Fragment not in correct list");
-                ValidateFragmentData(classes, genDataDef, parentClassName, genFragment);
+                ValidateFragmentData(genDataDef, parentClassName, genFragment, profileDataDef);
             }
         }
 
-        protected static void ValidateFragmentData(GenDataDefClassList classes, GenDataDef genDataDef, string parentClassName,
-            GenFragment genFragment)
+        protected static void ValidateFragmentData(GenDataDef genDataDef, string parentClassName, GenFragment genFragment, GenDataDef profileDataDef)
         {
             var fragment = genFragment.Fragment;
-            VerifyObjectClass(classes, genFragment.FragmentType.ToString(), fragment.GenObject);
+            VerifyObjectClass(profileDataDef, genFragment.FragmentType.ToString(), fragment.GenObject);
             var containerFragment = fragment as ContainerFragment;
             if (containerFragment != null)
             {
@@ -780,7 +756,7 @@ Child[Reference='child']
                 var className = parentClassName;
                 ValidateProfileSegmentData(genDataDef, containerFragment, genContainerFragment, ref className);
                 ValidateProfileTextBlockData(containerFragment, genContainerFragment);
-                ValidateProfileContainerData(classes, genContainerFragment, genDataDef, className);
+                ValidateProfileContainerData(genContainerFragment, genDataDef, className, profileDataDef);
             }
         }
 
@@ -792,7 +768,7 @@ Child[Reference='child']
             
             var genSegment = (GenSegment) genContainerFragment;
             className = segment.Class;
-            Assert.AreEqual(genDataDef.Classes[genSegment.ClassId].Name, className, "Segment class");
+            Assert.AreEqual(genDataDef.GetClassName(genSegment.ClassId), className, "Segment class");
             GenCardinality cardinality;
             Enum.TryParse(((Segment)genSegment.Fragment).Cardinality, out cardinality);
             Assert.AreEqual(cardinality.ToString(), segment.Cardinality);

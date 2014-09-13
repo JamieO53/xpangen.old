@@ -4,7 +4,6 @@
 
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Profile;
 
 namespace org.xpangen.Generator.Test
 {
@@ -54,11 +53,11 @@ namespace org.xpangen.Generator.Test
         {
             var def = new GenDataDef();
             Assert.AreEqual(1, def.Classes.Count, "Classes in a new def");
-            Assert.AreEqual("", def.Classes[0].Name, "Dummy root class name");
-            Assert.AreEqual(0, def.Classes.IndexOf(""), "Index of dummy root");
-            Assert.AreEqual(0, def.Classes[0].SubClasses.Count, "Subclasses of dummy root");
-            Assert.IsNull(def.Classes[0].Parent, "Parent of dummy root");
-            Assert.IsEmpty(def.Classes[0].Properties, "Dummy root has no properties");
+            Assert.AreEqual("", def.GetClassName(0), "Dummy root class name");
+            Assert.AreEqual(0, def.GetClassId(""), "Index of dummy root");
+            Assert.AreEqual(0, def.GetClassSubClasses(0).Count, "Subclasses of dummy root");
+            Assert.IsNull(def.GetClassParent(0), "Parent of dummy root");
+            Assert.IsEmpty(def.GetClassProperties(0), "Dummy root has no properties");
         }
 
         /// <summary>
@@ -75,14 +74,13 @@ namespace org.xpangen.Generator.Test
                 "`[Root:Root[`?Root.Id:Id`?Root.Id<>True:=`@StringOrName:`{`Root.Id``]`]`]`]]\r\n" +
                 "`]";
 
-            var d = new GenDataDef();
-            d.DefinitionName = "Root";
+            var d = new GenDataDef {DefinitionName = "Root"};
             var i = d.AddClass("", "Root");
             Assert.AreEqual(1, i);
-            Assert.AreEqual(i, d.Classes.IndexOf("Root"));
+            Assert.AreEqual(i, d.GetClassId("Root"));
             Assert.AreEqual(0, d.IndexOfSubClass(0, i));
-            var j = d.Classes[i].AddInstanceProperty("Id");
-            Assert.AreEqual(j, d.Classes[i].Properties.IndexOf("Id"));
+            var j = d.AddClassInstanceProperty(i, "Id");
+            Assert.AreEqual(j, d.GetClassProperties(i).IndexOf("Id"));
             Assert.AreEqual(rootProfile, GenDataDefProfile.CreateProfile(d));
 
             var id = d.GetId("Root.Id");
@@ -91,12 +89,12 @@ namespace org.xpangen.Generator.Test
 
             i = d.AddClass("Root", "Sub");
             Assert.AreEqual(2, i);
-            Assert.AreEqual(i, d.Classes.IndexOf("Sub"));
+            Assert.AreEqual(i, d.GetClassId("Sub"));
             Assert.AreEqual(0, d.IndexOfSubClass(1, i));
-            Assert.AreEqual(1, d.Classes[i].Parent.ClassId);
-            j = d.Classes[i].AddInstanceProperty("SubId");
+            Assert.AreEqual(1, d.GetClassParent(i).ClassId);
+            j = d.AddClassInstanceProperty(i, "SubId");
             Assert.AreEqual(0, j);
-            Assert.AreEqual(j, d.Classes[i].Properties.IndexOf("SubId"));
+            Assert.AreEqual(j, d.GetClassProperties(i).IndexOf("SubId"));
 
             id = d.GetId("Sub.SubId");
             Assert.AreEqual(i, id.ClassId);
@@ -110,17 +108,17 @@ namespace org.xpangen.Generator.Test
         public void CreateMinimalTest()
         {
             var f = GenDataDef.CreateMinimal();
-            Assert.AreEqual(0, f.Classes.IndexOf(""));
-            Assert.AreEqual(1, f.Classes.IndexOf("Class"));
-            Assert.AreEqual(2, f.Classes.IndexOf("SubClass"));
-            Assert.AreEqual(3, f.Classes.IndexOf("Property"));
-            Assert.AreEqual(1, f.Classes[0].SubClasses.Count);
-            Assert.AreEqual(2, f.Classes[1].SubClasses.Count);
-            Assert.AreEqual(0, f.Classes[2].SubClasses.Count);
-            Assert.AreEqual(0, f.Classes[3].SubClasses.Count);
-            Assert.AreEqual(1, f.Classes[0].SubClasses[0].SubClass.ClassId);
-            Assert.AreEqual(2, f.Classes[1].SubClasses[0].SubClass.ClassId);
-            Assert.AreEqual(3, f.Classes[1].SubClasses[1].SubClass.ClassId);
+            Assert.AreEqual(0, f.GetClassId(""));
+            Assert.AreEqual(1, f.GetClassId("Class"));
+            Assert.AreEqual(2, f.GetClassId("SubClass"));
+            Assert.AreEqual(3, f.GetClassId("Property"));
+            Assert.AreEqual(1, f.GetClassSubClasses(0).Count);
+            Assert.AreEqual(2, f.GetClassSubClasses(1).Count);
+            Assert.AreEqual(0, f.GetClassSubClasses(2).Count);
+            Assert.AreEqual(0, f.GetClassSubClasses(3).Count);
+            Assert.AreEqual(1, f.GetClassSubClasses(0)[0].SubClass.ClassId);
+            Assert.AreEqual(2, f.GetClassSubClasses(1)[0].SubClass.ClassId);
+            Assert.AreEqual(3, f.GetClassSubClasses(1)[1].SubClass.ClassId);
         }
 
         [TestCase(Description = "Verify that the SetUpParentChildReferenceDef method works as expected")]
@@ -129,29 +127,29 @@ namespace org.xpangen.Generator.Test
             var fChild = SetUpParentChildDef("Child", "Grandchild");
             var fParent = SetUpParentChildReferenceDef("Parent", "Child", "ChildDef", fChild);
             Assert.AreEqual(4, fParent.Classes.Count);
-            Assert.AreEqual(1, fParent.Classes[0].SubClasses.Count);
-            Assert.AreEqual("Parent", fParent.Classes[1].Name);
-            Assert.AreEqual("Child", fParent.Classes[2].Name);
-            Assert.AreEqual("Grandchild", fParent.Classes[3].Name);
-            Assert.AreEqual(1, fParent.Classes[1].SubClasses.Count);
-            Assert.AreEqual(2, fParent.Classes[1].SubClasses[0].SubClass.ClassId);
-            Assert.AreEqual("ChildDef", fParent.Classes[1].SubClasses[0].Reference);
-            Assert.AreEqual("ChildDef", fParent.Classes[1].SubClasses[0].ReferenceDefinition);
-            Assert.AreEqual("ChildDef", fParent.Classes[2].SubClasses[0].Reference);
-            Assert.AreEqual("ChildDef", fParent.Classes[2].SubClasses[0].ReferenceDefinition);
-            Assert.AreEqual("ChildDef", fParent.Classes[1].SubClasses[0].SubClass.Reference);
-            Assert.AreEqual("ChildDef", fParent.Classes[1].SubClasses[0].SubClass.ReferenceDefinition);
-            Assert.AreEqual("ChildDef", fParent.Classes[2].SubClasses[0].SubClass.Reference);
-            Assert.AreEqual("ChildDef", fParent.Classes[2].SubClasses[0].SubClass.ReferenceDefinition);
-            Assert.AreEqual(fParent.Classes[2].RefClassId, fChild.Classes[1].ClassId);
-            Assert.AreEqual(fParent.Classes[3].RefClassId, fChild.Classes[2].ClassId);
-            Assert.AreEqual("ChildDef", fParent.Classes[2].ReferenceDefinition);
-            Assert.AreEqual("ChildDef", fParent.Classes[3].ReferenceDefinition);
-            Assert.AreEqual(fParent.Classes[2].Name, fChild.Classes[1].Name);
-            Assert.AreEqual(fParent.Classes[3].Name, fChild.Classes[2].Name);
-            Assert.AreSame(fParent.Classes[0], fParent.Classes[1].Parent);
-            Assert.AreSame(fParent.Classes[1], fParent.Classes[2].Parent);
-            Assert.AreSame(fParent.Classes[2], fParent.Classes[3].Parent);
+            Assert.AreEqual(1, fParent.GetClassSubClasses(0).Count);
+            Assert.AreEqual("Parent", fParent.GetClassName(1));
+            Assert.AreEqual("Child", fParent.GetClassName(2));
+            Assert.AreEqual("Grandchild", fParent.GetClassName(3));
+            Assert.AreEqual(1, fParent.GetClassSubClasses(1).Count);
+            Assert.AreEqual(2, fParent.GetClassSubClasses(1)[0].SubClass.ClassId);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(1)[0].Reference);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(1)[0].ReferenceDefinition);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(2)[0].Reference);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(2)[0].ReferenceDefinition);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(1)[0].SubClass.Reference);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(1)[0].SubClass.ReferenceDefinition);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(2)[0].SubClass.Reference);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(2)[0].SubClass.ReferenceDefinition);
+            Assert.AreEqual(fParent.GetClassDef(2).RefClassId, fChild.GetClassDef(1).ClassId);
+            Assert.AreEqual(fParent.GetClassDef(3).RefClassId, fChild.GetClassDef(2).ClassId);
+            Assert.AreEqual("ChildDef", fParent.GetClassDef(2).ReferenceDefinition);
+            Assert.AreEqual("ChildDef", fParent.GetClassDef(3).ReferenceDefinition);
+            Assert.AreEqual(fParent.GetClassName(2), fChild.GetClassName(1));
+            Assert.AreEqual(fParent.GetClassName(3), fChild.GetClassName(2));
+            Assert.AreSame(fParent.GetClassDef(0), fParent.GetClassParent(1));
+            Assert.AreSame(fParent.GetClassDef(1), fParent.GetClassParent(2));
+            Assert.AreSame(fParent.GetClassDef(2), fParent.GetClassParent(3));
         }
 
 private const string Profile = @"Definition=Parent
@@ -177,40 +175,40 @@ SubClass=Child[Reference='ChildDef']
             var fChild = SetUpParentChildReferenceDef("Child", "Grandchild", "GrandchildDef", fGrandchild);
             var fParent = SetUpParentChildReferenceDef("Parent", "Child", "ChildDef", fChild);
             Assert.AreEqual(5, fParent.Classes.Count);
-            Assert.AreEqual(1, fParent.Classes[0].SubClasses.Count);
-            Assert.AreEqual("Parent", fParent.Classes[1].Name);
-            Assert.AreEqual("Child", fParent.Classes[2].Name);
-            Assert.AreEqual("Grandchild", fParent.Classes[3].Name);
-            Assert.AreEqual("Greatgrandchild", fParent.Classes[4].Name);
-            Assert.AreEqual("Name", fParent.Classes[1].Properties[0]);
-            Assert.AreEqual("Name", fParent.Classes[2].Properties[0]);
-            Assert.AreEqual("Name", fParent.Classes[3].Properties[0]);
-            Assert.AreEqual("Name", fParent.Classes[4].Properties[0]);
-            Assert.AreEqual(1, fParent.Classes[1].SubClasses.Count);
-            Assert.AreEqual(2, fParent.Classes[1].SubClasses[0].SubClass.ClassId);
-            Assert.AreEqual("ChildDef", fParent.Classes[1].SubClasses[0].Reference);
-            Assert.AreEqual("ChildDef", fParent.Classes[1].SubClasses[0].ReferenceDefinition);
-            Assert.AreEqual("ChildDef", fParent.Classes[2].SubClasses[0].Reference);
-            Assert.AreEqual("ChildDef", fParent.Classes[2].SubClasses[0].ReferenceDefinition);
-            Assert.AreEqual("ChildDef", fParent.Classes[1].SubClasses[0].SubClass.Reference);
-            Assert.AreEqual("ChildDef", fParent.Classes[1].SubClasses[0].SubClass.ReferenceDefinition);
-            Assert.AreEqual("ChildDef", fParent.Classes[2].SubClasses[0].SubClass.Reference);
-            Assert.AreEqual("ChildDef", fParent.Classes[2].SubClasses[0].SubClass.ReferenceDefinition);
-            Assert.AreEqual(fParent.Classes[2].RefClassId, fChild.Classes[1].ClassId);
-            Assert.AreEqual(fParent.Classes[3].RefClassId, fChild.Classes[2].ClassId);
-            Assert.AreEqual(fParent.Classes[4].RefClassId, fChild.Classes[3].ClassId);
-            Assert.AreEqual("ChildDef", fParent.Classes[2].ReferenceDefinition);
-            Assert.AreEqual("ChildDef", fParent.Classes[3].ReferenceDefinition);
-            Assert.AreEqual("ChildDef", fParent.Classes[4].ReferenceDefinition);
-            Assert.AreEqual(fParent.Classes[2].Name, fChild.Classes[1].Name);
-            Assert.AreEqual(fParent.Classes[3].Name, fChild.Classes[2].Name);
-            Assert.AreEqual(fParent.Classes[4].Name, fChild.Classes[3].Name);
-            Assert.AreEqual(fParent.Classes[3].Name, fGrandchild.Classes[1].Name);
-            Assert.AreEqual(fParent.Classes[4].Name, fGrandchild.Classes[2].Name);
-            Assert.AreSame(fParent.Classes[0], fParent.Classes[1].Parent);
-            Assert.AreSame(fParent.Classes[1], fParent.Classes[2].Parent);
-            Assert.AreSame(fParent.Classes[2], fParent.Classes[3].Parent);
-            Assert.AreSame(fParent.Classes[3], fParent.Classes[4].Parent);
+            Assert.AreEqual(1, fParent.GetClassSubClasses(0).Count);
+            Assert.AreEqual("Parent", fParent.GetClassName(1));
+            Assert.AreEqual("Child", fParent.GetClassName(2));
+            Assert.AreEqual("Grandchild", fParent.GetClassName(3));
+            Assert.AreEqual("Greatgrandchild", fParent.GetClassName(4));
+            Assert.AreEqual("Name", fParent.GetClassProperties(1)[0]);
+            Assert.AreEqual("Name", fParent.GetClassProperties(2)[0]);
+            Assert.AreEqual("Name", fParent.GetClassProperties(3)[0]);
+            Assert.AreEqual("Name", fParent.GetClassProperties(4)[0]);
+            Assert.AreEqual(1, fParent.GetClassSubClasses(1).Count);
+            Assert.AreEqual(2, fParent.GetClassSubClasses(1)[0].SubClass.ClassId);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(1)[0].Reference);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(1)[0].ReferenceDefinition);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(2)[0].Reference);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(2)[0].ReferenceDefinition);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(1)[0].SubClass.Reference);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(1)[0].SubClass.ReferenceDefinition);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(2)[0].SubClass.Reference);
+            Assert.AreEqual("ChildDef", fParent.GetClassSubClasses(2)[0].SubClass.ReferenceDefinition);
+            Assert.AreEqual(fParent.GetClassDef(2).RefClassId, fChild.GetClassDef(1).ClassId);
+            Assert.AreEqual(fParent.GetClassDef(3).RefClassId, fChild.GetClassDef(2).ClassId);
+            Assert.AreEqual(fParent.GetClassDef(4).RefClassId, fChild.GetClassDef(3).ClassId);
+            Assert.AreEqual("ChildDef", fParent.GetClassDef(2).ReferenceDefinition);
+            Assert.AreEqual("ChildDef", fParent.GetClassDef(3).ReferenceDefinition);
+            Assert.AreEqual("ChildDef", fParent.GetClassDef(4).ReferenceDefinition);
+            Assert.AreEqual(fParent.GetClassName(2), fChild.GetClassName(1));
+            Assert.AreEqual(fParent.GetClassName(3), fChild.GetClassName(2));
+            Assert.AreEqual(fParent.GetClassName(4), fChild.GetClassName(3));
+            Assert.AreEqual(fParent.GetClassName(3), fGrandchild.GetClassName(1));
+            Assert.AreEqual(fParent.GetClassName(4), fGrandchild.GetClassName(2));
+            Assert.AreSame(fParent.GetClassDef(0), fParent.GetClassParent(1));
+            Assert.AreSame(fParent.GetClassDef(1), fParent.GetClassParent(2));
+            Assert.AreSame(fParent.GetClassDef(2), fParent.GetClassParent(3));
+            Assert.AreSame(fParent.GetClassDef(3), fParent.GetClassParent(4));
         }
 
         /// <summary>

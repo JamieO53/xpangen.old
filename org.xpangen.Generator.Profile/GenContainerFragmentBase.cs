@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Profile
         }
         public GenSegBody Body { get; private set; }
 
-        public new int ClassId
+        public int ClassId
         {
             get
             {
@@ -43,7 +43,7 @@ namespace org.xpangen.Generator.Profile
 
         public GenDataDefClass Definition
         {
-            get { return GenDataDef.Classes[ClassId]; }
+            get { return GenDataDef.GetClassDef(ClassId); }
         }
     }
 }

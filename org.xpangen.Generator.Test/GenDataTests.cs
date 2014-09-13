@@ -29,14 +29,14 @@ namespace org.xpangen.Generator.Test
             a.SetString("Name", "Class");
             a.SaveFields();
 
-            var i = f.IndexOfSubClass(f.Classes.IndexOf("Class"), f.Classes.IndexOf("SubClass"));
-            var s = new GenObjectList(o.SubClass[i], d.GenDataBase, d.Context[f.Classes.IndexOf("Class")],
-                                      f.Classes[f.Classes.IndexOf("Class")].SubClasses[i]);
+            var i = f.IndexOfSubClass(f.GetClassId("Class"), f.GetClassId("SubClass"));
+            var s = new GenObjectList(o.SubClass[i], d.GenDataBase, d.Context[f.GetClassId("Class")],
+                                      f.GetClassSubClasses("Class")[i]);
             o = s.CreateObject();
             a.GenObject = o;
             a.SetString("Name", "SubClass");
             a.SaveFields();
-            d.Context[f.Classes.IndexOf("SubClass")].Last();
+            d.Context[f.GetClassId("SubClass")].Last();
 
             s.Last();
         }
@@ -132,11 +132,11 @@ namespace org.xpangen.Generator.Test
             var d = SetUpParentChildData("Parent", "Child", "Child");
             var f = d.GenDataDef;
             Assert.AreEqual(3, f.Classes.Count);
-            Assert.AreEqual("Parent", f.Classes[1].Name);
-            Assert.AreEqual("Child", f.Classes[2].Name);
-            Assert.AreEqual(1, f.Classes[1].SubClasses.Count);
-            Assert.AreEqual(2, f.Classes[1].SubClasses[0].SubClass.ClassId);
-            Assert.AreEqual("", f.Classes[1].SubClasses[0].Reference);
+            Assert.AreEqual("Parent", f.GetClassName(1));
+            Assert.AreEqual("Child", f.GetClassName(2));
+            Assert.AreEqual(1, f.GetClassSubClasses(1).Count);
+            Assert.AreEqual(2, f.GetClassSubClasses(1)[0].SubClass.ClassId);
+            Assert.AreEqual("", f.GetClassSubClasses(1)[0].Reference);
             Assert.AreEqual("Parent", d.Context[1].GenObject.Attributes[0]);
             Assert.AreEqual("Child", d.Context[2].GenObject.Attributes[0]);
         }
@@ -242,15 +242,15 @@ namespace org.xpangen.Generator.Test
         {
             var f = new GenDataDef();
             var classId = f.AddClass("", "Class");
-            f.Classes[classId].AddInstanceProperty("Prop1");
-            f.Classes[classId].AddInstanceProperty("Prop2");
+            f.AddClassInstanceProperty(classId, "Prop1");
+            f.AddClassInstanceProperty(classId, "Prop2");
             var d = new GenData(f);
             var o = d.CreateObject("", "Class");
             var a = new GenAttributes(f, 1) {GenObject = o};
             a.SetString("Prop1", "Prop1");
             a.SetString("Prop2", "Prop2");
             a.SaveFields();
-            Assert.AreEqual(2, f.Classes[classId].Properties.Count);
+            Assert.AreEqual(2, f.GetClassProperties(classId).Count);
         }
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace org.xpangen.Generator.Test
         public void ContextEmptyFirstPropertyExistsTest()
         {
             var f = GenDataDef.CreateMinimal();
-            f.Classes[1].AddInstanceProperty("First");
+            f.AddClassInstanceProperty(1, "First");
             var d = new GenData(f);
 
             SetUpData(d);
@@ -335,7 +335,7 @@ namespace org.xpangen.Generator.Test
         public void ContextFirstPropertyExistsWithValueTest()
         {
             var f = GenDataDef.CreateMinimal();
-            var idx = f.Classes[1].AddInstanceProperty("First");
+            var idx = f.AddClassInstanceProperty(1, "First");
             var d = new GenData(f);
 
             SetUpData(d);
@@ -371,7 +371,7 @@ namespace org.xpangen.Generator.Test
         public void ContextEmptyReferencePropertyExistsTest()
         {
             var f = GenDataDef.CreateMinimal();
-            f.Classes[1].AddInstanceProperty("Reference");
+            f.AddClassInstanceProperty(1, "Reference");
             var d = new GenData(f);
 
             SetUpData(d);
@@ -383,7 +383,7 @@ namespace org.xpangen.Generator.Test
         public void ContextReferencePropertyExistsWithValueTest()
         {
             var f = GenDataDef.CreateMinimal();
-            var idx = f.Classes[1].AddInstanceProperty("Reference");
+            var idx = f.AddClassInstanceProperty(1, "Reference");
             var d = new GenData(f);
 
             SetUpData(d);
@@ -396,7 +396,7 @@ namespace org.xpangen.Generator.Test
         public void ContextReferencePropertyExistsWithValueAndReferenceTest()
         {
             var f = GenDataDef.CreateMinimal();
-            var idx = f.Classes[1].AddInstanceProperty("Reference");
+            var idx = f.AddClassInstanceProperty(1, "Reference");
             var d = new GenData(f);
 
             SetUpData(d);
@@ -437,6 +437,23 @@ namespace org.xpangen.Generator.Test
             MoveItem(d, ListMove.ToBottom, 1, 2, "123", "Move second subclass to bottom");
         }
 
+        [TestCase(Description="Tests the retrieval of a class' subclass")]
+        public void GenObjectSubClassLookup()
+        {
+            var f = SetUpParentChildDef("Parent", "Child");
+            f.AddSubClass("Parent", "SecondChild");
+            f.AddClassInstanceProperty(3, "Name");
+            var d = new GenData(f);
+            CreateGenObject(d, "", "Parent", "Parent");
+            CreateGenObject(d, "Parent", "Child", "FirstChild");
+            CreateGenObject(d, "Parent", "SecondChild", "SecondChild");
+            var parent = d.Root.SubClass[0][0];
+            var sc = parent.GetSubClass("SecondChild");
+            Assert.AreEqual("SecondChild", sc[0].Attributes[0]);
+            sc = parent.GetSubClass("FirstChild");
+            Assert.AreEqual("Child", sc[0].Attributes[0]);
+        }
+        
         /// <summary>
         /// Set up the Generator data definition tests
         /// </summary>

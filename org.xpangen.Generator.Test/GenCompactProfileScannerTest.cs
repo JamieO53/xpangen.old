@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Globalization;
 using NUnit.Framework;
 using org.xpangen.Generator.Profile.Scanner;
 using org.xpangen.Generator.Scanner;
@@ -80,7 +81,7 @@ namespace org.xpangen.Generator.Test
             const string txt = "text ``string`post-text string";
             var scan = new CompactProfileScanner(txt);
             Assert.AreEqual("text `string", scan.ScanText());
-            Assert.AreEqual("p", scan.Current.ToString(), "Should now be beyond the delimeter");
+            Assert.AreEqual("p", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be beyond the delimeter");
         }
 
         /// <summary>
@@ -94,7 +95,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
             Assert.AreEqual(TokenType.Segment, scan.ScanTokenType());
             Assert.AreEqual("Class>", scan.ScanSegmentClass(), "Should be the segement class");
-            Assert.AreEqual("S", scan.Current.ToString(), "Should now be on the body of the segment");
+            Assert.AreEqual("S", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be on the body of the segment");
         }
 
         /// <summary>
@@ -108,7 +109,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
             Assert.AreEqual(TokenType.Condition, scan.ScanTokenType());
             Assert.AreEqual("Class.Name='Class'", scan.ScanCondition(), "Should be the condition");
-            Assert.AreEqual("C", scan.Current.ToString(), "Should now be in the body of the condition");
+            Assert.AreEqual("C", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be in the body of the condition");
         }
 
         /// <summary>
@@ -122,7 +123,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
             Assert.AreEqual(TokenType.Lookup, scan.ScanTokenType());
             Assert.AreEqual("Class.Name=SubClass.Name", scan.ScanLookup(), "Should be the lookup condition");
-            Assert.AreEqual("L", scan.Current.ToString(), "Should now be in the body of the lookup");
+            Assert.AreEqual("L", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be in the body of the lookup");
         }
 
         /// <summary>
@@ -139,7 +140,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
             Assert.AreEqual(TokenType.Secondary, scan.ScanTokenType(), "Should be on the secondary token");
             scan.SkipChar();
-            Assert.AreEqual("N", scan.Current.ToString(), "Should now be in the body of the lookup");
+            Assert.AreEqual("N", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be in the body of the lookup");
         }
 
         /// <summary>

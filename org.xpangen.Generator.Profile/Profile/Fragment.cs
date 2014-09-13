@@ -20,11 +20,6 @@ namespace org.xpangen.Generator.Profile.Profile
             Properties.Add("Name");
         }
 
-        public Fragment(GenData genData) : this()
-        {
-            GenData = genData;
-        }
-
 
         protected override void GenObjectSetNotification()
         {

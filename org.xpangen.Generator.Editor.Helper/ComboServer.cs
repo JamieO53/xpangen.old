@@ -35,9 +35,9 @@ namespace org.xpangen.Generator.Editor.Helper
             if (name.Equals("lookuptables", StringComparison.InvariantCultureIgnoreCase))
             {
                 var list = new List<GeComboItem>();
-                for (var i = 0; i < _codes.CodesTableList.Count; i++)
+                foreach (var t in _codes.CodesTableList)
                 {
-                    table = _codes.CodesTableList[i];
+                    table = t;
                     var item = new GeComboItem(table.Title, table.Name);
                     list.Add(item);
                 }

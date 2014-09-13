@@ -8,7 +8,6 @@ using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
-using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
 
 namespace org.xpangen.Generator.Test
 {
@@ -47,7 +46,7 @@ namespace org.xpangen.Generator.Test
                     {'\\', @"\\"},
                     {'\f', @"\f"}
                 };
-        private readonly object[] _escapedChars = new object[]{'\t', '\n', '\r', '\\'};
+        private readonly object[] _escapedChars = {'\t', '\n', '\r', '\\'};
 
         /// <summary>
         /// Tests that quoted strings with escape characters are scanned correctly
@@ -67,7 +66,7 @@ namespace org.xpangen.Generator.Test
                 {
                     {'\f', @"\f"}
                 };
-        private readonly object[] _undefinedEscapedChars = new object[] { '\f' };
+        private readonly object[] _undefinedEscapedChars = { '\f' };
 
         /// <summary>
         /// Tests that quoted strings with undefined escape characters are scanned correctly
@@ -244,7 +243,7 @@ namespace org.xpangen.Generator.Test
             const string expected = GenDataSaveText;
 
             var f = GenDataDef.CreateMinimal();
-            f.Classes[ClassClassId].AddInstanceProperty("Title");
+            f.AddClassInstanceProperty(ClassClassId, "Title");
             var a = new GenAttributes(f, ClassClassId);
             var d = new GenData(f);
             SetUpData(d);
@@ -300,7 +299,7 @@ namespace org.xpangen.Generator.Test
             var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", dataGrandchildhild);
 
             var genData = dataChild;
-            Assert.AreEqual("GrandchildDef", genData.GenDataDef.Classes[1].SubClasses[0].Reference);
+            Assert.AreEqual("GrandchildDef", genData.GenDataDef.GetClassSubClasses(1)[0].Reference);
 
             var genDataDef = genData.GenDataDef.AsGenData();
             Assert.AreEqual("GrandchildDef", genDataDef.Context[2].GenObject.Attributes[1]);
@@ -350,8 +349,8 @@ namespace org.xpangen.Generator.Test
             var definition = data.Cache["definition"];
             definition.Last(1);
             Assert.AreEqual(7, definition.Context[3].Count);
-            Assert.AreEqual("Property", def.Classes[5].Name);
-            Assert.AreEqual(7, def.Classes[5].Properties.Count);
+            Assert.AreEqual("Property", def.GetClassName(5));
+            Assert.AreEqual(7, def.GetClassProperties(5).Count);
             data.First(2);
             Assert.AreEqual("Definition", data.Context[2].GenObject.Attributes[0]);
             Assert.AreEqual("Definition.Class", data.Context[3].DefClass.ToString());

@@ -7,8 +7,6 @@ using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
-using org.xpangen.Generator.Profile.Profile;
-using org.xpangen.Generator.Profile.Scanner;
 
 namespace org.xpangen.Generator.Test
 {
@@ -137,7 +135,7 @@ namespace org.xpangen.Generator.Test
             var r = new GenProfileFragment(new GenProfileParams(GenData.GenDataDef));
             var g = new GenTextFragment(new GenTextFragmentParams(GenDataDef, r, r, "Text fragment"));
             VerifyFragment(GenData, g, "GenTextFragment", FragmentType.Text, "Text", "Text fragment", "Text fragment",
-                true, -1);
+                true, -1, r.Profile.GenData.GenDataDef);
         }
 
         /// <summary>
@@ -151,7 +149,7 @@ namespace org.xpangen.Generator.Test
                 new GenPlaceholderFragment(new GenPlaceholderFragmentParams(GenDataDef, r, r,
                     GenDataDef.GetId("Property.Name")));
             VerifyFragment(GenData, g, "GenPlaceholderFragment", FragmentType.Placeholder, "Property.Name", "`Property.Name`",
-                           "Property2", true, -1);
+                           "Property2", true, -1, r.Profile.GenData.GenDataDef);
         }
 
         /// <summary>
@@ -170,7 +168,7 @@ namespace org.xpangen.Generator.Test
             var t = new GenTextFragment(new GenTextFragmentParams(GenData.GenDataDef, r, g, ","));
             g.Body.Add(p);
             g.Body.Add(t);
-            VerifyFragment(GenData, g, "GenBlock", FragmentType.Block, "Block", "`{`Property.Name`,`]", "Property2,", false, -1);
+            VerifyFragment(GenData, g, "GenBlock", FragmentType.Block, "Block", "`{`Property.Name`,`]", "Property2,", false, -1, r.Profile.GenData.GenDataDef);
         }
 
         /// <summary>
@@ -194,13 +192,13 @@ namespace org.xpangen.Generator.Test
             d.First(SubClassClassId);
             g.GenObject = d.Context[SubClassClassId].GenObject;
             VerifyFragment(d, g, "GenLookup", FragmentType.Lookup, "Class.Name=SubClass.Name",
-                           "`%Class.Name=SubClass.Name:`Class.Name`,`]", "", false, -1);
+                           "`%Class.Name=SubClass.Name:`Class.Name`,`]", "", false, -1, r.Profile.GenData.GenDataDef);
 
             d.First(ClassClassId); // Has subclasses
             d.First(SubClassClassId);
             g.GenObject = d.Context[SubClassClassId].GenObject;
             VerifyFragment(d, g, "GenLookup", FragmentType.Lookup, "Class.Name=SubClass.Name",
-                           "`%Class.Name=SubClass.Name:`Class.Name`,`]", "SubClass,", false, -1);
+                           "`%Class.Name=SubClass.Name:`Class.Name`,`]", "SubClass,", false, -1, r.Profile.GenData.GenDataDef);
         }
 
         /// <summary>
@@ -210,7 +208,7 @@ namespace org.xpangen.Generator.Test
         public void GenLookupNoMatchTest()
         {
             const string txt = "SubClass does not exist";
-            var profile = "`[Class:`[SubClass:`%Class.Name=SubClass.Name:`;" + txt + "`]`]`]";
+            const string profile = "`[Class:`[SubClass:`%Class.Name=SubClass.Name:`;" + txt + "`]`]`]";
             var d = SetUpLookupData();
             var f = d.GenDataDef;
             var p = new GenCompactProfileParser(f, "", profile);
@@ -266,19 +264,19 @@ namespace org.xpangen.Generator.Test
             g.Body.Add(p1);
             g.Body.Add(t1);
 
-            var parentId = f.Classes.IndexOf("Parent");
-            var childId = f.Classes.IndexOf("Child");
+            var parentId = f.GetClassId("Parent");
+            var childId = f.GetClassId("Child");
             d.First(parentId);
             d.First(childId); // Valid lookup
             b.GenObject = d.Context[childId].GenObject;
             VerifyFragment(d, b, "GenBlock", FragmentType.Block, "Block",
-                           "`{`Parent.Name`,`%Lookup.Name=Child.Lookup:`Lookup.Name`,`]`]", "Parent,Valid,", false, -1);
+                           "`{`Parent.Name`,`%Lookup.Name=Child.Lookup:`Lookup.Name`,`]`]", "Parent,Valid,", false, -1, r.Profile.GenData.GenDataDef);
 
             d.First(parentId);
             d.Last(childId); // Invalid lookup
             b.GenObject = d.Context[childId].GenObject;
             VerifyFragment(d, b, "GenBlock", FragmentType.Block, "Block",
-                           "`{`Parent.Name`,`%Lookup.Name=Child.Lookup:`Lookup.Name`,`]`]", "Parent,", false, -1);
+                           "`{`Parent.Name`,`%Lookup.Name=Child.Lookup:`Lookup.Name`,`]`]", "Parent,", false, -1, r.Profile.GenData.GenDataDef);
         }
 
         /// <summary>
