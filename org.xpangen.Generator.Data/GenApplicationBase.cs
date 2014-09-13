@@ -24,7 +24,7 @@ namespace org.xpangen.Generator.Data
 
         public GenData GenData { get; set; }
 
-        public bool DelayedSave { get; set; }
+        public bool DelayedSave { protected get; set; }
         
         public override IGenObject GenObject
         {

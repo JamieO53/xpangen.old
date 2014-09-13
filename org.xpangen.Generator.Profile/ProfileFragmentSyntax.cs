@@ -2,6 +2,8 @@
 // // License, v. 2.0. If a copy of the MPL was not distributed with this
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Globalization;
+
 namespace org.xpangen.Generator.Profile
 {
     /// <summary>
@@ -12,19 +14,19 @@ namespace org.xpangen.Generator.Profile
         /// <summary>
         ///     The profile fragment type.
         /// </summary>
-        public FragmentType FragmentType { get; set; }
+        public FragmentType FragmentType { private get; set; }
 
         /// <summary>
         ///     The variant of the syntax for the fragment type.
         /// </summary>
-        public int Variant { get; set; }
+        public int Variant { private get; set; }
 
         /// <summary>
         ///     The key identifying the fragment type and variant.
         /// </summary>
         public string Key
         {
-            get { return FragmentType.ToString() + (Variant == 0 ? "" : Variant.ToString()); }
+            get { return FragmentType + (Variant == 0 ? "" : Variant.ToString(CultureInfo.InvariantCulture)); }
         }
 
         /// <summary>

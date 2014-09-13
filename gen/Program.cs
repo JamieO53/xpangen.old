@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;

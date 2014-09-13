@@ -62,20 +62,17 @@ namespace GenEdit.Controls
             ParentNode = parentNode;
             GenObject = GenData.Context[ClassId].GenObject;
             //SavedContext = GenData.SaveContext(ClassId, ParentNode.SavedContext);
-            ClassDef = GenData.GenDataDef.Classes[ClassId];
+            ClassDef = GenData.GenDataDef.GetClassDef(ClassId);
             Def = ClassId > definition.ClassList.Count ? null : definition.ClassList[ClassId-1];
             GenAttributes = new GenAttributes(GenData.GenDataDef, classId) { GenObject = GenObject };
 
-            if (ClassDef.Properties.IndexOf("Name") == -1)
-                Text = ClassDef.Name;
-            else
-                Text = GenAttributes.AsString("Name");
+            Text = ClassDef.Properties.IndexOf("Name") == -1 ? ClassDef.Name : GenAttributes.AsString("Name");
             ImageIndex = 1;
             ToolTipText = Def == null ? "" : Def.Title;
             Tag = new GenObjectViewModel(GenObject, Def, ClassDef.IsReference);
 
-            for (var i = 0; i < ClassDef.SubClasses.Count; i++)
-                Nodes.Add(new SubClassTreeNode(this, GenData, definition, ClassDef.SubClasses[i].SubClass.ClassId));
+            foreach (var subClass in ClassDef.SubClasses)
+                Nodes.Add(new SubClassTreeNode(this, GenData, definition, subClass.SubClass.ClassId));
         }
 
         /// <summary>

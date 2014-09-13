@@ -56,7 +56,7 @@ namespace org.xpangen.Generator.Data.Definition
         /// </summary>
         public string Inheritance
         {
-            get { return AsString("Inheritance"); }
+            private get { return AsString("Inheritance"); }
             set
             {
                 if (Inheritance == value) return;
@@ -90,7 +90,7 @@ namespace org.xpangen.Generator.Data.Definition
         }
 
 
-        public Property AddProperty(string name, string title = "", string dataType = "String", string @default = "", string lookupType = "", string lookupDependence = "", string lookupTable = "")
+        public void AddProperty(string name, string title = "", string dataType = "String", string @default = "", string lookupType = "", string lookupDependence = "", string lookupTable = "")
         {
             var item = new Property(GenData)
                            {
@@ -104,7 +104,6 @@ namespace org.xpangen.Generator.Data.Definition
                                LookupTable = lookupTable
                            };
             PropertyList.Add(item);
-            return item;
         }
 
     }

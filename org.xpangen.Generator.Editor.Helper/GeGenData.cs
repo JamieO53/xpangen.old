@@ -22,9 +22,9 @@ namespace org.xpangen.Generator.Editor.Helper
                 var f = DefGenData.AsDef();
                 f.DefinitionName = Path.GetFileNameWithoutExtension(filePath);
                 var references = f.Cache.References;
-                for (var i = 0; i < references.Count; i++)
+                foreach (GenDataDefReferenceCacheItem r in references)
                 {
-                    var reference = references[i].Path;
+                    var reference = r.Path;
                     if (!DefGenData.Cache.Contains(reference))
                         DefGenData.Cache.Internal(reference, GenData.DataLoader.LoadData(reference));
                 }

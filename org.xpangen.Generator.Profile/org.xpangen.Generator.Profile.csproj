@@ -56,7 +56,6 @@
     <Compile Include="GenFunctionParams.cs" />
     <Compile Include="GenLookup.cs" />
     <Compile Include="GenLookupParams.cs" />
-    <Compile Include="GenNullFragment.cs" />
     <Compile Include="GenPlaceholderFragment.cs" />
     <Compile Include="GenPlaceholderFragmentParams.cs" />
     <Compile Include="GenProfileFragment.cs" />

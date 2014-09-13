@@ -12,7 +12,7 @@ namespace GenEdit.ViewModel
         private static GeData _geData;
         private static GenDataEditorViewModel _genDataEditorViewModel;
 
-        public static bool IsInDesignMode {
+        private static bool IsInDesignMode {
             get {
                 var isInDesignMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime; // || Debugger.IsAttached;
 

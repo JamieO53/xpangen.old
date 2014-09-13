@@ -1,6 +1,8 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 using System;
-using System.Collections;
-using System.IO;
 using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
@@ -62,18 +64,16 @@ namespace org.xpangen.Generator.Data
         /// <summary>
         /// Cache a data file programatically.
         /// </summary>
-        /// <param name="def">The definition of the definition data.</param>
         /// <param name="name">The name of the cached data.</param>
-        /// <param name="genData">The data being cached.</param>
+        /// <param name="genDataDef">The data being cached.</param>
         /// <returns></returns>
-        public GenDataDef Internal(string name, GenDataDef genDataDef)
+        public void Internal(string name, GenDataDef genDataDef)
         {
             var n = name.ToLowerInvariant().Replace('/', '\\');
             if (n.Equals("self"))
                 throw new ArgumentException("The 'self' generator data cannot be added explicitly to the cache", "name");
             if (!LocalCache.ContainsKey(n))
                 LocalCache.Add(n, genDataDef);
-            return genDataDef;
         }
 
         private GenDataDef AddDef(string def)

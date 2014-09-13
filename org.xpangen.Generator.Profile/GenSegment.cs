@@ -12,7 +12,7 @@ namespace org.xpangen.Generator.Profile
             : base(genSegmentParams.SetFragmentType(FragmentType.Segment))
         {
             Body.ParentSegment = this;
-            ClassId = GenDataDef.Classes.IndexOf(genSegmentParams.ClassName);
+            ClassId = GenDataDef.GetClassId(genSegmentParams.ClassName);
             ((Segment) Fragment).Cardinality = genSegmentParams.Cardinality.ToString();
         }
     }

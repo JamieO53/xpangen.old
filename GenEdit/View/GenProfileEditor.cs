@@ -1,8 +1,14 @@
-﻿using System.Windows.Forms;
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using System;
+using System.Windows.Forms;
 using GenEdit.Utilities;
 using GenEdit.ViewModel;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace GenEdit.View
 {
@@ -10,7 +16,7 @@ namespace GenEdit.View
     {
         public GenDataEditorViewModel GenDataEditorViewModel { get; set; }
         private bool IsBuilding { get; set; }
-        
+
         public GenProfileEditor()
         {
             InitializeComponent();
@@ -21,10 +27,10 @@ namespace GenEdit.View
             if (IsBuilding) return;
 
             var contextData = GenDataEditorViewModel.Data.GenData.DuplicateContext();
-            RefreshProfile(contextData);
+            RefreshProfile(contextData, GenDataEditorViewModel.Data.GenObject);
         }
 
-        private void GenProfileEditor_Load(object sender, System.EventArgs e)
+        private void GenProfileEditor_Load(object sender, EventArgs e)
         {
         }
 
@@ -33,26 +39,27 @@ namespace GenEdit.View
             ProfileNavigatorTreeView.Nodes.Clear();
             ProfileExpansionTextBox.Clear();
             ProfileTextBox.Clear();
-            if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null || GenDataEditorViewModel.Data.Profile == null) return;
-            
+            if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null ||
+                GenDataEditorViewModel.Data.Profile == null) return;
+
             var builder = new ProfileEditorTreeViewBuilder(GenDataEditorViewModel.Data);
 
             IsBuilding = true;
             builder.CreateBodyChildTrees(ProfileNavigatorTreeView.Nodes, GenDataEditorViewModel.Data.Profile);
             IsBuilding = false;
-            RefreshProfile(GenDataEditorViewModel.Data.GenData);
+            RefreshProfile(GenDataEditorViewModel.Data.GenData, GenDataEditorViewModel.Data.GenObject);
             if (ProfileNavigatorTreeView.Nodes.Count > 0)
                 ProfileNavigatorTreeView.SelectedNode = ProfileNavigatorTreeView.Nodes[0];
         }
 
-        public void RefreshProfile(GenData genData)
+        public void RefreshProfile(GenData genData, GenObject genObject)
         {
             var selectedItem = ProfileNavigatorTreeView.SelectedNode;
+            GenFragment fragment1 = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem);
             var text = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem) != null
-                           ? ProfileEditorTreeViewBuilder.GetNodeProfileText(selectedItem, ProfileEditorTreeViewBuilder.GetNodeData(selectedItem),
-                                                                             ProfileFragmentSyntaxDictionary
-                                                                                 .ActiveProfileFragmentSyntaxDictionary)
-                           : "";
+                ? ProfileEditorTreeViewBuilder.GetNodeProfileText(ProfileFragmentSyntaxDictionary
+                        .ActiveProfileFragmentSyntaxDictionary, fragment1.Fragment)
+                : "";
 
             // Don't change to prevent unnecessary rendering and side effects
             if (text != ProfileTextBox.Text)
@@ -62,16 +69,19 @@ namespace GenEdit.View
             }
 
 
-            text = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem) != null
-                       ? ProfileEditorTreeViewBuilder.GetNodeExpansionText(selectedItem, ProfileEditorTreeViewBuilder.GetNodeData(selectedItem), genData)
-                       : "";
+            var fragment = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem);
+            var context = fragment != null
+                ? genData.GetContext(genObject ?? genData.Root, fragment.Fragment.ClassName())
+                : null;
+            text = context != null
+                ? ProfileEditorTreeViewBuilder.GetNodeExpansionText(genData, context, fragment.Fragment)
+                : "";
 
             // Don't change to prevent unnecessary rendering and side effects
             if (text != ProfileExpansionTextBox.Text)
             {
                 ProfileExpansionTextBox.Clear();
                 ProfileExpansionTextBox.Text = text;
-
             }
         }
     }

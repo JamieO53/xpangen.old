@@ -39,7 +39,6 @@
     <Compile Include="GeSettings.cs" />
     <Compile Include="IGenData.cs" />
     <Compile Include="IGenDataSettings.cs" />
-    <Compile Include="IGenTreeNavigator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

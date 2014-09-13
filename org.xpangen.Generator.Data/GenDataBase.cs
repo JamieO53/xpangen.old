@@ -27,7 +27,7 @@ namespace org.xpangen.Generator.Data
             }
         }
 
-        public bool HasReferences
+        private bool HasReferences
         {
             get { return _references == null; }
         }
@@ -49,7 +49,7 @@ namespace org.xpangen.Generator.Data
 
         public GenObject CreateGenObject(string className, GenObject parent)
         {
-            var classId = GenDataDef.Classes.IndexOf(className);
+            var classId = GenDataDef.GetClassId(className);
             var k = GenDataDef.IndexOfSubClass(parent.ClassId, classId);
             var l = parent.SubClass[k] as GenSubClass;
             if (l != null)

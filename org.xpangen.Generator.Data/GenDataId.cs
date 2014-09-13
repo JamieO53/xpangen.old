@@ -10,7 +10,8 @@ namespace org.xpangen.Generator.Data
         public int PropertyId { get; set; }
         public string ClassName { get; set; }
         public string PropertyName { get; set; }
-        public string Identifier { get {
+
+        private string Identifier { get {
             return ClassId == -1 && PropertyId == -1
                        ? "<<<< Invalid Identifier >>>>"
                        : (PropertyId == -1 ? "<<<< Invalid Property >>>>" : ClassName + "." + PropertyName);

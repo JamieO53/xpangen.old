@@ -111,7 +111,7 @@ namespace org.xpangen.Generator.Profile
                         if (!genCondition.UseLit)
                             try
                             {
-                                genCondition.Var2 = genDataDef.GetId(v2, false);
+                                genCondition.Var2 = genDataDef.GetId(v2);
                             }
                             catch (Exception)
                             {

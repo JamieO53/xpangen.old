@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
@@ -28,11 +32,6 @@ namespace org.xpangen.Generator.Data
         /// The definition of the subclass
         /// </summary>
         GenDataDefSubClass Definition { get; }
-
-        /// <summary>
-        /// The relationship between the subclass and the class
-        /// </summary>
-        string Relationship { get; set; }
 
         /// <summary>
         /// Reset the underlying data to force it to be reinitialized.

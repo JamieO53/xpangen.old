@@ -1,3 +1,7 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +25,7 @@ namespace org.xpangen.Generator.Data
 		#region Data
 
 		private static readonly Dictionary<string, PropertyChangedEventArgs> EventArgCache;
-	    private bool _ignorePropertyValidation = false;
+	    private bool _ignorePropertyValidation;
 	    private const string ErrorMsg = "{0} is not a public property of {1}";
 
 		#endregion // Data
@@ -33,11 +37,7 @@ namespace org.xpangen.Generator.Data
 			EventArgCache = new Dictionary<string, PropertyChangedEventArgs>();
 		}
 
-		protected BindableObject()
-		{
-		}
-
-		#endregion // Constructors
+	    #endregion // Constructors
 
 		#region Public Members
 
@@ -47,14 +47,12 @@ namespace org.xpangen.Generator.Data
 		[field:NonSerialized]
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		/// <summary>
-		/// Returns an instance of PropertyChangedEventArgs for 
-		/// the specified property name.
-		/// </summary>
-		/// <param name="propertyName">
-		/// The name of the property to create event args for.
-		/// </param>		
-		public static PropertyChangedEventArgs GetPropertyChangedEventArgs(string propertyName)
+	    /// <summary>
+	    /// Returns an instance of PropertyChangedEventArgs for 
+	    /// the specified property name.
+	    /// </summary>
+	    /// <param name="propertyName">The name of the property to create event args for.</param>		
+	    private static PropertyChangedEventArgs GetPropertyChangedEventArgs(string propertyName)
 		{
 			if (String.IsNullOrEmpty(propertyName))
 				throw new ArgumentException(
@@ -150,7 +148,7 @@ namespace org.xpangen.Generator.Data
 
 	    protected bool IgnorePropertyValidation
 	    {
-	        get { return _ignorePropertyValidation; }
+	        private get { return _ignorePropertyValidation; }
 	        set { _ignorePropertyValidation = value; }
 	    }
 

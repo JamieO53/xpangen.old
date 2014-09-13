@@ -48,8 +48,8 @@ namespace org.xpangen.Generator.Data
                                value.ClassId == DefClass.Parent.Parent.ClassId,
                             "Object list assignment error: " +
                             string.Format("The expected class was {0}({1}) but is {2}({3})",
-                                GenDataBase.GenDataDef.Classes[ClassId].Name, ClassId,
-                                GenDataBase.GenDataDef.Classes[value.ClassId].Name, value.ClassId));
+                                GenDataBase.GenDataDef.GetClassName(ClassId), ClassId,
+                                GenDataBase.GenDataDef.GetClassName(value.ClassId), value.ClassId));
                         Assert(
                             ParentList.GenObject == null || (value.Parent == ParentList.GenObject ||
                             DefClass.IsInherited && value.Parent == ParentList.GenObject.Parent),
@@ -62,9 +62,9 @@ namespace org.xpangen.Generator.Data
                         Assert(value.ClassId == refClassId,
                             "Object list assignment error:" +
                             string.Format("The expected class was {0}({1}) but is {2}({3})",
-                                ReferenceData.GenDataBase.GenDataDef.Classes[RefClassId].Name,
+                                ReferenceData.GenDataBase.GenDataDef.GetClassName(RefClassId),
                                 ReferenceData.Context[refClassId].RefClassId,
-                                ReferenceData.GenDataBase.GenDataDef.Classes[value.ClassId].Name, value.ClassId));
+                                ReferenceData.GenDataBase.GenDataDef.GetClassName(value.ClassId), value.ClassId));
                         Assert(value.Parent.ClassId == 0 || value.Parent == ParentList.GenObject,
                             "Object list assignment error:" +
                             "The the incorrect subclass is being used for the current parent");
@@ -278,7 +278,7 @@ namespace org.xpangen.Generator.Data
             SubClassBase.Insert(0, genObject);
             Index = 0;
             GenDataBase.Changed = true;
-            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
+            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.GetClassName(ClassId), "");
         }
 
         private void MoveUp(int itemIndex)
@@ -289,7 +289,7 @@ namespace org.xpangen.Generator.Data
             SubClassBase[itemIndex - 1] = genObject;
             Index = itemIndex - 1;
             GenDataBase.Changed = true;
-            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
+            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.GetClassName(ClassId), "");
         }
 
         private void MoveDown(int itemIndex)
@@ -300,7 +300,7 @@ namespace org.xpangen.Generator.Data
             SubClassBase[itemIndex + 1] = genObject;
             Index = itemIndex + 1;
             GenDataBase.Changed = true;
-            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
+            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.GetClassName(ClassId), "");
         }
 
         private void MoveToBottom(int itemIndex)
@@ -311,7 +311,7 @@ namespace org.xpangen.Generator.Data
             SubClassBase.Add(genObject);
             Index = SubClassBase.Count - 1;
             GenDataBase.Changed = true;
-            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.Classes[ClassId].Name, "");
+            GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.GetClassName(ClassId), "");
         }
 
         /// <summary>
@@ -337,7 +337,7 @@ namespace org.xpangen.Generator.Data
 
         public override string ToString()
         {
-            return GenDataBase.GenDataDef.Classes[ClassId] +
+            return GenDataBase.GenDataDef.GetClassDef(ClassId) +
                    (Eol || GenObject.Attributes.Count == 0 ? "" : ":" + GenObject.Attributes[0]);
         }
 

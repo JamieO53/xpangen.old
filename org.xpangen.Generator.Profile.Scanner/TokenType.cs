@@ -6,7 +6,6 @@ namespace org.xpangen.Generator.Profile.Scanner
 {
     public enum TokenType
     {
-        Null,
         Segment,
         Block,
         Lookup,

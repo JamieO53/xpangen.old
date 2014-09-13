@@ -36,18 +36,6 @@ namespace org.xpangen.Generator.Profile
             ParentSegment = parentSegment;
             ParentContainer = parentContainer;
             IsPrimary = isPrimary;
-            ClassId = ParentSegment == null ? 0 : ParentSegment.ClassId;
-        }
-
-        public GenFragmentParams(GenDataDef genDataDef, Fragment fragment)
-        {
-            GenDataDef = genDataDef;
-            IsPrimary = true;
-            Fragment = fragment;
-            FragmentType fragmentType;
-            if (!Enum.TryParse(fragment.GetType().Name, out fragmentType))
-                throw new ArgumentException("Invalid fragment type: " + fragment.GetType().Name);
-            FragmentType = fragmentType;
         }
 
         public GenFragmentParams SetFragmentType(FragmentType fragmentType)
@@ -84,7 +72,6 @@ namespace org.xpangen.Generator.Profile
         private bool IsPrimary { get; set; }
 
         public FragmentType FragmentType { get; protected set; }
-        public int ClassId { get; private set; }
 
         private void CheckFragment(FragmentType fragmentType, FragmentBody fragmentBody)
         {

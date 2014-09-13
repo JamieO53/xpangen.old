@@ -82,7 +82,7 @@ namespace org.xpangen.Generator.Scanner
         /// </summary>
         /// <param name="cs">The expected values of the current character.</param>
         /// <returns>Does the current character have one of the specified values?</returns>
-        public bool CheckCharSet(CharSet cs)
+        protected bool CheckCharSet(CharSet cs)
         {
             return cs.Match(Current);
         }
@@ -173,7 +173,7 @@ namespace org.xpangen.Generator.Scanner
                             name += '\\';
                             break;
                         default:
-                            name += @"\" + Current.ToString();
+                            name += @"\" + Current;
                             break;
                     }
                     SkipChar();
@@ -219,7 +219,7 @@ namespace org.xpangen.Generator.Scanner
         /// </summary>
         /// <param name="c">The character being sought.</param>
         /// <returns>The text up to the specified character.</returns>
-        public string ScanUntilCharCaseInsensitive(char c)
+        private string ScanUntilCharCaseInsensitive(char c)
         {
             var cu = Char.ToUpper(c);
             var cl = Char.ToLower(c);

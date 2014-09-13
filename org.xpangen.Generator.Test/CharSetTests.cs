@@ -3,6 +3,7 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Globalization;
 using NUnit.Framework;
 using org.xpangen.Generator.Scanner;
 
@@ -69,7 +70,7 @@ namespace org.xpangen.Generator.Test
             var ca = "\n\r\t\\-".ToCharArray();
             foreach (var x in ca)
             {
-                Assert.IsTrue(cs.Match(x), ((Int16)x).ToString());
+                Assert.IsTrue(cs.Match(x), ((Int16)x).ToString(CultureInfo.InvariantCulture));
             }
         }
         

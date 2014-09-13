@@ -11,20 +11,20 @@ namespace org.xpangen.Generator.Test
         {
             if (classId != 0)
             {
-                if (genDataDef.Classes[classId].Inheritors.Count > 0)
-                    profile.Append("`[" + genDataDef.Classes[classId].Name +
-                                   (genDataDef.Classes[classId].IsInherited ? "^:" : ":"));
+                if (genDataDef.GetClassInheritors(classId).Count > 0)
+                    profile.Append("`[" + genDataDef.GetClassName(classId) +
+                                   (genDataDef.GetClassIsInherited(classId) ? "^:" : ":"));
                 else
                 {
-                    profile.Append("`[" + genDataDef.Classes[classId].Name +
-                                   (genDataDef.Classes[classId].IsInherited ? "^:" : ":") +
-                                   genDataDef.Classes[classId].Name);
+                    profile.Append("`[" + genDataDef.GetClassName(classId) +
+                                   (genDataDef.GetClassIsInherited(classId) ? "^:" : ":") +
+                                   genDataDef.GetClassName(classId));
 
-                    if (genDataDef.Classes[classId].Properties.Count > 0)
+                    if (genDataDef.GetClassProperties(classId).Count > 0)
                     {
                         var f = new StringBuilder();
                         var sep = "";
-                        var defClass = genDataDef.Classes[classId];
+                        var defClass = genDataDef.GetClassDef(classId);
                         for (var i = 0; i < defClass.Properties.Count; i++)
                         {
                             if (!defClass.IsInherited ||
@@ -38,26 +38,25 @@ namespace org.xpangen.Generator.Test
 
                         var j = 0;
                         if (
-                            String.Compare(genDataDef.Classes[classId].Properties[0], "Name",
+                            String.Compare(genDataDef.GetClassProperties(classId)[0], "Name",
                                            StringComparison.OrdinalIgnoreCase) == 0)
                         {
-                            profile.Append("=`" + genDataDef.Classes[classId].Name + ".Name`");
+                            profile.Append("=`" + genDataDef.GetClassName(classId) + ".Name`");
                             j = 1;
                         }
-                        if (genDataDef.Classes[classId].Properties.Count > j)
+                        if (genDataDef.GetClassProperties(classId).Count > j)
                         {
                             profile.Append("[");
                             sep = "";
-                            for (var i = j; i < genDataDef.Classes[classId].Properties.Count; i++)
+                            for (var i = j; i < genDataDef.GetClassProperties(classId).Count; i++)
                             {
-                                profile.Append("`?" + genDataDef.Classes[classId].Name + "." +
-                                               genDataDef.Classes[classId].Properties[i] + ":" +
-                                               sep + genDataDef.Classes[classId].Properties[i] +
-                                               "`?" + genDataDef.Classes[classId].Name + "." +
-                                               genDataDef.Classes[classId].Properties[i] + "<>True:" +
-                                               "=`@StringOrName:`{`" + genDataDef.Classes[classId].Name +
-                                               '.' + genDataDef.Classes[classId].Properties[i] +
-                                               "``]`]`]`]");
+                                var property = genDataDef.GetClassProperties(classId)[i];
+                                profile.Append("`?" + genDataDef.GetClassName(classId) + "." +
+                                               property + ":" + sep + property +
+                                               "`?" + genDataDef.GetClassName(classId) + "." +
+                                               property + "<>True:" +
+                                               "=`@StringOrName:`{`" + genDataDef.GetClassName(classId) +
+                                               '.' + property + "``]`]`]`]");
                                 sep = ",";
                             }
                             profile.Append("]");
@@ -66,17 +65,17 @@ namespace org.xpangen.Generator.Test
                     }
                 }
 
-                if (genDataDef.Classes[classId].Inheritors.Count > 0)
-                    for (var i = 0; i < genDataDef.Classes[classId].Inheritors.Count; i++)
-                        ClassProfile(genDataDef, genDataDef.Classes[classId].Inheritors[i].ClassId, profile);
+                if (genDataDef.GetClassInheritors(classId).Count > 0)
+                    foreach (var inheritor in genDataDef.GetClassInheritors(classId))
+                        ClassProfile(genDataDef, inheritor.ClassId, profile);
             }
 
 
-            if (!genDataDef.Classes[classId].IsAbstract)
+            if (!genDataDef.GetClassIsAbstract(classId))
                 SubClassProfiles(genDataDef, classId, profile);
 
-            if (genDataDef.Classes[classId].IsInherited)
-                SubClassProfiles(genDataDef, genDataDef.Classes[classId].Parent.ClassId, profile);
+            if (genDataDef.GetClassIsInherited(classId))
+                SubClassProfiles(genDataDef, genDataDef.GetClassParent(classId).ClassId, profile);
 
             if (classId != 0)
                 profile.Append("`]");
@@ -84,12 +83,13 @@ namespace org.xpangen.Generator.Test
 
         private static void SubClassProfiles(GenDataDef genDataDef, int classId, StringBuilder profile)
         {
-            for (var i = 0; i < genDataDef.Classes[classId].SubClasses.Count; i++)
+            var subClasses = genDataDef.GetClassSubClasses(classId);
+            foreach (var subClass in subClasses)
             {
-                if (string.IsNullOrEmpty(genDataDef.Classes[classId].SubClasses[i].SubClass.Reference))
-                    ClassProfile(genDataDef, genDataDef.Classes[classId].SubClasses[i].SubClass.ClassId, profile);
+                if (string.IsNullOrEmpty(subClass.SubClass.Reference))
+                    ClassProfile(genDataDef, subClass.SubClass.ClassId, profile);
                 else
-                    profile.Append("`[" + genDataDef.Classes[classId].SubClasses[i].SubClass.Name + "@:`]");
+                    profile.Append("`[" + subClass.SubClass.Name + "@:`]");
             }
         }
 

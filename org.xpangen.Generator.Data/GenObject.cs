@@ -53,7 +53,7 @@ namespace org.xpangen.Generator.Data
         public int ClassId { get; set; }
 
         public GenObject Parent { get; private set; }
-        public GenObject RefParent { get; set; }
+        public GenObject RefParent { private get; set; }
         public GenSubClasses SubClass { get; private set; }
 
         public GenDataDefClass Definition
@@ -61,7 +61,7 @@ namespace org.xpangen.Generator.Data
             get
             {
                 if (GenDataBase != null && GenDataBase.GenDataDef != null)
-                    return GenDataBase.GenDataDef.Classes[ClassId];
+                    return GenDataBase.GenDataDef.GetClassDef(ClassId);
                 return null;
             }
         }
@@ -92,10 +92,9 @@ namespace org.xpangen.Generator.Data
             string value = null;
             if (id.ClassName == ClassName)
             {
-                var classes = GenDataBase.GenDataDef.Classes;
-                var indexOfClass = classes.IndexOf(id.ClassName);
-                var indexOfProperty = classes[indexOfClass].Properties.IndexOf(id.PropertyName);
-                if (classes[indexOfClass].IsPseudo(indexOfProperty))
+                var indexOfClass = GenDataBase.GenDataDef.GetClassId(id.ClassName);
+                var indexOfProperty = GenDataBase.GenDataDef.GetClassProperties(indexOfClass).IndexOf(id.PropertyName);
+                if (GenDataBase.GenDataDef.GetClassDef(indexOfClass).IsPseudo(indexOfProperty))
                 {
                     notFound = true;
                     return "";
@@ -123,6 +122,17 @@ namespace org.xpangen.Generator.Data
             }
             notFound = true;
             return value ?? "<<<< Invalid Lookup: " + id + " Class not found >>>>";
+        }
+
+        public GenSubClass GetSubClass(string subClassName)
+        {
+            var idx = IndexOfSubClass(subClassName);
+            return (GenSubClass) SubClass[idx];
+        }
+
+        private int IndexOfSubClass(string subClassName)
+        {
+            return Definition.SubClasses.IndexOf(subClassName);
         }
     }
 }

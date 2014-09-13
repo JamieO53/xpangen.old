@@ -155,7 +155,7 @@ namespace org.xpangen.Generator.Editor.Helper
             var r = new CodesDefinition();
             var t = r.AddCodesTable("YesNo", "Select True or False values");
             t.AddCode("Yes", "Yes", "True");
-            t.AddCode("No", "No", "");
+            t.AddCode("No", "No");
             t = r.AddCodesTable("DataType", "Select the editor field data type");
             t.AddCode("String", "String", "String");
             t.AddCode("Integer", "Integer", "Integer");
@@ -185,6 +185,8 @@ namespace org.xpangen.Generator.Editor.Helper
         }
 
         public ComboServer ComboServer { private get; set; }
+        public GenObject GenObject { get; set; }
+
         /// <summary>
         /// Get values to populate a data editor combo.
         /// </summary>

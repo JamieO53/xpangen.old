@@ -67,9 +67,9 @@ namespace org.xpangen.Generator.Test
         public void GenDataFileReopenTest()
         {
             LoadData("Minimal.dcb");
-            Assert.AreEqual("Class", Data.GenDataDef.Classes[1].Name, "First data loaded");
+            Assert.AreEqual("Class", Data.GenDataDef.GetClassName(1), "First data loaded");
             LoadData("GeneratorDefinitionModel.dcb");
-            Assert.AreEqual("Solution", Data.GenDataDef.Classes[1].Name, "Second data loaded");
+            Assert.AreEqual("Solution", Data.GenDataDef.GetClassName(1), "Second data loaded");
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Tests that design time settings are correctly initialized")]
         public void DesignTimeSettingsTest()
         {
-            var d = Data.GetDesignTimeSettings();
+            Data.GetDesignTimeSettings();
             var data = new GeData();
             data.Settings = data.GetDesignTimeSettings();
             Assert.AreEqual(1, data.Settings.GetFileGroups().Count);

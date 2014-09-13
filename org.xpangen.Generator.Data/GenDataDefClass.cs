@@ -1,4 +1,8 @@
-﻿using org.xpangen.Generator.Data.Definition;
+﻿// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using org.xpangen.Generator.Data.Definition;
 
 namespace org.xpangen.Generator.Data
 {
@@ -56,29 +60,26 @@ namespace org.xpangen.Generator.Data
             get
             {
                 if (_properties != null) return _properties;
+                NameList nameList;
+                if (_instanceProperties == null) nameList = new NameList();
+                else if (RefDef != null && RefClassId >= 0 && RefClassId < RefDef.Classes.Count)
+                    nameList = RefDef.GetClassProperties(RefClassId);
                 else
                 {
-                    NameList nameList;
-                    if (_instanceProperties == null) nameList = new NameList();
-                    else if (RefDef != null && RefClassId >= 0 && RefClassId < RefDef.Classes.Count)
-                        nameList = RefDef.Classes[RefClassId].Properties;
-                    else
-                    {
-                        nameList = new NameList();
-                        if (IsInherited)
-                            CopyInheritedProperties(nameList);
-                        CopyInstanceProperties(nameList);
-                    }
-                    return _properties = nameList;
+                    nameList = new NameList();
+                    if (IsInherited)
+                        CopyInheritedProperties(nameList);
+                    CopyInstanceProperties(nameList);
                 }
+                return _properties = nameList;
             }
         }
 
         private void CopyInstanceProperties(NameList nameList)
         {
-            for (var i = 0; i < InstanceProperties.Count; i++)
-                if (!nameList.Contains(InstanceProperties[i]))
-                    nameList.Add(InstanceProperties[i]);
+            foreach (string instanceProperty in InstanceProperties)
+                if (!nameList.Contains(instanceProperty))
+                    nameList.Add(instanceProperty);
         }
 
         private void CopyInheritedProperties(NameList nameList)
@@ -142,7 +143,7 @@ namespace org.xpangen.Generator.Data
         public void CreateInstanceProperties()
         {
             _instanceProperties = RefDef != null && RefClassId >= 0 && RefClassId < RefDef.Classes.Count
-                                      ? RefDef.Classes[RefClassId].InstanceProperties
+                                      ? RefDef.GetClassInstanceProperties(RefClassId)
                                       : new NameList();
         }
     }
