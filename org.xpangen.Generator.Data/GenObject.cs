@@ -2,6 +2,8 @@
 // // License, v. 2.0. If a copy of the MPL was not distributed with this
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
+
 namespace org.xpangen.Generator.Data
 {
     public class GenObject : GenBase, IGenObject
@@ -126,13 +128,38 @@ namespace org.xpangen.Generator.Data
 
         public GenSubClass GetSubClass(string subClassName)
         {
-            var idx = IndexOfSubClass(subClassName);
-            return (GenSubClass) SubClass[idx];
+            var subClassDef = GetClassDef(subClassName);
+            var subClassId = subClassDef.ClassId;
+            var idx = Definition.IndexOfSubClass(subClassId);
+            if (idx == -1)
+                throw new GeneratorException("Cannot find subclass " + subClassName + " of " + ClassName,
+                    GenErrorType.Assertion);
+            var subClass = (GenSubClass)SubClass[idx];
+            if (subClass.ClassId == subClassId) return subClass;
+            
+            var newSubClass = new GenSubClass(GenDataBase, Parent, subClassId, subClass.Definition);
+            foreach (var o in subClass)
+                if (subClassDef.IsInheritor(o.ClassId))
+                    newSubClass.Add(o);
+            return newSubClass;
         }
 
-        private int IndexOfSubClass(string subClassName)
+        public GenObject CreateGenObject(string className)
         {
-            return Definition.SubClasses.IndexOf(subClassName);
+            var classId = GetClassId(className);
+            var k = Definition.IndexOfSubClass(classId);
+            var l = SubClass[k] as GenSubClass;
+            return l != null ? l.CreateObject(classId) : null;
+        }
+
+        private GenDataDefClass GetClassDef(string className)
+        {
+            return GenDataBase.GenDataDef.GetClassDef(className);
+        }
+
+        private int GetClassId(string className)
+        {
+            return GenDataBase.GenDataDef.GetClassId(className);
         }
     }
 }

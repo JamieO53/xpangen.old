@@ -20,10 +20,10 @@ namespace org.xpangen.Generator.Test
         {
             var f = GenDataDef.CreateMinimal();
             var d = new GenData(f);
-            d.CreateObject("", "Class").Attributes[0] = "Class";
-            d.CreateObject("Class", "SubClass").Attributes[0] = "SubClass";
-            d.CreateObject("Class", "Property").Attributes[0] = "Property";
-            d.CreateObject("Class", "Property").Attributes[0] = "Property2";
+            var c = CreateGenObject(d, d.Root, "Class", "Class");
+            CreateGenObject(d, c, "SubClass", "SubClass");
+            CreateGenObject(d, c, "Property", "Property");
+            CreateGenObject(d, c, "Property", "Property2");
             return d;
         }
 
@@ -219,30 +219,23 @@ namespace org.xpangen.Generator.Test
         private static GenData SetUpSegmentSeparatorData(string display)
         {
             var fm = GenDataDef.CreateMinimal();
-            var am = new GenAttributes(fm, ClassClassId);
             var dm = new GenData(fm);
-            am.GenObject = dm.Context[ClassClassId].CreateObject();
-            am.SetString("Name", "TestData");
-            am.SaveFields();
+            var td = CreateClass(dm, "TestData");
             dm.First(ClassClassId);
-            am.GenObject = dm.Context[PropertyClassId].CreateObject();
-            am.SetString("Name", "Name");
-            am.SaveFields();
-            am.GenObject = dm.Context[PropertyClassId].CreateObject();
-            am.SetString("Name", "Display");
-            am.SaveFields();
+            CreateProperty(dm, "Name", td);
+            CreateProperty(dm, "Display", td);
             var f = dm.AsDef();
             var a = new GenAttributes(f, 1);
             var d = new GenData(f);
-            a.GenObject = d.Context[1].CreateObject();
+            a.GenObject = CreateGenObject(d, d.Root, "TestData", "One");
             a.SetString("Name", "One");
             a.SetString("Display", display[0] == '1' ? "True" : "");
             a.SaveFields();
-            a.GenObject = d.Context[1].CreateObject();
+            a.GenObject = CreateGenObject(d, d.Root, "TestData", "Two");
             a.SetString("Name", "Two");
             a.SetString("Display", display[1] == '1' ? "True" : "");
             a.SaveFields();
-            a.GenObject = d.Context[1].CreateObject();
+            a.GenObject = CreateGenObject(d, d.Root, "TestData", "Three");
             a.SetString("Name", "Three");
             a.SetString("Display", display[2] == '1' ? "True" : "");
             a.SaveFields();

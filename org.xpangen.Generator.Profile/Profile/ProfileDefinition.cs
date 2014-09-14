@@ -101,7 +101,7 @@ namespace org.xpangen.Generator.Profile.Profile
         {
             var item = new ProfileRoot(GenData)
                            {
-                               GenObject = GenData.CreateObject("", "ProfileRoot"),
+                               GenObject = GenData.Root.CreateGenObject("ProfileRoot"),
                                Name = name,
                                Title = title
                            };

@@ -47,19 +47,9 @@ namespace org.xpangen.Generator.Data
             return x.AsDef();
         }
 
-        public GenObject CreateGenObject(string className, GenObject parent)
+        public GenObject CreateGenObject(GenObject parent, string className)
         {
-            var classId = GenDataDef.GetClassId(className);
-            var k = GenDataDef.IndexOfSubClass(parent.ClassId, classId);
-            var l = parent.SubClass[k] as GenSubClass;
-            if (l != null)
-            {
-                var o = new GenObject(l.Parent, l, classId);
-                l.Add(o);
-                Changed = true;
-                return o;
-            }
-            return null;
+            return parent.CreateGenObject(className);
         }
 
         public override string ToString()

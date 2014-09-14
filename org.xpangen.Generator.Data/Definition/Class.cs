@@ -80,7 +80,7 @@ namespace org.xpangen.Generator.Data.Definition
         {
             var item = new SubClass(GenData)
                            {
-                               GenObject = GenData.CreateObject("Class", "SubClass"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("SubClass"),
                                Name = name,
                                Reference = reference,
                                Relationship = relationship
@@ -94,7 +94,7 @@ namespace org.xpangen.Generator.Data.Definition
         {
             var item = new Property(GenData)
                            {
-                               GenObject = GenData.CreateObject("Class", "Property"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("Property"),
                                Name = name,
                                Title = title,
                                DataType = dataType,

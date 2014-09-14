@@ -106,7 +106,7 @@ namespace org.xpangen.Generator.Data.Model.Settings
         {
             var item = new Profile(GenData)
                            {
-                               GenObject = GenData.CreateObject("BaseFile", "Profile"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("Profile"),
                                Name = name,
                                FileName = fileName,
                                FilePath = filePath,

@@ -50,7 +50,7 @@ namespace org.xpangen.Generator.Data.Model.Minimal
         {
             var item = new Class(GenData)
                            {
-                               GenObject = GenData.CreateObject("", "Class"),
+                               GenObject = GenData.Root.CreateGenObject("Class"),
                                Name = name,
                                Inheritance = inheritance
                            };

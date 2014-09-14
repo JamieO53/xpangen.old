@@ -99,7 +99,11 @@ namespace GenEdit.Controls
             GenData.First(0);
             if (string.IsNullOrEmpty(SubClassDef.ReferenceDefinition))
             {
-                var genObject = GenData.CreateObject(parentClassName, className);
+                
+                var parent = GenData.Context[GenData.GenDataDef.GetClassId(parentClassName)].GenObject;
+                var genObject = GenData.GenDataBase.CreateGenObject(parent, className);
+                GenData.Context[genObject.ClassId].SubClassBase = genObject.ParentSubClass;
+                GenData.Context[genObject.ClassId].Index = GenData.Context[genObject.ClassId].IndexOf(genObject);
                 var idx = genObject.Definition.Properties.IndexOf("Name");
                 if (idx >= 0)
                     genObject.Attributes[idx] = "new";

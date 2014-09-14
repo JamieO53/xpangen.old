@@ -106,7 +106,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new ForeignKeyColumn(GenData)
                            {
-                               GenObject = GenData.CreateObject("ForeignKey", "ForeignKeyColumn"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("ForeignKeyColumn"),
                                Name = name,
                                RelatedColumn = relatedColumn
                            };

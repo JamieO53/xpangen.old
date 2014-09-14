@@ -314,22 +314,6 @@ namespace org.xpangen.Generator.Data
             GenDataBase.RaiseDataChanged(GenDataBase.GenDataDef.GetClassName(ClassId), "");
         }
 
-        /// <summary>
-        ///     Create a new <see cref="GenObject" /> and append it to the list.
-        /// </summary>
-        /// <returns>The new object.</returns>
-        public GenObject CreateObject()
-        {
-            var genObjectListBase = SubClassBase as GenSubClass;
-            if (genObjectListBase != null)
-            {
-                var genObject = genObjectListBase.CreateObject();
-                Index = IndexOf(genObject);
-                return genObject;
-            }
-            return null;
-        }
-
         public int IndexOf(GenObject genObject)
         {
             return SubClassBase.IndexOf(genObject);

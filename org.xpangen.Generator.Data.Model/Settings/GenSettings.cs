@@ -50,7 +50,7 @@ namespace org.xpangen.Generator.Data.Model.Settings
         {
             var item = new FileGroup(GenData)
                            {
-                               GenObject = GenData.CreateObject("GenSettings", "FileGroup"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("FileGroup"),
                                Name = name,
                                FileName = fileName,
                                FilePath = filePath,
@@ -67,7 +67,7 @@ namespace org.xpangen.Generator.Data.Model.Settings
         {
             var item = new BaseFile(GenData)
                            {
-                               GenObject = GenData.CreateObject("GenSettings", "BaseFile"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("BaseFile"),
                                Name = name,
                                FileName = fileName,
                                FilePath = filePath,

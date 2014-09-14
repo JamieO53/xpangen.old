@@ -51,10 +51,10 @@ namespace org.xpangen.Generator.Test
             var f = GenDataDef.CreateMinimal();
             var d = new GenData(f);
 
-            CreateNamedClass(d, "", "Class", "Class");
-            CreateNamedClass(d, "Class", "SubClass", "SubClass1");
-            CreateNamedClass(d, "Class", "SubClass", "SubClass2");
-            CreateNamedClass(d, "Class", "SubClass", "SubClass3");
+            var c = CreateGenObject(d, d.Root, "Class", "Class");
+            CreateGenObject(d, c, "SubClass", "SubClass1");
+            CreateGenObject(d, c, "SubClass", "SubClass2");
+            CreateGenObject(d, c, "SubClass", "SubClass3");
             d.First(ClassClassId);
             d.GenDataBase.Changed = false;
             return d;

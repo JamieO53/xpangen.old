@@ -115,7 +115,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new Database(GenData)
                            {
-                               GenObject = GenData.CreateObject("", "Database"),
+                               GenObject = GenData.Root.CreateGenObject("Database"),
                                Name = name
                            };
             DatabaseList.Add(item);
