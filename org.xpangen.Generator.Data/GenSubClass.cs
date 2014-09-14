@@ -65,12 +65,12 @@ namespace org.xpangen.Generator.Data
         /// Create a new <see cref="Data.GenObject"/> and add it to the list.
         /// </summary>
         /// <returns>The new item.</returns>
-        public GenObject CreateObject()
+        public GenObject CreateObject(int classId = -1)
         {
-            var o = new GenObject(Parent, this, ClassId);
+            var o = new GenObject(Parent, this, classId != -1 ? classId : ClassId);
             Add(o);
+            GenDataBase.Changed = true;
             return o;
-
         }
 
         public override string ToString()

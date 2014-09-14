@@ -57,7 +57,7 @@ namespace org.xpangen.Generator.Data.Definition
         {
             var item = new Class(GenData)
                            {
-                               GenObject = GenData.CreateObject("", "Class"),
+                               GenObject = GenData.Root.CreateGenObject("Class"),
                                Name = name,
                                Title = title,
                                Inheritance = inheritance

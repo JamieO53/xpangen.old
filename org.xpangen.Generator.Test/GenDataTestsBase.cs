@@ -207,26 +207,48 @@ Child[Reference='child']
             Assert.AreEqual("Name", pa.AsString("Name"));
         }
 
-        protected static void CreateClass(GenData d, string name)
+        protected static GenObject CreateClass(GenData d, string name)
         {
-            CreateGenObject(d, "", "Class", name);
-            CreateProperty(d, "Name");
+            var c = CreateGenObject(d, d.Root, "Class", name);
+            CreateProperty(d, "Name", c);
+            return c;
         }
 
-        protected static void CreateGenObject(GenData d, string parentClassName, string className, string name)
+        protected static GenObject CreateGenObject(GenData d, GenObject parent, string className, string name = null)
         {
-            var o = d.CreateObject(parentClassName, className);
-            o.Attributes[0] = name;
+            var o = parent.CreateGenObject(className);
+            if (name != null)
+            {
+                if (o.Attributes.Count == 0)
+                    o.Attributes.Add(name);
+                else
+                    o.Attributes[0] = name;
+            }
+            SetContext(d, className);
+            return o;
         }
 
-        private static void CreateProperty(GenData d, string name)
+        private static void SetContext(GenData d, string className)
         {
-            CreateGenObject(d, "Class", "Property", name);
+            var classId = d.Context.Classes.IndexOf(className);
+            SetContext(d, classId);
         }
 
-        private static void CreateSubClass(GenData d, string name)
+        private static void SetContext(GenData d, int classId)
         {
-            CreateGenObject(d, "Class", "SubClass", name);
+            if (d.Context.Classes[classId].IsInherited)
+                SetContext(d, d.Context.Classes[classId].Parent.ClassId);
+            d.Last(classId);
+        }
+
+        protected static GenObject CreateProperty(GenData d, string name, GenObject parent)
+        {
+            return CreateGenObject(d, parent, "Property", name);
+        }
+
+        protected static GenObject CreateSubClass(GenData d, string name, GenObject parent)
+        {
+            return CreateGenObject(d, parent, "SubClass", name);
         }
 
         protected static void VerifyAsDef(GenDataDef f)
@@ -268,21 +290,14 @@ Child[Reference='child']
 
         protected static void SetUpData(GenData genData)
         {
-            CreateClass(genData, "Class");
-            CreateClass(genData, "SubClass");
-            CreateProperty(genData, "Reference");
+            var @class = CreateClass(genData, "Class");
+            var subClass = CreateClass(genData, "SubClass");
+            CreateProperty(genData, "Reference", subClass);
             CreateClass(genData, "Property");
-            genData.Context[ClassClassId].First();
-            CreateSubClass(genData, "SubClass");
-            CreateSubClass(genData, "Property");
+            CreateSubClass(genData, "SubClass", @class);
+            CreateSubClass(genData, "Property", @class);
             genData.Context[ClassClassId].Next();
             genData.First(ClassClassId);
-        }
-
-        protected static void CreateNamedClass(GenData d, string parentClassName, string className, string name)
-        {
-            var o = d.CreateObject(parentClassName, className);
-            o.Attributes[0] = name;
         }
 
         protected static void CreateGenDataSaveText(string fileName, string text = GenDataSaveText)
@@ -305,24 +320,17 @@ Child[Reference='child']
 
             var a = new GenAttributes(f, 1);
             var d = new GenData(f);
-            a.GenObject = d.CreateObject("", "Parent");
-            a.SetString("Name", "Parent");
-            a.SaveFields();
-
-            a.GenObject = d.CreateObject("Parent", "Child");
-            a.SetString("Name", "Child1");
+            var p = CreateGenObject(d, d.Root, "Parent", "Parent");
+            a.GenObject = CreateGenObject(d, p, "Child", "Child1");
             a.SetString("Lookup", "Valid");
             a.SaveFields();
 
-            a.GenObject = d.CreateObject("Parent", "Child");
-            a.SetString("Name", "Child2");
+            a.GenObject = CreateGenObject(d, p, "Child", "Child2");
             a.SetString("Lookup", "Invalid");
             a.SaveFields();
 
-            a.GenObject = d.CreateObject("Parent", "Lookup");
-            a.SetString("Name", "Valid");
-            a.SaveFields();
-
+            a.GenObject = CreateGenObject(d, p, "Lookup", "Valid");
+            
             return d;
         }
 
@@ -337,15 +345,15 @@ Child[Reference='child']
         private static GenData SetUpLookupData(GenDataDef f)
         {
             var d = new GenData(f);
-            d.CreateObject("", "Class").Attributes[0] = "Class";
-            d.CreateObject("Class", "Property").Attributes[0] = "Name";
-            d.CreateObject("", "Class").Attributes[0] = "SubClass";
-            d.CreateObject("Class", "Property").Attributes[0] = "Name";
-            d.CreateObject("", "Class").Attributes[0] = "Property";
-            d.CreateObject("Class", "Property").Attributes[0] = "Name";
+            var c = CreateGenObject(d, d.Root, "Class", "Class");
+            CreateGenObject(d, c, "Property", "Name");
+            var sc = CreateGenObject(d, d.Root, "Class", "SubClass");
+            CreateGenObject(d, sc, "Property", "Name");
+            var p = CreateGenObject(d, d.Root, "Class", "Property");
+            CreateGenObject(d, p, "Property", "Name");
+            CreateGenObject(d, c, "SubClass", "SubClass");
+            CreateGenObject(d, c, "SubClass", "Property");
             d.First(1);
-            d.CreateObject("Class", "SubClass").Attributes[0] = "SubClass";
-            d.CreateObject("Class", "SubClass").Attributes[0] = "Property";
             return d;
         }
 
@@ -360,7 +368,7 @@ Child[Reference='child']
         private static void SetUpParentOtherChildReferenceData(string parentClassName, string childClassName,
                                                                  string childDataName, GenData dataChild, GenData data)
         {
-            CreateGenObject(data, "", parentClassName, parentClassName);
+            CreateGenObject(data, data.Root, parentClassName, parentClassName);
             SetUpParentReference(data, dataChild, childClassName + "Def", parentClassName, childClassName, childDataName);
         }
 
@@ -379,8 +387,9 @@ Child[Reference='child']
         {
             var def = SetUpParentChildDef(parentClassName, childClassName);
             var data = new GenData(def) { DataName = parentClassName};
-            CreateGenObject(data, "", parentClassName, parentClassName);
-            CreateGenObject(data, parentClassName, childClassName, childDataName);
+            data.First(0);
+            var parent = CreateGenObject(data, data.Root, parentClassName, parentClassName);
+            CreateGenObject(data, parent, childClassName, childDataName);
             return data;
         }
 
@@ -478,103 +487,23 @@ Child[Reference='child']
             var d = new GenData(f);
             var model = new GeneratorEditor(d) {GenObject = d.Root};
             model.SaveFields();
-            var settings = new GenSettings(d) {GenObject = d.CreateObject("", "GenSettings"), HomeDir = "."};
+            var settings = new GenSettings(d) {GenObject = CreateGenObject(d, d.Root, "GenSettings"), HomeDir = "."};
             model.GenSettingsList.Add(settings);
-            settings.BaseFileList.Add(new BaseFile(d)
-                                          {
-                                              GenObject = d.CreateObject("GenSettings", "BaseFile"),
-                                              Name = "Minimal",
-                                              Title = "The simplest definition required by the generator",
-                                              FileName = "Minimal.dcb",
-                                              FilePath = "Data",
-                                              FileExtension = ".dcb"
-                                          });
-            settings.BaseFileList.Add(new BaseFile(d)
-                                          {
-                                              GenObject = d.CreateObject("GenSettings", "BaseFile"),
-                                              Name = "Definition",
-                                              Title = "The definition required by the editor",
-                                              FileName = "Definition.dcb",
-                                              FilePath = "Data",
-                                              FileExtension = ".dcb"
-                                          });
-            var baseFile = new BaseFile(d)
-                               {
-                                   GenObject = d.CreateObject("GenSettings", "BaseFile"),
-                                   Name = "ProgramDefinition",
-                                   Title = "Defines generator editor data models",
-                                   FileName = "ProgramDefinition.dcb",
-                                   FilePath = "Data",
-                                   FileExtension = ".dcb"
-                               };
-            baseFile.ProfileList.Add(new Data.Model.Settings.Profile(d)
-                                         {
-                                             GenObject = d.CreateObject("BaseFile", "Profile"),
-                                             Name = "GenProfileModel",
-                                             Title = "",
-                                             FileName = "GenProfileModel.prf",
-                                             FilePath = "Data"
-                                         });
-            settings.BaseFileList.Add(baseFile);
-            settings.BaseFileList.Add(new BaseFile(d)
-                                          {
-                                              GenObject = d.CreateObject("GenSettings", "BaseFile"),
-                                              Name = "GeneratorEditor",
-                                              Title = "Defines generator editor settings data",
-                                              FileName = "GeneratorEditor.dcb",
-                                              FilePath = "Data",
-                                              FileExtension = ".dcb"
-                                          });
-            settings.FileGroupList.Add(new FileGroup(d)
-                                           {
-                                               GenObject = d.CreateObject("GenSettings", "FileGroup"),
-                                               Name = "Minimal",
-                                               FileName = "Minimal.dcb",
-                                               FilePath = "Data",
-                                               BaseFileName = "Definition"
-                                           });
-            settings.FileGroupList.Add(new FileGroup(d)
-                                           {
-                                               GenObject = d.CreateObject("GenSettings", "FileGroup"),
-                                               Name = "Basic",
-                                               FileName = "Basic.dcb",
-                                               FilePath = "Data",
-                                               BaseFileName = "Definition"
-                                           });
-            settings.FileGroupList.Add(new FileGroup(d)
-                                           {
-                                               GenObject = d.CreateObject("GenSettings", "FileGroup"),
-                                               Name = "Definition",
-                                               FileName = "Definition.dcb",
-                                               FilePath = "Data",
-                                               BaseFileName = "Definition"
-                                           });
-            settings.FileGroupList.Add(new FileGroup(d)
-                                           {
-                                               GenObject = d.CreateObject("GenSettings", "FileGroup"),
-                                               Name = "ProgramDefinition",
-                                               FileName = "ProgramDefinition.dcb",
-                                               FilePath = "Data",
-                                               BaseFileName = "Definition"
-                                           });
-            settings.FileGroupList.Add(new FileGroup(d)
-                                           {
-                                               GenObject = d.CreateObject("GenSettings", "FileGroup"),
-                                               Name = "GeneratorEditor",
-                                               FileName = "GeneratorEditor.dcb",
-                                               FilePath = "Data",
-                                               BaseFileName = "Definition"
-                                           });
-            settings.FileGroupList.Add(new FileGroup(d)
-                                           {
-                                               GenObject = d.CreateObject("GenSettings", "FileGroup"),
-                                               Name = "GeneratorDefinitionModel",
-                                               FileName = "GeneratorDefinitionModel.dcb",
-                                               FilePath = "Data",
-                                               BaseFileName = "ProgramDefinition",
-                                               Profile = "GenProfileModel"
-                                           });
-            d.First(1);
+            settings.AddBaseFile("Minimal", "Minimal.dcb", "Data", "The simplest definition required by the generator",
+                ".dcb");
+            settings.AddBaseFile("Definition", "Definition.dcb", "Data", "The definition required by the editor", ".dcb");
+            var baseFile = settings.AddBaseFile("ProgramDefinition", "ProgramDefinition.dcb", "Data",
+                "Defines generator editor data models", ".dcb");
+            baseFile.AddProfile("GenProfileModel", "GenProfileModel.prf", "Data");
+            settings.AddBaseFile("GeneratorEditor", "GeneratorEditor.dcb", "Data",
+                "Defines generator editor settings data", ".dcb");
+            settings.AddFileGroup("Minimal", "Minimal.dcb", "Data", "Definition");
+            settings.AddFileGroup("Basic", "Basic.dcb", "Data", "Definition");
+            settings.AddFileGroup("Definition", "Definition.dcb", "Data", "Definition");
+            settings.AddFileGroup("ProgramDefinition", "ProgramDefinition.dcb", "Data", "Definition");
+            settings.AddFileGroup("GeneratorEditor", "GeneratorEditor.dcb", "Data", "Definition");
+            settings.AddFileGroup("GeneratorDefinitionModel", "GeneratorDefinitionModel.dcb", "Data",
+                "ProgramDefinition", "GenProfileModel");
             return model;
         }
 

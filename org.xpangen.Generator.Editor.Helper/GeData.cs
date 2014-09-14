@@ -86,8 +86,7 @@ namespace org.xpangen.Generator.Editor.Helper
             return new FileGroup(Settings.Model.GenData)
                        {
                            GenObject =
-                               Settings.Model.GenData.CreateObject("GenSettings",
-                                                                   "FileGroup"),
+                               ((GenObject)Settings.Model.GenSettingsList[0].GenObject).CreateGenObject("FileGroup"),
                            DelayedSave = true,
                            BaseFileName = "Definition"
                        };

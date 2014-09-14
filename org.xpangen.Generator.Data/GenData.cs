@@ -117,22 +117,6 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        ///     Create a new object for the named class, and add to the end of the list
-        ///     of classes belonging to the current parent class specified.
-        /// </summary>
-        /// <param name="parentClassName">The name of the parent class.</param>
-        /// <param name="className">The name of the class object being created.</param>
-        /// <returns>The new object.</returns>
-        public GenObject CreateObject(string parentClassName, string className)
-        {
-            var parent = Context[GenDataDef.GetClassId(parentClassName)].GenObject;
-            var o = GenDataBase.CreateGenObject(className, parent);
-            Context[o.ClassId].SubClassBase = o.ParentSubClass;
-            Context[o.ClassId].Index = Context[o.ClassId].IndexOf(o);
-            return o;
-        }
-
-        /// <summary>
         ///     Establish the first item of the class as the current item for its context,
         ///     then set all of its subclasses to their first classes.
         /// </summary>

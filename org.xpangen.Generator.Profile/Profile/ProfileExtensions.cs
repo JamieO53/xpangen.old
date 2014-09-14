@@ -2,6 +2,8 @@
 // // License, v. 2.0. If a copy of the MPL was not distributed with this
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using org.xpangen.Generator.Data;
+
 namespace org.xpangen.Generator.Profile.Profile
 {
     public static class ProfileExtensions
@@ -11,7 +13,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = CreateContainerFragmentBody(body, "Profile");
             var profile = new Profile(body.GenData)
                           {
-                              GenObject = body.GenData.CreateObject("FragmentBody", "Profile"),
+                              GenObject = ((GenObject) body.GenObject).CreateGenObject("Profile"),
                               Name = name,
                               Primary = name,
                               Secondary = "Empty1"
@@ -26,7 +28,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = CreateContainerFragmentBody(body, "Segment");
             var segment = new Segment(body.GenData)
                               {
-                                  GenObject = body.GenData.CreateObject("FragmentBody", "Segment"),
+                                  GenObject = ((GenObject) body.GenObject).CreateGenObject("Segment"),
                                   Name = name,
                                   Primary = name,
                                   Secondary = "Empty1",
@@ -43,7 +45,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = CreateContainerFragmentBody(body, "Block");
             var block = new Block(body.GenData)
                             {
-                                GenObject = body.GenData.CreateObject("FragmentBody", "Block"),
+                                GenObject = ((GenObject) body.GenObject).CreateGenObject("Block"),
                                 Name = name,
                                 Primary = name,
                                 Secondary = "Empty1"
@@ -59,7 +61,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = CreateContainerFragmentBody(body, "Condition");
             var condition = new Condition(body.GenData)
                                 {
-                                    GenObject = body.GenData.CreateObject("FragmentBody", "Condition"),
+                                    GenObject = ((GenObject) body.GenObject).CreateGenObject("Condition"),
                                     Name = name,
                                     Primary = name,
                                     Secondary = "Empty1",
@@ -81,7 +83,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = "Function" + body.FragmentList.Count;
             var function = new Function(body.GenData)
                                {
-                                   GenObject = body.GenData.CreateObject("FragmentBody", "Function"),
+                                   GenObject = ((GenObject) body.GenObject).CreateGenObject("Function"),
                                    Name = name,
                                    Primary = "Empty1",
                                    Secondary = "Empty1",
@@ -98,7 +100,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = CreateContainerFragmentBody(body, "Lookup");
             var lookup = new Lookup(body.GenData)
                              {
-                                 GenObject = body.GenData.CreateObject("FragmentBody", "Lookup"),
+                                 GenObject = ((GenObject) body.GenObject).CreateGenObject("Lookup"),
                                  Name = name,
                                  Primary = name,
                                  Secondary = "Empty1",
@@ -118,7 +120,7 @@ namespace org.xpangen.Generator.Profile.Profile
             var name = CreateContainerFragmentBody(body, "TextBlock");
             var textBlock = new TextBlock(body.GenData)
                                 {
-                                    GenObject = body.GenData.CreateObject("FragmentBody", "TextBlock"),
+                                    GenObject = ((GenObject) body.GenObject).CreateGenObject("TextBlock"),
                                     Name = name,
                                     Primary = name,
                                     Secondary = "Empty1"

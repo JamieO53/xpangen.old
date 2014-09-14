@@ -61,7 +61,7 @@ namespace org.xpangen.Generator.Data.Model.Codes
         {
             var item = new Code(GenData)
                            {
-                               GenObject = GenData.CreateObject("CodesTable", "Code"),
+                               GenObject = ((GenObject) GenObject).CreateGenObject("Code"),
                                Name = name,
                                Description = description,
                                Value = value

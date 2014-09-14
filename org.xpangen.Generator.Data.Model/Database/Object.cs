@@ -60,7 +60,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new Table(GenData)
                            {
-                               GenObject = GenData.CreateObject("Object", "Table"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("Table"),
                                Name = name,
                                TableName = tableName
                            };
@@ -73,7 +73,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new View(GenData)
                            {
-                               GenObject = GenData.CreateObject("Object", "View"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("View"),
                                Name = name,
                                ViewName = viewName
                            };
@@ -86,7 +86,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new Procedure(GenData)
                            {
-                               GenObject = GenData.CreateObject("Object", "Procedure"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("Procedure"),
                                Name = name,
                                ProcedureName = procedureName
                            };
@@ -99,7 +99,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new Function(GenData)
                            {
-                               GenObject = GenData.CreateObject("Object", "Function"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("Function"),
                                Name = name,
                                FunctionName = functionName
                            };
@@ -112,7 +112,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new Column(GenData)
                            {
-                               GenObject = GenData.CreateObject("Object", "Column"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("Column"),
                                Name = name,
                                ColumnName = columnName,
                                NativeDataType = nativeDataType,
@@ -133,7 +133,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new Index(GenData)
                            {
-                               GenObject = GenData.CreateObject("Object", "Index"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("Index"),
                                Name = name,
                                IsPrimaryKey = isPrimaryKey,
                                IsUnique = isUnique,
@@ -148,7 +148,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new ForeignKey(GenData)
                            {
-                               GenObject = GenData.CreateObject("Object", "ForeignKey"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("ForeignKey"),
                                Name = name,
                                ReferenceSchema = referenceSchema,
                                ReferenceTable = referenceTable,
@@ -164,7 +164,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new Parameter(GenData)
                            {
-                               GenObject = GenData.CreateObject("Object", "Parameter"),
+                               GenObject = ((GenObject)GenObject).CreateGenObject("Parameter"),
                                Name = name,
                                ParameterName = parameterName,
                                NativeDataType = nativeDataType,

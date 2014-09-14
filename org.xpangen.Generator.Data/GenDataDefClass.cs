@@ -146,5 +146,28 @@ namespace org.xpangen.Generator.Data
                                       ? RefDef.GetClassInstanceProperties(RefClassId)
                                       : new NameList();
         }
+
+        public bool IsInheritor(int classId)
+        {
+            if (classId == ClassId) return true;
+            foreach (var inheritor in Inheritors)
+                if (inheritor.ClassId == classId || inheritor.IsInheritor(classId)) return true;
+            return false;
+        }
+
+        public int IndexOfSubClass(int subClassId)
+        {
+            for (var i = 0; i < SubClasses.Count; i++)
+            {
+                var sc = SubClasses[i].SubClass;
+                if (sc.IsInheritor(subClassId)) return i;
+            }
+            if (IsInherited)
+            {
+                var j = Parent.IndexOfSubClass(subClassId);
+                if (j != -1) return j + SubClasses.Count;
+            }
+            return -1;
+        }
     }
 }

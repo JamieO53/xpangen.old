@@ -24,21 +24,15 @@ namespace org.xpangen.Generator.Test
             var f = GenDataDef.CreateMinimal();
             var d = new GenData(f);
             var a = new GenAttributes(f, 1);
-            var o = d.CreateObject("", "Class");
-            a.GenObject = o;
-            a.SetString("Name", "Class");
-            a.SaveFields();
+            var c = CreateGenObject(d, d.Root, "Class", "Class");//d.CreateObject("", "Class");
 
             var i = f.IndexOfSubClass(f.GetClassId("Class"), f.GetClassId("SubClass"));
-            var s = new GenObjectList(o.SubClass[i], d.GenDataBase, d.Context[f.GetClassId("Class")],
+            var s = new GenObjectList(c.SubClass[i], d.GenDataBase, d.Context[f.GetClassId("Class")],
                                       f.GetClassSubClasses("Class")[i]);
-            o = s.CreateObject();
-            a.GenObject = o;
-            a.SetString("Name", "SubClass");
-            a.SaveFields();
+            var sc = CreateGenObject(d, c, "SubClass", "SubClass");
             d.Context[f.GetClassId("SubClass")].Last();
-
-            s.Last();
+            Assert.AreEqual(d.Context[f.GetClassId("SubClass")].GenObject, sc);
+            Assert.AreEqual(s.GenObject, sc);
         }
 
         /// <summary>
@@ -245,7 +239,7 @@ namespace org.xpangen.Generator.Test
             f.AddClassInstanceProperty(classId, "Prop1");
             f.AddClassInstanceProperty(classId, "Prop2");
             var d = new GenData(f);
-            var o = d.CreateObject("", "Class");
+            var o = CreateGenObject(d, d.Root, "Class");
             var a = new GenAttributes(f, 1) {GenObject = o};
             a.SetString("Prop1", "Prop1");
             a.SetString("Prop2", "Prop2");
@@ -262,15 +256,8 @@ namespace org.xpangen.Generator.Test
             var f = GenDataDef.CreateMinimal();
             var a = new GenAttributes(f, 1);
             var d = new GenData(f);
-            var o = d.CreateObject("", "Class");
-            a.GenObject = o;
-            a.SetString("Name", "Class");
-            a.SaveFields();
-
-            o = d.CreateObject("Class", "SubClass");
-            a.GenObject = o;
-            a.SetString("Name", "SubClass");
-            a.SaveFields();
+            var o = CreateGenObject(d, d.Root, "Class", "Class");
+            CreateGenObject(d, o, "SubClass", "SubClass");
 
             VerifyDataCreation(d);
         }
@@ -415,10 +402,10 @@ namespace org.xpangen.Generator.Test
             var f = GenDataDef.CreateMinimal();
             var d = new GenData(f);
 
-            CreateNamedClass(d, "", "Class", "Class");
-            CreateNamedClass(d, "Class", "SubClass", "SubClass1");
-            CreateNamedClass(d, "Class", "SubClass", "SubClass2");
-            CreateNamedClass(d, "Class", "SubClass", "SubClass3");
+            var c = CreateGenObject(d, d.Root, "Class", "Class");
+            CreateGenObject(d, c, "SubClass", "SubClass1");
+            CreateGenObject(d, c, "SubClass", "SubClass2");
+            CreateGenObject(d, c, "SubClass", "SubClass3");
             
             // Verify initial subclass order - Index is last added item
             CheckOrder(d, 2, "123", "Verify initial subclass order");
@@ -444,16 +431,76 @@ namespace org.xpangen.Generator.Test
             f.AddSubClass("Parent", "SecondChild");
             f.AddClassInstanceProperty(3, "Name");
             var d = new GenData(f);
-            CreateGenObject(d, "", "Parent", "Parent");
-            CreateGenObject(d, "Parent", "Child", "FirstChild");
-            CreateGenObject(d, "Parent", "SecondChild", "SecondChild");
-            var parent = d.Root.SubClass[0][0];
+            var parent = CreateGenObject(d, d.Root, "Parent", "Parent");
+            CreateGenObject(d, parent, "Child", "FirstChild");
+            CreateGenObject(d, parent, "SecondChild", "SecondChild");
             var sc = parent.GetSubClass("SecondChild");
             Assert.AreEqual("SecondChild", sc[0].Attributes[0]);
-            sc = parent.GetSubClass("FirstChild");
-            Assert.AreEqual("Child", sc[0].Attributes[0]);
+            sc = parent.GetSubClass("Child");
+            Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
         }
         
+        [TestCase(Description="Tests the retrieval of a class' inherited subclass")]
+        public void GenObjectSubClassLookupWithInheritance()
+        {
+            var f = SetUpParentChildDef("Parent", "Child");
+            f.AddInheritor("Child", "FirstVirtualChild");
+            f.AddInheritor("Child", "SecondVirtualChild");
+            var d = new GenData(f);
+            var parent = CreateGenObject(d, d.Root, "Parent", "Parent");
+            CreateGenObject(d, parent, "FirstVirtualChild", "FirstChild");
+            CreateGenObject(d, parent, "SecondVirtualChild", "SecondChild");
+            var sc = parent.GetSubClass("Child");
+            Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
+            Assert.AreEqual("SecondChild", sc[1].Attributes[0]);
+            sc = parent.GetSubClass("FirstVirtualChild");
+            Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
+            sc = parent.GetSubClass("SecondVirtualChild");
+            Assert.AreEqual("SecondChild", sc[0].Attributes[0]);
+        }
+        
+        [TestCase(Description="Tests the retrieval of a class' nested inherited subclass")]
+        public void GenObjectSubClassLookupWithNestedInheritance()
+        {
+            var f = SetUpParentChildDef("Parent", "Child");
+            f.AddInheritor("Child", "FirstVirtualChild");
+            f.AddInheritor("Child", "SecondVirtualChild");
+            f.AddInheritor("SecondVirtualChild", "FirstVirtualGrandchildOfSecond");
+            var d = new GenData(f);
+            var parent = CreateGenObject(d, d.Root, "Parent", "Parent");
+            CreateGenObject(d, parent, "FirstVirtualChild", "FirstChild");
+            CreateGenObject(d, parent, "FirstVirtualGrandchildOfSecond", "FirstGrandChild");
+            CreateGenObject(d, parent, "FirstVirtualGrandchildOfSecond", "SecondGrandChild");
+            var sc = parent.GetSubClass("Child");
+            Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
+            Assert.AreEqual("FirstGrandChild", sc[1].Attributes[0]);
+            Assert.AreEqual("SecondGrandChild", sc[2].Attributes[0]);
+            sc = parent.GetSubClass("FirstVirtualChild");
+            Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
+            sc = parent.GetSubClass("SecondVirtualChild");
+            Assert.AreEqual("FirstGrandChild", sc[0].Attributes[0]);
+            Assert.AreEqual("SecondGrandChild", sc[1].Attributes[0]);
+        }
+
+        [TestCase(Description = "Tests the retrieval of a class' inherited subclass")]
+        public void GenObjectSubClassLookupWithInheritanceSubclass()
+        {
+            var f = SetUpParentChildDef("Parent", "Child");
+            f.AddInheritor("Child", "FirstVirtualChild");
+            f.AddInheritor("Child", "SecondVirtualChild");
+            f.AddSubClass("Child", "GrandChild");
+            var d = new GenData(f);
+            var parent = CreateGenObject(d, d.Root, "Parent", "Parent");
+            var child1 = CreateGenObject(d, parent, "FirstVirtualChild", "FirstChild");
+            var child2 = CreateGenObject(d, parent, "SecondVirtualChild", "SecondChild");
+            CreateGenObject(d, child1, "GrandChild", "FirstGrandchild");
+            CreateGenObject(d, child2, "GrandChild", "SecondGrandchild");
+            var sc = parent.GetSubClass("Child");
+            Assert.AreEqual(1, sc[0].SubClass.Count);
+            Assert.AreEqual("FirstGrandchild", sc[0].SubClass[0][0].Attributes[0]);
+            Assert.AreEqual("SecondGrandchild", sc[1].SubClass[0][0].Attributes[0]);
+        }
+
         /// <summary>
         /// Set up the Generator data definition tests
         /// </summary>

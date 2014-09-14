@@ -62,7 +62,7 @@ namespace org.xpangen.Generator.Data.Model.Settings
         {
             var item = new GenSettings(GenData)
                            {
-                               GenObject = GenData.CreateObject("", "GenSettings"),
+                               GenObject = GenData.Root.CreateGenObject("GenSettings"),
                                HomeDir = homeDir
                            };
             GenSettingsList.Add(item);

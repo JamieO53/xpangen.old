@@ -142,18 +142,7 @@ namespace org.xpangen.Generator.Data
         
         public int IndexOfSubClass(int classId, int subClassId)
         {
-            var classSubClasses = Classes[classId].SubClasses;
-            if (Classes[subClassId].IsInherited)
-            {
-                var inheritanceId = subClassId;
-                while (classSubClasses.IndexOf(inheritanceId) == -1 && Classes[inheritanceId].Parent != null)
-                    inheritanceId = GetClassId(Classes[inheritanceId].Parent.Name);
-                return classSubClasses.IndexOf(inheritanceId);
-            }
-            var idx = classSubClasses.IndexOf(subClassId);
-            if (idx == -1 && Classes[classId].IsInherited)
-                idx = classSubClasses.Count + IndexOfSubClass(Classes[classId].Parent.ClassId, subClassId);
-            return idx;
+            return Classes[classId].IndexOfSubClass(subClassId);
         }
 
         public static GenDataDef CreateMinimal()
@@ -206,13 +195,14 @@ namespace org.xpangen.Generator.Data
             for (var i = 1; i < Classes.Count; i++)
             {
                 if (!string.IsNullOrEmpty(Classes[i].ReferenceDefinition)) continue;
-                a.GenObject = d.CreateObject("", "Class");
+                var @class = d.Root.CreateGenObject("Class");
+                a.GenObject = @class;
                 var c = Classes[i];
                 a.SetString("Name", c.Name);
                 a.SaveFields();
                 foreach (var inheritor in c.Inheritors)
                 {
-                    a.GenObject = d.CreateObject("Class", "SubClass");
+                    a.GenObject = @class.CreateGenObject("SubClass");
                     var inheritorId = inheritor.ClassId;
                     a.SetString("Name", Classes[inheritorId].Name);
                     a.SetString("Relationship", "Extends");
@@ -223,7 +213,7 @@ namespace org.xpangen.Generator.Data
                 }
                 foreach (var subClass in c.SubClasses)
                 {
-                    a.GenObject = d.CreateObject("Class", "SubClass");
+                    a.GenObject = @class.CreateGenObject("SubClass");
                     var sc = subClass.SubClass;
                     a.SetString("Name", sc.Name);
                     a.SetString("Reference", sc.Reference);
@@ -231,11 +221,12 @@ namespace org.xpangen.Generator.Data
                 }
                 foreach (var property in c.InstanceProperties)
                 {
-                    a.GenObject = d.CreateObject("Class", "Property");
+                    a.GenObject = @class.CreateGenObject("Property");
                     a.SetString("Name", property);
                     a.SaveFields();
                 }
             }
+            d.First(1);
             return d;
         }
 

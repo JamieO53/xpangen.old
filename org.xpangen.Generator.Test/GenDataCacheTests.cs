@@ -46,11 +46,11 @@ namespace org.xpangen.Generator.Test
             Assert.AreSame(newDefinition, d.Cache["Definition"]);
             d.Cache.Merge();
 
-            CreateGenObject(d, "", "Parent", "Minimal");
+            CreateGenObject(d, d.Root, "Parent", "Minimal");
             ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Minimal";
-            CreateGenObject(d, "", "Parent", "Basic");
+            CreateGenObject(d, d.Root, "Parent", "Basic");
             ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Basic";
-            CreateGenObject(d, "", "Parent", "Definition");
+            CreateGenObject(d, d.Root, "Parent", "Definition");
             ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Definition";
 
             d.First(1);
@@ -84,11 +84,11 @@ namespace org.xpangen.Generator.Test
 
             var d = new GenData(f);
 
-            CreateGenObject(d, "", "Parent", "Minimal");
+            CreateGenObject(d, d.Root, "Parent", "Minimal");
             ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Minimal";
-            CreateGenObject(d, "", "Parent", "Basic");
+            CreateGenObject(d, d.Root, "Parent", "Basic");
             ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Basic";
-            CreateGenObject(d, "", "Parent", "Definition");
+            CreateGenObject(d, d.Root, "Parent", "Definition");
             ((SubClassReference)d.Context[1].GenObject.SubClass[0]).Reference = "Definition";
             //d.Cache.Merge();
 

@@ -100,7 +100,7 @@ namespace org.xpangen.Generator.Editor.Helper
                                 new FileGroup(Model.GenData)
                                     {
                                         GenObject =
-                                            Model.GenData.CreateObject("GenSettings", "FileGroup"),
+                                            ((GenObject)Model.GenObject).CreateGenObject("FileGroup"),
                                         Name = name,
                                         FilePath = filePath,
                                         FileName = fileName
