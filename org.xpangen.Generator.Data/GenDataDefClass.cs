@@ -147,6 +147,29 @@ namespace org.xpangen.Generator.Data
                                       : new NameList();
         }
 
+        public bool IsInheritor(string className)
+        {
+            if (className == Name) return true;
+            foreach (var inheritor in Inheritors)
+                if (inheritor.Name == className || inheritor.IsInheritor(className)) return true;
+            return false;
+        }
+
+       public int IndexOfSubClass(string subClassName)
+        {
+            for (var i = 0; i < SubClasses.Count; i++)
+            {
+                var sc = SubClasses[i].SubClass;
+                if (sc.IsInheritor(subClassName)) return i;
+            }
+           if (IsInherited)
+           {
+               var j = Parent.IndexOfSubClass(subClassName);
+               if (j != -1) return j + SubClasses.Count;
+           }
+           return -1;
+        }
+
         public bool IsInheritor(int classId)
         {
             if (classId == ClassId) return true;
@@ -155,7 +178,7 @@ namespace org.xpangen.Generator.Data
             return false;
         }
 
-        public int IndexOfSubClass(int subClassId)
+       public int IndexOfSubClass(int subClassId)
         {
             for (var i = 0; i < SubClasses.Count; i++)
             {

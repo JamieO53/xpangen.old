@@ -59,7 +59,7 @@ namespace GenEdit.Controls
             var parentClassId = ParentNode == null ? 0 : ParentNode.ClassId;
             var parentClassName = genDataDef.GetClassName(parentClassId);
             var parentClass = definition == null ? null : definition.ClassList.Find(parentClassName);
-            var i = genDataDef.IndexOfSubClass(parentClassId, ClassId);
+            var i = genDataDef.Classes[parentClassId].IndexOfSubClass(genDataDef.GetClassName(ClassId));
             SubClassDef = genDataDef.GetClassSubClasses(parentClassId)[i];
             Def = parentClass == null ? null : parentClass.SubClassList[i];
             

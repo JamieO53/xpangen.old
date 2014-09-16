@@ -3,6 +3,7 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
@@ -130,7 +131,7 @@ namespace org.xpangen.Generator.Data
         {
             var subClassDef = GetClassDef(subClassName);
             var subClassId = subClassDef.ClassId;
-            var idx = Definition.IndexOfSubClass(subClassId);
+            var idx = Definition.IndexOfSubClass(subClassName);
             if (idx == -1)
                 throw new GeneratorException("Cannot find subclass " + subClassName + " of " + ClassName,
                     GenErrorType.Assertion);
@@ -147,7 +148,7 @@ namespace org.xpangen.Generator.Data
         public GenObject CreateGenObject(string className)
         {
             var classId = GetClassId(className);
-            var k = Definition.IndexOfSubClass(classId);
+            var k = Definition.IndexOfSubClass(className);
             var l = SubClass[k] as GenSubClass;
             return l != null ? l.CreateObject(classId) : null;
         }
@@ -159,7 +160,41 @@ namespace org.xpangen.Generator.Data
 
         private int GetClassId(string className)
         {
-            return GenDataBase.GenDataDef.GetClassId(className);
+            return GenDataDef.GetClassId(className);
+        }
+
+        private GenDataDef GenDataDef
+        {
+            get { return GenDataBase.GenDataDef; }
+        }
+
+        public GenObject SearchFor(GenDataId id, string value)
+        {
+            var searchObjects = FindSearchObjects(id.ClassName);
+            if (searchObjects == null) return null;
+            foreach (var searchObject in searchObjects)
+            {
+                bool notFound;
+                var s = searchObject.GetValue(id, out notFound);
+                if (!notFound && s == value) return searchObject;
+            }
+            return null;
+        }
+
+        private IEnumerable<GenObject> FindSearchObjects(string className)
+        {
+            var genObject = this;
+            while (genObject != null)
+            {
+                if (genObject.ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase))
+                    return genObject.ParentSubClass;
+                var classId = GenDataDef.GetClassId(genObject.ClassName);
+                var idx = GenDataDef.GetClassSubClasses(classId).IndexOf(className);
+                if (idx != -1) return genObject.SubClass[idx];
+                
+                genObject = genObject.Parent;
+            }
+            return null;
         }
     }
 }
