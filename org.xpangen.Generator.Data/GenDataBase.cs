@@ -2,14 +2,22 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Collections.Generic;
+
 namespace org.xpangen.Generator.Data
 {
     public class GenDataBase : BindableObject
     {
         private GenDataBaseReferences _references;
+        private Dictionary<string, GenDataBase> Cache { get; set; }
 
-        public GenDataBase(GenDataDef genDataDef)
+        public GenDataBase(GenDataDef genDataDef) : this(genDataDef, null)
         {
+        }
+
+        private GenDataBase(GenDataDef genDataDef, Dictionary<string, GenDataBase> cache)
+        {
+            Cache = cache ?? new Dictionary<string, GenDataBase>();
             GenDataDef = genDataDef;
             IgnorePropertyValidation = true;
             Root = new GenObject(null, null, 0) { GenDataBase = this };
@@ -50,6 +58,18 @@ namespace org.xpangen.Generator.Data
         public GenObject CreateGenObject(GenObject parent, string className)
         {
             return parent.CreateGenObject(className);
+        }
+
+        internal GenDataBase CheckReference(string defFile, string dataFile)
+        {
+            var fn = dataFile.ToLowerInvariant();
+            if (Cache.ContainsKey(fn)) return Cache[fn];
+            var df = defFile.ToLowerInvariant();
+            var f = GenData.DataLoader.LoadData(df);
+
+            var d = GenData.DataLoader.LoadData(f.AsDef(), fn);
+            Cache.Add(fn, d.GenDataBase);
+            return d.GenDataBase;
         }
 
         public override string ToString()
