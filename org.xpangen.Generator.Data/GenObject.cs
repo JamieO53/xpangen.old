@@ -53,7 +53,7 @@ namespace org.xpangen.Generator.Data
         public TextList Attributes { get; private set; }
 
         public ISubClassBase ParentSubClass { get; private set; }
-        public int ClassId { get; set; }
+        public int ClassId { get; private set; }
 
         public GenObject Parent { get; private set; }
         public GenObject RefParent { private get; set; }
@@ -136,6 +136,16 @@ namespace org.xpangen.Generator.Data
                 throw new GeneratorException("Cannot find subclass " + subClassName + " of " + ClassName,
                     GenErrorType.Assertion);
             var subClass = (GenSubClass)SubClass[idx];
+            if (Definition.IsReference && !string.IsNullOrEmpty(subClass.Reference))
+            {
+                var d = GenDataBase.CheckReference(Definition.Reference, subClass.Reference);
+                foreach (var o in d.Root.SubClass[0])
+                {
+                    o.RefParent = this;
+                }
+                return (GenSubClass) d.Root.SubClass[0];
+            }
+
             if (subClass.ClassId == subClassId) return subClass;
             
             var newSubClass = new GenSubClass(GenDataBase, Parent, subClassId, subClass.Definition);
