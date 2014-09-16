@@ -467,7 +467,7 @@ namespace org.xpangen.Generator.Parameter
             {
                 var recordType = Scan.RecordType;
                 var subClassId = GetBaseClassId(recordType);
-                var subClassIdx = GenDataDef.IndexOfSubClass(0, subClassId);
+                var subClassIdx = GenDataDef.Classes[0].IndexOfSubClass(recordType);
                 var className = Scan.RecordType;
                 if (subClassIdx != -1)
                     LoadSubClass(Context[0].GenObject, subClassId, subClassIdx);
@@ -518,7 +518,7 @@ namespace org.xpangen.Generator.Parameter
                     {
                         int idx;
                         while (!Scan.Eof &&
-                               (idx = GenDataDef.IndexOfSubClass(baseSubClassId, GetBaseClassId(Scan.RecordType))) != -1)
+                               (idx = GenDataDef.Classes[baseSubClassId].IndexOfSubClass(Scan.RecordType)) != -1)
                             LoadSubClass(child, GetBaseClassId(Scan.RecordType), idx);
                     }
                 }

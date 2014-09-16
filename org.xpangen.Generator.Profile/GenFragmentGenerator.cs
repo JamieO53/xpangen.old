@@ -274,42 +274,14 @@ namespace org.xpangen.Generator.Profile
             if (!notFound)
                 value2 = GenObject.GetValue(Var2, out notFound);
             if (NoMatch)
-                return (notFound || SearchFor(Var1, value2) == null) && base.GenerateSecondary();
+                return (notFound || GenObject.SearchFor(Var1, value2) == null) && base.GenerateSecondary();
             
             if (notFound) return false;
-            OverrideGenObject = SearchFor(Var1, value2);
+            OverrideGenObject = GenObject.SearchFor(Var1, value2);
             return OverrideGenObject != null && base.Generate();
         }
 
         private bool NoMatch { get { return Lookup.SecondaryBody().FragmentList.Count > 0; } }
-
-        private GenObject SearchFor(GenDataId id, string value)
-        {
-            var searchObjects = FindSearchObjects(GenObject, id.ClassName);
-            if (searchObjects == null) return null;
-           foreach (var searchObject in searchObjects)
-           {
-               bool notFound;
-               var s = searchObject.GetValue(id, out notFound);
-               if (!notFound && s == value) return searchObject;
-           }
-            return null;
-        }
-
-        private IEnumerable<GenObject> FindSearchObjects(GenObject genObject, string className)
-        {
-            while (genObject != null)
-            {
-                if (genObject.ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase))
-                    return genObject.ParentSubClass;
-                var classId = GenData.GenDataDef.GetClassId(genObject.ClassName);
-                var idx = GenData.GenDataDef.GetClassSubClasses(classId).IndexOf(className);
-                if (idx != -1) return genObject.SubClass[idx];
-                
-                genObject = genObject.Parent;
-            }
-            return null;
-        }
     }
 
     public class GenFunctionGenerator : GenFragmentGenerator
@@ -360,26 +332,18 @@ namespace org.xpangen.Generator.Profile
             }
             else if (SubClassIsInheritor())
             {
+                //subClassBase = GenObject.GetSubClass(ClassName);
                 int classRootId;
                 int subClassRootId;
                 GetRootClassIds(out subClassRootId, out classRootId);
-                ISubClassBase rootSubClassBase;
                 if (classRootId != subClassRootId)
-                {
-                    rootSubClassBase = GenObject.SubClass[GenObject.Definition.SubClasses.IndexOf(subClassRootId)];
-                    var rootSubClasses = GenDataDef.GetClassSubClasses(classRootId);
-                    subClassBase = new GenSubClass(GenData.GenDataBase, GenObject, ClassId,
-                        rootSubClasses[rootSubClasses.IndexOf(subClassRootId)]);
-                }
-                else
-                {
-                    rootSubClassBase = GenObject.ParentSubClass;
-                    Assert(0 <= classRootId & classRootId < GenDataDef.Classes.Count, "Root ClassId invalid");
-                    var parentRootSubClasses = GenDataDef.GetClassParent(classRootId).SubClasses;
-                    var idx = parentRootSubClasses.IndexOf(classRootId);
-                    Assert(0 <= idx & idx < parentRootSubClasses.Count, "SubClass index out of range");
-                    subClassBase = new GenSubClass(GenData.GenDataBase, GenObject, ClassId, parentRootSubClasses[idx]);
-                }
+                    return GenObject.GetSubClass(ClassName);
+                var rootSubClassBase = GenObject.ParentSubClass;
+                Assert(0 <= classRootId & classRootId < GenDataDef.Classes.Count, "Root ClassId invalid");
+                var parentRootSubClasses = GenDataDef.GetClassParent(classRootId).SubClasses;
+                var idx = parentRootSubClasses.IndexOf(classRootId);
+                Assert(0 <= idx & idx < parentRootSubClasses.Count, "SubClass index out of range");
+                subClassBase = new GenSubClass(GenData.GenDataBase, GenObject, ClassId, parentRootSubClasses[idx]);
                 foreach (var o in rootSubClassBase)
                 {
                     if (GenObjectClassId(o) == ClassId)
@@ -387,10 +351,7 @@ namespace org.xpangen.Generator.Profile
                 }
             }
             else
-            {
-                var classIdx = IndexOfSubClass();
-                subClassBase = GenObject.SubClass[classIdx];
-            }
+                return GenObject.GetSubClass(ClassName);
             return subClassBase;
         }
 
@@ -411,10 +372,7 @@ namespace org.xpangen.Generator.Profile
 
         private int IndexOfSubClass()
         {
-            int classId;
-            int subClassId;
-            GetRootClassIds(out subClassId, out classId);
-            var idx = GenData.GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId);
+            var idx = GenObject.Definition.IndexOfSubClass(ClassName);
             Assert(idx != -1, "SubClass not found");
             return idx;
         }

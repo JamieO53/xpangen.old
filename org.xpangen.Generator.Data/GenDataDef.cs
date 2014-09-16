@@ -139,11 +139,6 @@ namespace org.xpangen.Generator.Data
             if (classId == -1) return null;
             return Classes[classId];
         }
-        
-        public int IndexOfSubClass(int classId, int subClassId)
-        {
-            return Classes[classId].IndexOfSubClass(subClassId);
-        }
 
         public static GenDataDef CreateMinimal()
         {

@@ -39,8 +39,8 @@ namespace org.xpangen.Generator.Data
             if (_nClass == -1 || nSubClass == -1 || nProperty == -1)
                 return;
 
-            _xSubClass = GenDataDef.IndexOfSubClass(_nClass, nSubClass);
-            _xProperty = GenDataDef.IndexOfSubClass(_nClass, nProperty);
+            _xSubClass = GenDataDef.Classes[_nClass].IndexOfSubClass("SubClass");
+            _xProperty = GenDataDef.Classes[_nClass].IndexOfSubClass("Property");
         }
     
         public GenDataDef AsDef()

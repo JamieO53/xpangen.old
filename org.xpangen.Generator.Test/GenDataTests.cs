@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Test
             var a = new GenAttributes(f, 1);
             var c = CreateGenObject(d, d.Root, "Class", "Class");//d.CreateObject("", "Class");
 
-            var i = f.IndexOfSubClass(f.GetClassId("Class"), f.GetClassId("SubClass"));
+            var i = f.Classes[f.GetClassId("Class")].IndexOfSubClass("SubClass");
             var s = new GenObjectList(c.SubClass[i], d.GenDataBase, d.Context[f.GetClassId("Class")],
                                       f.GetClassSubClasses("Class")[i]);
             var sc = CreateGenObject(d, c, "SubClass", "SubClass");
