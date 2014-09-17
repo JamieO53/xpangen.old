@@ -2,7 +2,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Parameter;
@@ -23,7 +22,6 @@ namespace org.xpangen.Generator.Test
         {
             var f = GenDataDef.CreateMinimal();
             var d = new GenData(f);
-            var a = new GenAttributes(f, 1);
             var c = CreateGenObject(d, d.Root, "Class", "Class");//d.CreateObject("", "Class");
 
             var i = f.Classes[f.GetClassId("Class")].IndexOfSubClass("SubClass");
@@ -33,91 +31,6 @@ namespace org.xpangen.Generator.Test
             d.Context[f.GetClassId("SubClass")].Last();
             Assert.AreEqual(d.Context[f.GetClassId("SubClass")].GenObject, sc);
             Assert.AreEqual(s.GenObject, sc);
-        }
-
-        /// <summary>
-        /// Ensure that the 'self' reference is automatically cached.
-        /// </summary>
-        [TestCase(Description = "Ensure that the 'self' reference is automatically cached")]
-        public void ReferenceCacheSelfTest()
-        {
-            var d = GenDataDef.CreateMinimal().AsGenData();
-            d.Cache.Check("Minimal", "self");
-            var self = d.Cache["self"];
-            Assert.AreSame(d, self);
-        }
-
-        /// <summary>
-        /// Ensure that simple named references are correctly cached
-        /// </summary>
-        [TestCase(Description = "Ensure that the 'self' simple named reference cannot be cached internally")]
-        [ExpectedException(exceptionType: typeof(ArgumentException), ExpectedMessage = "The 'self' generator data cannot be added explicitly to the cache\r\nParameter name: name")]
-        public void ReferenceCacheSelfLocalPathTest()
-        {
-            var d = GenDataDef.CreateMinimal().AsGenData();
-            var d0 = GenDataDef.CreateMinimal().AsGenData();
-            d.Cache.Internal("Minimal", "self", d0);
-        }
-
-        [TestCase(Description = "Ensure that the base data references and their definitions can be retrieved.")]
-        public void GetGenDataBaseReferencesTest()
-        {
-            var d = GenDataDef.CreateMinimal().AsGenData();
-            d.GenDataBase.References.Add("Data", "Def");
-            d.GenDataBase.References.Add("Data", "Def");
-            var references = d.GenDataBase.References.ReferenceList;
-            Assert.AreEqual(3, references.Count);
-            Assert.AreEqual("data", references[0].Data);
-            Assert.AreEqual("def", references[0].Definition);
-            Assert.AreEqual("def", references[1].Data);
-            Assert.AreEqual("minimal", references[1].Definition);
-            Assert.AreEqual("minimal", references[2].Data);
-            Assert.AreEqual("minimal", references[2].Definition);
-        }
-
-        [TestCase(Description = "Ensure that the base data references and their definitions are correctly loaded.")]
-        public void GetGenDataBaseReferencesLoadTest()
-        {
-            var d = GenDataDef.CreateMinimal().AsGenData();
-            d.GenDataBase.References.Add("Data/Definition", "Minimal");
-            d.LoadCache();
-            Assert.That(d.Cache.Contains("minimal"));
-            Assert.That(d.Cache.Contains("data\\definition"));
-        }
-
-        /// <summary>
-        /// Ensure that simple named references are correctly cached
-        /// </summary>
-        [TestCase(Description = "Ensure that simple named references are correctly cached")]
-        public void ReferenceCacheLocalPathTest()
-        {
-            var d = GenDataDef.CreateMinimal().AsGenData();
-            var d0 = GenDataDef.CreateMinimal().AsGenData();
-            var d1 = d0.DuplicateContext();
-            var lookup0 = d.Cache.Internal("Minimal", "d0", d0);
-            var lookup1 = d.Cache.Internal("Minimal", "d1", d1);
-            Assert.AreSame(d0, lookup0);
-            Assert.AreSame(d1, lookup1);
-            lookup0 = d.Cache["d0"];
-            lookup1 = d.Cache["d1"];
-            Assert.AreSame(d0, lookup0);
-            Assert.AreSame(d1, lookup1);
-            Assert.AreNotSame(lookup1, lookup0);
-        }
-
-        /// <summary>
-        /// Ensure that simple named references are correctly cached
-        /// </summary>
-        [TestCase(Description = "Ensure that simple named references are correctly cached")]
-        public void ReferenceCacheFilePathTest()
-        {
-            var d = GenDataDef.CreateMinimal().AsGenData();
-            d.GenDataBase.References.Add("Data/Minimal", "Data/Minimal");
-            d.GenDataBase.References.Add("Data/Definition", "Data/Minimal");
-            d.LoadCache();
-            var minimal = d.Cache["Data/Minimal"];
-            var definition = d.Cache["Data/Definition"];
-            Assert.AreNotSame(minimal, definition);
         }
 
         [TestCase(Description = "Verify that the SetUpParentChildData method works as expected")]
@@ -254,7 +167,6 @@ namespace org.xpangen.Generator.Test
         public void GenAttributeTests()
         {
             var f = GenDataDef.CreateMinimal();
-            var a = new GenAttributes(f, 1);
             var d = new GenData(f);
             var o = CreateGenObject(d, d.Root, "Class", "Class");
             CreateGenObject(d, o, "SubClass", "SubClass");
@@ -280,117 +192,6 @@ namespace org.xpangen.Generator.Test
             c.Context[SubClassClassId].First();
             Assert.AreEqual("SubClass", c.Context[SubClassClassId].GenObject.Attributes[0]);
             Assert.AreEqual("Property", d.Context[SubClassClassId].GenObject.Attributes[0]);
-        }
-
-        [TestCase(Description="Test First property - property does not exist; first record")]
-        public void ContextNoFirstPropertyExistsFirstTest()
-        {
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-
-            SetUpData(d);
-            var id = f.GetId("Class.First");
-            Assert.AreEqual("True", d.Context.GetValue(id));
-        }
-
-        [TestCase(Description = "Test First property - property does not exist; second record")]
-        public void ContextNoFirstPropertyExistsSecondTest()
-        {
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-
-            SetUpData(d);
-            d.Root.SubClass[0].Add(new GenObject(d.Root, d.Root.SubClass[0], 1));
-            d.Context[1].Next();
-            var id = f.GetId("Class.First");
-            Assert.AreEqual("", d.Context.GetValue(id));
-        }
-
-        [TestCase(Description = "Test First property - property exists and is empty")]
-        public void ContextEmptyFirstPropertyExistsTest()
-        {
-            var f = GenDataDef.CreateMinimal();
-            f.AddClassInstanceProperty(1, "First");
-            var d = new GenData(f);
-
-            SetUpData(d);
-            var id = f.GetId("Class.First");
-            Assert.AreEqual("", d.Context.GetValue(id));
-        }
-
-        [TestCase(Description = "Test First property - property exists and is not empty")]
-        public void ContextFirstPropertyExistsWithValueTest()
-        {
-            var f = GenDataDef.CreateMinimal();
-            var idx = f.AddClassInstanceProperty(1, "First");
-            var d = new GenData(f);
-
-            SetUpData(d);
-            d.Context[1].GenObject.Attributes[idx] = "First value";
-            var id = f.GetId("Class.First");
-            Assert.AreEqual("First value", d.Context.GetValue(id));
-        }
-
-        [TestCase(Description = "Test Reference property - property does not exist and there is no reference")]
-        public void ContextNoReferencePropertyExistsNoReferenceTest()
-        {
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-
-            SetUpData(d);
-            var id = f.GetId("Class.Reference");
-            Assert.AreEqual("", d.Context.GetValue(id));
-        }
-
-        [TestCase(Description = "Test Reference property - property does not exist and there is a reference")]
-        public void ContextNoReferencePropertyExistsWithReferenceTest()
-        {
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-
-            SetUpData(d);
-            d.Context[1].Reference = "Class reference";
-            var id = f.GetId("Class.Reference");
-            Assert.AreEqual("Class reference", d.Context.GetValue(id));
-        }
-
-        [TestCase(Description = "Test First property - property exists and is empty")]
-        public void ContextEmptyReferencePropertyExistsTest()
-        {
-            var f = GenDataDef.CreateMinimal();
-            f.AddClassInstanceProperty(1, "Reference");
-            var d = new GenData(f);
-
-            SetUpData(d);
-            var id = f.GetId("Class.Reference");
-            Assert.AreEqual("", d.Context.GetValue(id));
-        }
-
-        [TestCase(Description = "Test First property - property exists and is not empty")]
-        public void ContextReferencePropertyExistsWithValueTest()
-        {
-            var f = GenDataDef.CreateMinimal();
-            var idx = f.AddClassInstanceProperty(1, "Reference");
-            var d = new GenData(f);
-
-            SetUpData(d);
-            var id = f.GetId("Class.Reference");
-            d.Context[1].GenObject.Attributes[idx] = "Reference value";
-            Assert.AreEqual("Reference value", d.Context.GetValue(id));
-        }
-
-        [TestCase(Description = "Test First property - property exists and is not empty and a reference exists")]
-        public void ContextReferencePropertyExistsWithValueAndReferenceTest()
-        {
-            var f = GenDataDef.CreateMinimal();
-            var idx = f.AddClassInstanceProperty(1, "Reference");
-            var d = new GenData(f);
-
-            SetUpData(d);
-            var id = f.GetId("Class.Reference");
-            d.Context[1].Reference = "Class reference";
-            d.Context[1].GenObject.Attributes[idx] = "Reference value";
-            Assert.AreEqual("Reference value", d.Context.GetValue(id));
         }
 
         /// <summary>
@@ -422,83 +223,6 @@ namespace org.xpangen.Generator.Test
             MoveItem(d, ListMove.Down, 1, 2, "312", "Move second subclass down");
             MoveItem(d, ListMove.Up, 1, 0, "132", "Move second subclass up");
             MoveItem(d, ListMove.ToBottom, 1, 2, "123", "Move second subclass to bottom");
-        }
-
-        [TestCase(Description="Tests the retrieval of a class' subclass")]
-        public void GenObjectSubClassLookup()
-        {
-            var f = SetUpParentChildDef("Parent", "Child");
-            f.AddSubClass("Parent", "SecondChild");
-            f.AddClassInstanceProperty(3, "Name");
-            var d = new GenData(f);
-            var parent = CreateGenObject(d, d.Root, "Parent", "Parent");
-            CreateGenObject(d, parent, "Child", "FirstChild");
-            CreateGenObject(d, parent, "SecondChild", "SecondChild");
-            var sc = parent.GetSubClass("SecondChild");
-            Assert.AreEqual("SecondChild", sc[0].Attributes[0]);
-            sc = parent.GetSubClass("Child");
-            Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
-        }
-        
-        [TestCase(Description="Tests the retrieval of a class' inherited subclass")]
-        public void GenObjectSubClassLookupWithInheritance()
-        {
-            var f = SetUpParentChildDef("Parent", "Child");
-            f.AddInheritor("Child", "FirstVirtualChild");
-            f.AddInheritor("Child", "SecondVirtualChild");
-            var d = new GenData(f);
-            var parent = CreateGenObject(d, d.Root, "Parent", "Parent");
-            CreateGenObject(d, parent, "FirstVirtualChild", "FirstChild");
-            CreateGenObject(d, parent, "SecondVirtualChild", "SecondChild");
-            var sc = parent.GetSubClass("Child");
-            Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
-            Assert.AreEqual("SecondChild", sc[1].Attributes[0]);
-            sc = parent.GetSubClass("FirstVirtualChild");
-            Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
-            sc = parent.GetSubClass("SecondVirtualChild");
-            Assert.AreEqual("SecondChild", sc[0].Attributes[0]);
-        }
-        
-        [TestCase(Description="Tests the retrieval of a class' nested inherited subclass")]
-        public void GenObjectSubClassLookupWithNestedInheritance()
-        {
-            var f = SetUpParentChildDef("Parent", "Child");
-            f.AddInheritor("Child", "FirstVirtualChild");
-            f.AddInheritor("Child", "SecondVirtualChild");
-            f.AddInheritor("SecondVirtualChild", "FirstVirtualGrandchildOfSecond");
-            var d = new GenData(f);
-            var parent = CreateGenObject(d, d.Root, "Parent", "Parent");
-            CreateGenObject(d, parent, "FirstVirtualChild", "FirstChild");
-            CreateGenObject(d, parent, "FirstVirtualGrandchildOfSecond", "FirstGrandChild");
-            CreateGenObject(d, parent, "FirstVirtualGrandchildOfSecond", "SecondGrandChild");
-            var sc = parent.GetSubClass("Child");
-            Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
-            Assert.AreEqual("FirstGrandChild", sc[1].Attributes[0]);
-            Assert.AreEqual("SecondGrandChild", sc[2].Attributes[0]);
-            sc = parent.GetSubClass("FirstVirtualChild");
-            Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
-            sc = parent.GetSubClass("SecondVirtualChild");
-            Assert.AreEqual("FirstGrandChild", sc[0].Attributes[0]);
-            Assert.AreEqual("SecondGrandChild", sc[1].Attributes[0]);
-        }
-
-        [TestCase(Description = "Tests the retrieval of a class' inherited subclass")]
-        public void GenObjectSubClassLookupWithInheritanceSubclass()
-        {
-            var f = SetUpParentChildDef("Parent", "Child");
-            f.AddInheritor("Child", "FirstVirtualChild");
-            f.AddInheritor("Child", "SecondVirtualChild");
-            f.AddSubClass("Child", "GrandChild");
-            var d = new GenData(f);
-            var parent = CreateGenObject(d, d.Root, "Parent", "Parent");
-            var child1 = CreateGenObject(d, parent, "FirstVirtualChild", "FirstChild");
-            var child2 = CreateGenObject(d, parent, "SecondVirtualChild", "SecondChild");
-            CreateGenObject(d, child1, "GrandChild", "FirstGrandchild");
-            CreateGenObject(d, child2, "GrandChild", "SecondGrandchild");
-            var sc = parent.GetSubClass("Child");
-            Assert.AreEqual(1, sc[0].SubClass.Count);
-            Assert.AreEqual("FirstGrandchild", sc[0].SubClass[0][0].Attributes[0]);
-            Assert.AreEqual("SecondGrandchild", sc[1].SubClass[0][0].Attributes[0]);
         }
 
         /// <summary>
