@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.Contracts;
 using System.Text;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
@@ -11,7 +12,7 @@ namespace org.xpangen.Generator.Profile
         {
             Fragment = fragment;
             FragmentType fragmentType;
-            Assert(Enum.TryParse(Fragment.GetType().Name, out fragmentType), "Fragment type invalid: " + Fragment.GetType().Name);
+            Contract.Assert(Enum.TryParse(Fragment.GetType().Name, out fragmentType), "Fragment type invalid: " + Fragment.GetType().Name);
             FragmentType = fragmentType;
         }
 
@@ -58,7 +59,7 @@ namespace org.xpangen.Generator.Profile
                 {
                     var condition = (Condition) fragment;
                     GenComparison comparison;
-                    Assert(Enum.TryParse(condition.Comparison, out comparison),
+                    Contract.Assert(Enum.TryParse(condition.Comparison, out comparison),
                         "Invalid comparison: " + condition.Comparison);
                     var s = new StringBuilder(Identifier(condition.Class1, condition.Property1));
                     var x =

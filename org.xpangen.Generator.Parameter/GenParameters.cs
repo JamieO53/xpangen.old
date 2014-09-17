@@ -3,6 +3,7 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text;
 using org.xpangen.Generator.Data;
@@ -374,7 +375,7 @@ namespace org.xpangen.Generator.Parameter
                                 f.AddInheritor(className, inheritorClassName);
                                 reader.ScanWhile(ScanReader.WhiteSpace);
                             } while (reader.CheckChar(','));
-                            Assert(reader.CheckChar(']'), "Definition Error for class " + className + ": ] expected");
+                            Contract.Assert(reader.CheckChar(']'), "Definition Error for class " + className + ": ] expected");
                             reader.SkipChar();
                         }
                         break;
@@ -391,7 +392,7 @@ namespace org.xpangen.Generator.Parameter
                                 f.AddClassInstanceProperty(classId, field);
                                 reader.ScanWhile(ScanReader.WhiteSpace);
                             } while (reader.CheckChar(','));
-                            Assert(reader.CheckChar('}'), "Definition Error for class " + className + " fields list: } expected");
+                            Contract.Assert(reader.CheckChar('}'), "Definition Error for class " + className + " fields list: } expected");
                             reader.SkipChar();
                         }
                         else
@@ -435,9 +436,9 @@ namespace org.xpangen.Generator.Parameter
                 reader.SkipChar();
                 reader.ScanWhile(ScanReader.WhiteSpace);
                 var field = reader.ScanWhile(ScanReader.Identifier);
-                Assert(field.Equals("Reference", StringComparison.InvariantCultureIgnoreCase), "Data definition reference expected: " + field);
+                Contract.Assert(field.Equals("Reference", StringComparison.InvariantCultureIgnoreCase), "Data definition reference expected: " + field);
                 reader.ScanWhile(ScanReader.WhiteSpace);
-                Assert(reader.CheckChar('='), "Data definition [Reference=definition] expected: " + field);
+                Contract.Assert(reader.CheckChar('='), "Data definition [Reference=definition] expected: " + field);
                 reader.SkipChar();
                 reader.ScanWhile(ScanReader.WhiteSpace);
                 var value = reader.CheckChar('\'')
@@ -445,7 +446,7 @@ namespace org.xpangen.Generator.Parameter
                                 : reader.ScanWhile(ScanReader.Identifier);
                 f.AddSubClass(className, sub, value);
                 reader.ScanWhile(ScanReader.WhiteSpace);
-                Assert(reader.CheckChar(']'), "Data definition ] expected");
+                Contract.Assert(reader.CheckChar(']'), "Data definition ] expected");
                 reader.SkipChar();
             }
             else
@@ -482,14 +483,14 @@ namespace org.xpangen.Generator.Parameter
         private int GetClassId(string recordType)
         {
             var classId = GenDataDef.GetClassId(recordType);
-            Assert(classId != -1, "Unknown record type: " + recordType);
+            Contract.Assert(classId != -1, "Unknown record type: " + recordType);
             return classId;
         }
 
         private int GetBaseClassId(string recordType)
         {
             var classId = GenDataDef.GetClassId(recordType);
-            Assert(classId != -1, "Unknown record type: " + recordType);
+            Contract.Assert(classId != -1, "Unknown record type: " + recordType);
             var baseClassId = classId;
             while (GenDataDef.GetClassIsInherited(baseClassId))
                 baseClassId = GenDataDef.GetClassParent(baseClassId).ClassId;
@@ -498,7 +499,7 @@ namespace org.xpangen.Generator.Parameter
 
         private void LoadSubClass(GenObject parent, int baseSubClassId, int subClassIdx)
         {
-            Assert(Scan.HasProgressed, "Parameter reader is in a loop");
+            Contract.Assert(Scan.HasProgressed, "Parameter reader is in a loop");
             while (!Scan.Eof && baseSubClassId == GetBaseClassId(Scan.RecordType))
             {
                 if (Scan.Attribute("Name") != "" || Scan.Attribute("Reference") == "")

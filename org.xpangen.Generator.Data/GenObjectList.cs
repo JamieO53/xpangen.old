@@ -3,6 +3,7 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Diagnostics.Contracts;
 
 namespace org.xpangen.Generator.Data
 {
@@ -41,7 +42,7 @@ namespace org.xpangen.Generator.Data
                     if (ParentList.Eol) ParentList.First();
                     if (String.IsNullOrEmpty(Reference))
                     {
-                        Assert(value.ClassId == ClassId ||
+                        Contract.Assert(value.ClassId == ClassId ||
                                DefClass.IsInherited && !DefClass.Parent.IsInherited &&
                                value.ClassId == DefClass.Parent.ClassId ||
                                DefClass.IsInherited && DefClass.Parent.IsInherited &&
@@ -50,7 +51,7 @@ namespace org.xpangen.Generator.Data
                             string.Format("The expected class was {0}({1}) but is {2}({3})",
                                 GenDataBase.GenDataDef.GetClassName(ClassId), ClassId,
                                 GenDataBase.GenDataDef.GetClassName(value.ClassId), value.ClassId));
-                        Assert(
+                        Contract.Assert(
                             ParentList.GenObject == null || (value.Parent == ParentList.GenObject ||
                             DefClass.IsInherited && value.Parent == ParentList.GenObject.Parent),
                             "Object list assignment error:" +
@@ -59,17 +60,17 @@ namespace org.xpangen.Generator.Data
                     else if (ReferenceData != null)
                     {
                         var refClassId = GetBaseReferenceClassId(RefClassId, ReferenceData);
-                        Assert(value.ClassId == refClassId,
+                        Contract.Assert(value.ClassId == refClassId,
                             "Object list assignment error:" +
                             string.Format("The expected class was {0}({1}) but is {2}({3})",
                                 ReferenceData.GenDataBase.GenDataDef.GetClassName(RefClassId),
                                 ReferenceData.Context[refClassId].RefClassId,
                                 ReferenceData.GenDataBase.GenDataDef.GetClassName(value.ClassId), value.ClassId));
-                        Assert(value.Parent.ClassId == 0 || value.Parent == ParentList.GenObject,
+                        Contract.Assert(value.Parent.ClassId == 0 || value.Parent == ParentList.GenObject,
                             "Object list assignment error:" +
                             "The the incorrect subclass is being used for the current parent");
                         var refGenDataBase = GetBaseReferenceData(RefClassId, ReferenceData);
-                        Assert(value.GenDataBase == refGenDataBase,
+                        Contract.Assert(value.GenDataBase == refGenDataBase,
                             "Object list assignment error: " +
                             string.Format(
                                 "The assigned object list does not belong to the context generator data: {0} vs {1}",

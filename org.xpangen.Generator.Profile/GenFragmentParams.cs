@@ -3,6 +3,7 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Diagnostics.Contracts;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
 
@@ -43,7 +44,7 @@ namespace org.xpangen.Generator.Profile
             FragmentType = fragmentType;
             if (ParentContainer == null || ParentContainer.Fragment == null || FragmentExists) return this;
             var container = (ContainerFragment)ParentContainer.Fragment;
-            Assert(container != null, "Parent container fragment is not a container fragment");
+            Contract.Assert(container != null, "Parent container fragment is not a container fragment");
             var fragmentBody = IsPrimary ? container.CheckBody() : container.CheckSecondaryBody();
             CheckFragment(fragmentType, fragmentBody);
             return this;
@@ -53,7 +54,7 @@ namespace org.xpangen.Generator.Profile
         {
             get
             {
-                Assert(FragmentExists, "Fragment expected");
+                Contract.Assert(FragmentExists, "Fragment expected");
                 return _fragment;
             }
             protected set { _fragment = value; }

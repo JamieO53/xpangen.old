@@ -4,6 +4,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 
 namespace org.xpangen.Generator.Data
@@ -137,7 +138,7 @@ namespace org.xpangen.Generator.Data
 
         public void SaveFields()
         {
-            Assert(GenObject != null, "Attempting to save to a null generator object");
+            Contract.Assert(GenObject != null, "Attempting to save to a null generator object");
             var props = GenObject.Properties;
             var className = GenObject.ClassName;
             var n = props.Count;

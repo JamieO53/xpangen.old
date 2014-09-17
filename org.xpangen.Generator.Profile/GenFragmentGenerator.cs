@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
@@ -340,10 +341,10 @@ namespace org.xpangen.Generator.Profile
                 if (classRootId != subClassRootId)
                     return GenObject.GetSubClass(ClassName);
                 var rootSubClassBase = GenObject.ParentSubClass;
-                Assert(0 <= classRootId & classRootId < GenDataDef.Classes.Count, "Root ClassId invalid");
+                Contract.Assert(0 <= classRootId & classRootId < GenDataDef.Classes.Count, "Root ClassId invalid");
                 var parentRootSubClasses = GenDataDef.GetClassParent(classRootId).SubClasses;
                 var idx = parentRootSubClasses.IndexOf(classRootId);
-                Assert(0 <= idx & idx < parentRootSubClasses.Count, "SubClass index out of range");
+                Contract.Assert(0 <= idx & idx < parentRootSubClasses.Count, "SubClass index out of range");
                 subClassBase = new GenSubClass(GenData.GenDataBase, GenObject, ClassId, parentRootSubClasses[idx]);
                 foreach (var o in rootSubClassBase)
                 {
@@ -374,7 +375,7 @@ namespace org.xpangen.Generator.Profile
         private int IndexOfSubClass()
         {
             var idx = GenObject.Definition.IndexOfSubClass(ClassName);
-            Assert(idx != -1, "SubClass not found");
+            Contract.Assert(idx != -1, "SubClass not found");
             return idx;
         }
 
@@ -388,8 +389,8 @@ namespace org.xpangen.Generator.Profile
             while (GenData.GenDataDef.GetClassIsInherited(classId) &&
                    GenData.GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId) == -1)
                 classId = GenData.GenDataDef.GetClassParent(classId).ClassId;
-            Assert(subClassId != -1, "Invalid root subclass");
-            Assert(classId == subClassId || GenData.GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId) != -1,
+            Contract.Assert(subClassId != -1, "Invalid root subclass");
+            Contract.Assert(classId == subClassId || GenData.GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId) != -1,
                 "Subclass is not a subclass of the class");
         }
 
@@ -491,7 +492,7 @@ namespace org.xpangen.Generator.Profile
         {
             Segment = (Segment) fragment;
             GenCardinality cardinality;
-            Assert(Enum.TryParse(Segment.Cardinality, out cardinality), "Invalid segment cardinality: " + Segment.Cardinality);
+            Contract.Assert(Enum.TryParse(Segment.Cardinality, out cardinality), "Invalid segment cardinality: " + Segment.Cardinality);
             GenCardinality = cardinality;
             Navigator = new SegmentNavigator(this);
         }

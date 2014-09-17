@@ -2,6 +2,8 @@
 // // License, v. 2.0. If a copy of the MPL was not distributed with this
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Diagnostics.Contracts;
+
 namespace org.xpangen.Generator.Data
 {
     /// <summary>
@@ -249,7 +251,7 @@ namespace org.xpangen.Generator.Data
                     }
                     else
                     {
-                        Assert(i < genObject.SubClass.Count, "The object does not have a subclass to set");
+                        Contract.Assert(i < genObject.SubClass.Count, "The object does not have a subclass to set");
                         Context[subClassId].SubClassBase = genObject.SubClass[i];
                         First(subClassId);
                     }

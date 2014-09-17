@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace org.xpangen.Generator.Data
 {
@@ -23,15 +24,15 @@ namespace org.xpangen.Generator.Data
             GenDataBase = Parent.GenDataBase;
             if (Definition != null && Definition.IsInherited)
             {
-                Assert(Definition.Parent.Inheritors.Contains(Definition),
+                Contract.Assert(Definition.Parent.Inheritors.Contains(Definition),
                        "The new object is inherited, but not from its parent");
-                Assert(!Definition.Parent.IsInherited && parentSubClass.ClassId == Definition.Parent.ClassId ||
+                Contract.Assert(!Definition.Parent.IsInherited && parentSubClass.ClassId == Definition.Parent.ClassId ||
                     Definition.Parent.IsInherited && parentSubClass.ClassId == Definition.Parent.Parent.ClassId,
                        "The new object is being added to the incorrect subclass");
             }
             else
             {
-                Assert(parentSubClass.Definition == null || parentSubClass.Definition.SubClass.ClassId == ClassId,
+                Contract.Assert(parentSubClass.Definition == null || parentSubClass.Definition.SubClass.ClassId == ClassId,
                        "The new object is being assigned to the wrong subclass");
             }
         }
