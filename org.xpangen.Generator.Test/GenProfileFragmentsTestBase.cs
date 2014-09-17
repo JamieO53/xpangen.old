@@ -160,30 +160,28 @@ namespace org.xpangen.Generator.Test
             }
         }
 
-        protected static void ProcessSegment(GenData genData, string cardinalityText, GenCardinality genCardinality, string expected)
+        public class ProcessSegmentParams
         {
-            var cardinality = GenCardinality.All;
-            var dictionary = ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary;
-            if (cardinalityText != "")
+            private string _cardinalityText;
+            private GenCardinality _genCardinality;
+            private string _expected;
+
+            public ProcessSegmentParams(string cardinalityText, GenCardinality genCardinality, string expected)
             {
-                for (var i = 0; i < dictionary.GenCardinalityText.Length; i++)
-                {
-                    if (cardinalityText != dictionary.GenCardinalityText[i])
-                        continue;
-                    cardinality = (GenCardinality) i;
-                    break;
-                }
+                _cardinalityText = cardinalityText;
+                _genCardinality = genCardinality;
+                _expected = expected;
             }
-            var profile = "`[Property" + dictionary.GenCardinalityText[(int) cardinality] + ":`Property.Name`" +
-                          ((cardinality == GenCardinality.AllDlm || cardinality == GenCardinality.BackDlm)
-                              ? "`;"
-                              : "") + ",`]";
-            var p = new GenCompactProfileParser(genData.GenDataDef, "", "`[Class':" + profile + "`]");
-            var g = (GenSegment) ((GenSegment) p.Body.Fragment[0]).Body.Fragment[0];
-            Assert.AreEqual(genCardinality.ToString(), ((Segment) g.Fragment).Cardinality);
-            Assert.AreEqual("Property", g.Definition.Name);
-            genData.First(1);
-            VerifyFragment(genData, g, "GenSegment", FragmentType.Segment, "Property", profile, expected, false, -1, p.Profile.GenData.GenDataDef);
+
+            public string CardinalityText
+            {
+                get { return _cardinalityText; }
+            }
+
+            public GenCardinality GenCardinality
+            {
+                get { return _genCardinality; }
+            }
         }
 
         protected static void ExecuteFunction(GenData genData, string functionName, string variableName, string variableValue, string expected)
