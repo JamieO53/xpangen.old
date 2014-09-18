@@ -172,8 +172,6 @@ namespace org.xpangen.Generator.Test
                             p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary)
                              .Replace(">:", ":"));
             ValidateProfileData(p, f0);
-            //var profile = new GenCompactProfileParser(f0, "", p0);
-            //CompareGenDataBase(profile.Profile.GenData.GenDataBase, p.Profile.GenData.GenDataBase);
         }
 
         /// <summary>

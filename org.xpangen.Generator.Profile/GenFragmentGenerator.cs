@@ -323,13 +323,13 @@ namespace org.xpangen.Generator.Profile
             if (GenDataDef.GetClassIsReference(ClassId) &&
                 !GenDataDef.GetClassParent(ClassId).IsReference)
             {
-                //return GenObject.GetSubClass(ClassName);
-                GenData.Cache.Check(GenDataDef.GetClassDef(ClassId).ReferenceDefinition,
-                    GenObject.SubClass[IndexOfSubClass()].Reference);
-                var f = GenData.Cache[GenObject.SubClass[IndexOfSubClass()].Reference];
-                subClassBase = f.Root.SubClass[0];
-                foreach (var o in subClassBase)
-                    o.RefParent = GenObject;
+                return GenObject.GetSubClass(ClassName);
+                //GenData.Cache.Check(GenDataDef.GetClassDef(ClassId).ReferenceDefinition,
+                //    GenObject.SubClass[IndexOfSubClass()].Reference);
+                //var f = GenData.Cache[GenObject.SubClass[IndexOfSubClass()].Reference];
+                //subClassBase = f.Root.SubClass[0];
+                //foreach (var o in subClassBase)
+                //    o.RefParent = GenObject;
             }
             else if (GenObject.Definition.IsInherited || GenObject.ClassName == ClassName)//(SubClassIsInheritor())
             {
