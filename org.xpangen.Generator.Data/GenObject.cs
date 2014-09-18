@@ -133,20 +133,18 @@ namespace org.xpangen.Generator.Data
             var subClassDef = GetClassDef(subClassName);
             var subClassId = subClassDef.ClassId;
             var idx = Definition.IndexOfSubClass(subClassName);
-            if (idx == -1)
-                throw new GeneratorException("Cannot find subclass " + subClassName + " of " + ClassName,
-                    GenErrorType.Assertion);
-            var subClass = (GenSubClass)SubClass[idx];
-            if (Definition.IsReference && !string.IsNullOrEmpty(subClass.Reference))
+            Contract.Assert(idx != -1, "Cannot find subclass " + subClassName + " of " + ClassName);
+            var subClassRef = SubClass[idx] as SubClassReference;
+            if (subClassRef != null)
             {
-                var d = GenDataBase.CheckReference(Definition.Reference, subClass.Reference);
+                if (string.IsNullOrEmpty(subClassRef.Reference)) return GenSubClass.Empty;
+                var d = GenDataBase.CheckReference(subClassRef.Definition.Reference, subClassRef.Reference);
                 foreach (var o in d.Root.SubClass[0])
-                {
                     o.RefParent = this;
-                }
                 return (GenSubClass) d.Root.SubClass[0];
             }
 
+            var subClass = (GenSubClass)SubClass[idx];
             if (subClass.ClassId == subClassId) return subClass;
             
             var newSubClass = new GenSubClass(GenDataBase, Parent, subClassId, subClass.Definition);

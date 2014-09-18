@@ -8,6 +8,8 @@ namespace org.xpangen.Generator.Data
 {
     public class GenSubClass : List<GenObject>, ISubClassBase, IGenObject
     {
+        public static readonly GenSubClass Empty = new GenSubClass(null, null, -1, null);
+        
         /// <summary>
         /// Create a new <see cref="GenObjectList"/> list.
         /// </summary>

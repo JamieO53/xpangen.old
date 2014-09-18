@@ -84,6 +84,17 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("SecondGrandchild", sc[1].SubClass[0][0].Attributes[0]);
         }
 
+        [TestCase(Description = "Tests the retrieval of a class' referenced subclass")]
+        public void GenObjectSubClassLookupWithReferenceSubclass()
+        {
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", dataGrandchildhild);
+            var child = dataChild.Root.GetSubClass("Child")[0];
+            var sc = child.GetSubClass("Grandchild");
+            Assert.AreEqual(1, sc[0].SubClass.Count);
+            Assert.AreEqual("Greatgrandchild", sc[0].SubClass[0][0].Attributes[0]);
+        }
+
         /// <summary>
         /// Set up the Generator data definition tests
         /// </summary>
