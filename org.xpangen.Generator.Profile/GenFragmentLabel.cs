@@ -1,12 +1,11 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Text;
-using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class GenFragmentLabel: GenBase
+    public class GenFragmentLabel
     {
         public GenFragmentLabel(Fragment fragment)
         {

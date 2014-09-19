@@ -3,11 +3,10 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
-using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class GenSegBody : GenBase
+    public class GenSegBody
     {
         private readonly List<GenFragment> _fragment;
         private readonly IList<GenFragment> _secondaryFragment;

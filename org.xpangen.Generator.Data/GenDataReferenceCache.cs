@@ -64,6 +64,8 @@ namespace org.xpangen.Generator.Data
                     if (!LocalCache.ContainsKey(reference.Path))
                         LocalCache.Add(reference.Path, reference.GenData);
             }
+            if (!Self.GenDataBase.Cache.ContainsKey(p))
+                Self.GenDataBase.Cache.Add(p, this[p].GenDataBase);
         }
 
         public IEnumerable<GenDataReferenceCacheItem> References

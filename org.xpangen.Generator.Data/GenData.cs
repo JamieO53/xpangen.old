@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data
     /// <summary>
     ///     The container for navigating generator data.
     /// </summary>
-    public class GenData : GenBase
+    public class GenData
     {
         /// <summary>
         ///     The class context for automated navigation of the data.

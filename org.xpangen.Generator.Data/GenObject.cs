@@ -8,7 +8,7 @@ using System.Diagnostics.Contracts;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenObject : GenBase, IGenObject
+    public class GenObject : IGenObject
     {
         private GenDataBase _genDataBase;
 

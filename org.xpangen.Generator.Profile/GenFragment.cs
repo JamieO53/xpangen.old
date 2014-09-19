@@ -9,7 +9,7 @@ using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
-    public abstract class GenFragment : GenBase
+    public abstract class GenFragment
     {
         private FragmentType _fragmentType;
         private Fragment _fragment;
