@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data
     public class GenDataBase : BindableObject
     {
         private GenDataBaseReferences _references;
-        private Dictionary<string, GenDataBase> Cache { get; set; }
+        internal Dictionary<string, GenDataBase> Cache { get; set; }
 
         public GenDataBase(GenDataDef genDataDef) : this(genDataDef, null)
         {

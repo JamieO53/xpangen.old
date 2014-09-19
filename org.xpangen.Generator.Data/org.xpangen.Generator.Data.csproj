@@ -44,7 +44,6 @@
     <Compile Include="GenApplicationBase.cs" />
     <Compile Include="GenApplicationList.cs" />
     <Compile Include="GenAttributes.cs" />
-    <Compile Include="GenBase.cs" />
     <Compile Include="GenContext.cs" />
     <Compile Include="GenData.cs" />
     <Compile Include="GenDataBase.cs" />

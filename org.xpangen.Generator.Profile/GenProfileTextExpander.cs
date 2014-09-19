@@ -9,7 +9,7 @@ using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class GenProfileTextExpander : GenBase
+    public class GenProfileTextExpander
     {
         private ProfileFragmentSyntaxDictionary Dictionary { get; set; }
 

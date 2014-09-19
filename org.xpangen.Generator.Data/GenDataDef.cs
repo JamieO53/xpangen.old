@@ -7,7 +7,7 @@ using org.xpangen.Generator.Data.Definition;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenDataDef : GenBase
+    public class GenDataDef
     {
         public GenDataDefClassList Classes { get; private set; }
         private Definition.Definition Definition { get; set; }

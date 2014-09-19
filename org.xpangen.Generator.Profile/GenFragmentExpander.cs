@@ -10,7 +10,7 @@ using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class GenFragmentExpander : GenBase
+    public class GenFragmentExpander
     {
         private readonly GenData _genData;
 

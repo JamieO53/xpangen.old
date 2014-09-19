@@ -7,7 +7,7 @@ using org.xpangen.Generator.Profile.Scanner;
 
 namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
 {
-    public abstract class CompactPartialBodyParserBase : GenBase
+    public abstract class CompactPartialBodyParserBase
     {
         protected GenCompactProfileParser GenCompactProfileParser;
         protected bool IsPrimary;

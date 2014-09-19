@@ -7,7 +7,7 @@ using System.Diagnostics.Contracts;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenObjectList: GenBase
+    public class GenObjectList
     {
         private ISubClassBase _subClassBase;
 

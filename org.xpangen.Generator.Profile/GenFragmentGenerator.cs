@@ -11,7 +11,7 @@ using Function = org.xpangen.Generator.Profile.Profile.Function;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class GenFragmentGenerator : GenBase
+    public class GenFragmentGenerator
     {
         private readonly GenData _genData;
         private readonly GenWriter _writer;
@@ -301,7 +301,7 @@ namespace org.xpangen.Generator.Profile
         }
     }
 
-    public class SegmentNavigator : GenBase
+    public class SegmentNavigator
     {
         private readonly GenSegmentGenerator _generator;
 
@@ -319,20 +319,14 @@ namespace org.xpangen.Generator.Profile
 
         private ISubClassBase GetSubClassBase()
         {
-            ISubClassBase subClassBase;
-            if (GenDataDef.GetClassIsReference(ClassId) &&
-                !GenDataDef.GetClassParent(ClassId).IsReference)
-            {
-                return GenObject.GetSubClass(ClassName);
-                //GenData.Cache.Check(GenDataDef.GetClassDef(ClassId).ReferenceDefinition,
-                //    GenObject.SubClass[IndexOfSubClass()].Reference);
-                //var f = GenData.Cache[GenObject.SubClass[IndexOfSubClass()].Reference];
-                //subClassBase = f.Root.SubClass[0];
-                //foreach (var o in subClassBase)
-                //    o.RefParent = GenObject;
-            }
-            else if (GenObject.Definition.IsInherited || GenObject.ClassName == ClassName)//(SubClassIsInheritor())
-            {
+            if (_generator.GenCardinality != GenCardinality.Inheritance && GenObject.ClassName != ClassName) return GenObject.GetSubClass(ClassName);
+            //if (GenDataDef.GetClassIsReference(ClassId) &&
+            //    !GenDataDef.GetClassParent(ClassId).IsReference)
+            //{
+            //    return GenObject.GetSubClass(ClassName);
+            //}
+            //else if (GenObject.Definition.IsInherited || GenObject.ClassName == ClassName)//(SubClassIsInheritor())
+            //{
                 //subClassBase = GenObject.GetSubClass(ClassName);
                 int classRootId;
                 int subClassRootId;
@@ -344,15 +338,15 @@ namespace org.xpangen.Generator.Profile
                 var parentRootSubClasses = GenDataDef.GetClassParent(classRootId).SubClasses;
                 var idx = parentRootSubClasses.IndexOf(classRootId);
                 Contract.Assert(0 <= idx & idx < parentRootSubClasses.Count, "SubClass index out of range");
-                subClassBase = new GenSubClass(GenData.GenDataBase, GenObject, ClassId, parentRootSubClasses[idx]);
+                ISubClassBase subClassBase = new GenSubClass(GenData.GenDataBase, GenObject, ClassId, parentRootSubClasses[idx]);
                 foreach (var o in rootSubClassBase)
                 {
                     if (GenObjectClassId(o) == ClassId)
                         subClassBase.Add(o);
                 }
-            }
-            else
-                return GenObject.GetSubClass(ClassName);
+            //}
+            //else
+            //    return GenObject.GetSubClass(ClassName);
             return subClassBase;
         }
 
@@ -496,7 +490,7 @@ namespace org.xpangen.Generator.Profile
             Navigator = new SegmentNavigator(this);
         }
 
-        private GenCardinality GenCardinality { get; set; }
+        internal GenCardinality GenCardinality { get; set; }
         public Segment Segment { get; private set; }
 
         private SegmentNavigator Navigator { get; set; }

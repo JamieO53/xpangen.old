@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data
     /// <summary>
     /// The definition of a generator class
     /// </summary>
-    public class GenDataDefClass : GenBase
+    public class GenDataDefClass
     {
         /// <summary>
         /// The name of the class
