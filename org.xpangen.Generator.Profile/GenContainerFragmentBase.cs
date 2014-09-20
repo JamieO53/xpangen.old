@@ -19,11 +19,10 @@ namespace org.xpangen.Generator.Profile
 
         public new GenObject GenObject
         {
-            set
-            {
-                base.GenObject = value;
-            }
+            set { base.GenObject = value; }
+            protected get { return base.GenObject; }
         }
+
         public GenSegBody Body { get; private set; }
 
         public int ClassId

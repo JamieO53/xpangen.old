@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using org.xpangen.Generator.Data.Definition;
 
 namespace org.xpangen.Generator.Data
@@ -149,9 +150,10 @@ namespace org.xpangen.Generator.Data
 
         public bool IsInheritor(string className)
         {
-            if (className == Name) return true;
+            if (Name.Equals(className, StringComparison.InvariantCultureIgnoreCase)) return true;
             foreach (var inheritor in Inheritors)
-                if (inheritor.Name == className || inheritor.IsInheritor(className)) return true;
+                if (inheritor.Name.Equals(className, StringComparison.InvariantCultureIgnoreCase) ||
+                    inheritor.IsInheritor(className)) return true;
             return false;
         }
 

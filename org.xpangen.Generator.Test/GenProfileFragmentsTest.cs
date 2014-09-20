@@ -119,7 +119,7 @@ namespace org.xpangen.Generator.Test
             d.First(SubClassClassId);
             g.ParentContainer.GenObject = d.Context[ClassClassId].GenObject;
             g.GenObject = d.Context[SubClassClassId].GenObject;
-            Assert.AreEqual(txt, GenFragmentExpander.Expand(d, g.GenObject, g.Fragment));
+            Assert.AreEqual(txt, GenFragmentExpander.Expand(d.GenDataDef, g.GenObject, g.Fragment));
             var str = GenerateFragment(d, g);
             Assert.AreEqual(txt, str);
 

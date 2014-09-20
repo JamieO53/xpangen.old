@@ -42,6 +42,7 @@ namespace org.xpangen.Generator.Test
                               : "") + ",`]";
             var p = new GenCompactProfileParser(GenData.GenDataDef, "", "`[Class':" + profile + "`]");
             var g = (GenSegment) ((GenSegment) p.Body.Fragment[0]).Body.Fragment[0];
+            g.GenObject = GenData.Root.SubClass[0][0];
             Assert.AreEqual(genCardinality.ToString(), ((Segment) g.Fragment).Cardinality);
             Assert.AreEqual("Property", g.Definition.Name);
             GenData.First(1);

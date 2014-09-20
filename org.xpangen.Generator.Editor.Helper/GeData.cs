@@ -69,12 +69,7 @@ namespace org.xpangen.Generator.Editor.Helper
             }
             GenDataStore.SetBase(Settings.BaseFilePath);
             GenDataStore.SetData(Settings.FilePath);
-            SetProfile();
-        }
-
-        private void SetProfile()
-        {
-            Profile = Settings.Profile != "" ? new GenCompactProfileParser(GenDataDef, Settings.Profile, "") : null;
+            //SetProfile();
         }
 
         /// <summary>
@@ -207,16 +202,16 @@ namespace org.xpangen.Generator.Editor.Helper
             var baseFile = Settings.GetBaseFiles().Find(Settings.FileGroup.BaseFileName);
             var profile = baseFile.ProfileList.Find(Settings.FileGroup.Profile);
             var profileFileName = BuildFilePath(profile.FilePath, profile.FileName);
-            
-            var p = new GenCompactProfileParser(GenDataDef, profileFileName, "");
+
+            var p = new GenCompactProfileParser(GenDataDef, profileFileName, "") {GenObject = d.Root};
             using (var writer = new GenWriter(null) {FileName = Settings.GeneratedFile.Replace('/', '\\')})
-                GenFragmentGenerator.Generate(d, writer, d.Root, p.Fragment);
+                p.Generate(d, writer);
         }
 
         public void SetProfile(Data.Model.Settings.Profile profile)
         {
             Settings.Profile = profile != null ? profile.Name : "";
-            SetProfile();
+            Profile = Settings.Profile != "" ? new GenCompactProfileParser(GenDataDef, Settings.Profile, "") : null;
         }
 
         public bool CheckIfDataExists(string value)

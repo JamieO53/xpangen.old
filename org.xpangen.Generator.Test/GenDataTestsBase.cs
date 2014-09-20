@@ -131,6 +131,11 @@ Parent=Parent
 Child[Reference='child']
 ";
 
+        protected string GetTestDataFileName(string testName)
+        {
+            return "TestData\\" + testName + ".dcb";
+        }
+
         protected static void ValidateMinimalData(GenData d)
         {
             Assert.AreEqual("Minimal", d.GenDataDef.DefinitionName);
