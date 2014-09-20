@@ -74,11 +74,11 @@ namespace org.xpangen.Generator.Parameter
             def.Append("Definition=");
             def.AppendLine(genDataDef.DefinitionName);
             var profile = new GenProfileFragment(new GenProfileParams(genDataDef));
-            var defText = new GenTextFragment(new GenTextFragmentParams(genDataDef, profile, profile, ""));
+            var defText = new GenTextFragment(new GenTextFragmentParams(genDataDef, profile, ""));
             profile.Body.Add(defText);
 
             ClassDefinition(genDataDef, 0, def);
-            ClassProfile(genDataDef, 0, profile, profile, profile);
+            ClassProfile(genDataDef, 0, profile, profile);
             defText.Text = def + ".\r\n";
             return profile;
         }
@@ -171,8 +171,7 @@ namespace org.xpangen.Generator.Parameter
                     ClassDefinition(genDataDef, subClass.SubClass.ClassId, def);
         }
 
-        private static void ClassProfile(GenDataDef genDataDef, int classId, GenContainerFragmentBase profile,
-            GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer)
+        private static void ClassProfile(GenDataDef genDataDef, int classId, GenContainerFragmentBase profile, GenContainerFragmentBase parentContainer)
         {
             GenSegment classProfile = null;
             if (classId != 0)
@@ -180,7 +179,7 @@ namespace org.xpangen.Generator.Parameter
                 GenTextBlock textBlock = null;
                 var sb = new StringBuilder();
                 classProfile = new GenSegment(
-                    new GenSegmentParams(genDataDef, parentSegment, parentContainer, genDataDef.GetClassName(classId),
+                    new GenSegmentParams(genDataDef, parentContainer, genDataDef.GetClassName(classId),
                         genDataDef.GetClassIsInherited(classId)
                             ? GenCardinality.Inheritance
                             : GenCardinality.All));
@@ -214,7 +213,7 @@ namespace org.xpangen.Generator.Parameter
                                                                 genDataDef.GetClassProperties(classId)[i])
                                     }));
                             condExists.Body.Add(
-                                new GenTextFragment(new GenTextFragmentParams(genDataDef, parentSegment, condExists,
+                                new GenTextFragment(new GenTextFragmentParams(genDataDef, condExists,
                                     sep + genDataDef.GetClassProperties(classId)[i])));
                             var condNotTrue =
                                 new GenCondition(new GenConditionParams(genDataDef, classProfile, condExists,
@@ -227,17 +226,17 @@ namespace org.xpangen.Generator.Parameter
                                         UseLit = true
                                     }));
                             condNotTrue.Body.Add(
-                                new GenTextFragment(new GenTextFragmentParams(genDataDef, parentSegment, condNotTrue,
+                                new GenTextFragment(new GenTextFragmentParams(genDataDef, condNotTrue,
                                     "=")));
                             var functionQuote =
-                                new GenFunction(new GenFunctionParams(genDataDef, parentSegment, condNotTrue,
+                                new GenFunction(new GenFunctionParams(genDataDef, condNotTrue,
                                     "StringOrName"));
-                            var param = new GenBlock(new GenFragmentParams(genDataDef, parentSegment, functionQuote));
+                            var param = new GenBlock(new GenFragmentParams(genDataDef, functionQuote));
                             param.Body.Add(
-                                new GenPlaceholderFragment(new GenPlaceholderFragmentParams(genDataDef, parentSegment,
+                                new GenPlaceholderFragment(new GenPlaceholderFragmentParams(genDataDef,
                                     param,
                                     genDataDef.GetId(genDataDef.GetClassName(classId),
-                                                     genDataDef.GetClassProperties(classId)[i]))));
+                                        genDataDef.GetClassProperties(classId)[i]))));
                             functionQuote.Body.Add(param);
                             condNotTrue.Body.Add(functionQuote);
                             condExists.Body.Add(condNotTrue);
@@ -255,13 +254,12 @@ namespace org.xpangen.Generator.Parameter
             }
 
             foreach (var inheritor in genDataDef.GetClassInheritors(classId))
-                ClassProfile(genDataDef, inheritor.ClassId, classProfile ?? profile,
-                    classProfile, classProfile);
+                ClassProfile(genDataDef, inheritor.ClassId, classProfile ?? profile, classProfile);
 
             if (!genDataDef.GetClassIsAbstract(classId))
-                SubClassProfiles(genDataDef, classId, profile, parentSegment, classProfile ?? profile, classProfile);
+                SubClassProfiles(genDataDef, classId, profile, classProfile ?? profile, classProfile);
             if (genDataDef.GetClassIsInherited(classId))
-                SubClassProfiles(genDataDef, genDataDef.GetClassParent(classId).ClassId, profile, classProfile,
+                SubClassProfiles(genDataDef, genDataDef.GetClassParent(classId).ClassId, profile,
                     classProfile ?? profile, classProfile);
         }
 
@@ -274,13 +272,13 @@ namespace org.xpangen.Generator.Parameter
         private static void AddText(GenDataDef genDataDef, ref GenTextBlock textBlock, GenContainerFragmentBase classProfile, GenDataId id)
         {
             CheckTextBlock(genDataDef, ref textBlock, classProfile);
-            textBlock.Body.Add(new GenPlaceholderFragment(new GenPlaceholderFragmentParams(genDataDef, classProfile, textBlock, id)));
+            textBlock.Body.Add(new GenPlaceholderFragment(new GenPlaceholderFragmentParams(genDataDef, textBlock, id)));
         }
 
         private static void AddText(GenDataDef genDataDef, ref GenTextBlock textBlock, GenContainerFragmentBase classProfile, string s)
         {
             CheckTextBlock(genDataDef, ref textBlock, classProfile);
-            textBlock.Body.Add(new GenTextFragment(new GenTextFragmentParams(genDataDef, classProfile, textBlock, s)));
+            textBlock.Body.Add(new GenTextFragment(new GenTextFragmentParams(genDataDef, textBlock, s)));
         }
 
         private static void CheckTextBlock(GenDataDef genDataDef, ref GenTextBlock textBlock,
@@ -289,25 +287,23 @@ namespace org.xpangen.Generator.Parameter
             if (textBlock == null)
             {
                 textBlock =
-                    new GenTextBlock(new GenFragmentParams(genDataDef, classProfile, classProfile,
+                    new GenTextBlock(new GenFragmentParams(genDataDef, classProfile,
                         FragmentType.TextBlock));
                 classProfile.Body.Add(textBlock);
             }
 
         }
 
-        private static void SubClassProfiles(GenDataDef genDataDef, int classId,
-            GenContainerFragmentBase profile, GenContainerFragmentBase parentSegment,
-            GenContainerFragmentBase parentContainer, GenSegment classProfile)
+        private static void SubClassProfiles(GenDataDef genDataDef, int classId, GenContainerFragmentBase profile, GenContainerFragmentBase parentContainer, GenSegment classProfile)
         {
             foreach (var subClass in genDataDef.GetClassSubClasses(classId))
                 if (String.IsNullOrEmpty(subClass.SubClass.Reference))
                     ClassProfile(genDataDef, subClass.SubClass.ClassId,
-                        classProfile ?? profile, parentSegment, parentContainer);
+                        classProfile ?? profile, parentContainer);
                 else
                 {
                     var refClass =
-                        new GenSegment(new GenSegmentParams(genDataDef, parentSegment, parentContainer,
+                        new GenSegment(new GenSegmentParams(genDataDef, parentContainer,
                             subClass.SubClass.Name, GenCardinality.Reference));
                     (classProfile ?? profile).Body.Add(refClass);
                 }

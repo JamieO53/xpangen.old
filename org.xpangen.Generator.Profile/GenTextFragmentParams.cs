@@ -15,13 +15,11 @@ namespace org.xpangen.Generator.Profile
         ///     Parameters for creating a GenFragment
         /// </summary>
         /// <param name="genDataDef">The definition of the data being generated.</param>
-        /// <param name="parentSegment">The class segment this fragment belongs to.</param>
         /// <param name="parentContainer">The container fragment conataining this fragment.</param>
         /// <param name="text">The text to be generated.</param>
         /// <param name="isPrimary">The fragment is part of the primary part of the body.</param>
-        public GenTextFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
-            GenContainerFragmentBase parentContainer, string text, bool isPrimary = true) 
-            : base(genDataDef, parentSegment, parentContainer, FragmentType.Text, isPrimary)
+        public GenTextFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentContainer, string text, bool isPrimary = true) 
+            : base(genDataDef, parentContainer, FragmentType.Text, isPrimary: isPrimary)
         {
             ((Text) Fragment).TextValue = text;
         }

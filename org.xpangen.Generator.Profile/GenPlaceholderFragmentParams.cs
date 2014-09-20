@@ -10,9 +10,8 @@ namespace org.xpangen.Generator.Profile
     {
         public GenDataId Id { get; private set; }
 
-        public GenPlaceholderFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
-            GenContainerFragmentBase parentContainer, GenDataId id, bool isPrimary = true)
-            : base(genDataDef, parentSegment, parentContainer, FragmentType.Placeholder, isPrimary)
+        public GenPlaceholderFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentContainer, GenDataId id, bool isPrimary = true)
+            : base(genDataDef, parentContainer, FragmentType.Placeholder, isPrimary: isPrimary)
         {
             Id = id;
         }

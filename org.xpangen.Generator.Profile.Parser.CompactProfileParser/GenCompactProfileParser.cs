@@ -135,9 +135,9 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
         private GenFragment OutputText(GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer,
             bool isPrimary, string text)
         {
-            GenFragment frag = new GenBlock(new GenFragmentParams(GenDataDef, parentSegment, parentContainer));
+            GenFragment frag = new GenBlock(new GenFragmentParams(GenDataDef, parentContainer));
             ((GenBlock) frag).Body.Add(
-                new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, parentContainer, text, isPrimary)));
+                new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentContainer, text, isPrimary: isPrimary)));
             return frag;
         }
 
@@ -228,7 +228,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                         s = s.TrimStart();
                         if (s != "")
                             body.Add(
-                                new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, parentContainer,
+                                new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentContainer,
                                     s)));
                         t = Scan.ScanTokenType();
                     }
@@ -236,7 +236,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                 else
                 {
                     // Parameter starts without a delimiter
-                    var block = new GenBlock(new GenFragmentParams(GenDataDef, parentSegment, parentContainer));
+                    var block = new GenBlock(new GenFragmentParams(GenDataDef, parentContainer));
 
                     s = Scan.CheckChar('\'') ? Scan.ScanQuotedString() : Scan.ScanUntil(_parameterSeparator);
 
@@ -258,12 +258,11 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                                 if (w != "")
                                     // Add Text up to first delimiter
                                     block.Body.Add(
-                                        new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment,
+                                        new GenTextFragment(new GenTextFragmentParams(GenDataDef,
                                             parentContainer, w)));
                                 w = s.Substring(0, i - 1); // Text between initial two delimiters
                                 block.Body.Add(
-                                    new GenPlaceholderFragment(new GenPlaceholderFragmentParams(GenDataDef,
-                                        parentSegment, parentContainer, GenDataDef.GetId(w))));
+                                    new GenPlaceholderFragment(new GenPlaceholderFragmentParams(GenDataDef, parentContainer, GenDataDef.GetId(w))));
 
                                 s = s.Substring(i + 1);
                                 i = s.IndexOf(Scan.Delimiter);
@@ -272,7 +271,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                             {
                                 // No matching delimiter: output delimiter with text
                                 block.Body.Add(
-                                    new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment,
+                                    new GenTextFragment(new GenTextFragmentParams(GenDataDef,
                                         parentContainer, w + Scan.Delimiter + s)));
                                 s = "";
                             }
@@ -281,7 +280,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                         {
                             // No text after initial delimiter: output delimiter with text
                             block.Body.Add(
-                                new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, parentContainer,
+                                new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentContainer,
                                     w + Scan.Delimiter)));
                             i = -1;
                         }
@@ -290,7 +289,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                     if (s != "" || block.Body.Count == 0)
                         // Text without placeholders
                         block.Body.Add(
-                            new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, block, s)));
+                            new GenTextFragment(new GenTextFragmentParams(GenDataDef, block, s)));
 
                     body.Add(block);
 
@@ -308,7 +307,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
         private GenBlock ScanBlock(int classId, GenContainerFragmentBase parentSegment,
             GenContainerFragmentBase parentContainer, bool isPrimary = true)
         {
-            var frag = new GenBlock(new GenFragmentParams(GenDataDef, parentSegment, parentContainer, isPrimary));
+            var frag = new GenBlock(new GenFragmentParams(GenDataDef, parentContainer, isPrimary: isPrimary));
             if (Scan.CheckChar('{'))
                 Scan.SkipChar();
             ScanBody(classId, frag.Body, parentSegment, frag);
@@ -320,7 +319,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
         {
             CheckTextBlock(parentSegment, parentContainer, ref textBlock, genDataDef, isPrimary);
             textBlock.Body.Add(
-                new GenTextFragment(new GenTextFragmentParams(genDataDef, parentSegment, textBlock, s)));
+                new GenTextFragment(new GenTextFragmentParams(genDataDef, textBlock, s)));
         }
 
         private void AddText(GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, 
@@ -328,7 +327,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
         {
             CheckTextBlock(parentSegment, parentContainer, ref textBlock, genDataDef, isPrimary);
             textBlock.Body.Add(
-                new GenPlaceholderFragment(new GenPlaceholderFragmentParams(GenDataDef, parentSegment, textBlock, id)));
+                new GenPlaceholderFragment(new GenPlaceholderFragmentParams(GenDataDef, textBlock, id)));
         }
 
         private static void CheckTextBlock(GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer,
@@ -337,8 +336,8 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             if (textBlock == null)
             {
                 textBlock =
-                    new GenTextBlock(new GenFragmentParams(genDataDef, parentSegment, parentContainer,
-                        FragmentType.TextBlock, isPrimary));
+                    new GenTextBlock(new GenFragmentParams(genDataDef, parentContainer,
+                        FragmentType.TextBlock, isPrimary: isPrimary));
                 if (isPrimary)
                     parentContainer.Body.Add(textBlock);
                 else

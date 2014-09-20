@@ -56,7 +56,6 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
-        public GenContainerFragmentBase ParentSegment { get; set; }
         public GenContainerFragmentBase ParentContainer { get; set; }
 
         /// <summary>
@@ -66,7 +65,6 @@ namespace org.xpangen.Generator.Profile
         protected GenFragment(GenFragmentParams genFragmentParams)
         {
             GenDataDef = genFragmentParams.GenDataDef;
-            ParentSegment = genFragmentParams.ParentSegment;
             ParentContainer = genFragmentParams.ParentContainer;
             FragmentType = genFragmentParams.FragmentType;
             Fragment = genFragmentParams.Fragment;

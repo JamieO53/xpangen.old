@@ -11,8 +11,8 @@ namespace org.xpangen.Generator.Profile
         private readonly string _className;
         private readonly GenCardinality _cardinality;
 
-        public GenSegmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, string className, GenCardinality cardinality, bool isPrimary = true)
-            : base(genDataDef, parentSegment, parentContainer, isPrimary)
+        public GenSegmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentContainer, string className, GenCardinality cardinality, bool isPrimary = true)
+            : base(genDataDef, parentContainer, isPrimary: isPrimary)
         {
             _className = className;
             _cardinality = cardinality;

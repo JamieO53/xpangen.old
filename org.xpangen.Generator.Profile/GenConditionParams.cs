@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Profile
 
         public GenConditionParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
             GenContainerFragmentBase parentContainer, ConditionParameters conditionParameters, bool isPrimary = true)
-            : base(genDataDef, parentSegment, parentContainer, FragmentType.Condition, isPrimary)
+            : base(genDataDef, parentContainer, FragmentType.Condition, isPrimary: isPrimary)
         {
             Var1 = conditionParameters.Var1;
             Var2 = conditionParameters.Var2;

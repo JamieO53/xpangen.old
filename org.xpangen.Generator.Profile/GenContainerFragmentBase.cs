@@ -13,8 +13,8 @@ namespace org.xpangen.Generator.Profile
         protected GenContainerFragmentBase(GenFragmentParams genFragmentParams)
             : base(genFragmentParams)
         {
-            ParentSegment = genFragmentParams.ParentSegment;
-            Body = new GenSegBody(genFragmentParams.ParentSegment, this);
+            ParentContainer = genFragmentParams.ParentContainer;
+            Body = new GenSegBody(genFragmentParams.ParentContainer, this);
         }
 
         public new GenObject GenObject
@@ -31,9 +31,7 @@ namespace org.xpangen.Generator.Profile
             {
                 if (_classId != -1)
                     return _classId;
-                var classId = ParentSegment is GenSegment
-                                  ? (ParentSegment).ClassId
-                                  : (ParentSegment is GenLookup ? ((GenLookup) ParentSegment).ClassId : -1);
+                var classId = Fragment.ClassId;
                 if (classId == -1) return 0;
                 return classId;
             }
