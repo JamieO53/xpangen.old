@@ -115,37 +115,41 @@ Child=V2I2Child2
         [TestCase(Description = "Tests the saving of data with inheritance")]
         public void InheritanceDataSaveTest()
         {
-            var d = PopulateInheritanceData();
+            var dataFile = GetTestDataFileName("InheritanceDataSaveTest");
+            var d = PopulateInheritanceData(dataFile);
             var p = GenParameters.CreateProfile(d.GenDataDef);
             p.GenObject = d.Root;
-            var text = GenFragmentExpander.Expand(d, d.Root, p.Fragment);
+            var text = GenFragmentExpander.Expand(d.GenDataDef, d.Root, p.Fragment);
             Assert.AreEqual(VirtualDefinitionData, text);
         }
 
         [TestCase(Description = "Tests the expansion of data with inheritance")]
         public void InheritanceDataExpansionTest()
         {
-            var d = PopulateInheritanceData();
-            GenParameters.SaveToFile(d, "InheritanceData.dcb");
-            var text = File.ReadAllText("InheritanceData.dcb");
+            var dataFile = GetTestDataFileName("InheritanceDataExpansionTest");
+            var d = PopulateInheritanceData(dataFile);
+            GenParameters.SaveToFile(d, dataFile);
+            var text = File.ReadAllText(dataFile);
             Assert.AreEqual(VirtualDefinitionData, text);
         }
 
         [TestCase(Description = "Tests the loading of data with inheritance")]
         public void InheritanceDataLoadTest()
         {
-            SetUpParametersFile(VirtualDataFile, VirtualDefinitionData);
-            var d = PopulateInheritanceData();
-            var x = GenData.DataLoader.LoadData(d.GenDataDef, VirtualDataFile);
+            var dataFile = GetTestDataFileName("InheritanceDataLoadTest");
+            SetUpParametersFile(dataFile, VirtualDefinitionData);
+            var d = PopulateInheritanceData(dataFile);
+            var x = GenData.DataLoader.LoadData(d.GenDataDef, dataFile);
             CompareGenData(d, x);
         }
 
         [TestCase(Description = "Tests the loading of data with inheritance without a definition")]
         public void InheritanceDataLoadSansDefinitionTest()
         {
-            SetUpParametersFile(VirtualDataFile, VirtualDefinitionData);
-            var d = PopulateInheritanceData();
-            var x = GenData.DataLoader.LoadData(VirtualDataFile);
+            var dataFile = GetTestDataFileName("InheritanceDataLoadSansDefinitionTest");
+            SetUpParametersFile(dataFile, VirtualDefinitionData);
+            var d = PopulateInheritanceData(dataFile);
+            var x = GenData.DataLoader.LoadData(dataFile);
             CompareGenData(d, x);
         }
 
@@ -181,16 +185,18 @@ Child=V2I2Child2
         [TestCase(Description = "Tests the expansion of a class with inheritance")]
         public void InheritanceClassExpansionTest()
         {
-            var d = PopulateInheritanceData();
+            var dataFile = GetTestDataFileName("InheritanceClassExpansionTest");
+            var d = PopulateInheritanceData(dataFile);
             var p = new GenCompactProfileParser(d.GenDataDef, "", InheritanceProfile);
-            var text = GenFragmentExpander.Expand(d, d.Root, p.Fragment);
+            var text = GenFragmentExpander.Expand(d.GenDataDef, d.Root, p.Fragment);
             Assert.AreEqual(InheritanceProfileResult, text);
         }
 
         [TestCase(Description = "Tests the generation of a class with inheritance")]
         public void InheritanceClassGenerationTest()
         {
-            var d = PopulateInheritanceData();
+            var dataFile = GetTestDataFileName("InheritanceClassGenerationTest");
+            var d = PopulateInheritanceData(dataFile);
             var p = new GenCompactProfileParser(d.GenDataDef, "", InheritanceProfile);
             var text = GenerateFragment(d, p);
             Assert.AreEqual(InheritanceProfileResult, text);
@@ -266,7 +272,7 @@ Container[Reference='TestData\VirtualData']
         {
             var d = LoadVirtualParentData();
             var p = new GenCompactProfileParser(d.GenDataDef, "", NestedInheritanceProfile);
-            var text = GenFragmentExpander.Expand(d, d.Root, p.Fragment);
+            var text = GenFragmentExpander.Expand(d.GenDataDef, d.Root, p.Fragment);
             Assert.AreEqual(InheritanceProfileResult, text);
         }
 
@@ -277,7 +283,7 @@ Container[Reference='TestData\VirtualData']
             var df = SetUpVirtualDefinition();
             if (File.Exists(VirtualDefinitionFile)) File.Delete(VirtualDefinitionFile);
             GenParameters.SaveToFile(df.GenData, VirtualDefinitionFile);
-            var d = PopulateInheritanceData();
+            var d = PopulateInheritanceData(VirtualDataFile);
             if (File.Exists(VirtualDataFile)) File.Delete(VirtualDataFile);
             GenParameters.SaveToFile(d, VirtualDataFile);
 
@@ -289,10 +295,10 @@ Container[Reference='TestData\VirtualData']
             GenParameters.SaveToFile(pd, VirtualParentDataFile);
         }
 
-        private static GenData PopulateInheritanceData()
+        private static GenData PopulateInheritanceData(string dataName)
         {
             var f = SetUpVirtualDefinition().GenData.AsDef();
-            var d = new GenData(f) {DataName = "VirtualData"};
+            var d = new GenData(f) {DataName = Path.GetFileNameWithoutExtension(dataName)};
             var container = CreateGenObject(d, d.Root, "Container", "Container");
             d.First(1);
             var virtual1 = CreateGenObject(d, container, "Virtual1", "V1Instance1");

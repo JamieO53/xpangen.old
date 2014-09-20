@@ -46,7 +46,7 @@ namespace GenEdit.Utilities
         {
             var context = genData.GetContext(genObject, fragment.ClassName());
             if (context != null)
-                return GenFragmentExpander.Expand(genData, context, fragment);
+                return GenFragmentExpander.Expand(genData.GenDataDef, context, fragment);
             return "";
         }
 

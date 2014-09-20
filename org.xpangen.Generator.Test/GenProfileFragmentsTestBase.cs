@@ -8,14 +8,11 @@ using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
-using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Test
 {
     public class GenProfileFragmentsTestBase : GenDataTestsBase
     {
-        //protected static readonly ProfileFragmentSyntaxDictionary CompactSyntaxDitionary = new CompactProfileFragmentSyntaxDictionary();
-
         protected static GenData SetUpData()
         {
             var f = GenDataDef.CreateMinimal();
@@ -134,7 +131,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(isText, genFragment.IsTextFragment, "Is text fragment?");
             if (genFragment.GenObject == null) genFragment.GenObject = genData.Context[3].GenObject;
             var fragment = genFragment.Fragment;
-            Assert.AreEqual(expected, GenFragmentExpander.Expand(genData, genFragment.GenObject, fragment), "Expanded fragment");
+            Assert.AreEqual(expected, GenFragmentExpander.Expand(genData.GenDataDef, genFragment.GenObject, fragment), "Expanded fragment");
             var genFragmentLabel =new GenFragmentLabel(fragment);
             Assert.AreEqual(profileLabel, genFragmentLabel.ProfileLabel(), "Profile label");
             Assert.AreEqual(profileText, genFragment.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary), "Profile text");
@@ -152,35 +149,11 @@ namespace org.xpangen.Generator.Test
             using (var s = new MemoryStream(100000))
             {
                 var w = new GenWriter(s);
-                GenFragmentGenerator.Generate(genData, w, fragment.GenObject ?? genData.Root, fragment.Fragment);
+                GenFragmentGenerator.Generate(genData.GenDataDef, w, fragment.GenObject ?? genData.Root, fragment.Fragment);
                 w.Flush();
                 s.Seek(0, SeekOrigin.Begin);
                 var r = new StreamReader(s);
                 return r.ReadToEnd();
-            }
-        }
-
-        public class ProcessSegmentParams
-        {
-            private string _cardinalityText;
-            private GenCardinality _genCardinality;
-            private string _expected;
-
-            public ProcessSegmentParams(string cardinalityText, GenCardinality genCardinality, string expected)
-            {
-                _cardinalityText = cardinalityText;
-                _genCardinality = genCardinality;
-                _expected = expected;
-            }
-
-            public string CardinalityText
-            {
-                get { return _cardinalityText; }
-            }
-
-            public GenCardinality GenCardinality
-            {
-                get { return _genCardinality; }
             }
         }
 
@@ -258,8 +231,8 @@ namespace org.xpangen.Generator.Test
         {
             var d = SetUpSegmentSeparatorData(display);
             var g = SetUpSegmentSeparatorFragment(d, cardinality);
-            g.GenObject = d.Root.SubClass[0][0];
-            Assert.AreEqual(expected, GenFragmentExpander.Expand(d, ((GenFragment) g).GenObject, g.Fragment));
+            g.GenObject = d.Root;//.SubClass[0][0];
+            Assert.AreEqual(expected, GenFragmentExpander.Expand(d.GenDataDef, ((GenFragment) g).GenObject, g.Fragment));
             var str = GenerateFragment(d, g);
             Assert.AreEqual(expected, str);
         }

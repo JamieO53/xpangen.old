@@ -148,12 +148,12 @@ namespace gen
             else
                 using (var dataStream = new FileStream(data, FileMode.Open))
                     d = new GenParameters(dataStream) {DataName = Path.GetFileNameWithoutExtension(data)};
-            var p = new GenCompactProfileParser(d.GenDataDef, profile, "", delimiter[0]);
+            var p = new GenCompactProfileParser(d.GenDataDef, profile, "", delimiter[0]) {GenObject = d.Root};
             using (var writer = new GenWriter(null) { FileName = output })
             {
                 try
                 {
-                    GenFragmentGenerator.Generate(d, writer, ((GenFragment)p).GenObject, p.Fragment);
+                    p.Generate(d, writer);
                 }
                 catch (Exception e)
                 {

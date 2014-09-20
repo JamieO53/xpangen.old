@@ -13,13 +13,13 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenFragmentGenerator
     {
-        private readonly GenData _genData;
+        private readonly GenDataDef _genDataDef;
         private readonly GenWriter _writer;
         private readonly Fragment _fragment;
 
-        protected GenFragmentGenerator(GenData genData, GenWriter writer, Fragment fragment, GenObject genObject)
+        protected GenFragmentGenerator(GenDataDef genDataDef, GenWriter writer, Fragment fragment, GenObject genObject)
         {
-            _genData = genData;
+            _genDataDef = genDataDef;
             _writer = writer;
             _fragment = fragment;
             GenObject = genObject;
@@ -31,9 +31,9 @@ namespace org.xpangen.Generator.Profile
 
         public GenObject GenObject { get; private set; }
 
-        public GenData GenData
+        public GenDataDef GenDataDef
         {
-            get { return _genData; }
+            get { return _genDataDef; }
         }
 
         protected GenWriter Writer
@@ -48,49 +48,49 @@ namespace org.xpangen.Generator.Profile
 
         protected virtual bool Generate()
         {
-            var expanded = GenFragmentExpander.Expand(GenData, GenObject, Fragment);
+            var expanded = GenFragmentExpander.Expand(GenDataDef, GenObject, Fragment);
             Writer.Write(expanded);
             return expanded != "";
         }
 
-        private static GenFragmentGenerator Create(GenData genData, GenWriter genWriter, GenObject genObject, Fragment fragment)
+        private static GenFragmentGenerator Create(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment)
         {
             FragmentType fragmentType;
             Enum.TryParse(fragment.GetType().Name, out fragmentType);
             switch (fragmentType)
             {
                 case FragmentType.Profile:
-                    return new GenContainerGenerator(genData, genWriter, genObject, fragment);
+                    return new GenContainerGenerator(genDataDef, genWriter, genObject, fragment);
                 case FragmentType.Segment:
-                    return new GenSegmentGenerator(genData, genWriter, genObject, fragment);
+                    return new GenSegmentGenerator(genDataDef, genWriter, genObject, fragment);
                 case FragmentType.Block:
-                    return new GenContainerGenerator(genData, genWriter, genObject, fragment);
+                    return new GenContainerGenerator(genDataDef, genWriter, genObject, fragment);
                 case FragmentType.Lookup:
-                    return new GenLookupGenerator(genData, genWriter, genObject, fragment);
+                    return new GenLookupGenerator(genDataDef, genWriter, genObject, fragment);
                 case FragmentType.Condition:
-                    return new GenConditionGenerator(genData, genWriter, genObject, fragment);
+                    return new GenConditionGenerator(genDataDef, genWriter, genObject, fragment);
                 case FragmentType.Function:
-                    return new GenFunctionGenerator(genData, genWriter, genObject, fragment);
+                    return new GenFunctionGenerator(genDataDef, genWriter, genObject, fragment);
                 case FragmentType.TextBlock:
-                    return new GenContainerGenerator(genData, genWriter, genObject, fragment);
+                    return new GenContainerGenerator(genDataDef, genWriter, genObject, fragment);
                 default:
-                    return new GenFragmentGenerator(genData, genWriter, fragment, genObject);
+                    return new GenFragmentGenerator(genDataDef, genWriter, fragment, genObject);
             }
         }
 
-        public static bool Generate(GenData genData, GenWriter genWriter, GenObject genObject, Fragment fragment)
+        public static bool Generate(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment)
         {
-            return Create(genData, genWriter, genObject, fragment).Generate();
+            return Create(genDataDef, genWriter, genObject, fragment).Generate();
         }
 
-        public static bool GenerateSecondary(GenData genData, GenWriter genWriter, GenObject genObject, Fragment fragment)
+        public static bool GenerateSecondary(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment)
         {
-            return Create(genData, genWriter, genObject, fragment).GenerateSecondary();
+            return Create(genDataDef, genWriter, genObject, fragment).GenerateSecondary();
         }
 
         protected virtual bool GenerateSecondary()
         {
-            var expanded = GenFragmentExpander.ExpandSecondary(GenData, GenObject, Fragment);
+            var expanded = GenFragmentExpander.ExpandSecondary(GenDataDef, GenObject, Fragment);
             Writer.Write(expanded);
             return expanded != "";
         }
@@ -98,8 +98,8 @@ namespace org.xpangen.Generator.Profile
 
     public class GenConditionGenerator : GenContainerGenerator
     {
-        internal GenConditionGenerator(GenData genData, GenWriter writer, GenObject genObject, Fragment fragment) 
-            : base(genData, writer, genObject, fragment)
+        internal GenConditionGenerator(GenDataDef genDataDef, GenWriter writer, GenObject genObject, Fragment fragment) 
+            : base(genDataDef, writer, genObject, fragment)
         {
         }
 
@@ -198,8 +198,8 @@ namespace org.xpangen.Generator.Profile
 
     public class GenContainerGenerator : GenFragmentGenerator
     {
-        public GenContainerGenerator(GenData genData, GenWriter genWriter, GenObject genObject, Fragment fragment) 
-            : base(genData, genWriter, fragment, genObject)
+        public GenContainerGenerator(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment) 
+            : base(genDataDef, genWriter, fragment, genObject)
         {
             ContainerFragment = (ContainerFragment) Fragment;
         }
@@ -213,7 +213,7 @@ namespace org.xpangen.Generator.Profile
             var genObject = OverrideGenObject ?? GenObject;
             foreach (var fragment in ContainerFragment.Body().FragmentList)
             {
-                generated |= Generate(GenData, Writer, genObject, fragment);
+                generated |= Generate(GenDataDef, Writer, genObject, fragment);
             }
             return generated;
         }
@@ -224,7 +224,7 @@ namespace org.xpangen.Generator.Profile
             var genObject = OverrideGenObject ?? GenObject;
             foreach (var fragment in ContainerFragment.SecondaryBody().FragmentList)
             {
-                generated |= Generate(GenData, Writer, genObject, fragment);
+                generated |= Generate(GenDataDef, Writer, genObject, fragment);
             }
             return generated;
         }
@@ -235,8 +235,8 @@ namespace org.xpangen.Generator.Profile
         private GenDataId _var1;
         private GenDataId _var2;
 
-        public GenLookupGenerator(GenData genData, GenWriter genWriter, GenObject genObject, Fragment fragment) 
-            : base(genData, genWriter, genObject, fragment)
+        public GenLookupGenerator(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment) 
+            : base(genDataDef, genWriter, genObject, fragment)
         {
         }
 
@@ -247,8 +247,8 @@ namespace org.xpangen.Generator.Profile
                 if (!string.IsNullOrEmpty(_var1.ClassName)) return _var1;
                 _var1.ClassName = Lookup.Class1;
                 _var1.PropertyName = Lookup.Property1;
-                _var1.ClassId = GenData.GenDataDef.GetClassId(_var1.ClassName);
-                _var1.PropertyId = GenData.GenDataDef.GetClassProperties(_var1.ClassId).IndexOf(_var1.PropertyName);
+                _var1.ClassId = GenDataDef.GetClassId(_var1.ClassName);
+                _var1.PropertyId = GenDataDef.GetClassProperties(_var1.ClassId).IndexOf(_var1.PropertyName);
                 return _var1;
             }
         }
@@ -260,8 +260,8 @@ namespace org.xpangen.Generator.Profile
                 if (!string.IsNullOrEmpty(_var2.ClassName)) return _var2;
                 _var2.ClassName = Lookup.Class2;
                 _var2.PropertyName = Lookup.Property2;
-                _var2.ClassId = GenData.GenDataDef.GetClassId(_var2.ClassName);
-                _var2.PropertyId = GenData.GenDataDef.GetClassProperties(_var2.ClassId).IndexOf(_var2.PropertyName);
+                _var2.ClassId = GenDataDef.GetClassId(_var2.ClassName);
+                _var2.PropertyId = GenDataDef.GetClassProperties(_var2.ClassId).IndexOf(_var2.PropertyName);
                 return _var2;
             }
         }
@@ -286,8 +286,8 @@ namespace org.xpangen.Generator.Profile
 
     public class GenFunctionGenerator : GenFragmentGenerator
     {
-        public GenFunctionGenerator(GenData genData, GenWriter genWriter, GenObject genObject, Fragment fragment) 
-            : base(genData, genWriter, fragment, genObject)
+        public GenFunctionGenerator(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment) 
+            : base(genDataDef, genWriter, fragment, genObject)
         {
         }
 
@@ -296,7 +296,9 @@ namespace org.xpangen.Generator.Profile
             var fn = (Function) Fragment;
             if (String.Compare(fn.FunctionName, "File", StringComparison.OrdinalIgnoreCase) == 0 &&
                 (Writer.Stream == null || Writer.Stream is FileStream))
-                return (Writer.FileName = GenFragmentExpander.Expand(GenData, GenObject, fn.Body().FragmentList[0])) != "";
+            {
+                return (Writer.FileName = GenFragmentExpander.Expand(GenDataDef, GenObject, fn.Body().FragmentList[0])) != "";
+            }
             return base.Generate();
         }
     }
@@ -319,48 +321,35 @@ namespace org.xpangen.Generator.Profile
 
         private ISubClassBase GetSubClassBase()
         {
-            if (_generator.GenCardinality != GenCardinality.Inheritance && GenObject.ClassName != ClassName) return GenObject.GetSubClass(ClassName);
-            //if (GenDataDef.GetClassIsReference(ClassId) &&
-            //    !GenDataDef.GetClassParent(ClassId).IsReference)
-            //{
-            //    return GenObject.GetSubClass(ClassName);
-            //}
-            //else if (GenObject.Definition.IsInherited || GenObject.ClassName == ClassName)//(SubClassIsInheritor())
-            //{
-                //subClassBase = GenObject.GetSubClass(ClassName);
-                int classRootId;
-                int subClassRootId;
-                GetRootClassIds(out subClassRootId, out classRootId);
-                if (classRootId != subClassRootId)
-                    return GenObject.GetSubClass(ClassName);
-                var rootSubClassBase = GenObject.ParentSubClass;
-                Contract.Assert(0 <= classRootId & classRootId < GenDataDef.Classes.Count, "Root ClassId invalid");
-                var parentRootSubClasses = GenDataDef.GetClassParent(classRootId).SubClasses;
-                var idx = parentRootSubClasses.IndexOf(classRootId);
-                Contract.Assert(0 <= idx & idx < parentRootSubClasses.Count, "SubClass index out of range");
-                ISubClassBase subClassBase = new GenSubClass(GenData.GenDataBase, GenObject, ClassId, parentRootSubClasses[idx]);
-                foreach (var o in rootSubClassBase)
-                {
-                    if (GenObjectClassId(o) == ClassId)
-                        subClassBase.Add(o);
-                }
-            //}
-            //else
-            //    return GenObject.GetSubClass(ClassName);
+            if (GenCardinality != GenCardinality.Inheritance)
+                return GenObject.GetSubClass(ClassName);
+            
+            int classRootId;
+            int subClassRootId;
+            GetRootClassIds(out subClassRootId, out classRootId);
+
+            var rootSubClassBase = GenObject.ParentSubClass;
+            Contract.Assert(0 <= classRootId & classRootId < GenDataDef.Classes.Count, "Root ClassId invalid");
+            var parentRootSubClasses = GenDataDef.GetClassParent(classRootId).SubClasses;
+            var idx = parentRootSubClasses.IndexOf(classRootId);
+            Contract.Assert(0 <= idx & idx < parentRootSubClasses.Count, "SubClass index out of range");
+            ISubClassBase subClassBase = new GenSubClass(GenObject.GenDataBase, GenObject, ClassId, parentRootSubClasses[idx]);
+            foreach (var o in rootSubClassBase)
+            {
+                if (GenObjectClassId(o) == ClassId)
+                    subClassBase.Add(o);
+            }
             return subClassBase;
+        }
+
+        private GenCardinality GenCardinality
+        {
+            get { return _generator.GenCardinality; }
         }
 
         private int SegmentClassId
         {
-            get {return GenData.GenDataDef.GetClassId(ClassName);}
-        }
-
-        private bool SubClassIsInheritor()
-        {
-            int classId;
-            int subClassId;
-            GetRootClassIds(out subClassId, out classId);
-            return subClassId == classId;
+            get {return GenDataDef.GetClassId(ClassName);}
         }
 
         private GenObject GenObject { get; set; }
@@ -376,20 +365,20 @@ namespace org.xpangen.Generator.Profile
         {
             classId = GenObjectClassId(GenObject);
             subClassId = ClassId;
-            while (GenData.GenDataDef.GetClassIsInherited(subClassId) &&
-                   GenData.GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId) == -1)
-                subClassId = GenData.GenDataDef.GetClassParent(subClassId).ClassId;
-            while (GenData.GenDataDef.GetClassIsInherited(classId) &&
-                   GenData.GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId) == -1)
-                classId = GenData.GenDataDef.GetClassParent(classId).ClassId;
+            while (GenDataDef.GetClassIsInherited(subClassId) &&
+                   GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId) == -1)
+                subClassId = GenDataDef.GetClassParent(subClassId).ClassId;
+            while (GenDataDef.GetClassIsInherited(classId) &&
+                   GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId) == -1)
+                classId = GenDataDef.GetClassParent(classId).ClassId;
             Contract.Assert(subClassId != -1, "Invalid root subclass");
-            Contract.Assert(classId == subClassId || GenData.GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId) != -1,
+            Contract.Assert(classId == subClassId || GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId) != -1,
                 "Subclass is not a subclass of the class");
         }
 
         private int GenObjectClassId(GenObject genObject)
         {
-            return GenData.GenDataDef.GetClassId(genObject.Definition.Name);
+            return GenDataDef.GetClassId(genObject.Definition.Name);
         }
 
         public string Reference
@@ -421,9 +410,9 @@ namespace org.xpangen.Generator.Profile
             Index = SubClassBase.IndexOf(GenObject);
         }
 
-        private GenData GenData
+        private GenDataDef GenDataDef
         {
-            get { return _generator.GenData; }
+            get { return _generator.GenDataDef; }
         }
 
         public void First()
@@ -467,11 +456,6 @@ namespace org.xpangen.Generator.Profile
             get { return GenDataDef.GetClassDef(ClassId); }
         }
 
-        private GenDataDef GenDataDef
-        {
-            get { return GenData.GenDataDef; }
-        }
-
         private int ClassId
         {
             get { return SegmentClassId; }
@@ -480,8 +464,8 @@ namespace org.xpangen.Generator.Profile
 
     public class GenSegmentGenerator : GenContainerGenerator
     {
-        public GenSegmentGenerator(GenData genData, GenWriter genWriter, GenObject genObject, Fragment fragment) 
-            : base(genData, genWriter, genObject, fragment)
+        public GenSegmentGenerator(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment) 
+            : base(genDataDef, genWriter, genObject, fragment)
         {
             Segment = (Segment) fragment;
             GenCardinality cardinality;
@@ -490,7 +474,7 @@ namespace org.xpangen.Generator.Profile
             Navigator = new SegmentNavigator(this);
         }
 
-        internal GenCardinality GenCardinality { get; set; }
+        internal GenCardinality GenCardinality { get; private set; }
         public Segment Segment { get; private set; }
 
         private SegmentNavigator Navigator { get; set; }
@@ -616,7 +600,7 @@ namespace org.xpangen.Generator.Profile
                             sepText += text0.TextValue;
                         else if (placeholder != null)
                             sepText +=
-                                GenObject.GetValue(GenData.GenDataDef.GetId(placeholder.Class,
+                                GenObject.GetValue(GenDataDef.GetId(placeholder.Class,
                                     placeholder.Property));
                     }
                 }

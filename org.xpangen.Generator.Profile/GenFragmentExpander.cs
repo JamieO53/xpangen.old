@@ -12,18 +12,18 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenFragmentExpander
     {
-        private readonly GenData _genData;
+        private readonly GenDataDef _genDataDef;
 
-        private GenFragmentExpander(GenData genData, GenObject genObject, Fragment fragment)
+        private GenFragmentExpander(GenDataDef genDataDef, GenObject genObject, Fragment fragment)
         {
-            _genData = genData;
+            _genDataDef = genDataDef;
             Fragment = fragment;
             GenObject = genObject;
         }
 
-        private GenData GenData
+        private GenDataDef GenDataDef
         {
-            get { return _genData; }
+            get { return _genDataDef; }
         }
 
         private Fragment Fragment { get; set; }
@@ -34,7 +34,7 @@ namespace org.xpangen.Generator.Profile
             {
                 using (var writer = new GenWriter(stream))
                 {
-                    GenFragmentGenerator.Generate(GenData, writer, GenObject, Fragment);
+                    GenFragmentGenerator.Generate(GenDataDef, writer, GenObject, Fragment);
                     writer.Flush();
                     stream.Seek(0, SeekOrigin.Begin);
                     using (var reader = new StreamReader(stream))
@@ -49,7 +49,7 @@ namespace org.xpangen.Generator.Profile
             {
                 using (var writer = new GenWriter(stream))
                 {
-                    GenFragmentGenerator.GenerateSecondary(GenData, writer, GenObject, Fragment);
+                    GenFragmentGenerator.GenerateSecondary(GenDataDef, writer, GenObject, Fragment);
                     writer.Flush();
                     stream.Seek(0, SeekOrigin.Begin);
                     using (var reader = new StreamReader(stream))
@@ -60,7 +60,7 @@ namespace org.xpangen.Generator.Profile
 
         private GenObject GenObject { get; set; }
 
-        public static string Expand(GenData genData, GenObject genObject, Fragment fragment)
+        public static string Expand(GenDataDef genDataDef, GenObject genObject, Fragment fragment)
         {
             FragmentType fragmentType;
             Enum.TryParse(fragment.GetType().Name, out fragmentType);
@@ -79,8 +79,7 @@ namespace org.xpangen.Generator.Profile
                     for (var i = 0; i < paramFragments.Count; i++)
                     {
                         var paramFragment = paramFragments[i];
-                        param[i] = Expand(genData, genObject,
-                            paramFragment);
+                        param[i] = Expand(genDataDef, genObject, paramFragment);
                     }
                     return LibraryManager.GetInstance().Execute(fn.FunctionName, param);
                 case FragmentType.TextBlock:
@@ -94,7 +93,7 @@ namespace org.xpangen.Generator.Profile
                     }
                     return sb.ToString();
                 default:
-                    return Create(genData, genObject, fragment).Expand();
+                    return Create(genDataDef, genObject, fragment).Expand();
             }
             
         }
@@ -112,15 +111,15 @@ namespace org.xpangen.Generator.Profile
             return placeholderValue;
         }
 
-        private static GenFragmentExpander Create(GenData genData, GenObject genObject, Fragment fragment)
+        private static GenFragmentExpander Create(GenDataDef genDataDef, GenObject genObject, Fragment fragment)
         {
-            return new GenFragmentExpander(genData, genObject, fragment);
+            return new GenFragmentExpander(genDataDef, genObject, fragment);
         }
 
-        public static string ExpandSecondary(GenData genData, GenObject genObject, Fragment fragment)
+        public static string ExpandSecondary(GenDataDef genDataDef, GenObject genObject, Fragment fragment)
         {
             if (fragment is ContainerFragment)
-                return Create(genData, genObject, fragment).ExpandSecondary();
+                return Create(genDataDef, genObject, fragment).ExpandSecondary();
             return "";
         }
     }
