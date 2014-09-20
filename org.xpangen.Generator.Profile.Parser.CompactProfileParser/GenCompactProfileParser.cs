@@ -48,9 +48,9 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             Scan = scan;
             try
             {
-                _compactSecondaryBodyParser = new CompactSecondaryBodyParser(this);
                 _compactPrimaryBodyParser = new CompactPrimaryBodyParser(this);
-                ScanBody(ClassId, Body, this, Profile, Profile.Body());
+                _compactSecondaryBodyParser = new CompactSecondaryBodyParser(this);
+                ScanBody(ClassId, Body, this, Profile);
             }
             finally
             {
@@ -60,18 +60,18 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
         }
 
         private void ScanBody(int classId, GenSegBody body, GenContainerFragmentBase parentContainer,
-            ContainerFragment containerFragment, FragmentBody fragmentBody)
+            ContainerFragment containerFragment)
         {
             var saveClassId = GenDataDef.CurrentClassId;
             GenDataDef.CurrentClassId = classId;
             if (!Scan.Eof)
             {
                 TokenType t;
-                CompactPrimaryBodyParser.ScanPartialBody(classId, body, parentContainer, out t);
+                CompactPrimaryBodyParser.ScanPartialBody(classId, body, parentContainer, containerFragment, out t);
                 if (t == TokenType.Secondary)
                 {
                     Scan.SkipChar();
-                    CompactSecondaryBodyParser.ScanPartialBody(classId, body, parentContainer, out t);
+                    CompactSecondaryBodyParser.ScanPartialBody(classId, body, parentContainer, containerFragment, out t);
                 }
 
                 if (t != TokenType.Close)
@@ -92,7 +92,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             GenDataDef.CurrentClassId = saveClassId;
         }
 
-        internal GenFragment ScanFragment(int classId, ref TokenType nextToken, out string s, GenContainerFragmentBase parentContainer, ref GenTextBlock textBlock, bool isPrimary)
+        internal GenFragment ScanFragment(int classId, ref TokenType nextToken, out string s, GenContainerFragmentBase parentContainer, FragmentBody fragmentBody, ref GenTextBlock textBlock, bool isPrimary)
         {
             GenFragment frag = null;
             s = "";
@@ -155,7 +155,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                 new GenFunction(new GenFunctionParams(GenDataDef, parentContainer,
                     s, FragmentType.Function, isPrimary));
             GenFragment frag = func;
-            ScanBlockParams(func.Body, func);
+            ScanBlockParams(func.Body, func, func.Function, func.Function.Body());
             return frag;
         }
 
@@ -169,7 +169,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                 new GenCondition(new GenConditionParams(GenDataDef, parentContainer, c, isPrimary));
 
             GenFragment frag = cond;
-            ScanBody(classId, cond.Body, cond, cond.Condition, cond.Condition.Body());
+            ScanBody(classId, cond.Body, cond, cond.Condition);
             return frag;
         }
 
@@ -179,7 +179,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             var lookup =
                 new GenLookup(new GenLookupParams(GenDataDef, parentContainer, s, isPrimary));
             GenFragment frag = lookup;
-            ScanBody(lookup.ClassId, lookup.Body, lookup, lookup.Lookup, lookup.Lookup.Body());
+            ScanBody(lookup.ClassId, lookup.Body, lookup, lookup.Lookup);
             return frag;
         }
 
@@ -190,11 +190,12 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseSegmentHeading(
                     GenDataDef, s, parentContainer, isPrimary);
             GenFragment frag = seg;
-            ScanBody(seg.ClassId, seg.Body, seg, seg.Segment, seg.Segment.Body());
+            ScanBody(seg.ClassId, seg.Body, seg, seg.Segment);
             return frag;
         }
 
-        private void ScanBlockParams(GenSegBody body, GenContainerFragmentBase parentContainer)
+        private void ScanBlockParams(GenSegBody body, GenContainerFragmentBase parentContainer, Function function, 
+            FragmentBody fragmentBody)
         {
             Scan.ScanWhile(ScanReader.WhiteSpace);
 
@@ -212,7 +213,8 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                     {
                         // Scan contained block
                         GenTextBlock textBlock = null;
-                        var frag = ScanFragment(GenDataDef.CurrentClassId, ref t, out s, parentContainer, ref textBlock, true);
+                        var frag = ScanFragment(GenDataDef.CurrentClassId, ref t, out s, parentContainer, fragmentBody, 
+                            ref textBlock, true);
                         body.Add(frag ?? textBlock);
 
                         // Skip blank parameter separators
@@ -300,12 +302,11 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             var frag = new GenBlock(new GenFragmentParams(GenDataDef, parentContainer, isPrimary));
             if (Scan.CheckChar('{'))
                 Scan.SkipChar();
-            ScanBody(classId, frag.Body, frag, frag.Block, frag.Block.Body());
+            ScanBody(classId, frag.Body, frag, frag.Block);
             return frag;
         }
 
-        internal static void AddText(GenContainerFragmentBase parentContainer, 
-            ref GenTextBlock textBlock, string s, GenDataDef genDataDef, bool isPrimary)
+        internal static void AddText(GenContainerFragmentBase parentContainer, FragmentBody fragmentBody, ref GenTextBlock textBlock, string s, GenDataDef genDataDef, bool isPrimary)
         {
             CheckTextBlock(parentContainer, ref textBlock, genDataDef, isPrimary);
             textBlock.Body.Add(
