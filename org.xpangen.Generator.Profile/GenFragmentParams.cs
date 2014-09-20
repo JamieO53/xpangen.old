@@ -23,7 +23,7 @@ namespace org.xpangen.Generator.Profile
         /// <param name="isPrimary">Is this fragmnent in the primary body?</param>
         public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, FragmentType fragmentType, bool isPrimary = true)
         {
-            Contract.Requires(fragmentType == FragmentType.Profile || parentSegment != null && parentContainer != null);
+            Contract.Requires(parentSegment != null && parentContainer != null);
             Contract.Ensures(fragmentType == FragmentType.Profile || Fragment != null);
             GenDataDef = genDataDef;
             ParentSegment = parentSegment;
@@ -33,6 +33,13 @@ namespace org.xpangen.Generator.Profile
             SetFragmentType(fragmentType);
         }
 
+        /// <summary>
+        /// Parameters for creating a GenFragment
+        /// </summary>
+        /// <param name="genDataDef">The definition of the data being generated.</param>
+        /// <param name="parentSegment">The class segment this fragment belongs to.</param>
+        /// <param name="parentContainer">The container fragment conataining this fragment.</param>
+        /// <param name="isPrimary">Is this fragmnent in the primary body?</param>
         public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, bool isPrimary = true)
         {
             Contract.Requires(parentSegment != null && parentContainer != null);
@@ -43,13 +50,21 @@ namespace org.xpangen.Generator.Profile
             IsPrimary = isPrimary;
         }
 
+        protected GenFragmentParams(GenDataDef genDataDef, Fragment fragment, FragmentType fragmentType)
+        {
+            Contract.Requires(fragment != null && fragment.GetType().Name == fragmentType.ToString());
+            Contract.Ensures(Fragment != null && Fragment.GetType().Name == FragmentType.ToString());
+            _fragment = fragment;
+            GenDataDef = genDataDef;
+            FragmentType = fragmentType;
+        }
+
         public GenFragmentParams SetFragmentType(FragmentType fragmentType)
         {
-            Contract.Requires(FragmentType == FragmentType.Profile ||
-                              Container != null || Fragment != null);
-            Contract.Ensures(FragmentType == FragmentType.Profile || Fragment != null);
+            Contract.Requires(Container != null || Fragment != null);
+            Contract.Ensures(Fragment != null && Fragment.GetType().Name == FragmentType.ToString());
             FragmentType = fragmentType;
-            if (FragmentType == FragmentType.Profile || FragmentExists) return this;
+            if (FragmentExists) return this;
             var fragmentBody = IsPrimary ? Container.CheckBody() : Container.CheckSecondaryBody();
             CheckFragment(fragmentType, fragmentBody);
             return this;

@@ -9,24 +9,21 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenProfileParams : GenFragmentParams
     {
-        public GenProfileParams(GenDataDef genDataDef, Profile.Profile profile = null) : base(genDataDef, null, null, FragmentType.Profile)
+        public GenProfileParams(GenDataDef genDataDef, Profile.Profile profile = null)
+            : this(genDataDef, profile == null ? CreateProfileDefinition() : profile.ProfileDefinition())
         {
-            if (profile == null)
-            {
-                ProfileDefinition = new ProfileDefinition();
-                ProfileDefinition.Setup();
-                Fragment = ProfileDefinition.Profile();
-                FragmentType = FragmentType.Profile;
-            }
-            else
-            {
-                ProfileDefinition = profile.ProfileDefinition();
-                Fragment = profile;
-                FragmentType = FragmentType.Profile;
-            }
-            FragmentType = FragmentType.Profile;
         }
 
-        private ProfileDefinition ProfileDefinition { get; set; }
+        private static ProfileDefinition CreateProfileDefinition()
+        {
+            var profileDefinition = new ProfileDefinition();
+            profileDefinition.Setup();
+            return profileDefinition;
+        }
+
+        private GenProfileParams(GenDataDef genDataDef, ProfileDefinition profileDefinition)
+            : base(genDataDef, profileDefinition.Profile(), FragmentType.Profile)
+        {
+        }
     }
 }
