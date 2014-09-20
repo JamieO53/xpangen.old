@@ -8,8 +8,7 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenLookupParams : GenFragmentParams
     {
-        public GenLookupParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
-            GenContainerFragmentBase parentContainer, string condition, bool isPrimary = true)
+        public GenLookupParams(GenDataDef genDataDef, GenContainerFragmentBase parentContainer, string condition, bool isPrimary = true)
             : base(genDataDef, parentContainer, FragmentType.Lookup, isPrimary: isPrimary)
         {
             var sa = condition.Split('=');

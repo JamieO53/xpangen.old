@@ -14,8 +14,7 @@ namespace org.xpangen.Generator.Profile
         public bool UseLit { get; private set; }
         public string Lit { get; private set; }
 
-        public GenConditionParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
-            GenContainerFragmentBase parentContainer, ConditionParameters conditionParameters, bool isPrimary = true)
+        public GenConditionParams(GenDataDef genDataDef, GenContainerFragmentBase parentContainer, ConditionParameters conditionParameters, bool isPrimary = true)
             : base(genDataDef, parentContainer, FragmentType.Condition, isPrimary: isPrimary)
         {
             Var1 = conditionParameters.Var1;

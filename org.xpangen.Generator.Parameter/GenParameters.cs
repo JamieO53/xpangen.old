@@ -205,23 +205,23 @@ namespace org.xpangen.Generator.Parameter
                         for (var i = j; i < genDataDef.GetClassProperties(classId).Count; i++)
                         {
                             var condExists =
-                                new GenCondition(new GenConditionParams(genDataDef, classProfile, classProfile,
+                                new GenCondition(new GenConditionParams(genDataDef, classProfile,
                                     new ConditionParameters
                                     {
                                         GenComparison = GenComparison.Exists,
                                         Var1 = genDataDef.GetId(genDataDef.GetClassName(classId),
-                                                                genDataDef.GetClassProperties(classId)[i])
+                                            genDataDef.GetClassProperties(classId)[i])
                                     }));
                             condExists.Body.Add(
                                 new GenTextFragment(new GenTextFragmentParams(genDataDef, condExists,
                                     sep + genDataDef.GetClassProperties(classId)[i])));
                             var condNotTrue =
-                                new GenCondition(new GenConditionParams(genDataDef, classProfile, condExists,
+                                new GenCondition(new GenConditionParams(genDataDef, condExists,
                                     new ConditionParameters
                                     {
                                         GenComparison = GenComparison.Ne,
                                         Var1 = genDataDef.GetId(genDataDef.GetClassName(classId),
-                                                                genDataDef.GetClassProperties(classId)[i]),
+                                            genDataDef.GetClassProperties(classId)[i]),
                                         Lit = "True",
                                         UseLit = true
                                     }));

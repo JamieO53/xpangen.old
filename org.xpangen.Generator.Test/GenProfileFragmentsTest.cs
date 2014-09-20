@@ -74,7 +74,7 @@ namespace org.xpangen.Generator.Test
             var f = d.GenDataDef;
             var r = new GenProfileFragment(new GenProfileParams(GenData.GenDataDef));
 
-            var g = new GenLookup(new GenLookupParams(f, r, r, "Class.Name=SubClass.Name"));
+            var g = new GenLookup(new GenLookupParams(f, r, "Class.Name=SubClass.Name"));
             var p = new GenPlaceholderFragment(new GenPlaceholderFragmentParams(f, g, f.GetId("Class.Name")));
             var t = new GenTextFragment(new GenTextFragmentParams(d.GenDataDef, g, ","));
             g.Body.Add(p);
@@ -148,7 +148,7 @@ namespace org.xpangen.Generator.Test
             b.Body.Add(p0);
             b.Body.Add(t0);
 
-            var g = new GenLookup(new GenLookupParams(f, r, b, "Lookup.Name=Child.Lookup"));
+            var g = new GenLookup(new GenLookupParams(f, b, "Lookup.Name=Child.Lookup"));
             var p1 = new GenPlaceholderFragment(new GenPlaceholderFragmentParams(f, g, f.GetId("Lookup.Name")));
             var t1 = new GenTextFragment(new GenTextFragmentParams(f, g, ","));
             Assert.IsFalse(g.NoMatch);
