@@ -19,12 +19,14 @@ namespace org.xpangen.Generator.Profile
             : base(genLookupParams.SetFragmentType(FragmentType.Lookup))
         {
             Body.ParentSegment = this;
-            var lookup = (Lookup) Fragment;
-            lookup.Class1 = genLookupParams.Var1.ClassName;
-            lookup.Property1 = genLookupParams.Var1.PropertyName;
-            lookup.Class2 = genLookupParams.Var2.ClassName;
-            lookup.Property2 = genLookupParams.Var2.PropertyName;
-            ClassId = GenDataDef.GetClassId(lookup.Class1);
+            Lookup = (Lookup) Fragment;
+            Lookup.Class1 = genLookupParams.Var1.ClassName;
+            Lookup.Property1 = genLookupParams.Var1.PropertyName;
+            Lookup.Class2 = genLookupParams.Var2.ClassName;
+            Lookup.Property2 = genLookupParams.Var2.PropertyName;
+            ClassId = GenDataDef.GetClassId(Lookup.Class1);
         }
+
+        public Lookup Lookup { get; private set; }
     }
 }

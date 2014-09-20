@@ -11,14 +11,16 @@ namespace org.xpangen.Generator.Profile
         public GenCondition(GenConditionParams genConditionParams)
             : base(genConditionParams.SetFragmentType(FragmentType.Condition))
         {
-            var condition = (Condition) Fragment;
-            condition.Class1 = genConditionParams.Var1.ClassName;
-            condition.Property1 = genConditionParams.Var1.PropertyName;
-            condition.Class2 = genConditionParams.Var2.ClassName;
-            condition.Property2 = genConditionParams.Var2.PropertyName;
-            condition.Comparison = genConditionParams.GenComparison.ToString();
-            condition.UseLit = genConditionParams.UseLit ? "True" : "";
-            condition.Lit = genConditionParams.Lit;
+            Condition = (Condition) Fragment;
+            Condition.Class1 = genConditionParams.Var1.ClassName;
+            Condition.Property1 = genConditionParams.Var1.PropertyName;
+            Condition.Class2 = genConditionParams.Var2.ClassName;
+            Condition.Property2 = genConditionParams.Var2.PropertyName;
+            Condition.Comparison = genConditionParams.GenComparison.ToString();
+            Condition.UseLit = genConditionParams.UseLit ? "True" : "";
+            Condition.Lit = genConditionParams.Lit;
         }
+
+        public Condition Condition { get; private set; }
     }
 }
