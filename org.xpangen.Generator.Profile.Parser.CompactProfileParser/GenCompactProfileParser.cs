@@ -102,48 +102,22 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                 switch (nextToken)
                 {
                     case TokenType.Segment:
-                        s = Scan.ScanSegmentClass();
-                        var seg =
-                            ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseSegmentHeading(
-                                GenDataDef, s, parentSegment, parentContainer, isPrimary);
-                        frag = seg;
-                        ScanBody(seg.ClassId, seg.Body, seg, seg);
+                        frag = ScanSegment(ref s, parentSegment, parentContainer, isPrimary);
                         break;
                     case TokenType.Block:
                         frag = ScanBlock(classId, parentSegment, parentContainer, isPrimary);
                         break;
                     case TokenType.Lookup:
-                        s = Scan.ScanLookup();
-                        var lookup =
-                            new GenLookup(new GenLookupParams(GenDataDef, parentSegment, parentContainer, s, isPrimary));
-                        frag = lookup;
-                        ScanBody(lookup.ClassId, lookup.Body, lookup, lookup);
+                        frag = ScanLookup(ref s, parentSegment, parentContainer, isPrimary);
                         break;
                     case TokenType.Condition:
-                        s = Scan.ScanCondition();
-                        var c =
-                            ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseCondition(
-                                GenDataDef, s);
-                        var cond =
-                            new GenCondition(new GenConditionParams(GenDataDef, parentSegment, parentContainer, c,
-                                isPrimary));
-
-                        frag = cond;
-                        ScanBody(classId, cond.Body, parentSegment, cond);
+                        frag = ScanCondition(classId, ref s, parentSegment, parentContainer, isPrimary);
                         break;
                     case TokenType.Function:
-                        s = Scan.ScanFunctionName();
-                        var func =
-                            new GenFunction(new GenFunctionParams(GenDataDef, parentSegment, parentContainer,
-                                s, FragmentType.Function, isPrimary));
-                        frag = func;
-                        ScanBlockParams(func.Body, parentSegment, func);
+                        frag = ScanFunction(ref s, parentSegment, parentContainer, isPrimary);
                         break;
                     case TokenType.Name:
-                        AddText(parentSegment, parentContainer, ref textBlock, GenDataDef.GetId(Scan.ScanName()), GenDataDef, isPrimary);
-                        frag = null;
-                        if (Scan.CheckChar(Scan.Delimiter))
-                            Scan.SkipChar();
+                        frag = ScanPlaceholder(parentSegment, parentContainer, ref textBlock, isPrimary);
                         break;
                     default:
                         throw new GeneratorException("Unknown token type: " + nextToken);
@@ -152,10 +126,79 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             }
             catch (Exception e)
             {
-                frag = new GenBlock(new GenFragmentParams(GenDataDef, parentSegment, parentContainer));
-                ((GenBlock) frag).Body.Add(
-                    new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, parentContainer, e.Message, isPrimary)));
+                var text = e.Message;
+                frag = OutputText(parentSegment, parentContainer, isPrimary, text);
             }
+            return frag;
+        }
+
+        private GenFragment OutputText(GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer,
+            bool isPrimary, string text)
+        {
+            GenFragment frag = new GenBlock(new GenFragmentParams(GenDataDef, parentSegment, parentContainer));
+            ((GenBlock) frag).Body.Add(
+                new GenTextFragment(new GenTextFragmentParams(GenDataDef, parentSegment, parentContainer, text, isPrimary)));
+            return frag;
+        }
+
+        private GenFragment ScanPlaceholder(GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer,
+            ref GenTextBlock textBlock, bool isPrimary)
+        {
+            AddText(parentSegment, parentContainer, ref textBlock, GenDataDef.GetId(Scan.ScanName()), GenDataDef, isPrimary);
+            GenFragment frag = null;
+            if (Scan.CheckChar(Scan.Delimiter))
+                Scan.SkipChar();
+            return frag;
+        }
+
+        private GenFragment ScanFunction(ref string s, GenContainerFragmentBase parentSegment,
+            GenContainerFragmentBase parentContainer, bool isPrimary)
+        {
+            s = Scan.ScanFunctionName();
+            var func =
+                new GenFunction(new GenFunctionParams(GenDataDef, parentSegment, parentContainer,
+                    s, FragmentType.Function, isPrimary));
+            GenFragment frag = func;
+            ScanBlockParams(func.Body, parentSegment, func);
+            return frag;
+        }
+
+        private GenFragment ScanCondition(int classId, ref string s, GenContainerFragmentBase parentSegment,
+            GenContainerFragmentBase parentContainer, bool isPrimary)
+        {
+            s = Scan.ScanCondition();
+            var c =
+                ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseCondition(
+                    GenDataDef, s);
+            var cond =
+                new GenCondition(new GenConditionParams(GenDataDef, parentSegment, parentContainer, c,
+                    isPrimary));
+
+            GenFragment frag = cond;
+            ScanBody(classId, cond.Body, parentSegment, cond);
+            return frag;
+        }
+
+        private GenFragment ScanLookup(ref string s, GenContainerFragmentBase parentSegment,
+            GenContainerFragmentBase parentContainer, bool isPrimary)
+        {
+            s = Scan.ScanLookup();
+            var lookup =
+                new GenLookup(new GenLookupParams(GenDataDef, parentSegment, parentContainer, s, isPrimary));
+            GenFragment frag = lookup;
+            ScanBody(lookup.ClassId, lookup.Body, lookup, lookup);
+            return frag;
+        }
+
+        private GenFragment ScanSegment(ref string s, GenContainerFragmentBase parentSegment,
+            GenContainerFragmentBase parentContainer, bool isPrimary)
+        {
+            s = Scan.ScanSegmentClass();
+            var seg =
+                ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseSegmentHeading(
+                    GenDataDef, s, parentSegment, parentContainer, isPrimary);
+            GenFragment frag = seg;
+            ScanBody(seg.ClassId, seg.Body, seg, seg);
             return frag;
         }
 

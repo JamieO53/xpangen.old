@@ -23,32 +23,39 @@ namespace org.xpangen.Generator.Profile
         /// <param name="isPrimary">Is this fragmnent in the primary body?</param>
         public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, FragmentType fragmentType, bool isPrimary = true)
         {
+            Contract.Requires(fragmentType == FragmentType.Profile || parentSegment != null && parentContainer != null);
+            Contract.Ensures(fragmentType == FragmentType.Profile || Fragment != null);
             GenDataDef = genDataDef;
             ParentSegment = parentSegment;
             ParentContainer = parentContainer;
+            Container = ParentContainer == null ? null : (ContainerFragment)ParentContainer.Fragment;
             IsPrimary = isPrimary;
             SetFragmentType(fragmentType);
-            //Assert(Fragment != null, "Fragment expected");
         }
 
         public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, bool isPrimary = true)
         {
+            Contract.Requires(parentSegment != null && parentContainer != null);
             GenDataDef = genDataDef;
             ParentSegment = parentSegment;
             ParentContainer = parentContainer;
+            Container = ParentContainer == null ? null : (ContainerFragment)ParentContainer.Fragment;
             IsPrimary = isPrimary;
         }
 
         public GenFragmentParams SetFragmentType(FragmentType fragmentType)
         {
+            Contract.Requires(FragmentType == FragmentType.Profile ||
+                              Container != null || Fragment != null);
+            Contract.Ensures(FragmentType == FragmentType.Profile || Fragment != null);
             FragmentType = fragmentType;
-            if (ParentContainer == null || ParentContainer.Fragment == null || FragmentExists) return this;
-            var container = (ContainerFragment)ParentContainer.Fragment;
-            Contract.Assert(container != null, "Parent container fragment is not a container fragment");
-            var fragmentBody = IsPrimary ? container.CheckBody() : container.CheckSecondaryBody();
+            if (FragmentType == FragmentType.Profile || FragmentExists) return this;
+            var fragmentBody = IsPrimary ? Container.CheckBody() : Container.CheckSecondaryBody();
             CheckFragment(fragmentType, fragmentBody);
             return this;
         }
+
+        public ContainerFragment Container { get; set; }
 
         public Fragment Fragment
         {
@@ -76,6 +83,7 @@ namespace org.xpangen.Generator.Profile
 
         private void CheckFragment(FragmentType fragmentType, FragmentBody fragmentBody)
         {
+            Contract.Ensures(Fragment != null);
             if (FragmentExists) return;
             
             var fragmentName = fragmentBody.FragmentName(fragmentType);
@@ -109,9 +117,6 @@ namespace org.xpangen.Generator.Profile
                 case FragmentType.TextBlock:
                     Fragment = fragmentBody.AddTextBlock();
                     break;
-                    //case FragmentType.Null:
-                    //    Fragment = container.Body().AddFragment();
-                    //    break;
                 default:
                     throw new ArgumentOutOfRangeException("fragmentType");
             }
