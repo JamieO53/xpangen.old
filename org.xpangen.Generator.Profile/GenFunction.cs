@@ -11,7 +11,10 @@ namespace org.xpangen.Generator.Profile
         public GenFunction(GenFunctionParams genFunctionParams)
             : base(genFunctionParams.SetFragmentType(FragmentType.Function))
         {
-            ((Function) Fragment).FunctionName = genFunctionParams.FunctionName;
+            Function = (Function) Fragment;
+            Function.FunctionName = genFunctionParams.FunctionName;
         }
+
+        public Function Function { get; private set; }
     }
 }
