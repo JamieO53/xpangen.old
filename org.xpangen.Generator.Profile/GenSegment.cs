@@ -11,9 +11,12 @@ namespace org.xpangen.Generator.Profile
         public GenSegment(GenSegmentParams genSegmentParams)
             : base(genSegmentParams.SetFragmentType(FragmentType.Segment))
         {
+            Segment = (Segment) Fragment;
             Body.ParentSegment = this;
             ClassId = GenDataDef.GetClassId(genSegmentParams.ClassName);
-            ((Segment) Fragment).Cardinality = genSegmentParams.Cardinality.ToString();
+            Segment.Cardinality = genSegmentParams.Cardinality.ToString();
         }
+
+        public Segment Segment { get; private set; }
     }
 }
