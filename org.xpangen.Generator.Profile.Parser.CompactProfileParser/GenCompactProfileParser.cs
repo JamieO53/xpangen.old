@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile.Profile;
 using org.xpangen.Generator.Profile.Scanner;
 using org.xpangen.Generator.Scanner;
 
@@ -49,7 +50,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             {
                 _compactSecondaryBodyParser = new CompactSecondaryBodyParser(this);
                 _compactPrimaryBodyParser = new CompactPrimaryBodyParser(this);
-                ScanBody(ClassId, Body, this);
+                ScanBody(ClassId, Body, this, Profile, Profile.Body());
             }
             finally
             {
@@ -58,7 +59,8 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             _parameterSeparator = new CharSet(" " + Scan.Delimiter);
         }
 
-        private void ScanBody(int classId, GenSegBody body, GenContainerFragmentBase parentContainer)
+        private void ScanBody(int classId, GenSegBody body, GenContainerFragmentBase parentContainer,
+            ContainerFragment containerFragment, FragmentBody fragmentBody)
         {
             var saveClassId = GenDataDef.CurrentClassId;
             GenDataDef.CurrentClassId = classId;
@@ -167,7 +169,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                 new GenCondition(new GenConditionParams(GenDataDef, parentContainer, c, isPrimary));
 
             GenFragment frag = cond;
-            ScanBody(classId, cond.Body, cond);
+            ScanBody(classId, cond.Body, cond, cond.Condition, cond.Condition.Body());
             return frag;
         }
 
@@ -177,7 +179,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             var lookup =
                 new GenLookup(new GenLookupParams(GenDataDef, parentContainer, s, isPrimary));
             GenFragment frag = lookup;
-            ScanBody(lookup.ClassId, lookup.Body, lookup);
+            ScanBody(lookup.ClassId, lookup.Body, lookup, lookup.Lookup, lookup.Lookup.Body());
             return frag;
         }
 
@@ -188,7 +190,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                 ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseSegmentHeading(
                     GenDataDef, s, parentContainer, isPrimary);
             GenFragment frag = seg;
-            ScanBody(seg.ClassId, seg.Body, seg);
+            ScanBody(seg.ClassId, seg.Body, seg, seg.Segment, seg.Segment.Body());
             return frag;
         }
 
@@ -298,7 +300,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             var frag = new GenBlock(new GenFragmentParams(GenDataDef, parentContainer, isPrimary));
             if (Scan.CheckChar('{'))
                 Scan.SkipChar();
-            ScanBody(classId, frag.Body, frag);
+            ScanBody(classId, frag.Body, frag, frag.Block, frag.Block.Body());
             return frag;
         }
 
