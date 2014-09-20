@@ -88,7 +88,7 @@ namespace org.xpangen.Generator.Test
             var exp = expected ? r : "";
 
             var c = ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseCondition(genDataDef, condIn);
-            var g = new GenCondition(new GenConditionParams(genDataDef, root, root, c));
+            var g = new GenCondition(new GenConditionParams(genDataDef, root, c));
 
             var t = new GenTextFragment(new GenTextFragmentParams(genDataDef, g, r));
             g.Body.Add(t);

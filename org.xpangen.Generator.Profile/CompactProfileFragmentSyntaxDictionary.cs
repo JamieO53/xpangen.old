@@ -141,7 +141,7 @@ namespace org.xpangen.Generator.Profile
             return genCondition;
         }
 
-        public override GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, bool isPrimary)
+        public override GenSegment ParseSegmentHeading(GenDataDef genDataDef, string segmentClass, GenContainerFragmentBase parentContainer, bool isPrimary)
         {
             var s = segmentClass.Substring(segmentClass.Length - 1);
             var c = segmentClass;
