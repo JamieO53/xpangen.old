@@ -8,12 +8,12 @@ namespace org.xpangen.Generator.Profile
 {
     public class GenFunctionParams : GenFragmentParams
     {
-        public GenFunctionParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, string functionName, FragmentType fragmentType, bool isPrimary = true) : base(genDataDef, parentSegment, parentContainer, fragmentType, isPrimary)
+        public GenFunctionParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, string functionName, FragmentType fragmentType, bool isPrimary = true) : base(genDataDef, parentContainer, fragmentType, isPrimary: isPrimary)
         {
             FunctionName = functionName;
         }
 
-        public GenFunctionParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, string functionName, bool isPrimary = true) : base(genDataDef, parentSegment, parentContainer, isPrimary)
+        public GenFunctionParams(GenDataDef genDataDef, GenContainerFragmentBase parentContainer, string functionName, bool isPrimary = true) : base(genDataDef, parentContainer, isPrimary: isPrimary)
         {
             FunctionName = functionName;
         }

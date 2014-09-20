@@ -8,6 +8,7 @@ using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Test
 {
@@ -89,10 +90,10 @@ namespace org.xpangen.Generator.Test
             var c = ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseCondition(genDataDef, condIn);
             var g = new GenCondition(new GenConditionParams(genDataDef, root, root, c));
 
-            var t = new GenTextFragment(new GenTextFragmentParams(genDataDef, root, g, r));
+            var t = new GenTextFragment(new GenTextFragmentParams(genDataDef, g, r));
             g.Body.Add(t);
             VerifyFragment(genData, g, "GenCondition", FragmentType.Condition, profileLabel,
-                           String.Format("`?{0}:{1}`]", condOut, r), exp, false, -1, g.Fragment.GenData.GenDataDef);
+                           String.Format("`?{0}:{1}`]", condOut, r), exp, false, null, g.Fragment.GenData.GenDataDef);
         }
 
         protected static void TestIdentifierComparison(GenData genData, string comparison, bool expectedLt, bool expectedEq,
@@ -124,7 +125,7 @@ namespace org.xpangen.Generator.Test
             TestCondition(genData, condIn + valueGt, "", "", expectedGt); // Property.Name?Namz
         }
 
-        protected static void VerifyFragment(GenData genData, GenFragment genFragment, string expectedClass, FragmentType expectedType, string profileLabel, string profileText, string expected, bool isText, int parentClassId, GenDataDef profileDataDef)
+        protected static void VerifyFragment(GenData genData, GenFragment genFragment, string expectedClass, FragmentType expectedType, string profileLabel, string profileText, string expected, bool isText, string parentClassName, GenDataDef profileDataDef)
         {
             Assert.AreEqual(expectedClass, genFragment.GetType().Name, "Fragment Class");
             Assert.AreEqual(expectedType, genFragment.FragmentType, "Fragment Type");
@@ -135,12 +136,11 @@ namespace org.xpangen.Generator.Test
             var genFragmentLabel =new GenFragmentLabel(fragment);
             Assert.AreEqual(profileLabel, genFragmentLabel.ProfileLabel(), "Profile label");
             Assert.AreEqual(profileText, genFragment.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary), "Profile text");
-            if (parentClassId >= 0)
-                Assert.AreEqual(parentClassId, genFragment.ParentSegment.ClassId, "Parent Class ID");
+            if (parentClassName != null)
+                Assert.AreEqual(parentClassName, genFragment.Fragment.ClassName(), "Parent Class ID");
             var str = GenerateFragment(genData, genFragment);
             Assert.AreEqual(expected, str);
             var genDataDef = genData.GenDataDef;
-            var parentClassName = genDataDef.GetClassName(genFragment.ParentSegment.ClassId);
             ValidateFragmentData(genDataDef, parentClassName, genFragment, profileDataDef);
         }
 
@@ -160,11 +160,11 @@ namespace org.xpangen.Generator.Test
         protected static void ExecuteFunction(GenData genData, string functionName, string variableName, string variableValue, string expected)
         {
             var r = new GenProfileFragment(new GenProfileParams(genData.GenDataDef));
-            var g = new GenFunction(new GenFunctionParams(genData.GenDataDef, r, r, functionName));
+            var g = new GenFunction(new GenFunctionParams(genData.GenDataDef, r, functionName));
             r.Body.Add(g);
             var b = SetFunctionParameters(genData, g, variableName, variableValue);
             VerifyFragment(genData, g, "GenFunction", FragmentType.Function, functionName,
-                           "`@" + functionName + ':' + b + "`]", expected, false, -1, r.Profile.GenData.GenDataDef);
+                           "`@" + functionName + ':' + b + "`]", expected, false, null, r.Profile.GenData.GenDataDef);
         }
 
         private static string SetFunctionParameters(GenData genData, GenFunction genFunction, string variableName, string variableValue)
@@ -172,12 +172,12 @@ namespace org.xpangen.Generator.Test
             if (variableName == "")
                 return "";
 
-            var p0 = new GenTextFragment(new GenTextFragmentParams(genData.GenDataDef, genFunction, genFunction, variableName));
+            var p0 = new GenTextFragment(new GenTextFragmentParams(genData.GenDataDef, genFunction, variableName));
             genFunction.Body.Add(p0);
             if (variableValue == "")
                 return variableName;
 
-            var p1 = new GenTextFragment(new GenTextFragmentParams(genData.GenDataDef, genFunction, genFunction, variableValue));
+            var p1 = new GenTextFragment(new GenTextFragmentParams(genData.GenDataDef, genFunction, variableValue));
             genFunction.Body.Add(p1);
             return variableName + " " + variableValue;
         }

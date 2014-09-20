@@ -42,14 +42,12 @@ namespace org.xpangen.Generator.Profile
         public void Add(GenFragment fragment)
         {
             _fragment.Add(fragment);
-            fragment.ParentSegment = ParentSegment;
             fragment.ParentContainer = ParentContainer;
         }
 
         public void AddSecondary(GenFragment secondaryFragment)
         {
             _secondaryFragment.Add(secondaryFragment);
-            secondaryFragment.ParentSegment = ParentSegment;
             secondaryFragment.ParentContainer = ParentContainer;
         }
 

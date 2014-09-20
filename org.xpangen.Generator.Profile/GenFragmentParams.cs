@@ -17,16 +17,14 @@ namespace org.xpangen.Generator.Profile
         /// Parameters for creating a GenFragment
         /// </summary>
         /// <param name="genDataDef">The definition of the data being generated.</param>
-        /// <param name="parentSegment">The class segment this fragment belongs to.</param>
         /// <param name="parentContainer">The container fragment conataining this fragment.</param>
         /// <param name="fragmentType">The type of fragment.</param>
         /// <param name="isPrimary">Is this fragmnent in the primary body?</param>
-        public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, FragmentType fragmentType, bool isPrimary = true)
+        public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentContainer, FragmentType fragmentType, bool isPrimary = true)
         {
-            Contract.Requires(parentSegment != null && parentContainer != null);
+            Contract.Requires(parentContainer != null);
             Contract.Ensures(fragmentType == FragmentType.Profile || Fragment != null);
             GenDataDef = genDataDef;
-            ParentSegment = parentSegment;
             ParentContainer = parentContainer;
             Container = ParentContainer == null ? null : (ContainerFragment)ParentContainer.Fragment;
             IsPrimary = isPrimary;
@@ -37,14 +35,12 @@ namespace org.xpangen.Generator.Profile
         /// Parameters for creating a GenFragment
         /// </summary>
         /// <param name="genDataDef">The definition of the data being generated.</param>
-        /// <param name="parentSegment">The class segment this fragment belongs to.</param>
         /// <param name="parentContainer">The container fragment conataining this fragment.</param>
         /// <param name="isPrimary">Is this fragmnent in the primary body?</param>
-        public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment, GenContainerFragmentBase parentContainer, bool isPrimary = true)
+        public GenFragmentParams(GenDataDef genDataDef, GenContainerFragmentBase parentContainer, bool isPrimary = true)
         {
-            Contract.Requires(parentSegment != null && parentContainer != null);
+            Contract.Requires(parentContainer != null && parentContainer != null);
             GenDataDef = genDataDef;
-            ParentSegment = parentSegment;
             ParentContainer = parentContainer;
             Container = ParentContainer == null ? null : (ContainerFragment)ParentContainer.Fragment;
             IsPrimary = isPrimary;
@@ -79,7 +75,7 @@ namespace org.xpangen.Generator.Profile
                 Contract.Assert(FragmentExists, "Fragment expected");
                 return _fragment;
             }
-            protected set { _fragment = value; }
+            private set { _fragment = value; }
         }
 
         private bool FragmentExists
@@ -89,12 +85,10 @@ namespace org.xpangen.Generator.Profile
 
         public GenDataDef GenDataDef { get; private set; }
 
-        public GenContainerFragmentBase ParentSegment { get; private set; }
-
         public GenContainerFragmentBase ParentContainer { get; private set; }
         private bool IsPrimary { get; set; }
 
-        public FragmentType FragmentType { get; protected set; }
+        public FragmentType FragmentType { get; private set; }
 
         private void CheckFragment(FragmentType fragmentType, FragmentBody fragmentBody)
         {

@@ -10,7 +10,7 @@ namespace org.xpangen.Generator.Profile
     {
         public GenLookupParams(GenDataDef genDataDef, GenContainerFragmentBase parentSegment,
             GenContainerFragmentBase parentContainer, string condition, bool isPrimary = true)
-            : base(genDataDef, parentSegment, parentContainer, FragmentType.Lookup, isPrimary)
+            : base(genDataDef, parentContainer, FragmentType.Lookup, isPrimary: isPrimary)
         {
             var sa = condition.Split('=');
             Var1 = GenDataDef.GetId(sa[0]);

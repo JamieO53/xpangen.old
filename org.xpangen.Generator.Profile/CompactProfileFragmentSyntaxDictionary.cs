@@ -156,7 +156,7 @@ namespace org.xpangen.Generator.Profile
                     break;
                 }
             }
-            return new GenSegment(new GenSegmentParams(genDataDef, parentSegment, parentContainer, c, cardinality, isPrimary));
+            return new GenSegment(new GenSegmentParams(genDataDef, parentContainer, c, cardinality, isPrimary: isPrimary));
         }
     }
 }
