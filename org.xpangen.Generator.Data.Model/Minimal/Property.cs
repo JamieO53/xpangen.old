@@ -14,9 +14,9 @@ namespace org.xpangen.Generator.Data.Model.Minimal
             Properties.Add("Name");
         }
 
-        public Property(GenData genData) : this()
+        public Property(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

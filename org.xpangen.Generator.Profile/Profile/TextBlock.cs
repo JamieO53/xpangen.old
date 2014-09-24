@@ -16,9 +16,9 @@ namespace org.xpangen.Generator.Profile.Profile
             Properties.Add("Name");
         }
 
-        public TextBlock(GenData genData) : this()
+        public TextBlock(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

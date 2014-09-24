@@ -15,9 +15,9 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("TableName");
         }
 
-        public Table(GenData genData) : this()
+        public Table(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

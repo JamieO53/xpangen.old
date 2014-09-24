@@ -15,9 +15,9 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("ViewName");
         }
 
-        public View(GenData genData) : this()
+        public View(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

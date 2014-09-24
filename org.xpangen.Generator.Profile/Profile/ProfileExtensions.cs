@@ -11,7 +11,7 @@ namespace org.xpangen.Generator.Profile.Profile
         public static Profile AddProfile(this FragmentBody body)
         {
             var name = CreateContainerFragmentBody(body, "Profile");
-            var profile = new Profile(body.GenData)
+            var profile = new Profile(body.GenDataBase)
                           {
                               GenObject = ((GenObject) body.GenObject).CreateGenObject("Profile"),
                               Name = name,
@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Profile.Profile
         public static Segment AddSegment(this FragmentBody body, string @class = "", string cardinality = "")
         {
             var name = CreateContainerFragmentBody(body, "Segment");
-            var segment = new Segment(body.GenData)
+            var segment = new Segment(body.GenDataBase)
                               {
                                   GenObject = ((GenObject) body.GenObject).CreateGenObject("Segment"),
                                   Name = name,
@@ -43,7 +43,7 @@ namespace org.xpangen.Generator.Profile.Profile
         public static Block AddBlock(this FragmentBody body)
         {
             var name = CreateContainerFragmentBody(body, "Block");
-            var block = new Block(body.GenData)
+            var block = new Block(body.GenDataBase)
                             {
                                 GenObject = ((GenObject) body.GenObject).CreateGenObject("Block"),
                                 Name = name,
@@ -59,7 +59,7 @@ namespace org.xpangen.Generator.Profile.Profile
             string comparison = "", string class2 = "", string property2 = "", string lit = "", string useLit = "")
         {
             var name = CreateContainerFragmentBody(body, "Condition");
-            var condition = new Condition(body.GenData)
+            var condition = new Condition(body.GenDataBase)
                                 {
                                     GenObject = ((GenObject) body.GenObject).CreateGenObject("Condition"),
                                     Name = name,
@@ -81,7 +81,7 @@ namespace org.xpangen.Generator.Profile.Profile
         public static Function AddFunction(this FragmentBody body, string functionName = "")
         {
             var name = "Function" + body.FragmentList.Count;
-            var function = new Function(body.GenData)
+            var function = new Function(body.GenDataBase)
                                {
                                    GenObject = ((GenObject) body.GenObject).CreateGenObject("Function"),
                                    Name = name,
@@ -98,7 +98,7 @@ namespace org.xpangen.Generator.Profile.Profile
             string property1 = "", string class2 = "", string property2 = "")
         {
             var name = CreateContainerFragmentBody(body, "Lookup");
-            var lookup = new Lookup(body.GenData)
+            var lookup = new Lookup(body.GenDataBase)
                              {
                                  GenObject = ((GenObject) body.GenObject).CreateGenObject("Lookup"),
                                  Name = name,
@@ -118,7 +118,7 @@ namespace org.xpangen.Generator.Profile.Profile
         public static TextBlock AddTextBlock(this FragmentBody body)
         {
             var name = CreateContainerFragmentBody(body, "TextBlock");
-            var textBlock = new TextBlock(body.GenData)
+            var textBlock = new TextBlock(body.GenDataBase)
                                 {
                                     GenObject = ((GenObject) body.GenObject).CreateGenObject("TextBlock"),
                                     Name = name,

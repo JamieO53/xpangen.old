@@ -16,9 +16,9 @@ namespace org.xpangen.Generator.Profile.Profile
             Properties.Add("Name");
         }
 
-        public Profile(GenData genData) : this()
+        public Profile(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

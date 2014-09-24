@@ -1,4 +1,5 @@
-﻿using org.xpangen.Generator.Editor.Helper;
+﻿using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Editor.Helper;
 using NUnit.Framework;
 using org.xpangen.Generator.Parameter;
 
@@ -14,7 +15,7 @@ namespace org.xpangen.Generator.Test
         public void SettingsLoadTest()
         {
             var model = PopulateGenSettings();
-            var d = model.GenData;
+            var d = new GenData(model.GenDataBase);
             Assert.AreEqual(1, model.GenSettingsList.Count);
             Assert.AreEqual(4, model.GenSettingsList[0].BaseFileList.Count);
             Assert.AreEqual(6, model.GenSettingsList[0].FileGroupList.Count);
@@ -49,7 +50,7 @@ namespace org.xpangen.Generator.Test
         public void GeSettingsSaveTest()
         {
             var model = PopulateGenSettings();
-            GenParameters.SaveToFile(model.GenData, "TestData/Settings.dcb");
+            GenParameters.SaveToFile(model.GenDataBase, "TestData/Settings.dcb");
         }
 
         /// <summary>

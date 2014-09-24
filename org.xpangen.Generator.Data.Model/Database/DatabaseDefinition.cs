@@ -9,13 +9,13 @@ namespace org.xpangen.Generator.Data.Model.Database
     /// </summary>
     public class DatabaseDefinition : GenApplicationBase
     {
-        public DatabaseDefinition(): this(new GenData(GetDefinition()))
+        public DatabaseDefinition(): this(new GenDataBase(GetDefinition()))
         {
         }
 
-        public DatabaseDefinition(GenData genData)
+        public DatabaseDefinition(GenDataBase genDataBase)
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
             Classes.Add("Database");
             Classes.Add("Schema");
             Classes.Add("Object");
@@ -32,7 +32,7 @@ namespace org.xpangen.Generator.Data.Model.Database
             Classes.Add("ForeignKeyColumn");
             Classes.Add("Parameter");
             SubClasses.Add("Database");
-            base.GenObject = genData.Root;
+            base.GenObject = genDataBase.Root;
         }
 
         public static GenDataDef GetDefinition()
@@ -113,9 +113,9 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public Database AddDatabase(string name)
         {
-            var item = new Database(GenData)
+            var item = new Database(GenDataBase)
                            {
-                               GenObject = GenData.Root.CreateGenObject("Database"),
+                               GenObject = GenDataBase.Root.CreateGenObject("Database"),
                                Name = name
                            };
             DatabaseList.Add(item);

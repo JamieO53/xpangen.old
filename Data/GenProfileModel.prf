@@ -9,16 +9,16 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
     /// </summary>
     public class `Assembly.Name` : GenApplicationBase
     {
-        public `Assembly.Name`(): this(new GenData(GetDefinition()))
+        public `Assembly.Name`(): this(new GenDataBase(GetDefinition()))
         {
         }
 
-        public `Assembly.Name`(GenData genData)
+        public `Assembly.Name`(GenDataBase genDataBase)
         {
-            GenData = genData;`[Class:
+            GenDataBase = genDataBase;`[Class:
             Classes.Add("`Class.Name`");`]`[Class':
             SubClasses.Add("`Class.Name`");`]
-            base.GenObject = genData.Root;
+            base.GenObject = genDataBase.Root;
         }
 
         public static GenDataDef GetDefinition()
@@ -41,9 +41,9 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
 
         public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`]`;, `])
         {
-            var item = new `Class.Name`(GenData)
+            var item = new `Class.Name`(GenDataBase)
                            {
-                               GenObject = GenData.Root.CreateGenObject("`Class.Name`")`[Property:,
+                               GenObject = GenDataBase.Root.CreateGenObject("`Class.Name`")`[Property:,
                                `Property.Name` = `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`]
                            };
             `Class.Name`List.Add(item);
@@ -68,9 +68,9 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             Properties.Add("`Property.Name`");`]
         }
 
-        public `Class.Name`(GenData genData) : this()
+        public `Class.Name`(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
 `[Property:`?Class.Inheritance~:        /// <summary>
@@ -125,7 +125,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
 
         public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`]`;, `])
         {
-            var item = new `Class.Name`(GenData)
+            var item = new `Class.Name`(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("`Class.Name`")`[Property:,
                                `Property.Name` = `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`]
@@ -136,7 +136,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
 `]`?Class.Inheritance=Abstract:`[Subclass:`%Class.Name=SubClass.Name:`?Class.Inheritance=Virtual:
         public `Class.Name` Add`Class.Name`(`[Property/:`{string `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`?Property.Name<>'Name': = "`Property.Default`"`]`]`;, `])
         {
-            var item = new `Class.Name`(GenData)
+            var item = new `Class.Name`(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("`Class.Name`")`[Property:,
                                `Property.Name` = `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`]

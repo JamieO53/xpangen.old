@@ -96,7 +96,7 @@ namespace org.xpangen.Generator.Test
         {
             const string name = "Test";
             if (File.Exists("TestData\\" + name)) File.Delete("TestData\\" + name);
-            var d = PopulateGenSettings().GenData;
+            var d = new GenData(PopulateGenSettings().GenDataBase);
             Data.Settings = Data.LoadSettingsFromData(d);
             Assert.IsNull(Data.Settings.FindFileGroup(name));
             var added = Data.NewFileGroup();

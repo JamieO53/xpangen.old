@@ -15,9 +15,9 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("Order");
         }
 
-        public KeyColumn(GenData genData) : this()
+        public KeyColumn(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

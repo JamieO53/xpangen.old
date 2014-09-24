@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Data
             AddClass("");
             CurrentClassId = -1;
             Cache = new GenDataDefReferenceCache(this);
-            Definition = new Definition.Definition(DefinitionCreator.CreateEmpty());
+            Definition = new Definition.Definition(DefinitionCreator.CreateEmpty().GenDataBase);
         }
 
         public int AddClass(string parent, string name)
@@ -42,20 +42,20 @@ namespace org.xpangen.Generator.Data
 
         private GenObject CreateDefinitionClass(string name)
         {
-            return DefinitionCreator.CreateDefinitionClass(Definition.GenData.Root, name, "", "",
-                                                           Definition.GenData.GenDataBase);
+            return DefinitionCreator.CreateDefinitionClass(Definition.GenDataBase.Root, name, "", "",
+                                                           Definition.GenDataBase);
         }
 
         private Class AddDefinitionClass(string className)
         {
-            var c = new Class(Definition.GenData) { GenObject = CreateDefinitionClass(className) };
+            var c = new Class(Definition.GenDataBase) { GenObject = CreateDefinitionClass(className) };
             Definition.ClassList.Add(c);
             return c;
         }
 
         private void AddDefinitionSubClass(string subClassName, Class c)
         {
-            var s = new SubClass(Definition.GenData)
+            var s = new SubClass(Definition.GenDataBase)
             {
                 GenObject = CreateDefinitionSubClass(subClassName, (GenObject)c.GenObject)
             };

@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Data
             
         }
 
-        public GenData GenData { get; set; }
+        public GenDataBase GenDataBase { get; set; }
 
         public bool DelayedSave { protected get; set; }
         

@@ -521,9 +521,9 @@ Child[Reference='child']
         {
             var f = GenData.DataLoader.LoadData("data/GeneratorEditor").AsDef();
             var d = new GenData(f);
-            var model = new GeneratorEditor(d) {GenObject = d.Root};
+            var model = new GeneratorEditor(d.GenDataBase) {GenObject = d.Root};
             model.SaveFields();
-            var settings = new GenSettings(d) {GenObject = CreateGenObject(d, d.Root, "GenSettings"), HomeDir = "."};
+            var settings = new GenSettings(d.GenDataBase) {GenObject = CreateGenObject(d, d.Root, "GenSettings"), HomeDir = "."};
             model.GenSettingsList.Add(settings);
             settings.AddBaseFile("Minimal", "Minimal.dcb", "Data", "The simplest definition required by the generator",
                 ".dcb");
@@ -638,7 +638,7 @@ Child[Reference='child']
 
         protected static void ValidateProfileData(GenProfileFragment profile, GenDataDef genDataDef)
         {
-            var profileDataDef = profile.Profile.GenData.GenDataDef;
+            var profileDataDef = profile.Profile.GenDataBase.GenDataDef;
             VerifyObjectClass(profileDataDef, "Profile", profile.Profile.GenObject);
             var profileDefinition = profile.Profile.ProfileDefinition();
             VerifyObjectClass(profileDataDef, "ProfileRoot", profileDefinition.ProfileRootList[0].GenObject);
@@ -913,14 +913,14 @@ Container[Reference='TestData\VirtualData']
 
             var df = SetUpVirtualDefinition();
             if (File.Exists(VirtualDefinitionFile)) File.Delete(VirtualDefinitionFile);
-            GenParameters.SaveToFile(df.GenData, VirtualDefinitionFile);
+            GenParameters.SaveToFile(df.GenDataBase, VirtualDefinitionFile);
             var d = PopulateInheritanceData(VirtualDataFile);
             if (File.Exists(VirtualDataFile)) File.Delete(VirtualDataFile);
             GenParameters.SaveToFile(d, VirtualDataFile);
 
             var pdf = SetUpParentOfVirtualDefinition();
             if (File.Exists(VirtualParentDefinitionFile)) File.Delete(VirtualParentDefinitionFile);
-            GenParameters.SaveToFile(pdf.GenData, VirtualParentDefinitionFile);
+            GenParameters.SaveToFile(pdf.GenDataBase, VirtualParentDefinitionFile);
             var pd = SetUpParentOfVirtualData();
             if (File.Exists(VirtualParentDataFile)) File.Delete(VirtualParentDataFile);
             GenParameters.SaveToFile(pd, VirtualParentDataFile);
@@ -928,7 +928,7 @@ Container[Reference='TestData\VirtualData']
 
         protected static GenData PopulateInheritanceData(string dataName)
         {
-            var f = SetUpVirtualDefinition().GenData.AsDef();
+            var f = new GenData((SetUpVirtualDefinition().GenDataBase)).AsDef();
             var d = new GenData(f) {DataName = Path.GetFileNameWithoutExtension(dataName)};
             var container = CreateGenObject(d, d.Root, "Container", "Container");
             d.First(1);
@@ -973,7 +973,7 @@ Container[Reference='TestData\VirtualData']
 
         protected static Definition SetUpVirtualDefinition()
         {
-            var df = new Definition {GenData = {DataName = "VirtualDefinition"}};
+            var df = new Definition {GenDataBase = {DataName = "VirtualDefinition"}};
             var c = df.AddClass("Container");
             c.AddProperty("Name", dataType: "Identifier");
             c.AddSubClass("Abstract");
@@ -995,7 +995,7 @@ Container[Reference='TestData\VirtualData']
         {
             Assert.IsTrue(File.Exists(VirtualDefinitionFile));
             Assert.IsTrue(File.Exists(VirtualDataFile));
-            var df = new Definition {GenData = {DataName = "VirtualParentDefintion"}};
+            var df = new Definition {GenDataBase = {DataName = "VirtualParentDefintion"}};
             var c = df.AddClass("Parent");
             c.AddProperty("Name");
             c.AddSubClass("Container", "TestData/VirtualDefinition");

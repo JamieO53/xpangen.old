@@ -18,9 +18,9 @@ namespace org.xpangen.Generator.Profile.Profile
             Properties.Add("Cardinality");
         }
 
-        public Segment(GenData genData) : this()
+        public Segment(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

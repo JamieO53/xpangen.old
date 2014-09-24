@@ -2,11 +2,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System.Collections.Generic;
-
 namespace org.xpangen.Generator.Data
 {
-    public class GenSubClass : List<GenObject>, ISubClassBase, IGenObject
+    public class GenSubClass : GenList<GenObject>, ISubClassBase, IGenObject
     {
         public static readonly GenSubClass Empty = new GenSubClass(null, null, -1, null);
         
@@ -26,6 +24,13 @@ namespace org.xpangen.Generator.Data
             GenDataBase = data;
             Parent = parent;
             ClassId = classId;
+        }
+
+        public override bool Move(ListMove move, int itemIndex)
+        {
+            var moved = base.Move(move, itemIndex);
+            GenDataBase.Changed |= moved;
+            return moved;
         }
 
         private const int ReferenceIdx = 0;

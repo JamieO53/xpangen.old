@@ -97,7 +97,7 @@ namespace org.xpangen.Generator.Editor.Helper
                     if (FileGroup.Changed)
                         FileGroup.SaveFields();
                     FileGroup = FindFileGroup(FileGroup.Name) ??
-                                new FileGroup(Model.GenData)
+                                new FileGroup(Model.GenDataBase)
                                     {
                                         GenObject =
                                             ((GenObject)Model.GenObject).CreateGenObject("FileGroup"),

@@ -16,9 +16,9 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("SchemaName");
         }
 
-        public Schema(GenData genData) : this()
+        public Schema(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

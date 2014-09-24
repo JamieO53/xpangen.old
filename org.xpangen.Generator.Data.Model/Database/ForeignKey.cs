@@ -19,9 +19,9 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("UpdateAction");
         }
 
-        public ForeignKey(GenData genData) : this()
+        public ForeignKey(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public ForeignKeyColumn AddForeignKeyColumn(string name, string relatedColumn = "")
         {
-            var item = new ForeignKeyColumn(GenData)
+            var item = new ForeignKeyColumn(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("ForeignKeyColumn"),
                                Name = name,

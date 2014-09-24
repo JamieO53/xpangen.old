@@ -9,18 +9,18 @@ namespace org.xpangen.Generator.Data.Model.Minimal
     /// </summary>
     public class Minimal : GenApplicationBase
     {
-        public Minimal(): this(new GenData(GetDefinition()))
+        public Minimal(): this(new GenDataBase(GetDefinition()))
         {
         }
 
-        public Minimal(GenData genData)
+        public Minimal(GenDataBase genDataBase)
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
             Classes.Add("Class");
             Classes.Add("SubClass");
             Classes.Add("Property");
             SubClasses.Add("Class");
-            base.GenObject = genData.Root;
+            base.GenObject = genDataBase.Root;
         }
 
         public static GenDataDef GetDefinition()
@@ -48,9 +48,9 @@ namespace org.xpangen.Generator.Data.Model.Minimal
 
         public Class AddClass(string name, string inheritance = "")
         {
-            var item = new Class(GenData)
+            var item = new Class(GenDataBase)
                            {
-                               GenObject = GenData.Root.CreateGenObject("Class"),
+                               GenObject = GenDataBase.Root.CreateGenObject("Class"),
                                Name = name,
                                Inheritance = inheritance
                            };

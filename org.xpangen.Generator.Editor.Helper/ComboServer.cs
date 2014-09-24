@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <summary>
         /// Create a new <see cref="ComboServer"/> instance.
         /// </summary>
-        public ComboServer(GenData data)
+        public ComboServer(GenDataBase data)
         {
             _codes = new CodesDefinition(data);
             _cache = new Dictionary<string, List<GeComboItem>>();

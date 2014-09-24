@@ -18,9 +18,9 @@ namespace org.xpangen.Generator.Profile.Profile
             Properties.Add("Title");
         }
 
-        public ProfileRoot(GenData genData) : this()
+        public ProfileRoot(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public FragmentBody AddFragmentBody(string name)
         {
-            var item = new FragmentBody(GenData)
+            var item = new FragmentBody(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("FragmentBody"),
                                Name = name

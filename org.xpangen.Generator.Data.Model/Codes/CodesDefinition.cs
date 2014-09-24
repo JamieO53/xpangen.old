@@ -9,17 +9,17 @@ namespace org.xpangen.Generator.Data.Model.Codes
     /// </summary>
     public class CodesDefinition : GenApplicationBase
     {
-        public CodesDefinition(): this(new GenData(GetDefinition()))
+        public CodesDefinition(): this(new GenDataBase(GetDefinition()))
         {
         }
 
-        public CodesDefinition(GenData genData)
+        public CodesDefinition(GenDataBase genDataBase)
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
             Classes.Add("CodesTable");
             Classes.Add("Code");
             SubClasses.Add("CodesTable");
-            base.GenObject = genData.Root;
+            base.GenObject = genDataBase.Root;
         }
 
         public static GenDataDef GetDefinition()
@@ -45,9 +45,9 @@ namespace org.xpangen.Generator.Data.Model.Codes
 
         public CodesTable AddCodesTable(string name, string title = "")
         {
-            var item = new CodesTable(GenData)
+            var item = new CodesTable(GenDataBase)
                            {
-                               GenObject = GenData.Root.CreateGenObject("CodesTable"),
+                               GenObject = GenDataBase.Root.CreateGenObject("CodesTable"),
                                Name = name,
                                Title = title
                            };

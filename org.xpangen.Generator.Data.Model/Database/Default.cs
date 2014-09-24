@@ -15,9 +15,9 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("Value");
         }
 
-        public Default(GenData genData) : this()
+        public Default(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

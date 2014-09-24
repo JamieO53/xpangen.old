@@ -18,9 +18,9 @@ namespace org.xpangen.Generator.Data.Definition
             Properties.Add("Inheritance");
         }
 
-        public Class(GenData genData) : this()
+        public Class(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace org.xpangen.Generator.Data.Definition
 
         public SubClass AddSubClass(string name, string reference = "", string relationship = "")
         {
-            var item = new SubClass(GenData)
+            var item = new SubClass(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("SubClass"),
                                Name = name,
@@ -92,7 +92,7 @@ namespace org.xpangen.Generator.Data.Definition
 
         public Property AddProperty(string name, string title = "", string dataType = "String", string @default = "", string lookupType = "", string lookupDependence = "", string lookupTable = "")
         {
-            var item = new Property(GenData)
+            var item = new Property(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Property"),
                                Name = name,

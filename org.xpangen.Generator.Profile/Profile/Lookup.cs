@@ -21,9 +21,9 @@ namespace org.xpangen.Generator.Profile.Profile
             Properties.Add("Property2");
         }
 
-        public Lookup(GenData genData) : this()
+        public Lookup(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

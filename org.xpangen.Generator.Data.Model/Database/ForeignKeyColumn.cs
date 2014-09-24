@@ -15,9 +15,9 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("RelatedColumn");
         }
 
-        public ForeignKeyColumn(GenData genData) : this()
+        public ForeignKeyColumn(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

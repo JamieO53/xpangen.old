@@ -17,9 +17,9 @@ namespace org.xpangen.Generator.Data.Model.Settings
             Properties.Add("Title");
         }
 
-        public Profile(GenData genData) : this()
+        public Profile(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

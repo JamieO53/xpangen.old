@@ -13,57 +13,57 @@ namespace org.xpangen.Generator.Data
     /// <typeparam name="T"></typeparam>
     public class GenList<T> : List<T>
     {
-        public virtual void Move(ListMove move, int itemIndex)
+        public virtual bool Move(ListMove move, int itemIndex)
         {
             switch (move)
             {
                 case ListMove.ToTop:
-                    MoveToTop(itemIndex);
-                    break;
+                    return MoveToTop(itemIndex);
                 case ListMove.Up:
-                    MoveUp(itemIndex);
-                    break;
+                    return MoveUp(itemIndex);
                 case ListMove.Down:
-                    MoveDown(itemIndex);
-                    break;
+                    return MoveDown(itemIndex);
                 case ListMove.ToBottom:
-                    MoveToBottom(itemIndex);
-                    break;
+                    return MoveToBottom(itemIndex);
                 default:
                     throw new ArgumentOutOfRangeException("move");
             }
         }
 
-        private void MoveToTop(int itemIndex)
+        private bool MoveToTop(int itemIndex)
         {
-            if (itemIndex <= 0 || itemIndex >= Count) return;
+            if (itemIndex <= 0 || itemIndex >= Count) return false;
             var genObject = this[itemIndex];
             RemoveAt(itemIndex);
             Insert(0, genObject);
+            return true;
         }
 
-        private void MoveUp(int itemIndex)
+        private bool MoveUp(int itemIndex)
         {
-            if (itemIndex <= 0 || itemIndex >= Count) return;
+            if (itemIndex <= 0 || itemIndex >= Count) return false;
             var genObject = this[itemIndex];
             this[itemIndex] = this[itemIndex - 1];
             this[itemIndex - 1] = genObject;
+            return true;
         }
 
-        private void MoveDown(int itemIndex)
+        private bool MoveDown(int itemIndex)
         {
-            if (itemIndex < 0 || itemIndex >= Count - 1) return;
+            if (itemIndex < 0 || itemIndex >= Count - 1) return false;
             var genObject = this[itemIndex];
             this[itemIndex] = this[itemIndex + 1];
             this[itemIndex + 1] = genObject;
+            return true;
         }
 
-        private void MoveToBottom(int itemIndex)
+        private bool MoveToBottom(int itemIndex)
         {
-            if (itemIndex < 0 || itemIndex >= Count - 1) return;
+            if (itemIndex < 0 || itemIndex >= Count - 1) return false;
             var genObject = this[itemIndex];
             RemoveAt(itemIndex);
             Add(genObject);
+            return true;
         }
     }
 }
