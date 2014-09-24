@@ -181,7 +181,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new Default(GenData)
                            {
-                               GenObject = ((GenObject)GenObject).CreateGenObject("Default"),
+                               GenObject = ((GenObject) GenObject).CreateGenObject("Default"),
                                Name = name,
                                Value = value
                            };

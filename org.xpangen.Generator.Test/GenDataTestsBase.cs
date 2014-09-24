@@ -4,11 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Data.Definition;
 using org.xpangen.Generator.Data.Model.Settings;
+using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Profile;
 using Text = org.xpangen.Generator.Profile.Profile.Text;
@@ -403,9 +406,15 @@ Child[Reference='child']
             var def = new GenDataDef {DefinitionName = parentClassName};
             def.AddSubClass("", parentClassName);
             def.AddClassInstanceProperty(1, "Name");
-            def.AddSubClass(parentClassName, childClassName);
-            def.AddClassInstanceProperty(2, "Name");
+            SetUpChildDef(parentClassName, childClassName, def);
             return def;
+        }
+
+        protected static void SetUpChildDef(string parentClassName, string childClassName, GenDataDef def)
+        {
+            def.AddSubClass(parentClassName, childClassName);
+            var childClassId = def.GetClassId(childClassName);
+            def.AddClassInstanceProperty(childClassId, "Name");
         }
 
         private static void SetUpParentReference(GenData dataParent, GenData dataChild, string childDefName,
@@ -416,6 +425,28 @@ Child[Reference='child']
             dataParent.Cache.Merge();
             SetSubClassReference(dataParent, parentClassName, childClassName, childName);
             dataParent.First(1);
+        }
+
+        /// <summary>
+        /// Get the first object in the data.
+        /// </summary>
+        /// <param name="d">The data containing the object.</param>
+        /// <returns>The first classId 1 object if it exists, otherwise null.</returns>
+        protected static GenObject GetFirstObject(GenData d)
+        {
+            if (d.Root == null) return null;
+            if (d.Root.SubClass.Count == 0) return null;
+            if (d.Root.SubClass[0].Count == 0) return null;
+            return d.Root.SubClass[0][0];
+        }
+
+        protected static GenObject GetFirstObjectOfSubClass(GenObject genObject, string subClassName)
+        {
+            Contract.Requires(genObject != null, "The object cannot be null");
+            Contract.Requires(genObject.Definition != null, "The object definition is required");
+            var index = genObject.Definition.IndexOfSubClass(subClassName);
+            if (index == -1) throw new ArgumentException("Class is not a subclass", subClassName);
+            return genObject.SubClass[index].Count == 0 ? null : genObject.SubClass[index][0];
         }
 
         /// <summary>
@@ -734,6 +765,256 @@ Child[Reference='child']
             Assert.AreEqual(
                 genTextBlock.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary), s,
                 "Text block profile text");
+        }
+
+        protected const string VirtualDefinition = @"Definition=Definition
+Class=Class
+Field={Name,Title,Inheritance}
+SubClass={SubClass,Property}
+Class=SubClass
+Field={Name,Reference,Relationship}
+Class=Property
+Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
+.
+Class=Container[]
+SubClass=Abstract[]
+Property=Name[,DataType=Identifier]
+Class=Abstract[Title='Abstract class',Inheritance=Abstract]
+SubClass=Virtual1[,Relationship=Extends]
+SubClass=Virtual2[,Relationship=Extends]
+SubClass=Child[]
+Property=Name[,DataType=Identifier]
+Class=Virtual1[]
+Property=V1Field[,DataType=String]
+Class=Virtual2[]
+Property=V2Field[,DataType=String]
+Class=Child[]
+Property=Name[,DataType=Identifier]
+";
+        protected const string VirtualDefinitionProfile = @"Definition=VirtualDefinition
+Class=Container
+Field=Name
+SubClass=Abstract
+Class=Abstract[Virtual1,Virtual2]
+Field=Name
+SubClass=Child
+Class=Virtual1
+Field=V1Field
+Class=Virtual2
+Field=V2Field
+Class=Child
+Field=Name
+.
+`[Container:Container=`Container.Name`
+`[Abstract:`[Virtual1^:Virtual1=`Virtual1.Name`[`?Virtual1.V1Field:V1Field`?Virtual1.V1Field<>True:=`@StringOrName:`{`Virtual1.V1Field``]`]`]`]]
+`[Child:Child=`Child.Name`
+`]`]`[Virtual2^:Virtual2=`Virtual2.Name`[`?Virtual2.V2Field:V2Field`?Virtual2.V2Field<>True:=`@StringOrName:`{`Virtual2.V2Field``]`]`]`]]
+`[Child:Child=`Child.Name`
+`]`]`]`]";
+        protected const string VirtualDefinitionData = @"Definition=VirtualDefinition
+Class=Container
+Field=Name
+SubClass=Abstract
+Class=Abstract[Virtual1,Virtual2]
+Field=Name
+SubClass=Child
+Class=Virtual1
+Field=V1Field
+Class=Virtual2
+Field=V2Field
+Class=Child
+Field=Name
+.
+Container=Container
+Virtual1=V1Instance1[V1Field='Value 1']
+Child=V1I1Child1
+Child=V1I1Child2
+Virtual2=V2Instance1[V2Field='Value 1']
+Child=V2I1Child1
+Child=V2I1Child2
+Virtual1=V1Instance2[V1Field='Value 2']
+Child=V1I2Child1
+Child=V1I2Child2
+Virtual2=V2Instance2[V2Field='Value 2']
+Child=V2I2Child1
+Child=V2I2Child2
+";
+        protected const string InheritanceProfile = @"`[Container:Container=`Container.Name`
+`[Virtual1:Virtual1=`Virtual1.Name`[`?Virtual1.V1Field:V1Field`?Virtual1.V1Field<>True:=`@StringOrName:`{`Virtual1.V1Field``]`]`]`]]
+`[Child:Child=`Child.Name`
+`]`]`[Virtual2:Virtual2=`Virtual2.Name`[`?Virtual2.V2Field:V2Field`?Virtual2.V2Field<>True:=`@StringOrName:`{`Virtual2.V2Field``]`]`]`]]
+`[Child:Child=`Child.Name`
+`]`]`]";
+        protected const string NestedInheritanceProfile = @"`[Parent:`[Container:Container=`Container.Name`
+`[Virtual1:Virtual1=`Virtual1.Name`[`?Virtual1.V1Field:V1Field`?Virtual1.V1Field<>True:=`@StringOrName:`{`Virtual1.V1Field``]`]`]`]]
+`[Child:Child=`Child.Name`
+`]`]`[Virtual2:Virtual2=`Virtual2.Name`[`?Virtual2.V2Field:V2Field`?Virtual2.V2Field<>True:=`@StringOrName:`{`Virtual2.V2Field``]`]`]`]]
+`[Child:Child=`Child.Name`
+`]`]`]`]";
+        protected const string InheritanceProfileResult = @"Container=Container
+Virtual1=V1Instance1[V1Field='Value 1']
+Child=V1I1Child1
+Child=V1I1Child2
+Virtual1=V1Instance2[V1Field='Value 2']
+Child=V1I2Child1
+Child=V1I2Child2
+Virtual2=V2Instance1[V2Field='Value 1']
+Child=V2I1Child1
+Child=V2I1Child2
+Virtual2=V2Instance2[V2Field='Value 2']
+Child=V2I2Child1
+Child=V2I2Child2
+";
+        protected const string VirtualDefinitionFile = "TestData\\VirtualDefinition.dcb";
+        protected const string VirtualDataFile = "TestData\\VirtualData.dcb";
+        protected const string VirtualParentDefinitionFile = "TestData\\VirtualParentDefinition.dcb";
+        protected const string VirtualParentDataFile = "TestData\\VirtualParentData.dcb";
+        protected const string VirtualParentDefinition = @"Definition=Definition
+Class=Class
+Field={Name,Title,Inheritance}
+SubClass={SubClass,Property}
+Class=SubClass
+Field={Name,Reference,Relationship}
+Class=Property
+Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
+.
+Class=Parent[]
+SubClass=Container[Reference='TestData/VirtualDefinition']
+Property=Name[,DataType=String]
+";
+        protected const string VirtualParentData = @"Definition=VirtualParentDefinition
+Class=Parent
+Field=Name
+SubClass=Container[Reference='TestData/VirtualDefinition']
+.
+Parent=Parent
+Container[Reference='TestData\VirtualData']
+";
+
+        protected static GenData LoadVirtualParentData()
+        {
+            SetUpParametersFile(VirtualDefinitionFile, VirtualDefinition);
+            SetUpParametersFile(VirtualDataFile, VirtualDefinitionData);
+            SetUpParametersFile(VirtualParentDefinitionFile, VirtualParentDefinition);
+            SetUpParametersFile(VirtualParentDataFile, VirtualParentData);
+            var data = GenData.DataLoader.LoadData(VirtualParentDataFile);
+            return data;
+        }
+
+        protected static void SetUpParametersFile(string fileName, string text)
+        {
+            if (File.Exists(fileName)) File.Delete(fileName);
+            File.WriteAllText(fileName, text);
+        }
+
+        protected static void SaveVirtualAndParentData()
+        {
+            if (!Directory.Exists("TestData")) Directory.CreateDirectory("TestData");
+
+            var df = SetUpVirtualDefinition();
+            if (File.Exists(VirtualDefinitionFile)) File.Delete(VirtualDefinitionFile);
+            GenParameters.SaveToFile(df.GenData, VirtualDefinitionFile);
+            var d = PopulateInheritanceData(VirtualDataFile);
+            if (File.Exists(VirtualDataFile)) File.Delete(VirtualDataFile);
+            GenParameters.SaveToFile(d, VirtualDataFile);
+
+            var pdf = SetUpParentOfVirtualDefinition();
+            if (File.Exists(VirtualParentDefinitionFile)) File.Delete(VirtualParentDefinitionFile);
+            GenParameters.SaveToFile(pdf.GenData, VirtualParentDefinitionFile);
+            var pd = SetUpParentOfVirtualData();
+            if (File.Exists(VirtualParentDataFile)) File.Delete(VirtualParentDataFile);
+            GenParameters.SaveToFile(pd, VirtualParentDataFile);
+        }
+
+        protected static GenData PopulateInheritanceData(string dataName)
+        {
+            var f = SetUpVirtualDefinition().GenData.AsDef();
+            var d = new GenData(f) {DataName = Path.GetFileNameWithoutExtension(dataName)};
+            var container = CreateGenObject(d, d.Root, "Container", "Container");
+            d.First(1);
+            var virtual1 = CreateGenObject(d, container, "Virtual1", "V1Instance1");
+            Assert.AreEqual(3, virtual1.ClassId);
+            var @abstract = new GenAttributes(f, 3) {GenObject = virtual1};
+            //@abstract.SetString("Name", "V1Instance1");
+            @abstract.SetString("V1Field", "Value 1");
+            @abstract.SaveFields();
+            d.Last(2);
+            CreateGenObject(d, virtual1, "Child", "V1I1Child1");
+            CreateGenObject(d, virtual1, "Child", "V1I1Child2");
+            var virtual2 = CreateGenObject(d, container, "Virtual2", "V2Instance1");
+            Assert.AreEqual(4, virtual2.ClassId);
+            @abstract.GenObject = virtual2;
+            //@abstract.SetString("Name", "V2Instance1");
+            @abstract.SetString("V2Field", "Value 1");
+            @abstract.SaveFields();
+            d.Last(2);
+            CreateGenObject(d, virtual2, "Child", "V2I1Child1");
+            CreateGenObject(d, virtual2, "Child", "V2I1Child2");
+            virtual1 = CreateGenObject(d, container, "Virtual1", "V1Instance2");
+            Assert.AreEqual(3, virtual1.ClassId);
+            @abstract.GenObject = virtual1;
+            //@abstract.SetString("Name", "V1Instance2");
+            @abstract.SetString("V1Field", "Value 2");
+            @abstract.SaveFields();
+            d.Last(2);
+            CreateGenObject(d, virtual1, "Child", "V1I2Child1");
+            CreateGenObject(d, virtual1, "Child", "V1I2Child2");
+            virtual2 = CreateGenObject(d, container, "Virtual2", "V2Instance2");
+            Assert.AreEqual(4, virtual2.ClassId);
+            @abstract.GenObject = virtual2;
+            //@abstract.SetString("Name", "V2Instance2");
+            @abstract.SetString("V2Field", "Value 2");
+            @abstract.SaveFields();
+            d.Last(2);
+            CreateGenObject(d, virtual2, "Child", "V2I2Child1");
+            CreateGenObject(d, virtual2, "Child", "V2I2Child2");
+            return d;
+        }
+
+        protected static Definition SetUpVirtualDefinition()
+        {
+            var df = new Definition {GenData = {DataName = "VirtualDefinition"}};
+            var c = df.AddClass("Container");
+            c.AddProperty("Name", dataType: "Identifier");
+            c.AddSubClass("Abstract");
+            var a = df.AddClass("Abstract", "Abstract class", "Abstract");
+            a.AddProperty("Name", dataType: "Identifier");
+            a.AddSubClass("Virtual1").Relationship = "Extends";
+            a.AddSubClass("Virtual2").Relationship = "Extends";
+            a.AddSubClass("Child");
+            var v1 = df.AddClass("Virtual1");
+            v1.AddProperty("V1Field");
+            var v2 = df.AddClass("Virtual2");
+            v2.AddProperty("V2Field");
+            var ch = df.AddClass("Child");
+            ch.AddProperty("Name", dataType: "Identifier");
+            return df;
+        }
+
+        protected static Definition SetUpParentOfVirtualDefinition()
+        {
+            Assert.IsTrue(File.Exists(VirtualDefinitionFile));
+            Assert.IsTrue(File.Exists(VirtualDataFile));
+            var df = new Definition {GenData = {DataName = "VirtualParentDefintion"}};
+            var c = df.AddClass("Parent");
+            c.AddProperty("Name");
+            c.AddSubClass("Container", "TestData/VirtualDefinition");
+            return df;
+        }
+
+        protected static GenData SetUpParentOfVirtualData()
+        {
+            Assert.IsTrue(File.Exists(VirtualDefinitionFile));
+            Assert.IsTrue(File.Exists(VirtualParentDefinitionFile));
+            Assert.IsTrue(File.Exists(VirtualDataFile));
+            var f = GenData.DataLoader.LoadData(VirtualParentDefinitionFile).AsDef();
+            var d = new GenData(f) { DataName = "VirtualParentData" };
+            var container = new GenAttributes(f, 1) {GenObject = CreateGenObject(d, d.Root, "Parent", "Parent")};
+            container.SetString("Name", "Parent");
+            container.SaveFields();
+            d.First(1);
+            d.Context[1].GenObject.SubClass[0].Reference = "TestData\\VirtualData";
+            return d;
         }
     }
 }

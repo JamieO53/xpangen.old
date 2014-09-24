@@ -2,6 +2,7 @@
 // // License, v. 2.0. If a copy of the MPL was not distributed with this
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Diagnostics.Contracts;
 
 namespace org.xpangen.Generator.Data
@@ -335,11 +336,16 @@ namespace org.xpangen.Generator.Data
 
         public GenObject GetContext(GenObject genObject, string className)
         {
-            if (genObject.ClassName == className) return genObject;
+            if (genObject.ClassNameIs(className)) return genObject;
             var ancestorContext = GetAncestorContext(genObject, className);
-            if (ancestorContext == null || ancestorContext.ClassName == className) return ancestorContext;
+            if (ancestorContext != null && ancestorContext.ClassNameIs(className))
+                return ancestorContext;
             var descendentContext = GetDescendentContext(genObject, className);
-            if (descendentContext == null || descendentContext.ClassName == className)
+            if (descendentContext != null &&
+                descendentContext.ClassNameIs(className))
+                return descendentContext;
+            if (descendentContext != null && descendentContext.Definition.IsInherited && 
+                descendentContext.Definition.Parent.ClassNameIs(className))
                 return descendentContext;
             return null;
         }
@@ -349,9 +355,11 @@ namespace org.xpangen.Generator.Data
             while (true)
             {
                 if (genObject.Parent == null) return genObject;
-                if (genObject.Parent.ClassName == className) return genObject.Parent;
+                if (genObject.Parent.ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase))
+                    return genObject.Parent;
                 var descendentContext = GetDescendentContext(genObject.Parent, className, genObject.ParentSubClass);
-                if (descendentContext == null || descendentContext.ClassName == className)
+                if (descendentContext != null &&
+                    descendentContext.ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase))
                     return descendentContext;
                 genObject = genObject.Parent;
             }
@@ -359,13 +367,23 @@ namespace org.xpangen.Generator.Data
 
         private GenObject GetDescendentContext(GenObject genObject, string className, ISubClassBase exclude = null)
         {
-            foreach (var subClass in genObject.SubClass)
+            var subClass = genObject.GetSubClass(className);
+            if (subClass != null)
             {
-                if (subClass == exclude) continue;
-                if (subClass.Definition.SubClass.Name == className)
+                if (subClass.Definition.SubClass.IsInheritor(className))
                     return subClass.Count == 0 ? null : subClass[0];
-                var descendentContext = GetDescendentContext(subClass[0], className);
-                if (descendentContext == null || descendentContext.ClassName == className) return descendentContext;
+                return null;
+            }
+            
+            foreach (var sc in genObject.SubClass)
+            {
+                if (sc == exclude) continue;
+                if (sc.Definition.SubClass.IsInheritor(className))
+                    return sc.Count == 0 ? null : sc[0];
+                var descendentContext = GetDescendentContext(sc[0], className);
+                if (descendentContext == null ||
+                    descendentContext.ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase))
+                    return descendentContext;
             }
             return genObject;
         }

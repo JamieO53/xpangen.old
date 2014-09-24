@@ -150,9 +150,9 @@ namespace org.xpangen.Generator.Data
 
         public bool IsInheritor(string className)
         {
-            if (Name.Equals(className, StringComparison.InvariantCultureIgnoreCase)) return true;
+            if (ClassNameIs(className)) return true;
             foreach (var inheritor in Inheritors)
-                if (inheritor.Name.Equals(className, StringComparison.InvariantCultureIgnoreCase) ||
+                if (inheritor.ClassNameIs(className) ||
                     inheritor.IsInheritor(className)) return true;
             return false;
         }
@@ -180,19 +180,9 @@ namespace org.xpangen.Generator.Data
             return false;
         }
 
-       public int IndexOfSubClass(int subClassId)
+        public bool ClassNameIs(string className)
         {
-            for (var i = 0; i < SubClasses.Count; i++)
-            {
-                var sc = SubClasses[i].SubClass;
-                if (sc.IsInheritor(subClassId)) return i;
-            }
-            if (IsInherited)
-            {
-                var j = Parent.IndexOfSubClass(subClassId);
-                if (j != -1) return j + SubClasses.Count;
-            }
-            return -1;
+            return Name.Equals(className, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

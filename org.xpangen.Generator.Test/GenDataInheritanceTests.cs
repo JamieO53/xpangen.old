@@ -18,81 +18,6 @@ namespace org.xpangen.Generator.Test
     [TestFixture]
     public class GenDataInheritanceTests : GenProfileFragmentsTestBase
     {
-        private const string VirtualDefinition = @"Definition=Definition
-Class=Class
-Field={Name,Title,Inheritance}
-SubClass={SubClass,Property}
-Class=SubClass
-Field={Name,Reference,Relationship}
-Class=Property
-Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
-.
-Class=Container[]
-SubClass=Abstract[]
-Property=Name[,DataType=Identifier]
-Class=Abstract[Title='Abstract class',Inheritance=Abstract]
-SubClass=Virtual1[,Relationship=Extends]
-SubClass=Virtual2[,Relationship=Extends]
-SubClass=Child[]
-Property=Name[,DataType=Identifier]
-Class=Virtual1[]
-Property=V1Field[,DataType=String]
-Class=Virtual2[]
-Property=V2Field[,DataType=String]
-Class=Child[]
-Property=Name[,DataType=Identifier]
-";
-
-        private const string VirtualDefinitionProfile = @"Definition=VirtualDefinition
-Class=Container
-Field=Name
-SubClass=Abstract
-Class=Abstract[Virtual1,Virtual2]
-Field=Name
-SubClass=Child
-Class=Virtual1
-Field=V1Field
-Class=Virtual2
-Field=V2Field
-Class=Child
-Field=Name
-.
-`[Container:Container=`Container.Name`
-`[Abstract:`[Virtual1^:Virtual1=`Virtual1.Name`[`?Virtual1.V1Field:V1Field`?Virtual1.V1Field<>True:=`@StringOrName:`{`Virtual1.V1Field``]`]`]`]]
-`[Child:Child=`Child.Name`
-`]`]`[Virtual2^:Virtual2=`Virtual2.Name`[`?Virtual2.V2Field:V2Field`?Virtual2.V2Field<>True:=`@StringOrName:`{`Virtual2.V2Field``]`]`]`]]
-`[Child:Child=`Child.Name`
-`]`]`]`]";
-
-        private const string VirtualDefinitionData = @"Definition=VirtualDefinition
-Class=Container
-Field=Name
-SubClass=Abstract
-Class=Abstract[Virtual1,Virtual2]
-Field=Name
-SubClass=Child
-Class=Virtual1
-Field=V1Field
-Class=Virtual2
-Field=V2Field
-Class=Child
-Field=Name
-.
-Container=Container
-Virtual1=V1Instance1[V1Field='Value 1']
-Child=V1I1Child1
-Child=V1I1Child2
-Virtual2=V2Instance1[V2Field='Value 1']
-Child=V2I1Child1
-Child=V2I1Child2
-Virtual1=V1Instance2[V1Field='Value 2']
-Child=V1I2Child1
-Child=V1I2Child2
-Virtual2=V2Instance2[V2Field='Value 2']
-Child=V2I2Child1
-Child=V2I2Child2
-";
-
         [TestCase(Description = "Tests the setting up of a definition with inheritance")]
         public void InheritanceDefinitionSetupTest()
         {
@@ -153,35 +78,6 @@ Child=V2I2Child2
             CompareGenData(d, x);
         }
 
-        private const string InheritanceProfile = @"`[Container:Container=`Container.Name`
-`[Virtual1:Virtual1=`Virtual1.Name`[`?Virtual1.V1Field:V1Field`?Virtual1.V1Field<>True:=`@StringOrName:`{`Virtual1.V1Field``]`]`]`]]
-`[Child:Child=`Child.Name`
-`]`]`[Virtual2:Virtual2=`Virtual2.Name`[`?Virtual2.V2Field:V2Field`?Virtual2.V2Field<>True:=`@StringOrName:`{`Virtual2.V2Field``]`]`]`]]
-`[Child:Child=`Child.Name`
-`]`]`]";
-
-        private const string NestedInheritanceProfile = @"`[Parent:`[Container:Container=`Container.Name`
-`[Virtual1:Virtual1=`Virtual1.Name`[`?Virtual1.V1Field:V1Field`?Virtual1.V1Field<>True:=`@StringOrName:`{`Virtual1.V1Field``]`]`]`]]
-`[Child:Child=`Child.Name`
-`]`]`[Virtual2:Virtual2=`Virtual2.Name`[`?Virtual2.V2Field:V2Field`?Virtual2.V2Field<>True:=`@StringOrName:`{`Virtual2.V2Field``]`]`]`]]
-`[Child:Child=`Child.Name`
-`]`]`]`]";
-
-        private const string InheritanceProfileResult = @"Container=Container
-Virtual1=V1Instance1[V1Field='Value 1']
-Child=V1I1Child1
-Child=V1I1Child2
-Virtual1=V1Instance2[V1Field='Value 2']
-Child=V1I2Child1
-Child=V1I2Child2
-Virtual2=V2Instance1[V2Field='Value 1']
-Child=V2I1Child1
-Child=V2I1Child2
-Virtual2=V2Instance2[V2Field='Value 2']
-Child=V2I2Child1
-Child=V2I2Child2
-";
-
         [TestCase(Description = "Tests the expansion of a class with inheritance")]
         public void InheritanceClassExpansionTest()
         {
@@ -202,55 +98,12 @@ Child=V2I2Child2
             Assert.AreEqual(InheritanceProfileResult, text);
         }
 
-        private const string VirtualDefinitionFile = "TestData\\VirtualDefinition.dcb";
-        private const string VirtualDataFile = "TestData\\VirtualData.dcb";
-        private const string VirtualParentDefinitionFile = "TestData\\VirtualParentDefinition.dcb";
-        private const string VirtualParentDataFile = "TestData\\VirtualParentData.dcb";
-
-        private const string VirtualParentDefinition = @"Definition=Definition
-Class=Class
-Field={Name,Title,Inheritance}
-SubClass={SubClass,Property}
-Class=SubClass
-Field={Name,Reference,Relationship}
-Class=Property
-Field={Name,Title,DataType,Default,LookupType,LookupDependence,LookupTable}
-.
-Class=Parent[]
-SubClass=Container[Reference='TestData/VirtualDefinition']
-Property=Name[,DataType=String]
-";
-        private const string VirtualParentData = @"Definition=VirtualParentDefinition
-Class=Parent
-Field=Name
-SubClass=Container[Reference='TestData/VirtualDefinition']
-.
-Parent=Parent
-Container[Reference='TestData\VirtualData']
-";
-
         [TestCase(Description = "Tests the loading of nested data with inheritance")]
         public void NestedInheritanceDataLoadTest()
         {
             var data = LoadVirtualParentData();
             var expectedData = SetUpParentOfVirtualData();
             CompareGenData(expectedData, data);
-        }
-
-        private static GenData LoadVirtualParentData()
-        {
-            SetUpParametersFile(VirtualDefinitionFile, VirtualDefinition);
-            SetUpParametersFile(VirtualDataFile, VirtualDefinitionData);
-            SetUpParametersFile(VirtualParentDefinitionFile, VirtualParentDefinition);
-            SetUpParametersFile(VirtualParentDataFile, VirtualParentData);
-            var data = GenData.DataLoader.LoadData(VirtualParentDataFile);
-            return data;
-        }
-
-        private static void SetUpParametersFile(string fileName, string text)
-        {
-            if (File.Exists(fileName)) File.Delete(fileName);
-            File.WriteAllText(fileName, text);
         }
 
         [TestCase(Description = "Tests the saving of nested data with inheritance")]
@@ -274,116 +127,6 @@ Container[Reference='TestData\VirtualData']
             var p = new GenCompactProfileParser(d.GenDataDef, "", NestedInheritanceProfile);
             var text = GenFragmentExpander.Expand(d.GenDataDef, d.Root, p.Fragment);
             Assert.AreEqual(InheritanceProfileResult, text);
-        }
-
-        private static void SaveVirtualAndParentData()
-        {
-            if (!Directory.Exists("TestData")) Directory.CreateDirectory("TestData");
-
-            var df = SetUpVirtualDefinition();
-            if (File.Exists(VirtualDefinitionFile)) File.Delete(VirtualDefinitionFile);
-            GenParameters.SaveToFile(df.GenData, VirtualDefinitionFile);
-            var d = PopulateInheritanceData(VirtualDataFile);
-            if (File.Exists(VirtualDataFile)) File.Delete(VirtualDataFile);
-            GenParameters.SaveToFile(d, VirtualDataFile);
-
-            var pdf = SetUpParentOfVirtualDefinition();
-            if (File.Exists(VirtualParentDefinitionFile)) File.Delete(VirtualParentDefinitionFile);
-            GenParameters.SaveToFile(pdf.GenData, VirtualParentDefinitionFile);
-            var pd = SetUpParentOfVirtualData();
-            if (File.Exists(VirtualParentDataFile)) File.Delete(VirtualParentDataFile);
-            GenParameters.SaveToFile(pd, VirtualParentDataFile);
-        }
-
-        private static GenData PopulateInheritanceData(string dataName)
-        {
-            var f = SetUpVirtualDefinition().GenData.AsDef();
-            var d = new GenData(f) {DataName = Path.GetFileNameWithoutExtension(dataName)};
-            var container = CreateGenObject(d, d.Root, "Container", "Container");
-            d.First(1);
-            var virtual1 = CreateGenObject(d, container, "Virtual1", "V1Instance1");
-            Assert.AreEqual(3, virtual1.ClassId);
-            var @abstract = new GenAttributes(f, 3) {GenObject = virtual1};
-            //@abstract.SetString("Name", "V1Instance1");
-            @abstract.SetString("V1Field", "Value 1");
-            @abstract.SaveFields();
-            d.Last(2);
-            CreateGenObject(d, virtual1, "Child", "V1I1Child1");
-            CreateGenObject(d, virtual1, "Child", "V1I1Child2");
-            var virtual2 = CreateGenObject(d, container, "Virtual2", "V2Instance1");
-            Assert.AreEqual(4, virtual2.ClassId);
-            @abstract.GenObject = virtual2;
-            //@abstract.SetString("Name", "V2Instance1");
-            @abstract.SetString("V2Field", "Value 1");
-            @abstract.SaveFields();
-            d.Last(2);
-            CreateGenObject(d, virtual2, "Child", "V2I1Child1");
-            CreateGenObject(d, virtual2, "Child", "V2I1Child2");
-            virtual1 = CreateGenObject(d, container, "Virtual1", "V1Instance2");
-            Assert.AreEqual(3, virtual1.ClassId);
-            @abstract.GenObject = virtual1;
-            //@abstract.SetString("Name", "V1Instance2");
-            @abstract.SetString("V1Field", "Value 2");
-            @abstract.SaveFields();
-            d.Last(2);
-            CreateGenObject(d, virtual1, "Child", "V1I2Child1");
-            CreateGenObject(d, virtual1, "Child", "V1I2Child2");
-            virtual2 = CreateGenObject(d, container, "Virtual2", "V2Instance2");
-            Assert.AreEqual(4, virtual2.ClassId);
-            @abstract.GenObject = virtual2;
-            //@abstract.SetString("Name", "V2Instance2");
-            @abstract.SetString("V2Field", "Value 2");
-            @abstract.SaveFields();
-            d.Last(2);
-            CreateGenObject(d, virtual2, "Child", "V2I2Child1");
-            CreateGenObject(d, virtual2, "Child", "V2I2Child2");
-            return d;
-        }
-
-        private static Definition SetUpVirtualDefinition()
-        {
-            var df = new Definition {GenData = {DataName = "VirtualDefinition"}};
-            var c = df.AddClass("Container");
-            c.AddProperty("Name", dataType: "Identifier");
-            c.AddSubClass("Abstract");
-            var a = df.AddClass("Abstract", "Abstract class", "Abstract");
-            a.AddProperty("Name", dataType: "Identifier");
-            a.AddSubClass("Virtual1").Relationship = "Extends";
-            a.AddSubClass("Virtual2").Relationship = "Extends";
-            a.AddSubClass("Child");
-            var v1 = df.AddClass("Virtual1");
-            v1.AddProperty("V1Field");
-            var v2 = df.AddClass("Virtual2");
-            v2.AddProperty("V2Field");
-            var ch = df.AddClass("Child");
-            ch.AddProperty("Name", dataType: "Identifier");
-            return df;
-        }
-
-        private static Definition SetUpParentOfVirtualDefinition()
-        {
-            Assert.IsTrue(File.Exists(VirtualDefinitionFile));
-            Assert.IsTrue(File.Exists(VirtualDataFile));
-            var df = new Definition {GenData = {DataName = "VirtualParentDefintion"}};
-            var c = df.AddClass("Parent");
-            c.AddProperty("Name");
-            c.AddSubClass("Container", "TestData/VirtualDefinition");
-            return df;
-        }
-
-        private static GenData SetUpParentOfVirtualData()
-        {
-            Assert.IsTrue(File.Exists(VirtualDefinitionFile));
-            Assert.IsTrue(File.Exists(VirtualParentDefinitionFile));
-            Assert.IsTrue(File.Exists(VirtualDataFile));
-            var f = GenData.DataLoader.LoadData(VirtualParentDefinitionFile).AsDef();
-            var d = new GenData(f) { DataName = "VirtualParentData" };
-            var container = new GenAttributes(f, 1) {GenObject = CreateGenObject(d, d.Root, "Parent", "Parent")};
-            container.SetString("Name", "Parent");
-            container.SaveFields();
-            d.First(1);
-            d.Context[1].GenObject.SubClass[0].Reference = "TestData\\VirtualData";
-            return d;
         }
 
         /// <summary>

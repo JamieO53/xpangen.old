@@ -80,7 +80,7 @@ namespace org.xpangen.Generator.Data.Definition
         {
             var item = new SubClass(GenData)
                            {
-                               GenObject = ((GenObject)GenObject).CreateGenObject("SubClass"),
+                               GenObject = ((GenObject) GenObject).CreateGenObject("SubClass"),
                                Name = name,
                                Reference = reference,
                                Relationship = relationship
@@ -90,11 +90,11 @@ namespace org.xpangen.Generator.Data.Definition
         }
 
 
-        public void AddProperty(string name, string title = "", string dataType = "String", string @default = "", string lookupType = "", string lookupDependence = "", string lookupTable = "")
+        public Property AddProperty(string name, string title = "", string dataType = "String", string @default = "", string lookupType = "", string lookupDependence = "", string lookupTable = "")
         {
             var item = new Property(GenData)
                            {
-                               GenObject = ((GenObject)GenObject).CreateGenObject("Property"),
+                               GenObject = ((GenObject) GenObject).CreateGenObject("Property"),
                                Name = name,
                                Title = title,
                                DataType = dataType,
@@ -104,6 +104,7 @@ namespace org.xpangen.Generator.Data.Definition
                                LookupTable = lookupTable
                            };
             PropertyList.Add(item);
+            return item;
         }
 
     }

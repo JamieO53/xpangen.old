@@ -46,7 +46,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new Schema(GenData)
                            {
-                               GenObject = ((GenObject)GenObject).CreateGenObject("Schema"),
+                               GenObject = ((GenObject) GenObject).CreateGenObject("Schema"),
                                Name = name,
                                SchemaName = schemaName
                            };
