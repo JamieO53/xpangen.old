@@ -17,9 +17,9 @@ namespace org.xpangen.Generator.Profile.Profile
             Properties.Add("Name");
         }
 
-        public FragmentBody(GenData genData) : this()
+        public FragmentBody(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace org.xpangen.Generator.Profile.Profile
         }
         public Text AddText(string name, string textValue = "")
         {
-            var item = new Text(GenData)
+            var item = new Text(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Text"),
                                Name = name,
@@ -56,7 +56,7 @@ namespace org.xpangen.Generator.Profile.Profile
         }
         public Placeholder AddPlaceholder(string name, string @class = "", string property = "")
         {
-            var item = new Placeholder(GenData)
+            var item = new Placeholder(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Placeholder"),
                                Name = name,
@@ -68,7 +68,7 @@ namespace org.xpangen.Generator.Profile.Profile
         }
         public ContainerFragment AddContainerFragment(string name, string primary = "", string secondary = "")
         {
-            var item = new ContainerFragment(GenData)
+            var item = new ContainerFragment(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("ContainerFragment"),
                                Name = name,

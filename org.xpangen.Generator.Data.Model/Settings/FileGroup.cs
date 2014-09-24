@@ -19,9 +19,9 @@ namespace org.xpangen.Generator.Data.Model.Settings
             Properties.Add("GeneratedFile");
         }
 
-        public FileGroup(GenData genData) : this()
+        public FileGroup(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

@@ -16,9 +16,9 @@ namespace org.xpangen.Generator.Data.Model.Codes
             Properties.Add("Title");
         }
 
-        public CodesTable(GenData genData) : this()
+        public CodesTable(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace org.xpangen.Generator.Data.Model.Codes
 
         public Code AddCode(string name, string description = "", string value = "")
         {
-            var item = new Code(GenData)
+            var item = new Code(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Code"),
                                Name = name,

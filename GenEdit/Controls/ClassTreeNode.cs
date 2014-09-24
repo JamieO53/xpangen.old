@@ -100,7 +100,7 @@ namespace GenEdit.Controls
         /// <returns>The root node.</returns>
         public static SubClassTreeNode CreateRootNode(GeData data)
         {
-            return new SubClassTreeNode(null, data.GenData, new Definition(data.DefGenData), 1);
+            return new SubClassTreeNode(null, data.GenData, new Definition(data.DefGenData.GenDataBase), 1);
         }
     }
 }

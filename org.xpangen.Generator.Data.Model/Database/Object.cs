@@ -22,9 +22,9 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("Name");
         }
 
-        public Object(GenData genData) : this()
+        public Object(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         public GenNamedApplicationList<Table> TableList { get; private set; }
@@ -58,7 +58,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public Table AddTable(string name, string tableName = "")
         {
-            var item = new Table(GenData)
+            var item = new Table(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Table"),
                                Name = name,
@@ -71,7 +71,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public View AddView(string name, string viewName = "")
         {
-            var item = new View(GenData)
+            var item = new View(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("View"),
                                Name = name,
@@ -84,7 +84,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public Procedure AddProcedure(string name, string procedureName = "")
         {
-            var item = new Procedure(GenData)
+            var item = new Procedure(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Procedure"),
                                Name = name,
@@ -97,7 +97,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public Function AddFunction(string name, string functionName = "")
         {
-            var item = new Function(GenData)
+            var item = new Function(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Function"),
                                Name = name,
@@ -110,7 +110,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public Column AddColumn(string name, string columnName = "", string nativeDataType = "", string oDBCDataType = "", string length = "", string precision = "", string scale = "", string isNullable = "", string isKey = "", string isIdentity = "")
         {
-            var item = new Column(GenData)
+            var item = new Column(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Column"),
                                Name = name,
@@ -131,7 +131,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public Index AddIndex(string name, string isPrimaryKey = "", string isUnique = "", string isClusterKey = "")
         {
-            var item = new Index(GenData)
+            var item = new Index(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Index"),
                                Name = name,
@@ -146,7 +146,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public ForeignKey AddForeignKey(string name, string referenceSchema = "", string referenceTable = "", string deleteAction = "", string updateAction = "")
         {
-            var item = new ForeignKey(GenData)
+            var item = new ForeignKey(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("ForeignKey"),
                                Name = name,
@@ -162,7 +162,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public Parameter AddParameter(string name, string parameterName = "", string nativeDataType = "", string oDBCDataType = "", string length = "", string precision = "", string scale = "", string isNullable = "", string direction = "")
         {
-            var item = new Parameter(GenData)
+            var item = new Parameter(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Parameter"),
                                Name = name,

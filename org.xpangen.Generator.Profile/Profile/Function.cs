@@ -17,9 +17,9 @@ namespace org.xpangen.Generator.Profile.Profile
             Properties.Add("FunctionName");
         }
 
-        public Function(GenData genData) : this()
+        public Function(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

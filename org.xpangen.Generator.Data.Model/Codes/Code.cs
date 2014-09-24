@@ -16,9 +16,9 @@ namespace org.xpangen.Generator.Data.Model.Codes
             Properties.Add("Value");
         }
 
-        public Code(GenData genData) : this()
+        public Code(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

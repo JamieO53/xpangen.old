@@ -77,7 +77,7 @@ namespace org.xpangen.Generator.Data
         {
         }
 
-        private GenData(GenDataBase genDataBase)
+        public GenData(GenDataBase genDataBase)
         {
             GenDataBase = genDataBase;
             Context = new GenContext(this);

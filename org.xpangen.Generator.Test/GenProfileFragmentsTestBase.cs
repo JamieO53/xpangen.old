@@ -93,7 +93,7 @@ namespace org.xpangen.Generator.Test
             var t = new GenTextFragment(new GenTextFragmentParams(genDataDef, g, r));
             g.Body.Add(t);
             VerifyFragment(genData, g, "GenCondition", FragmentType.Condition, profileLabel,
-                           String.Format("`?{0}:{1}`]", condOut, r), exp, false, null, g.Fragment.GenData.GenDataDef);
+                           String.Format("`?{0}:{1}`]", condOut, r), exp, false, null, g.Fragment.GenDataBase.GenDataDef);
         }
 
         protected static void TestIdentifierComparison(GenData genData, string comparison, bool expectedLt, bool expectedEq,
@@ -164,7 +164,7 @@ namespace org.xpangen.Generator.Test
             r.Body.Add(g);
             var b = SetFunctionParameters(genData, g, variableName, variableValue);
             VerifyFragment(genData, g, "GenFunction", FragmentType.Function, functionName,
-                           "`@" + functionName + ':' + b + "`]", expected, false, null, r.Profile.GenData.GenDataDef);
+                           "`@" + functionName + ':' + b + "`]", expected, false, null, r.Profile.GenDataBase.GenDataDef);
         }
 
         private static string SetFunctionParameters(GenData genData, GenFunction genFunction, string variableName, string variableValue)

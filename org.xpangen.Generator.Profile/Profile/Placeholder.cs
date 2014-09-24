@@ -18,9 +18,9 @@ namespace org.xpangen.Generator.Profile.Profile
             Properties.Add("Property");
         }
 
-        public Placeholder(GenData genData) : this()
+        public Placeholder(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

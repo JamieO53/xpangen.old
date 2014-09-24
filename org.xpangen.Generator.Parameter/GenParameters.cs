@@ -68,6 +68,11 @@ namespace org.xpangen.Generator.Parameter
             }
         }
 
+        public static void SaveToFile(GenDataBase genDataBase, string fileName)
+        {
+            SaveToFile(new GenData(genDataBase), fileName);
+        }
+
         public static GenProfileFragment CreateProfile(GenDataDef genDataDef)
         {
             var def = new StringBuilder();

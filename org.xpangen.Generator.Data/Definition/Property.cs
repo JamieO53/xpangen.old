@@ -20,9 +20,9 @@ namespace org.xpangen.Generator.Data.Definition
             Properties.Add("LookupTable");
         }
 
-        public Property(GenData genData) : this()
+        public Property(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

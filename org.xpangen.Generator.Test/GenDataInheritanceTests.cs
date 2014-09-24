@@ -22,17 +22,19 @@ namespace org.xpangen.Generator.Test
         public void InheritanceDefinitionSetupTest()
         {
             var df = SetUpVirtualDefinition();
-            var def = df.GenData.AsDef();
+            var d = (new GenData(df.GenDataBase));
+            var def = d.AsDef();
             Assert.AreEqual(VirtualDefinitionProfile, GenDataDefProfile.CreateProfile(def));
             var data = def.AsGenData();
-            CompareGenData(df.GenData, data);
+            CompareGenData(d, data);
         }
 
         [TestCase(Description = "Tests the creation of a data profile with inheritance")]
         public void InheritanceDataProfileTest()
         {
             var df = SetUpVirtualDefinition();
-            var p = GenParameters.CreateProfile(df.GenData.AsDef());
+            var d = (new GenData(df.GenDataBase));
+            var p = GenParameters.CreateProfile(d.AsDef());
             var profileText = p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary).Replace(">:", ":");
             Assert.AreEqual(VirtualDefinitionProfile, profileText);
         }

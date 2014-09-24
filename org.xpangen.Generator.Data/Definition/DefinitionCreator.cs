@@ -47,12 +47,12 @@ namespace org.xpangen.Generator.Data.Definition
             CreateDefinitionProperty(property, "LookupTable", "The lookup table used for the property's values",
                                      "String", "", "Standard", "LookupType", "LookupTablesX");
 
-            return new Definition(d);
+            return new Definition(d.GenDataBase);
         }
 
         public static GenData CreateEmpty()
         {
-            var d = new GenData(null) {DataName = "Definition"};
+            var d = new GenData((GenDataDef) null) {DataName = "Definition"};
             var b0 = d.GenDataBase;
             var root0 = b0.Root;
             root0.SubClass.Add(new GenSubClass(b0, root0, 1, null));

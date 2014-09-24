@@ -11,13 +11,13 @@ namespace org.xpangen.Generator.Profile.Profile
     /// </summary>
     public class ProfileDefinition : GenApplicationBase
     {
-        public ProfileDefinition(): this(new GenData(GetDefinition()))
+        public ProfileDefinition(): this(new GenDataBase(GetDefinition()))
         {
         }
 
-        public ProfileDefinition(GenData genData)
+        public ProfileDefinition(GenDataBase genDataBase)
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
             Classes.Add("ProfileRoot");
             Classes.Add("FragmentBody");
             Classes.Add("Fragment");
@@ -32,7 +32,7 @@ namespace org.xpangen.Generator.Profile.Profile
             Classes.Add("Function");
             Classes.Add("TextBlock");
             SubClasses.Add("ProfileRoot");
-            base.GenObject = genData.Root;
+            base.GenObject = genDataBase.Root;
         }
 
         public static GenDataDef GetDefinition()
@@ -99,9 +99,9 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public ProfileRoot AddProfileRoot(string name, string title = "")
         {
-            var item = new ProfileRoot(GenData)
+            var item = new ProfileRoot(GenDataBase)
                            {
-                               GenObject = GenData.Root.CreateGenObject("ProfileRoot"),
+                               GenObject = GenDataBase.Root.CreateGenObject("ProfileRoot"),
                                Name = name,
                                Title = title
                            };

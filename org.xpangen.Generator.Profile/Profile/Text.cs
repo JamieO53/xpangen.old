@@ -17,9 +17,9 @@ namespace org.xpangen.Generator.Profile.Profile
             Properties.Add("TextValue");
         }
 
-        public Text(GenData genData) : this()
+        public Text(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

@@ -25,9 +25,9 @@ namespace org.xpangen.Generator.Profile.Profile
             Properties.Add("Secondary");
         }
 
-        public ContainerFragment(GenData genData) : this()
+        public ContainerFragment(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

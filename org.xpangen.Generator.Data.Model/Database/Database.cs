@@ -15,9 +15,9 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("Name");
         }
 
-        public Database(GenData genData) : this()
+        public Database(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public Schema AddSchema(string name, string schemaName = "")
         {
-            var item = new Schema(GenData)
+            var item = new Schema(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Schema"),
                                Name = name,

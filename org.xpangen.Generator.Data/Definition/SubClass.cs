@@ -16,9 +16,9 @@ namespace org.xpangen.Generator.Data.Definition
             Properties.Add("Relationship");
         }
 
-        public SubClass(GenData genData) : this()
+        public SubClass(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

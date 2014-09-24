@@ -19,9 +19,9 @@ namespace org.xpangen.Generator.Data.Model.Settings
             Properties.Add("FileExtension");
         }
 
-        public BaseFile(GenData genData) : this()
+        public BaseFile(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace org.xpangen.Generator.Data.Model.Settings
 
         public Profile AddProfile(string name, string fileName = "", string filePath = "", string title = "")
         {
-            var item = new Profile(GenData)
+            var item = new Profile(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Profile"),
                                Name = name,

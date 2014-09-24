@@ -24,9 +24,9 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("IsIdentity");
         }
 
-        public Column(GenData genData) : this()
+        public Column(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public Default AddDefault(string name, string value = "")
         {
-            var item = new Default(GenData)
+            var item = new Default(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("Default"),
                                Name = name,

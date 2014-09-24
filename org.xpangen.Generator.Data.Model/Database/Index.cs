@@ -19,9 +19,9 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("IsClusterKey");
         }
 
-        public Index(GenData genData) : this()
+        public Index(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public KeyColumn AddKeyColumn(string name, string order = "")
         {
-            var item = new KeyColumn(GenData)
+            var item = new KeyColumn(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("KeyColumn"),
                                Name = name,
@@ -106,7 +106,7 @@ namespace org.xpangen.Generator.Data.Model.Database
 
         public DataColumn AddDataColumn(string name)
         {
-            var item = new DataColumn(GenData)
+            var item = new DataColumn(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("DataColumn"),
                                Name = name

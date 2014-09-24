@@ -23,9 +23,9 @@ namespace org.xpangen.Generator.Profile.Profile
             Properties.Add("UseLit");
         }
 
-        public Condition(GenData genData) : this()
+        public Condition(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>

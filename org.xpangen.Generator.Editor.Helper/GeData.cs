@@ -78,7 +78,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <returns>The new file group.</returns>
         public FileGroup NewFileGroup()
         {
-            return new FileGroup(Settings.Model.GenData)
+            return new FileGroup(Settings.Model.GenDataBase)
                        {
                            GenObject =
                                ((GenObject)Settings.Model.GenSettingsList[0].GenObject).CreateGenObject("FileGroup"),
@@ -110,7 +110,7 @@ namespace org.xpangen.Generator.Editor.Helper
         private void SaveSettings()
         {
             if (SaveToDisk)
-                GenParameters.SaveToFile(Settings.Model.GenData, "Data/Settings.dcb");
+                GenParameters.SaveToFile(new GenData(Settings.Model.GenDataBase), "Data/Settings.dcb");
         }
 
         private static string BuildFilePath(string filePath, string fileName)
@@ -141,7 +141,7 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             var data = GenData.DataLoader.LoadData(GenData.DataLoader.LoadData("CodesDefinition").AsDef(),
                                                    "Data/Standard Editor Codes.dcb");
-            return new ComboServer(data);
+            return new ComboServer(data.GenDataBase);
         }
 
         public static ComboServer GetDesignTimeComboServer()
@@ -155,14 +155,14 @@ namespace org.xpangen.Generator.Editor.Helper
             t.AddCode("Integer", "Integer", "Integer");
             t.AddCode("Boolean", "Boolean", "Boolean");
             t.AddCode("Identifier", "Identifier", "Identifier");
-            return new ComboServer(r.GenData);
+            return new ComboServer(r.GenDataBase);
         }
 
         private bool SaveToDisk { get; set; }
 
         public IGenDataSettings LoadSettingsFromData(GenData data)
         {
-            var model = new GeneratorEditor(data) {GenObject = data.Root};
+            var model = new GeneratorEditor(data.GenDataBase) {GenObject = data.Root};
             SaveToDisk = false;
             return new GeSettings(model);
         }

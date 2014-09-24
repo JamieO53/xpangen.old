@@ -9,18 +9,18 @@ namespace org.xpangen.Generator.Data.Definition
     /// </summary>
     public class Definition : GenApplicationBase
     {
-        public Definition(): this(new GenData(GetDefinition()))
+        public Definition(): this(new GenDataBase(GetDefinition()))
         {
         }
 
-        public Definition(GenData genData)
+        public Definition(GenDataBase genDataBase)
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
             Classes.Add("Class");
             Classes.Add("SubClass");
             Classes.Add("Property");
             SubClasses.Add("Class");
-            base.GenObject = genData.Root;
+            base.GenObject = genDataBase.Root;
         }
 
         public static GenDataDef GetDefinition()
@@ -55,9 +55,9 @@ namespace org.xpangen.Generator.Data.Definition
 
         public Class AddClass(string name, string title = "", string inheritance = "")
         {
-            var item = new Class(GenData)
+            var item = new Class(GenDataBase)
                            {
-                               GenObject = GenData.Root.CreateGenObject("Class"),
+                               GenObject = GenDataBase.Root.CreateGenObject("Class"),
                                Name = name,
                                Title = title,
                                Inheritance = inheritance

@@ -47,7 +47,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Property", g.Definition.Name);
             GenData.First(1);
             VerifyFragment(GenData, g, "GenSegment", FragmentType.Segment, "Property", profile, expected, false, null,
-                p.Profile.GenData.GenDataDef);
+                p.Profile.GenDataBase.GenDataDef);
         }
 
         /// <summary>

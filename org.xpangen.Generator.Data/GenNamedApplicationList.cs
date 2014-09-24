@@ -36,7 +36,7 @@ namespace org.xpangen.Generator.Data
         {
             var list = ParentObject.SubClass[ClassIdx];
             foreach (var item in list)
-                Add(new T {GenData = parent.GenData, GenObject = item, Parent = parent});
+                Add(new T {GenDataBase = parent.GenDataBase, GenObject = item, Parent = parent});
         }
 
         private int ClassIdx { get; set; }

@@ -9,19 +9,19 @@ namespace org.xpangen.Generator.Data.Model.Settings
     /// </summary>
     public class GeneratorEditor : GenApplicationBase
     {
-        public GeneratorEditor(): this(new GenData(GetDefinition()))
+        public GeneratorEditor(): this(new GenDataBase(GetDefinition()))
         {
         }
 
-        public GeneratorEditor(GenData genData)
+        public GeneratorEditor(GenDataBase genDataBase)
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
             Classes.Add("GenSettings");
             Classes.Add("FileGroup");
             Classes.Add("BaseFile");
             Classes.Add("Profile");
             SubClasses.Add("GenSettings");
-            base.GenObject = genData.Root;
+            base.GenObject = genDataBase.Root;
         }
 
         public static GenDataDef GetDefinition()
@@ -60,9 +60,9 @@ namespace org.xpangen.Generator.Data.Model.Settings
 
         public GenSettings AddGenSettings(string homeDir = "")
         {
-            var item = new GenSettings(GenData)
+            var item = new GenSettings(GenDataBase)
                            {
-                               GenObject = GenData.Root.CreateGenObject("GenSettings"),
+                               GenObject = GenDataBase.Root.CreateGenObject("GenSettings"),
                                HomeDir = homeDir
                            };
             GenSettingsList.Add(item);

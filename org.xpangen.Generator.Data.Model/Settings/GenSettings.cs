@@ -16,9 +16,9 @@ namespace org.xpangen.Generator.Data.Model.Settings
             Properties.Add("HomeDir");
         }
 
-        public GenSettings(GenData genData) : this()
+        public GenSettings(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace org.xpangen.Generator.Data.Model.Settings
 
         public FileGroup AddFileGroup(string name, string fileName = "", string filePath = "", string baseFileName = "", string profile = "", string generatedFile = "")
         {
-            var item = new FileGroup(GenData)
+            var item = new FileGroup(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("FileGroup"),
                                Name = name,
@@ -65,7 +65,7 @@ namespace org.xpangen.Generator.Data.Model.Settings
 
         public BaseFile AddBaseFile(string name, string fileName = "", string filePath = "", string title = "", string fileExtension = "")
         {
-            var item = new BaseFile(GenData)
+            var item = new BaseFile(GenDataBase)
                            {
                                GenObject = ((GenObject) GenObject).CreateGenObject("BaseFile"),
                                Name = name,

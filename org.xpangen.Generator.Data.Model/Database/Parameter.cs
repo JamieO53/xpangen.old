@@ -22,9 +22,9 @@ namespace org.xpangen.Generator.Data.Model.Database
             Properties.Add("Direction");
         }
 
-        public Parameter(GenData genData) : this()
+        public Parameter(GenDataBase genDataBase) : this()
         {
-            GenData = genData;
+            GenDataBase = genDataBase;
         }
 
         /// <summary>
