@@ -22,15 +22,15 @@ namespace org.xpangen.Generator.Test
             f.AddSubClass("Parent", "Class", "Definition");
 
             var d = new GenData(f);
-            var minimal = GenData.DataLoader.LoadData("Minimal");
+            var minimal = LoadGenData("Minimal");
             minimal.Last(1);
             Assert.AreEqual("Property", minimal.Context[1].GenObject.Attributes[0]);
             Assert.AreEqual(1, minimal.Context[3].Count);
-            var basic = GenData.DataLoader.LoadData("Basic");
+            var basic = LoadGenData("Basic");
             basic.Last(1);
             Assert.AreEqual("Property", basic.Context[1].GenObject.Attributes[0]);
             Assert.AreEqual(2, basic.Context[3].Count);
-            var definition = GenData.DataLoader.LoadData("Definition");
+            var definition = LoadGenData("Definition");
             definition.Last(1);
             Assert.AreEqual("Property", definition.Context[1].GenObject.Attributes[0]);
             Assert.AreEqual(7, definition.Context[3].Count);

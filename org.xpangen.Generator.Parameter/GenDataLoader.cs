@@ -18,7 +18,7 @@ namespace org.xpangen.Generator.Parameter
         /// </summary>
         /// <param name="path">The path of the data to be loaded.</param>
         /// <returns>The loaded data.</returns>
-        public GenData LoadData(string path)
+        public GenDataBase LoadData(string path)
         {
             using (var stream = GenParameters.CreateStream(GetFullPath(path)))
                 return new GenParameters(stream) {DataName = GetDataName(path)};
@@ -46,7 +46,7 @@ namespace org.xpangen.Generator.Parameter
         /// <param name="dataDef">The definition of the data being loaded.</param>
         /// <param name="path">The path of the data to be loaded.</param>
         /// <returns>The loaded data.</returns>
-        public GenData LoadData(GenDataDef dataDef, string path)
+        public GenDataBase LoadData(GenDataDef dataDef, string path)
         {
             using (var stream = GenParameters.CreateStream(GetFullPath(path)))
                 return new GenParameters(dataDef, stream) {DataName = GetDataName(path)};

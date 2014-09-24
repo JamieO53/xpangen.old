@@ -141,7 +141,7 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             var data = GenData.DataLoader.LoadData(GenData.DataLoader.LoadData("CodesDefinition").AsDef(),
                                                    "Data/Standard Editor Codes.dcb");
-            return new ComboServer(data.GenDataBase);
+            return new ComboServer(data);
         }
 
         public static ComboServer GetDesignTimeComboServer()
@@ -160,9 +160,9 @@ namespace org.xpangen.Generator.Editor.Helper
 
         private bool SaveToDisk { get; set; }
 
-        public IGenDataSettings LoadSettingsFromData(GenData data)
+        public IGenDataSettings LoadSettingsFromData(GenDataBase data)
         {
-            var model = new GeneratorEditor(data.GenDataBase) {GenObject = data.Root};
+            var model = new GeneratorEditor(data) {GenObject = data.Root};
             SaveToDisk = false;
             return new GeSettings(model);
         }

@@ -82,6 +82,7 @@ namespace org.xpangen.Generator.Data
             GenDataBase = genDataBase;
             Context = new GenContext(this);
             if (GenDataDef != null)
+            {
                 foreach (var t in GenDataDef.Classes)
                 {
                     var parent = t.Parent;
@@ -110,12 +111,20 @@ namespace org.xpangen.Generator.Data
                     }
                     Context.Add(null, t, GenDataBase, reference, referenceDefinition, defSubClass);
                 }
-            else
-            {
-                Context.Add(null, null, genDataBase, "", null, null);
+                foreach (var key in genDataBase.Cache.Keys)
+                {
+                    var d = genDataBase.Cache[key];
+                    Cache.Check(key, d);
+                }
             }
+            else
+                Context.Add(null, null, genDataBase, "", null, null);
 
             Context[0].SubClassBase.Add(GenDataBase.Root);
+            foreach (var key in GenDataBase.Cache.Keys)
+                if (!Cache.Contains(key))
+                    Cache.Internal(GenDataBase.Cache[key].GenDataDef.DefinitionName, key,
+                        new GenData(GenDataBase.Cache[key]));
             First(0);
         }
 

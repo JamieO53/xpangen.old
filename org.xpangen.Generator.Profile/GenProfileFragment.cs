@@ -19,9 +19,9 @@ namespace org.xpangen.Generator.Profile
             get { return (Profile.Profile)Fragment; }
         }
 
-        public void Generate(GenData genData, GenWriter genWriter)
+        public void Generate(GenDataBase genDataBase, GenWriter genWriter)
         {
-            GenFragmentGenerator.Generate(genData.GenDataDef, genWriter, genData.Root, Profile);
+            GenFragmentGenerator.Generate(genDataBase.GenDataDef, genWriter, genDataBase.Root, Profile);
         }
     }
 }
