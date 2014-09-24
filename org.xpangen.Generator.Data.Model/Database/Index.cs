@@ -95,7 +95,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new KeyColumn(GenData)
                            {
-                               GenObject = ((GenObject)GenObject).CreateGenObject("KeyColumn"),
+                               GenObject = ((GenObject) GenObject).CreateGenObject("KeyColumn"),
                                Name = name,
                                Order = order
                            };
@@ -108,7 +108,7 @@ namespace org.xpangen.Generator.Data.Model.Database
         {
             var item = new DataColumn(GenData)
                            {
-                               GenObject = ((GenObject)GenObject).CreateGenObject("DataColumn"),
+                               GenObject = ((GenObject) GenObject).CreateGenObject("DataColumn"),
                                Name = name
                            };
             DataColumnList.Add(item);

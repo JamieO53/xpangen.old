@@ -130,10 +130,20 @@ namespace org.xpangen.Generator.Data
 
         public GenSubClass GetSubClass(string subClassName)
         {
-            var subClassDef = GetClassDef(subClassName);
-            var subClassId = subClassDef.ClassId;
+            if (ClassNameIs(subClassName)) return (GenSubClass) ParentSubClass;
+            return GetSubClass(GenDataDef.GetClassId(subClassName));
+        }
+
+        public GenSubClass GetSubClass(int subClassId)
+        {
+            var subClassDef = GenDataDef.Classes[subClassId];
+            var subClassName = subClassDef.Name;
             var idx = Definition.IndexOfSubClass(subClassName);
-            Contract.Assert(idx != -1, "Cannot find subclass " + subClassName + " of " + ClassName);
+            return idx == -1 ? null : GetSubClassByIndex(subClassId, idx, subClassDef);
+        }
+
+        internal GenSubClass GetSubClassByIndex(int subClassId, int idx, GenDataDefClass subClassDef)
+        {
             var subClassRef = SubClass[idx] as SubClassReference;
             if (subClassRef != null)
             {
@@ -144,9 +154,9 @@ namespace org.xpangen.Generator.Data
                 return (GenSubClass) d.Root.SubClass[0];
             }
 
-            var subClass = (GenSubClass)SubClass[idx];
+            var subClass = (GenSubClass) SubClass[idx];
             if (subClass.ClassId == subClassId) return subClass;
-            
+
             var newSubClass = new GenSubClass(GenDataBase, Parent, subClassId, subClass.Definition);
             foreach (var o in subClass)
                 if (subClassDef.IsInheritor(o.ClassId))
@@ -204,6 +214,11 @@ namespace org.xpangen.Generator.Data
                 genObject = genObject.Parent;
             }
             return null;
+        }
+
+        public bool ClassNameIs(string className)
+        {
+            return ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

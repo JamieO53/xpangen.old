@@ -65,7 +65,7 @@ namespace org.xpangen.Generator.Data.Model.Minimal
         {
             var item = new SubClass(GenData)
                            {
-                               GenObject = ((GenObject)GenObject).CreateGenObject("SubClass"),
+                               GenObject = ((GenObject) GenObject).CreateGenObject("SubClass"),
                                Name = name,
                                Reference = reference,
                                Relationship = relationship
@@ -79,7 +79,7 @@ namespace org.xpangen.Generator.Data.Model.Minimal
         {
             var item = new Property(GenData)
                            {
-                               GenObject = ((GenObject)GenObject).CreateGenObject("Property"),
+                               GenObject = ((GenObject) GenObject).CreateGenObject("Property"),
                                Name = name
                            };
             PropertyList.Add(item);

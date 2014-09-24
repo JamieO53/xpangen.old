@@ -3,6 +3,7 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Diagnostics.Contracts;
 using System.IO;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile.Profile;
@@ -94,11 +95,14 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
 
         internal GenFragment ScanFragment(int classId, ref TokenType nextToken, out string s, GenContainerFragmentBase parentContainer, FragmentBody fragmentBody, ref GenTextBlock textBlock, bool isPrimary)
         {
+            Contract.Ensures(Contract.OldValue(nextToken) == TokenType.Name ||
+                             Contract.Result<GenFragment>() != null);
+            var oldToken = nextToken;
             GenFragment frag = null;
             s = "";
             try
             {
-                switch (nextToken)
+                switch (oldToken)
                 {
                     case TokenType.Segment:
                         frag = ScanSegment(parentContainer, isPrimary);

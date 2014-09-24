@@ -321,6 +321,7 @@ namespace org.xpangen.Generator.Profile
 
         private ISubClassBase GetSubClassBase()
         {
+            Contract.Ensures(Contract.Result<ISubClassBase>() != null);
             if (GenCardinality != GenCardinality.Inheritance)
                 return GenObject.GetSubClass(ClassName);
             

@@ -58,7 +58,7 @@
     <CodeContractsFailBuildOnWarnings>False</CodeContractsFailBuildOnWarnings>
     <CodeContractsBeingOptimisticOnExternal>True</CodeContractsBeingOptimisticOnExternal>
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
+    <CodeContractsReferenceAssembly>DoNotBuild</CodeContractsReferenceAssembly>
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -81,6 +81,7 @@
     <Compile Include="EditorHelperTests.cs" />
     <Compile Include="GenDataCacheTests.cs" />
     <Compile Include="DataModelTests.cs" />
+    <Compile Include="GenDataContextTests.cs" />
     <Compile Include="GenDataDefProfile.cs" />
     <Compile Include="GenDataDefToDataConversionTests.cs" />
     <Compile Include="GenDataDefTests.cs" />

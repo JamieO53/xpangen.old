@@ -24,7 +24,6 @@ namespace GenEdit
             genLibrary1.OnDataLoaded = () => genDataEditor1.LoadData();
             genLibrary1.OnDataLoaded += () => genProfileEditor1.LoadData();
             genLibrary1.OnProfileChanged = () => genProfileEditor1.LoadData();
-                //RefreshProfile(genProfileEditor1.GenDataEditorViewModel.Data.GenData);
         }
 
         private void GenEditMainForm_FormClosing(object sender, FormClosingEventArgs e)

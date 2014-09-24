@@ -26,8 +26,9 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             var f = new GenDataDef();
             f.DefinitionName = "`Assembly.Name`";
 `[Class':            f.AddSubClass("", "`Class.Name`");
-`]`[Class:`[SubClass:            f.AddSubClass("`Class.Name`", "`SubClass.Name`");
-`]`]`@Set:`{ClassId`]0`]`[Class:`@Add:`{ClassId`]`]`[Property:            f.Classes[`@Get:`{ClassId`]`]].AddInstanceProperty("`Property.Name`");
+`]`[Class:`[SubClass:`?Relationship=Extends:            f.AddInheritor("`Class.Name`", "`SubClass.Name`");
+`]`?Relationship~:            f.AddSubClass("`Class.Name`", "`SubClass.Name`");
+`]`]`]`@Set:`{ClassId`]0`]`[Class:`@Add:`{ClassId`]`]`[Property:            f.Classes[`@Get:`{ClassId`]`]].AddInstanceProperty("`Property.Name`");
 `]`]            return f;
         }
 `[Class':
@@ -42,7 +43,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
         {
             var item = new `Class.Name`(GenData)
                            {
-                               GenObject = GenData.CreateObject("", "`Class.Name`")`[Property:,
+                               GenObject = GenData.Root.CreateGenObject("`Class.Name`")`[Property:,
                                `Property.Name` = `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`]
                            };
             `Class.Name`List.Add(item);
@@ -126,7 +127,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
         {
             var item = new `Class.Name`(GenData)
                            {
-                               GenObject = GenData.CreateObject("`@MapGet:'ClassName'`]", "`Class.Name`")`[Property:,
+                               GenObject = ((GenObject) GenObject).CreateGenObject("`Class.Name`")`[Property:,
                                `Property.Name` = `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`]
                            };
             `Class.Name`List.Add(item);
@@ -137,7 +138,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
         {
             var item = new `Class.Name`(GenData)
                            {
-                               GenObject = GenData.CreateObject("`@MapGet:'ClassName'`]", "`@MapGet:`{`Class.Name`InheritanceRoot`]`]")`[Property:,
+                               GenObject = ((GenObject) GenObject).CreateGenObject("`Class.Name`")`[Property:,
                                `Property.Name` = `?Property.Name='Default':@`]`?Property.Name='Class':@`]`@Decapitalize:`{`Property.Name``]`]`]
                            };
             `@MapGet:`{SubClassName`]`]List.Add(item);

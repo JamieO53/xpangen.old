@@ -63,7 +63,7 @@ namespace org.xpangen.Generator.Profile.Profile
         {
             var item = new FragmentBody(GenData)
                            {
-                               GenObject = ((GenObject)GenObject).CreateGenObject("FragmentBody"),
+                               GenObject = ((GenObject) GenObject).CreateGenObject("FragmentBody"),
                                Name = name
                            };
             FragmentBodyList.Add(item);
