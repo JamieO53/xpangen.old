@@ -215,6 +215,16 @@ Child[Reference='child']
             Assert.AreEqual("Name", pa.AsString("Name"));
         }
 
+        protected static GenData LoadGenData(string path)
+        {
+            return new GenData(GenData.DataLoader.LoadData(path));
+        }
+
+        protected GenData LoadGenData(GenDataDef genDataDef, string path)
+        {
+            return new GenData(GenData.DataLoader.LoadData(genDataDef, path));
+        }
+
         protected static GenObject CreateClass(GenData d, string name)
         {
             var c = CreateGenObject(d, d.Root, "Class", name);
@@ -272,6 +282,11 @@ Child[Reference='child']
             Assert.AreEqual(ClassClassId, f.GetClassSubClasses(0)[0].SubClass.ClassId);
             Assert.AreEqual(SubClassClassId, f.GetClassSubClasses(ClassClassId)[0].SubClass.ClassId);
             Assert.AreEqual(PropertyClassId, f.GetClassSubClasses(ClassClassId)[1].SubClass.ClassId);
+        }
+
+        protected static void VerifyDataCreation(GenDataBase d)
+        {
+            VerifyDataCreation(new GenData(d));
         }
 
         protected static void VerifyDataCreation(GenData d)
@@ -543,9 +558,9 @@ Child[Reference='child']
             return model;
         }
 
-        protected static void CompareGenData(GenData expected, GenData actual)
+        protected static void CompareGenData(GenData expected, GenDataBase actualBase)
         {
-            //Assert.AreEqual(expected, actual);
+            var actual = new GenData(actualBase);
             Assert.AreEqual(expected.DataName, actual.DataName);
             Assert.AreEqual(expected.Context.Count, actual.Context.Count);
             CompareContext(0, 0, expected, actual);
@@ -891,7 +906,7 @@ Parent=Parent
 Container[Reference='TestData\VirtualData']
 ";
 
-        protected static GenData LoadVirtualParentData()
+        protected static GenDataBase LoadVirtualParentData()
         {
             SetUpParametersFile(VirtualDefinitionFile, VirtualDefinition);
             SetUpParametersFile(VirtualDataFile, VirtualDefinitionData);

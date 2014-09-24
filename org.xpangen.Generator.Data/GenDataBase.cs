@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data
     public class GenDataBase : BindableObject
     {
         private GenDataBaseReferences _references;
-        internal Dictionary<string, GenDataBase> Cache { get; set; }
+        protected internal Dictionary<string, GenDataBase> Cache { get; set; }
 
         public GenDataBase(GenDataDef genDataDef) : this(genDataDef, null)
         {
@@ -60,16 +60,26 @@ namespace org.xpangen.Generator.Data
             return parent.CreateGenObject(className);
         }
 
-        internal GenDataBase CheckReference(string defFile, string dataFile)
+        protected internal GenDataBase CheckReference(string defFile, string dataFile)
         {
-            var fn = dataFile.ToLowerInvariant();
-            if (Cache.ContainsKey(fn)) return Cache[fn];
-            var df = defFile.ToLowerInvariant();
-            var f = GenData.DataLoader.LoadData(df);
+            var fn = dataFile.ToLowerInvariant().Replace('\\', '/');
+            GenDataBase d;
+            if (Cache.ContainsKey(fn))
+                d = Cache[fn];
+            else
+            {
+                var df = defFile.ToLowerInvariant();
+                var f = new GenData(GenData.DataLoader.LoadData(df));
 
-            var d = GenData.DataLoader.LoadData(f.AsDef(), fn);
-            Cache.Add(fn, d.GenDataBase);
-            return d.GenDataBase;
+                d = GenData.DataLoader.LoadData(f.AsDef(), fn);
+                Cache.Add(fn, d);
+            }
+
+            foreach (var key in d.Cache.Keys)
+            {
+                if (!Cache.ContainsKey(key)) Cache.Add(key, d.Cache[key]);
+            }
+            return d;
         }
 
         public override string ToString()

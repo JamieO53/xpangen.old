@@ -7,7 +7,7 @@
         /// </summary>
         /// <param name="path">The path of the data to be loaded.</param>
         /// <returns>The loaded data.</returns>
-        GenData LoadData(string path);
+        GenDataBase LoadData(string path);
 
         /// <summary>
         /// Load the GenData from the specified path using the given definition.
@@ -15,6 +15,6 @@
         /// <param name="dataDef">The definition of the data being loaded.</param>
         /// <param name="path">The path of the data to be loaded.</param>
         /// <returns>The loaded data.</returns>
-        GenData LoadData(GenDataDef dataDef, string path);
+        GenDataBase LoadData(GenDataDef dataDef, string path);
     }
 }

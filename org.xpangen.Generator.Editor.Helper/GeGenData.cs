@@ -18,7 +18,7 @@ namespace org.xpangen.Generator.Editor.Helper
                 DefGenData = null;
             else
             {
-                DefGenData = GenData.DataLoader.LoadData(filePath);
+                DefGenData = new GenData(GenData.DataLoader.LoadData(filePath));
                 var f = DefGenData.AsDef();
                 f.DefinitionName = Path.GetFileNameWithoutExtension(filePath);
                 var references = f.Cache.References;
@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Editor.Helper
                 {
                     var reference = r.Path;
                     if (!DefGenData.Cache.Contains(reference))
-                        DefGenData.Cache.Internal(reference, GenData.DataLoader.LoadData(reference));
+                        DefGenData.Cache.Internal(reference, new GenData(GenData.DataLoader.LoadData(reference)));
                 }
                 GenData = new GenData(f);
             }
@@ -38,9 +38,9 @@ namespace org.xpangen.Generator.Editor.Helper
                 GenData = null;
             else
             {
-                GenData = DefGenData == null
+                GenData = new GenData((DefGenData == null
                               ? GenData.DataLoader.LoadData(filePath)
-                              : GenData.DataLoader.LoadData(DefGenData.AsDef(), filePath);
+                              : GenData.DataLoader.LoadData(DefGenData.AsDef(), filePath)));
             }
         }
     }

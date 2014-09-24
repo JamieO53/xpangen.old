@@ -200,9 +200,9 @@ namespace org.xpangen.Generator.Test
             GenParameters f;
             using (var s = new FileStream("Grandchild.dcb", FileMode.Open, FileAccess.ReadWrite))
                 f = new GenParameters(s) { DataName = "Grandchild" };
-            GenParameters d;
+            GenData d;
             using (var s = new FileStream("Grandchild.txt", FileMode.Open, FileAccess.ReadWrite))
-                d = new GenParameters(f.AsDef(), s) { DataName = "Grandchild" };
+                d = new GenData(new GenParameters(f.AsDef(), s) { DataName = "Grandchild" });
             Assert.AreEqual(3, d.Context.Count);
             d.First(1);
             Assert.AreEqual("Grandchild", d.Context[1].GenObject.Attributes[0]);
@@ -220,9 +220,9 @@ namespace org.xpangen.Generator.Test
             GenParameters f;
             using (var s = new FileStream("Child.dcb", FileMode.Open, FileAccess.ReadWrite))
                 f = new GenParameters(s) { DataName = "Child" };
-            GenParameters d;
+            GenData d;
             using (var s = new FileStream("Child.txt", FileMode.Open, FileAccess.ReadWrite))
-                d = new GenParameters(f.AsDef(), s) { DataName = "Child" };
+                d = new GenData(new GenParameters(f.AsDef(), s) { DataName = "Child" });
             Assert.AreEqual(4, d.GenDataDef.Classes.Count);
             Assert.AreEqual(4, d.Context.Count);
             d.First(1);
@@ -342,7 +342,7 @@ namespace org.xpangen.Generator.Test
         {
             var defData = GenData.DataLoader.LoadData("ProgramDefinition");
             var def = defData.AsDef();
-            var data = GenData.DataLoader.LoadData(def, "GeneratorDefinitionModel");
+            var data = new GenData(GenData.DataLoader.LoadData(def, "GeneratorDefinitionModel"));
             data.Cache.Check("definition", "definition");
             var definition = data.Cache["definition"];
             definition.Last(1);

@@ -19,7 +19,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Class", def.ClassList[0].Name);
             Assert.AreEqual("SubClass", def.ClassList[1].Name);
             Assert.AreEqual("Property", def.ClassList[2].Name);
-            CompareGenDataBase(GenData.DataLoader.LoadData("Data/Definition").GenDataBase, def.GenDataBase);
+            CompareGenDataBase(GenData.DataLoader.LoadData("Data/Definition"), def.GenDataBase);
         }
 
         /// <summary>

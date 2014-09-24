@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Test
             var def = d.AsDef();
             Assert.AreEqual(VirtualDefinitionProfile, GenDataDefProfile.CreateProfile(def));
             var data = def.AsGenData();
-            CompareGenData(d, data);
+            CompareGenData(d, data.GenDataBase);
         }
 
         [TestCase(Description = "Tests the creation of a data profile with inheritance")]

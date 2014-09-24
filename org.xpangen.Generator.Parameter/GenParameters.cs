@@ -12,7 +12,7 @@ using org.xpangen.Generator.Scanner;
 
 namespace org.xpangen.Generator.Parameter
 {
-    public class GenParameters : GenData
+    public class GenParameters : GenDataBase
     {
         /// <summary>
         ///     Create a new generator parameters object from the given text. The generator data definition is derived from the text.
@@ -50,8 +50,7 @@ namespace org.xpangen.Generator.Parameter
         {
             Scan = new ParameterScanner(stream);
             Parse();
-            First(1);
-            GenDataBase.Changed = false;
+            Changed = false;
         }
 
         /// <summary>
@@ -64,7 +63,7 @@ namespace org.xpangen.Generator.Parameter
             var profile = CreateProfile(genData.GenDataDef);
             using (var writer = new GenWriter(null) {FileName = fileName})
             {
-                profile.Generate(genData, writer);
+                profile.Generate(genData.GenDataBase, writer);
             }
         }
 
@@ -463,7 +462,6 @@ namespace org.xpangen.Generator.Parameter
                 Scan.SkipChar();
 
             Scan.ScanObject();
-            First(0);
             while (!Scan.Eof)
             {
                 var recordType = Scan.RecordType;
@@ -471,13 +469,13 @@ namespace org.xpangen.Generator.Parameter
                 var subClassIdx = GenDataDef.Classes[0].IndexOfSubClass(recordType);
                 var className = Scan.RecordType;
                 if (subClassIdx != -1)
-                    LoadSubClass(Context[0].GenObject, subClassId, subClassIdx);
+                    LoadSubClass(Root, subClassId, subClassIdx);
                 else
                     // Error: Invalid data type at the global level - skip it
                     while (!Scan.Eof && Scan.RecordType == className)
                         Scan.ScanObject();
             }
-            Cache.Merge();
+            //Cache.Merge();
         }
 
         private int GetClassId(string recordType)
@@ -504,16 +502,14 @@ namespace org.xpangen.Generator.Parameter
             {
                 if (Scan.Attribute("Name") != "" || Scan.Attribute("Reference") == "")
                 {
-                    var parentSubClass = parent.SubClass[subClassIdx] as GenSubClass;
-                    var classId = GetClassId(Scan.RecordType);
-                    var child = new GenObject(parent, parentSubClass, classId);
+                    var child = parent.CreateGenObject(Scan.RecordType);
                     var newClassId = GetClassId(Scan.RecordType);
                     for (var i = 0; i < GenDataDef.GetClassProperties(newClassId).Count; i++)
                     {
                         var s = Scan.Attribute(GenDataDef.GetClassProperties(newClassId)[i]);
                         child.Attributes[i] = s;
                     }
-                    parent.SubClass[subClassIdx].Add(child);
+
                     Scan.ScanObject();
                     if (!Scan.Eof && baseSubClassId != GetBaseClassId(Scan.RecordType))
                     {
@@ -526,11 +522,11 @@ namespace org.xpangen.Generator.Parameter
                 else
                 {
                     var reference = Scan.Attribute("Reference");
-                    var referenceData = DataLoader.LoadData(reference);
-                    var definition = referenceData.GenDataDef.DefinitionName;
-                    GenDataDef.Cache.Internal(string.IsNullOrEmpty(definition) ? reference + "Def" : definition,
-                                              referenceData.GenDataDef);
-                    Cache.Internal(reference, referenceData);
+                    var defFile = GenDataDef.GetClassDef(baseSubClassId).Reference;
+                    var referenceData = CheckReference(defFile, reference);
+                    //var referenceData = GenData.DataLoader.LoadData(reference);
+                    //var definition = referenceData.GenDataDef.DefinitionName;
+                    GenDataDef.Cache.Internal(defFile, referenceData.GenDataDef);
                     parent.SubClass[subClassIdx].Reference = reference;
                     Scan.ScanObject();
                 }
