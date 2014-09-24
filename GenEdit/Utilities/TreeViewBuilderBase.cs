@@ -13,14 +13,13 @@ namespace GenEdit.Utilities
         protected TreeViewBuilderBase(GeData data)
         {
             Data = data;
-            Dat = data.GenData;
+            Dat = data.GenDataBase;
             Def = data.GenDataDef;
-            Dat.First(0);
         }
 
         protected GeData Data { get; private set; }
         protected GenDataDef Def { get; private set; }
-        protected GenData Dat { get; private set; }
+        protected GenDataBase Dat { get; private set; }
 
         /// <summary>
         /// Create a new tree node.

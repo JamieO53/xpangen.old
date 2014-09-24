@@ -449,7 +449,7 @@ namespace org.xpangen.Generator.Test
             if (Directory.Exists(dir))
                 Directory.Delete(dir);
 
-            GenParameters.SaveToFile(d, fileName);
+            GenParameters.SaveToFile(d.GenDataBase, fileName);
             Assert.IsTrue(Directory.Exists(dir), "Output directory is not created.");
             Assert.IsTrue(File.Exists(fileName));
             GenParameters d1;

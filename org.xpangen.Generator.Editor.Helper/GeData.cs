@@ -19,22 +19,22 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             get
             {
-                return GenData != null && GenData.Changed;
+                return GenDataBase != null && GenDataBase.Changed;
             }
-            set { if (GenData != null) GenData.Changed = value; }
+            set { if (GenDataBase != null) GenDataBase.Changed = value; }
         }
 
-        public GenData DefGenData
+        public GenDataBase DefGenDataBase
         {
-            get { return GenDataStore.DefGenData; }
+            get { return GenDataStore.DefGenDataBase; }
         }
 
         /// <summary>
         /// The open data file.
         /// </summary>
-        public GenData GenData
+        public GenDataBase GenDataBase
         {
-            get { return GenDataStore.GenData; }
+            get { return GenDataStore.GenDataBase; }
         }
         
         /// <summary>
@@ -42,7 +42,7 @@ namespace org.xpangen.Generator.Editor.Helper
         /// </summary>
         public GenDataDef GenDataDef
         {
-            get { return GenData != null ? GenData.GenDataDef : null; }
+            get { return GenDataBase != null ? GenDataBase.GenDataDef : null; }
         }
 
         public GenCompactProfileParser Profile { get; private set; } 
@@ -99,7 +99,8 @@ namespace org.xpangen.Generator.Editor.Helper
                 var dataDef = Settings.FindBaseFile(fileGroup.BaseFileName);
                 var f = GenData.DataLoader.LoadData(BuildFilePath(dataDef.FilePath, dataDef.FileName)).AsDef();
                 var d = new GenData(f);
-                GenParameters.SaveToFile(d, BuildFilePath(fileGroup.FilePath, fileGroup.FileName));
+                string fileName = BuildFilePath(fileGroup.FilePath, fileGroup.FileName);
+                GenParameters.SaveToFile(d.GenDataBase, fileName);
             }
             if (Settings.FindFileGroup(fileGroup.Name) == null)
                 Settings.GetFileGroups().Add(fileGroup);
@@ -110,7 +111,10 @@ namespace org.xpangen.Generator.Editor.Helper
         private void SaveSettings()
         {
             if (SaveToDisk)
-                GenParameters.SaveToFile(new GenData(Settings.Model.GenDataBase), "Data/Settings.dcb");
+            {
+                GenData genData = new GenData(Settings.Model.GenDataBase);
+                GenParameters.SaveToFile(genData.GenDataBase, "Data/Settings.dcb");
+            }
         }
 
         private static string BuildFilePath(string filePath, string fileName)
@@ -170,7 +174,8 @@ namespace org.xpangen.Generator.Editor.Helper
         public void SaveFile(FileGroup fileGroup)
         {
             fileGroup.SaveFields();
-            GenParameters.SaveToFile(GenData, BuildFilePath(fileGroup.FilePath, fileGroup.FileName));
+            string fileName = BuildFilePath(fileGroup.FilePath, fileGroup.FileName);
+            GenParameters.SaveToFile(GenDataBase, fileName);
 
             if (Settings.FindFileGroup(fileGroup.Name) == null)
                 Settings.GetFileGroups().Add(fileGroup);

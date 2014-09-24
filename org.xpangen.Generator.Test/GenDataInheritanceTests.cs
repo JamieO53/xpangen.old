@@ -55,7 +55,7 @@ namespace org.xpangen.Generator.Test
         {
             var dataFile = GetTestDataFileName("InheritanceDataExpansionTest");
             var d = PopulateInheritanceData(dataFile);
-            GenParameters.SaveToFile(d, dataFile);
+            GenParameters.SaveToFile(d.GenDataBase, dataFile);
             var text = File.ReadAllText(dataFile);
             Assert.AreEqual(VirtualDefinitionData, text);
         }

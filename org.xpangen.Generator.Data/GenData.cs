@@ -342,59 +342,5 @@ namespace org.xpangen.Generator.Data
             Context[classId].Index = Context[superClassId].Index;
             Context[classId].ReferenceData = Context[superClassId].ReferenceData;
         }
-
-        public GenObject GetContext(GenObject genObject, string className)
-        {
-            if (genObject.ClassNameIs(className)) return genObject;
-            var ancestorContext = GetAncestorContext(genObject, className);
-            if (ancestorContext != null && ancestorContext.ClassNameIs(className))
-                return ancestorContext;
-            var descendentContext = GetDescendentContext(genObject, className);
-            if (descendentContext != null &&
-                descendentContext.ClassNameIs(className))
-                return descendentContext;
-            if (descendentContext != null && descendentContext.Definition.IsInherited && 
-                descendentContext.Definition.Parent.ClassNameIs(className))
-                return descendentContext;
-            return null;
-        }
-
-        private GenObject GetAncestorContext(GenObject genObject, string className)
-        {
-            while (true)
-            {
-                if (genObject.Parent == null) return genObject;
-                if (genObject.Parent.ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase))
-                    return genObject.Parent;
-                var descendentContext = GetDescendentContext(genObject.Parent, className, genObject.ParentSubClass);
-                if (descendentContext != null &&
-                    descendentContext.ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase))
-                    return descendentContext;
-                genObject = genObject.Parent;
-            }
-        }
-
-        private GenObject GetDescendentContext(GenObject genObject, string className, ISubClassBase exclude = null)
-        {
-            var subClass = genObject.GetSubClass(className);
-            if (subClass != null)
-            {
-                if (subClass.Definition.SubClass.IsInheritor(className))
-                    return subClass.Count == 0 ? null : subClass[0];
-                return null;
-            }
-            
-            foreach (var sc in genObject.SubClass)
-            {
-                if (sc == exclude) continue;
-                if (sc.Definition.SubClass.IsInheritor(className))
-                    return sc.Count == 0 ? null : sc[0];
-                var descendentContext = GetDescendentContext(sc[0], className);
-                if (descendentContext == null ||
-                    descendentContext.ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase))
-                    return descendentContext;
-            }
-            return genObject;
-        }
     }
 }

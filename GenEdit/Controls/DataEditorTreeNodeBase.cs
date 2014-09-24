@@ -15,7 +15,7 @@ namespace GenEdit.Controls
         /// <summary>
         /// The data being navigated.
         /// </summary>
-        protected GenData GenData { get; set; }
+        protected GenDataBase GenDataBase { get; set; }
 
         /// <summary>
         /// The definition data for the data being navigated.

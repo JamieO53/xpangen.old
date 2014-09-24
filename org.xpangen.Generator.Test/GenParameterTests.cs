@@ -250,7 +250,7 @@ namespace org.xpangen.Generator.Test
             a.SetString("Title", "Class object");
             a.SaveFields();
 
-            GenParameters.SaveToFile(d, fileName);
+            GenParameters.SaveToFile(d.GenDataBase, fileName);
 
             var file = File.ReadAllText(fileName);
             Assert.AreEqual(expected, file);
@@ -273,11 +273,12 @@ namespace org.xpangen.Generator.Test
 
             var genData = dataParent;
 
-            GenParameters.SaveToFile(genData.GenDataDef.AsGenData(), fileNameDef);
+            GenData genData1 = genData.GenDataDef.AsGenData();
+            GenParameters.SaveToFile(genData1.GenDataBase, fileNameDef);
             var file = File.ReadAllText(fileNameDef);
             Assert.AreEqual(expectedDef, file);
-            
-            GenParameters.SaveToFile(genData, fileName);
+
+            GenParameters.SaveToFile(genData.GenDataBase, fileName);
             file = File.ReadAllText(fileName);
             Assert.AreEqual(expected, file);
         }
@@ -301,11 +302,11 @@ namespace org.xpangen.Generator.Test
 
             var genDataDef = genData.GenDataDef.AsGenData();
             Assert.AreEqual("GrandchildDef", genDataDef.Context[2].GenObject.Attributes[1]);
-            GenParameters.SaveToFile(genDataDef, fileNameDef);
+            GenParameters.SaveToFile(genDataDef.GenDataBase, fileNameDef);
             var file = File.ReadAllText(fileNameDef);
             Assert.AreEqual(expectedDef, file);
 
-            GenParameters.SaveToFile(genData, fileName);
+            GenParameters.SaveToFile(genData.GenDataBase, fileName);
             file = File.ReadAllText(fileName);
             Assert.AreEqual(expected, file);
         }
@@ -325,11 +326,12 @@ namespace org.xpangen.Generator.Test
 
             var genData = dataGrandchildhild;
 
-            GenParameters.SaveToFile(genData.GenDataDef.AsGenData(), fileNameDef);
+            GenData genData1 = genData.GenDataDef.AsGenData();
+            GenParameters.SaveToFile(genData1.GenDataBase, fileNameDef);
             var file = File.ReadAllText(fileNameDef);
             Assert.AreEqual(expectedDef, file);
 
-            GenParameters.SaveToFile(genData, fileName);
+            GenParameters.SaveToFile(genData.GenDataBase, fileName);
             file = File.ReadAllText(fileName);
             Assert.AreEqual(expected, file);
         }
