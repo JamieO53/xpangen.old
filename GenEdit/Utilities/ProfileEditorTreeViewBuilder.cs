@@ -42,7 +42,7 @@ namespace GenEdit.Utilities
             return item;
         }
 
-        public static string GetNodeExpansionText(GenData genData, GenObject genObject, Fragment fragment)
+        public static string GetNodeExpansionText(GenDataBase genData, GenObject genObject, Fragment fragment)
         {
             var context = genData.GetContext(genObject, fragment.ClassName());
             if (context != null)

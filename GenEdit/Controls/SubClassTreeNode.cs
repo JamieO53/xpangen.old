@@ -43,19 +43,18 @@ namespace GenEdit.Controls
         /// Create a new <see cref="SubClassTreeNode"/> for the selected subclass.
         /// </summary>
         /// <param name="parentNode">The tree node of the parent class of this subclass.</param>
-        /// <param name="genData">The data being navigated.</param>
+        /// <param name="genDataBase">The data being navigated.</param>
         /// <param name="definition">The definition data for the data being navigated.</param>
         /// <param name="classId">The ClassId of this subclass.</param>
-        public SubClassTreeNode(ClassTreeNode parentNode, GenData genData, Definition definition, int classId)
+        public SubClassTreeNode(ClassTreeNode parentNode, GenDataBase genDataBase, Definition definition, int classId)
         {
             ClassId = classId;
             ParentNode = parentNode;
-            GenData = genData;
-            SubClassBase = GenData.Context[ClassId].SubClassBase;
-//            SavedContext = ClassId == 1 ? null : ParentNode.SavedContext;
+            GenDataBase = genDataBase;
+            SubClassBase = ParentNode.GenObject.GetSubClass(classId);
             Definition = definition;
             
-            var genDataDef = GenData.GenDataDef;
+            var genDataDef = GenDataBase.GenDataDef;
             var parentClassId = ParentNode == null ? 0 : ParentNode.ClassId;
             var parentClassName = genDataDef.GetClassName(parentClassId);
             var parentClass = definition == null ? null : definition.ClassList.Find(parentClassName);
@@ -64,19 +63,15 @@ namespace GenEdit.Controls
             Def = parentClass == null ? null : parentClass.SubClassList[i];
             
             Text = genDataDef.GetClassName(ClassId) +
-                   (!string.IsNullOrEmpty(SubClassDef.Reference) ? ":" + GenData.Context[ClassId].Reference : "");
+                   (!string.IsNullOrEmpty(SubClassDef.Reference) ? ":" + SubClassBase.Reference : "");
             ImageIndex = 2;
             ToolTipText = Text;
-            var genObject = GenData.Context[ClassId].GenObject;
-            //if (genObject != null)
-                Tag = new SubClassViewModel(ParentNode == null ? null : ParentNode.GenObject.SubClass[i], SubClassBase, Def,
-                                            SubClassDef, !string.IsNullOrEmpty(SubClassDef.Reference));
+            Tag = new SubClassViewModel(ParentNode == null ? null : ParentNode.GenObject.SubClass[i], SubClassBase, Def,
+                                        SubClassDef, !string.IsNullOrEmpty(SubClassDef.Reference));
 
-            GenData.First(ClassId);
             for (var j = 0; j < SubClassBase.Count; j++)
             {
-                Nodes.Add(new ClassTreeNode(this, GenData, Definition, ClassId));
-                GenData.Next(ClassId);
+                Nodes.Add(new ClassTreeNode(this, GenDataBase, Definition, ClassId, SubClassBase[j]));
             }
         }
 
@@ -96,19 +91,15 @@ namespace GenEdit.Controls
         {
             var parentClassName = ParentNode == null ? "" : ParentNode.ClassDef.Name;
             var className = SubClassDef.SubClass.Name;
-            GenData.First(0);
             if (string.IsNullOrEmpty(SubClassDef.ReferenceDefinition))
             {
                 
-                var parent = GenData.Context[GenData.GenDataDef.GetClassId(parentClassName)].GenObject;
-                var genObject = GenData.GenDataBase.CreateGenObject(parent, className);
-                GenData.Context[genObject.ClassId].SubClassBase = genObject.ParentSubClass;
-                GenData.Context[genObject.ClassId].Index = GenData.Context[genObject.ClassId].IndexOf(genObject);
+                var parent = ParentNode == null ? GenDataBase.Root : ParentNode.GenObject;
+                var genObject = parent.CreateGenObject(className);
                 var idx = genObject.Definition.Properties.IndexOf("Name");
                 if (idx >= 0)
                     genObject.Attributes[idx] = "new";
-                GenData.Last(ClassId);
-                var node = new ClassTreeNode(this, GenData, Definition, ClassId);
+                var node = new ClassTreeNode(this, GenDataBase, Definition, ClassId, genObject);
                 node.ViewModel.IsNew = true;
                 node.ViewModel.Save();
                 Nodes.Add(node);
@@ -131,8 +122,6 @@ namespace GenEdit.Controls
             var nodeData = node.ViewModel;
             if (nodeData == null) return false;
             var index = Nodes.IndexOf(node);
-            var genData = GenData;
-            var classId = nodeData.GenAttributes.GenObject.ClassId;
             bool result;
             switch (move)
             {
@@ -152,7 +141,6 @@ namespace GenEdit.Controls
                     throw new ArgumentOutOfRangeException("move");
             }
 
-            genData.Context[classId].MoveItem(move, index);
             TreeView.SelectedNode = node;
             return result;
         }

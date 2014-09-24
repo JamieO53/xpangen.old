@@ -931,14 +931,14 @@ Container[Reference='TestData\VirtualData']
             GenParameters.SaveToFile(df.GenDataBase, VirtualDefinitionFile);
             var d = PopulateInheritanceData(VirtualDataFile);
             if (File.Exists(VirtualDataFile)) File.Delete(VirtualDataFile);
-            GenParameters.SaveToFile(d, VirtualDataFile);
+            GenParameters.SaveToFile(d.GenDataBase, VirtualDataFile);
 
             var pdf = SetUpParentOfVirtualDefinition();
             if (File.Exists(VirtualParentDefinitionFile)) File.Delete(VirtualParentDefinitionFile);
             GenParameters.SaveToFile(pdf.GenDataBase, VirtualParentDefinitionFile);
             var pd = SetUpParentOfVirtualData();
             if (File.Exists(VirtualParentDataFile)) File.Delete(VirtualParentDataFile);
-            GenParameters.SaveToFile(pd, VirtualParentDataFile);
+            GenParameters.SaveToFile(pd.GenDataBase, VirtualParentDataFile);
         }
 
         protected static GenData PopulateInheritanceData(string dataName)

@@ -178,7 +178,7 @@ namespace GenEdit.View
             DataNavigatorTreeView.Nodes.Clear();
             GenDataDataGrid.DataSource = null;
             if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null ||
-                GenDataEditorViewModel.Data.GenData == null) 
+                GenDataEditorViewModel.Data.GenDataBase == null) 
                 return;
 
             var saveCursor = Cursor.Current;
@@ -194,8 +194,7 @@ namespace GenEdit.View
                 Cursor.Current = saveCursor;
             }
             
-            GenDataEditorViewModel.Data.GenData.First(0);
-            GenDataEditorViewModel.Data.GenData.GenDataBase.PropertyChanged += GenData_PropertyChanged;
+            GenDataEditorViewModel.Data.GenDataBase.PropertyChanged += GenData_PropertyChanged;
             RaiseDataChanged();
         }
 
@@ -271,8 +270,9 @@ namespace GenEdit.View
             var selectedNode = DataNavigatorTreeView.SelectedNode;
             var data = GenDataEditorViewModel;
             var nodeData = (GenObjectViewModel)GetNodeData(selectedNode);
-            var genObject = nodeData.GenAttributes.GenObject;
-            data.Data.GenData.Context[genObject.ClassId].Delete();
+            var genObject = (GenObject) nodeData.GenAttributes.GenObject;
+            var parentList = genObject.ParentSubClass;
+            parentList.Remove(genObject);
             selectedNode.Parent.Nodes.Remove(selectedNode);
             RaiseDataChanged();
         }

@@ -21,9 +21,9 @@ namespace org.xpangen.Generator.Test
             var parent = GetFirstObject(d);
             var child = GetFirstObjectOfSubClass(parent, "Child");
             
-            var childContext = d.GetContext(child, "Child");
+            var childContext = d.GenDataBase.GetContext(child, "Child");
             Assert.AreSame(child, childContext);
-            childContext = d.GetContext(child, "CHILD"); // Case independent search
+            childContext = d.GenDataBase.GetContext(child, "CHILD"); // Case independent search
             Assert.AreSame(child, childContext);
         }
 
@@ -34,9 +34,9 @@ namespace org.xpangen.Generator.Test
             var parent = GetFirstObject(d);
             var child = GetFirstObjectOfSubClass(parent, "Child");
             
-            var childContext = d.GetContext(child, "Parent");
+            var childContext = d.GenDataBase.GetContext(child, "Parent");
             Assert.AreSame(parent, childContext);
-            childContext = d.GetContext(child, "PARENT"); // Case independent search
+            childContext = d.GenDataBase.GetContext(child, "PARENT"); // Case independent search
             Assert.AreSame(parent, childContext);
         }
 
@@ -47,9 +47,9 @@ namespace org.xpangen.Generator.Test
             var parent = GetFirstObject(d);
             var child = GetFirstObjectOfSubClass(parent, "Child");
             
-            var parentContext = d.GetContext(parent, "Child");
+            var parentContext = d.GenDataBase.GetContext(parent, "Child");
             Assert.AreSame(child, parentContext);
-            parentContext = d.GetContext(parent, "CHILD"); // Case independent search
+            parentContext = d.GenDataBase.GetContext(parent, "CHILD"); // Case independent search
             Assert.AreSame(child, parentContext);
         }
 
@@ -63,9 +63,9 @@ namespace org.xpangen.Generator.Test
             var child = CreateGenObject(d, parent, "Child", "FirstChild");
             var grandChild = CreateGenObject(d, child, "GrandChild", "FirstGrandchild");
             
-            var grandchildContext = d.GetContext(parent, "GrandChild");
+            var grandchildContext = d.GenDataBase.GetContext(parent, "GrandChild");
             Assert.AreSame(grandChild, grandchildContext);
-            grandchildContext = d.GetContext(parent, "GRANDCHILD"); // Case independent search
+            grandchildContext = d.GenDataBase.GetContext(parent, "GRANDCHILD"); // Case independent search
             Assert.AreSame(grandChild, grandchildContext);
         }
 
@@ -79,9 +79,9 @@ namespace org.xpangen.Generator.Test
             var child = CreateGenObject(d, parent, "Child", "FirstChild");
             var grandChild = CreateGenObject(d, child, "GrandChild", "FirstGrandchild");
             
-            var grandparentContext = d.GetContext(grandChild, "Parent");
+            var grandparentContext = d.GenDataBase.GetContext(grandChild, "Parent");
             Assert.AreSame(parent, grandparentContext);
-            grandparentContext = d.GetContext(grandChild, "PARENT"); // Case independent search
+            grandparentContext = d.GenDataBase.GetContext(grandChild, "PARENT"); // Case independent search
             Assert.AreSame(parent, grandparentContext);
         }
 
@@ -95,9 +95,9 @@ namespace org.xpangen.Generator.Test
             var firstChild = CreateGenObject(d, parent, "FirstChild", "FirstChild");
             var secondChild = CreateGenObject(d, parent, "SecondChild", "SecondChild");
             
-            var siblingContext = d.GetContext(firstChild, "SecondChild");
+            var siblingContext = d.GenDataBase.GetContext(firstChild, "SecondChild");
             Assert.AreSame(secondChild, siblingContext);
-            siblingContext = d.GetContext(firstChild, "SECONDCHILD"); // Case independent search
+            siblingContext = d.GenDataBase.GetContext(firstChild, "SECONDCHILD"); // Case independent search
             Assert.AreSame(secondChild, siblingContext);
         }
 
@@ -108,7 +108,7 @@ namespace org.xpangen.Generator.Test
             var d = PopulateInheritanceData(dataFile);
             var container = GetFirstObject(d);
             var @virtual1 = GetFirstObjectOfSubClass(container, "Abstract");
-            var containerContext = d.GetContext(container, "Abstract");
+            var containerContext = d.GenDataBase.GetContext(container, "Abstract");
             Assert.AreSame(@virtual1, containerContext);
         }
 
@@ -120,7 +120,7 @@ namespace org.xpangen.Generator.Test
             var container = GetFirstObject(d);
             var @virtual1 = GetFirstObjectOfSubClass(container, "Abstract");
             var child = GetFirstObjectOfSubClass(@virtual1, "Child");
-            var containerContext = d.GetContext(child, "Container");
+            var containerContext = d.GenDataBase.GetContext(child, "Container");
             Assert.AreSame(container, containerContext);
         }
 

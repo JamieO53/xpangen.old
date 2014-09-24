@@ -26,8 +26,7 @@ namespace GenEdit.View
         {
             if (IsBuilding) return;
 
-            var contextData = GenDataEditorViewModel.Data.GenData.DuplicateContext();
-            RefreshProfile(contextData, GenDataEditorViewModel.Data.GenObject);
+            RefreshProfile(GenDataEditorViewModel.Data.GenDataBase, GenDataEditorViewModel.Data.GenObject);
         }
 
         private void GenProfileEditor_Load(object sender, EventArgs e)
@@ -47,12 +46,12 @@ namespace GenEdit.View
             IsBuilding = true;
             builder.CreateBodyChildTrees(ProfileNavigatorTreeView.Nodes, GenDataEditorViewModel.Data.Profile);
             IsBuilding = false;
-            RefreshProfile(GenDataEditorViewModel.Data.GenData, GenDataEditorViewModel.Data.GenObject);
+            RefreshProfile(GenDataEditorViewModel.Data.GenDataBase, GenDataEditorViewModel.Data.GenObject);
             if (ProfileNavigatorTreeView.Nodes.Count > 0)
                 ProfileNavigatorTreeView.SelectedNode = ProfileNavigatorTreeView.Nodes[0];
         }
 
-        public void RefreshProfile(GenData genData, GenObject genObject)
+        public void RefreshProfile(GenDataBase genDataBase, GenObject genObject)
         {
             var selectedItem = ProfileNavigatorTreeView.SelectedNode;
             GenFragment fragment1 = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem);
@@ -70,11 +69,11 @@ namespace GenEdit.View
 
 
             var fragment = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem);
-            var context = fragment != null && (genObject ?? genData.Root) != null
-                ? genData.GetContext(genObject ?? genData.Root, fragment.Fragment.ClassName())
+            var context = fragment != null && (genObject ?? genDataBase.Root) != null
+                ? genDataBase.GetContext(genObject ?? genDataBase.Root, fragment.Fragment.ClassName())
                 : null;
             text = context != null
-                ? ProfileEditorTreeViewBuilder.GetNodeExpansionText(genData, context, fragment.Fragment)
+                ? ProfileEditorTreeViewBuilder.GetNodeExpansionText(genDataBase, genObject, fragment.Fragment)
                 : "";
 
             // Don't change to prevent unnecessary rendering and side effects

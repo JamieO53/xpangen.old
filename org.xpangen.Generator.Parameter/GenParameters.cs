@@ -56,20 +56,15 @@ namespace org.xpangen.Generator.Parameter
         /// <summary>
         ///     Save the generator data to the specified file name.
         /// </summary>
-        /// <param name="genData">The generator data to be saved.</param>
+        /// <param name="genDataBase">The generator data to be saved.</param>
         /// <param name="fileName">The file path to which the data is to be saved.</param>
-        public static void SaveToFile(GenData genData, string fileName)
-        {
-            var profile = CreateProfile(genData.GenDataDef);
-            using (var writer = new GenWriter(null) {FileName = fileName})
-            {
-                profile.Generate(genData.GenDataBase, writer);
-            }
-        }
-
         public static void SaveToFile(GenDataBase genDataBase, string fileName)
         {
-            SaveToFile(new GenData(genDataBase), fileName);
+            var profile = CreateProfile(genDataBase.GenDataDef);
+            using (var writer = new GenWriter(null) {FileName = fileName})
+            {
+                profile.Generate(genDataBase, writer);
+            }
         }
 
         public static GenProfileFragment CreateProfile(GenDataDef genDataDef)

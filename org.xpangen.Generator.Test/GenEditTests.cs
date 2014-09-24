@@ -26,8 +26,8 @@ namespace org.xpangen.Generator.Test
         {
             Assert.IsNotNull(Data, "GEData object not created");
             Assert.IsNotNull(Data.GenDataStore, "Generator data object created on the fly");
-            Assert.IsNull(Data.DefGenData, "The base does not exist to start with");
-            Assert.IsNull(Data.GenData, "The data does not exist to start with");
+            Assert.IsNull(Data.DefGenDataBase, "The base does not exist to start with");
+            Assert.IsNull(Data.GenDataBase, "The data does not exist to start with");
             Assert.IsFalse(Data.GenDataStore.Changed, "No data to have changed");
         }
 
@@ -38,12 +38,12 @@ namespace org.xpangen.Generator.Test
         public void GenBaseFileOpenTest()
         {
             LoadBase("Minimal.dcb");
-            Assert.IsNotNull(Data.GenData, "An empty Data object should be created");
+            Assert.IsNotNull(Data.GenDataBase, "An empty Data object should be created");
             Assert.IsFalse(Data.GenDataStore.Changed, "Newly created data should be unchanged");
             VerifyGenDataNotLoaded();
             Data.GenDataStore.SetBase("");
-            Assert.IsNull(Data.DefGenData, "The data should now be gone");
-            Assert.IsNotNull(Data.GenData, "The new Data object should still be there");
+            Assert.IsNull(Data.DefGenDataBase, "The data should now be gone");
+            Assert.IsNotNull(Data.GenDataBase, "The new Data object should still be there");
         }
 
         /// <summary>
@@ -54,8 +54,8 @@ namespace org.xpangen.Generator.Test
         {
             LoadBase("Minimal.dcb");
             LoadData("Basic.dcb");
-            Assert.IsNotNull(Data.DefGenData, "The base should be loaded when needed");
-            Assert.IsNotNull(Data.GenData, "A data object should be loaded when needed");
+            Assert.IsNotNull(Data.DefGenDataBase, "The base should be loaded when needed");
+            Assert.IsNotNull(Data.GenDataBase, "A data object should be loaded when needed");
             Assert.IsFalse(Data.GenDataStore.Changed, "Newly loaded data should be unchanged");
             VerifyGenDataLoaded();
         }
@@ -107,8 +107,8 @@ namespace org.xpangen.Generator.Test
             Data.CreateFile(added);
             Assert.IsNotNull(Data.Settings.FindFileGroup(name));
             Assert.That(File.Exists("TestData\\" + name + ".dcb"));
-            Assert.IsNotNull(Data.GenData);
-            Assert.AreEqual(name, Data.GenData.DataName);
+            Assert.IsNotNull(Data.GenDataBase);
+            Assert.AreEqual(name, Data.GenDataBase.DataName);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace org.xpangen.Generator.Test
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
-            GenParameters.SaveToFile(d, fileName);
+            GenParameters.SaveToFile(d.GenDataBase, fileName);
             Assert.IsTrue(File.Exists(fileName));
             GenParameters d1;
             using (var stream = new FileStream(fileName, FileMode.Open))
@@ -141,7 +141,7 @@ namespace org.xpangen.Generator.Test
         {
             var f = GenData.DataLoader.LoadData("GeneratorEditor").AsDef();
             var d = new GenData(f);
-            GenParameters.SaveToFile(d, "Settings.dcb");
+            GenParameters.SaveToFile(d.GenDataBase, "Settings.dcb");
             var data = new GeData();
             data.Settings = data.GetDefaultSettings();
             Assert.AreEqual(0, data.Settings.GetFileGroups().Count);
@@ -173,14 +173,12 @@ namespace org.xpangen.Generator.Test
 
         private void VerifyGenDataLoaded()
         {
-            Data.GenData.First(1);
-            Assert.IsFalse(Data.GenData.Context[1].Eol, "Data not loaded");
+            Assert.IsFalse(Data.GenDataBase.Root.SubClass[0].Count == 0, "Data not loaded");
         }
 
         private void VerifyGenDataNotLoaded()
         {
-            Data.GenData.First(1);
-            Assert.IsTrue(Data.GenData.Context[1].Eol, "Data loaded");
+            Assert.IsTrue(Data.GenDataBase.Root.SubClass[0].Count == 0, "Data loaded");
         }
 
         /// <summary>

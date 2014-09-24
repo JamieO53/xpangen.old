@@ -52,19 +52,19 @@ namespace GenEdit.Controls
         /// Create a new <see cref="ClassTreeNode"/> for the selected class
         /// </summary>
         /// <param name="parentNode">The tree node of the parent subclass of this class.</param>
-        /// <param name="genData">The data being navigated.</param>
+        /// <param name="genDataBase"></param>
         /// <param name="definition">The definition data for the data being navigated.</param>
         /// <param name="classId">The ID of this class.</param>
-        public ClassTreeNode(SubClassTreeNode parentNode, GenData genData, Definition definition, int classId)
+        /// <param name="genObject"></param>
+        public ClassTreeNode(SubClassTreeNode parentNode, GenDataBase genDataBase, Definition definition, int classId, GenObject genObject)
         {
             ClassId = classId;
-            GenData = genData;
+            GenDataBase = genDataBase;
             ParentNode = parentNode;
-            GenObject = GenData.Context[ClassId].GenObject;
-            //SavedContext = GenData.SaveContext(ClassId, ParentNode.SavedContext);
-            ClassDef = GenData.GenDataDef.GetClassDef(ClassId);
+            GenObject = genObject;
+            ClassDef = GenDataBase.GenDataDef.GetClassDef(ClassId);
             Def = ClassId > definition.ClassList.Count ? null : definition.ClassList[ClassId-1];
-            GenAttributes = new GenAttributes(GenData.GenDataDef, classId) { GenObject = GenObject };
+            GenAttributes = new GenAttributes(GenDataBase.GenDataDef, classId) { GenObject = GenObject };
 
             Text = ClassDef.Properties.IndexOf("Name") == -1 ? ClassDef.Name : GenAttributes.AsString("Name");
             ImageIndex = 1;
@@ -72,7 +72,7 @@ namespace GenEdit.Controls
             Tag = new GenObjectViewModel(GenObject, Def, ClassDef.IsReference);
 
             foreach (var subClass in ClassDef.SubClasses)
-                Nodes.Add(new SubClassTreeNode(this, GenData, definition, subClass.SubClass.ClassId));
+                Nodes.Add(new SubClassTreeNode(this, GenDataBase, definition, subClass.SubClass.ClassId));
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace GenEdit.Controls
         /// <returns>The root node.</returns>
         public static SubClassTreeNode CreateRootNode(GeData data)
         {
-            return new SubClassTreeNode(null, data.GenData, new Definition(data.DefGenData.GenDataBase), 1);
+            return new SubClassTreeNode(null, data.GenDataBase, new Definition(data.GenDataBase), 1);
         }
     }
 }

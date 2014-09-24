@@ -9,38 +9,31 @@ namespace org.xpangen.Generator.Editor.Helper
 {
     public class GeGenData : IGenData
     {
-        public bool Changed { get { return GenData != null && GenData.Changed; } }
-        public GenData DefGenData { get; private set; }
-        public GenData GenData { get; private set; }
+        public bool Changed { get { return GenDataBase != null && GenDataBase.Changed; } }
+        public GenDataBase DefGenDataBase { get; private set; }
+        public GenDataBase GenDataBase { get; private set; }
         public void SetBase(string filePath)
         {
             if (filePath == "")
-                DefGenData = null;
+                DefGenDataBase = null;
             else
             {
-                DefGenData = new GenData(GenData.DataLoader.LoadData(filePath));
-                var f = DefGenData.AsDef();
+                DefGenDataBase = Data.GenData.DataLoader.LoadData(filePath);
+                var f = DefGenDataBase.AsDef();
                 f.DefinitionName = Path.GetFileNameWithoutExtension(filePath);
-                var references = f.Cache.References;
-                foreach (GenDataDefReferenceCacheItem r in references)
-                {
-                    var reference = r.Path;
-                    if (!DefGenData.Cache.Contains(reference))
-                        DefGenData.Cache.Internal(reference, new GenData(GenData.DataLoader.LoadData(reference)));
-                }
-                GenData = new GenData(f);
+                GenDataBase = new GenDataBase(f);
             }
         }
 
         public void SetData(string filePath)
         {
             if (filePath == "")
-                GenData = null;
+                GenDataBase = null;
             else
             {
-                GenData = new GenData((DefGenData == null
-                              ? GenData.DataLoader.LoadData(filePath)
-                              : GenData.DataLoader.LoadData(DefGenData.AsDef(), filePath)));
+                GenDataBase = DefGenDataBase == null
+                              ? Data.GenData.DataLoader.LoadData(filePath)
+                              : Data.GenData.DataLoader.LoadData(DefGenDataBase.AsDef(), filePath);
             }
         }
     }
