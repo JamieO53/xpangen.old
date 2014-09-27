@@ -10,7 +10,7 @@ namespace org.xpangen.Generator.Parameter
     {
         public static void Register()
         {
-            GenData.DataLoader = new GenDataLoader();
+            GenDataBase.DataLoader = new GenDataLoader();
         }
         
         /// <summary>

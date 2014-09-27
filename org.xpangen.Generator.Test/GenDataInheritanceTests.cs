@@ -66,7 +66,7 @@ namespace org.xpangen.Generator.Test
             var dataFile = GetTestDataFileName("InheritanceDataLoadTest");
             SetUpParametersFile(dataFile, VirtualDefinitionData);
             var d = PopulateInheritanceData(dataFile);
-            var x = GenData.DataLoader.LoadData(d.GenDataDef, dataFile);
+            var x = GenDataBase.DataLoader.LoadData(d.GenDataDef, dataFile);
             CompareGenData(d, x);
         }
 
@@ -76,7 +76,7 @@ namespace org.xpangen.Generator.Test
             var dataFile = GetTestDataFileName("InheritanceDataLoadSansDefinitionTest");
             SetUpParametersFile(dataFile, VirtualDefinitionData);
             var d = PopulateInheritanceData(dataFile);
-            var x = GenData.DataLoader.LoadData(dataFile);
+            var x = GenDataBase.DataLoader.LoadData(dataFile);
             CompareGenData(d, x);
         }
 

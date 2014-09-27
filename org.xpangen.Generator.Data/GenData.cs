@@ -65,11 +65,6 @@ namespace org.xpangen.Generator.Data
         }
 
         /// <summary>
-        ///     The data loader for reference data.
-        /// </summary>
-        public static IGenDataLoader DataLoader { get; set; }
-
-        /// <summary>
         ///     Create a new <see cref="GenData" /> container for the specified definition.
         /// </summary>
         /// <param name="genDataDef">The data definition.</param>

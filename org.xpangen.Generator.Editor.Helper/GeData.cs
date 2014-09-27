@@ -97,10 +97,10 @@ namespace org.xpangen.Generator.Editor.Helper
             if (!File.Exists(BuildFilePath(fileGroup.FilePath, fileGroup.FileName).Replace('/', '\\')))
             {
                 var dataDef = Settings.FindBaseFile(fileGroup.BaseFileName);
-                var f = GenData.DataLoader.LoadData(BuildFilePath(dataDef.FilePath, dataDef.FileName)).AsDef();
-                var d = new GenData(f);
-                string fileName = BuildFilePath(fileGroup.FilePath, fileGroup.FileName);
-                GenParameters.SaveToFile(d.GenDataBase, fileName);
+                var f = GenDataBase.DataLoader.LoadData(BuildFilePath(dataDef.FilePath, dataDef.FileName)).AsDef();
+                var d = new GenDataBase(f);
+                var fileName = BuildFilePath(fileGroup.FilePath, fileGroup.FileName);
+                GenParameters.SaveToFile(d, fileName);
             }
             if (Settings.FindFileGroup(fileGroup.Name) == null)
                 Settings.GetFileGroups().Add(fileGroup);
@@ -112,8 +112,7 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             if (SaveToDisk)
             {
-                GenData genData = new GenData(Settings.Model.GenDataBase);
-                GenParameters.SaveToFile(genData.GenDataBase, "Data/Settings.dcb");
+                GenParameters.SaveToFile(Settings.Model.GenDataBase, "Data/Settings.dcb");
             }
         }
 
@@ -124,7 +123,7 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public IGenDataSettings GetDefaultSettings()
         {
-            var data = GenData.DataLoader.LoadData("Settings");
+            var data = GenDataBase.DataLoader.LoadData("Settings");
             var settings = LoadSettingsFromData(data);
             settings.Check();
             SaveToDisk = true;
@@ -143,7 +142,7 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public ComboServer GetDefaultComboServer()
         {
-            var data = GenData.DataLoader.LoadData(GenData.DataLoader.LoadData("CodesDefinition").AsDef(),
+            var data = GenDataBase.DataLoader.LoadData(GenDataBase.DataLoader.LoadData("CodesDefinition").AsDef(),
                                                    "Data/Standard Editor Codes.dcb");
             return new ComboServer(data);
         }

@@ -217,12 +217,12 @@ Child[Reference='child']
 
         protected static GenData LoadGenData(string path)
         {
-            return new GenData(GenData.DataLoader.LoadData(path));
+            return new GenData(GenDataBase.DataLoader.LoadData(path));
         }
 
         protected GenData LoadGenData(GenDataDef genDataDef, string path)
         {
-            return new GenData(GenData.DataLoader.LoadData(genDataDef, path));
+            return new GenData(GenDataBase.DataLoader.LoadData(genDataDef, path));
         }
 
         protected static GenObject CreateClass(GenData d, string name)
@@ -534,7 +534,7 @@ Child[Reference='child']
 
         protected static GeneratorEditor PopulateGenSettings()
         {
-            var f = GenData.DataLoader.LoadData("data/GeneratorEditor").AsDef();
+            var f = GenDataBase.DataLoader.LoadData("data/GeneratorEditor").AsDef();
             var d = new GenData(f);
             var model = new GeneratorEditor(d.GenDataBase) {GenObject = d.Root};
             model.SaveFields();
@@ -912,7 +912,7 @@ Container[Reference='TestData\VirtualData']
             SetUpParametersFile(VirtualDataFile, VirtualDefinitionData);
             SetUpParametersFile(VirtualParentDefinitionFile, VirtualParentDefinition);
             SetUpParametersFile(VirtualParentDataFile, VirtualParentData);
-            var data = GenData.DataLoader.LoadData(VirtualParentDataFile);
+            var data = GenDataBase.DataLoader.LoadData(VirtualParentDataFile);
             return data;
         }
 
@@ -1022,7 +1022,7 @@ Container[Reference='TestData\VirtualData']
             Assert.IsTrue(File.Exists(VirtualDefinitionFile));
             Assert.IsTrue(File.Exists(VirtualParentDefinitionFile));
             Assert.IsTrue(File.Exists(VirtualDataFile));
-            var f = GenData.DataLoader.LoadData(VirtualParentDefinitionFile).AsDef();
+            var f = GenDataBase.DataLoader.LoadData(VirtualParentDefinitionFile).AsDef();
             var d = new GenData(f) { DataName = "VirtualParentData" };
             var container = new GenAttributes(f, 1) {GenObject = CreateGenObject(d, d.Root, "Parent", "Parent")};
             container.SetString("Name", "Parent");

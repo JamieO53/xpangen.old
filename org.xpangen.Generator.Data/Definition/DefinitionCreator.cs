@@ -9,9 +9,7 @@ namespace org.xpangen.Generator.Data.Definition
 
         public static Definition Create()
         {
-            var d = CreateEmpty();
-
-            var b = d.GenDataBase;
+            var b = CreateEmpty();
             var root = b.Root;
             
             var @class = CreateDefinitionClass(root, "Class", "Class Definition", "", b);
@@ -47,15 +45,13 @@ namespace org.xpangen.Generator.Data.Definition
             CreateDefinitionProperty(property, "LookupTable", "The lookup table used for the property's values",
                                      "String", "", "Standard", "LookupType", "LookupTablesX");
 
-            return new Definition(d.GenDataBase);
+            return new Definition(b);
         }
 
-        public static GenData CreateEmpty()
+        public static GenDataBase CreateEmpty()
         {
-            var d = new GenData((GenDataDef) null) {DataName = "Definition"};
-            var b0 = d.GenDataBase;
-            var root0 = b0.Root;
-            root0.SubClass.Add(new GenSubClass(b0, root0, 1, null));
+            var d = new GenDataBase((GenDataDef) null) {DataName = "Definition"};
+            d.Root.SubClass.Add(new GenSubClass(d, d.Root, 1, null));
             return d;
         }
 

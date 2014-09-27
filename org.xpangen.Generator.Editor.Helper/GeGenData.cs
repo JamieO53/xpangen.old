@@ -18,7 +18,7 @@ namespace org.xpangen.Generator.Editor.Helper
                 DefGenDataBase = null;
             else
             {
-                DefGenDataBase = Data.GenData.DataLoader.LoadData(filePath);
+                DefGenDataBase = GenDataBase.DataLoader.LoadData(filePath);
                 var f = DefGenDataBase.AsDef();
                 f.DefinitionName = Path.GetFileNameWithoutExtension(filePath);
                 GenDataBase = new GenDataBase(f);
@@ -32,8 +32,8 @@ namespace org.xpangen.Generator.Editor.Helper
             else
             {
                 GenDataBase = DefGenDataBase == null
-                              ? Data.GenData.DataLoader.LoadData(filePath)
-                              : Data.GenData.DataLoader.LoadData(DefGenDataBase.AsDef(), filePath);
+                              ? GenDataBase.DataLoader.LoadData(filePath)
+                              : GenDataBase.DataLoader.LoadData(DefGenDataBase.AsDef(), filePath);
             }
         }
     }
