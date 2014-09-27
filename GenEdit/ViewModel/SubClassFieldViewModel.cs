@@ -33,7 +33,7 @@ namespace GenEdit.ViewModel
                 switch (SubClassField)
                 {
                     case SubClassField.Name:
-                        return GenDataDefSubClass.SubClass.Name;
+                        return GenDataDefSubClass == null ? "" : GenDataDefSubClass.SubClass.Name;
                     case SubClassField.Reference:
                         return Parent != null ? Parent.Reference : "";
                     default:
@@ -74,7 +74,7 @@ namespace GenEdit.ViewModel
             {
                 case SubClassField.Name:
                     Name = "Name";
-                    Hint = genDataDefSubClass.Reference == ""
+                    Hint = genDataDefSubClass == null || genDataDefSubClass.Reference == ""
                                ? "The name of the subclass"
                                : "The name of the top level class in the referenced file";
                     DataType = "Identifier";
@@ -82,11 +82,11 @@ namespace GenEdit.ViewModel
                     break;
                 case SubClassField.Reference:
                     Name = "Reference";
-                    Hint = genDataDefSubClass.Reference == ""
+                    Hint = genDataDefSubClass == null || genDataDefSubClass.Reference == ""
                                ? "Must be blank"
                                : "The name of the referenced file";
                     DataType = "String";
-                    IsReadOnly = isReadOnly || genDataDefSubClass.Reference == "";
+                    IsReadOnly = isReadOnly || genDataDefSubClass == null || genDataDefSubClass.Reference == "";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("subClassField");

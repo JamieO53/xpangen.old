@@ -77,6 +77,7 @@ namespace GenEdit.ViewModel
             IgnorePropertyValidation = true;
             Definition = definition;
             GenAttributes = new GenAttributes(genObject.GenDataBase.GenDataDef, genObject.ClassId) {GenObject = genObject};
+            GenObject = genObject;
             Changed = false;
             IsNew = false;
         }

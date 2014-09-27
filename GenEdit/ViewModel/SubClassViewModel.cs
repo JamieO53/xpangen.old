@@ -16,6 +16,7 @@ namespace GenEdit.ViewModel
 //            SavedContext = savedContext;
             SubClassBase = subClassBase;
             SavedReference = Parent != null ? Parent.Reference : "";
+            GenObject = subClassBase.Parent;
         }
 
         public GenDataDefSubClass SubClassDef { get; private set; }

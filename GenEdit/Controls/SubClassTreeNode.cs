@@ -51,23 +51,33 @@ namespace GenEdit.Controls
             ClassId = classId;
             ParentNode = parentNode;
             GenDataBase = genDataBase;
-            SubClassBase = ParentNode.GenObject.GetSubClass(classId);
             Definition = definition;
-            
             var genDataDef = GenDataBase.GenDataDef;
-            var parentClassId = ParentNode == null ? 0 : ParentNode.ClassId;
-            var parentClassName = genDataDef.GetClassName(parentClassId);
-            var parentClass = definition == null ? null : definition.ClassList.Find(parentClassName);
-            var i = genDataDef.Classes[parentClassId].IndexOfSubClass(genDataDef.GetClassName(ClassId));
-            SubClassDef = genDataDef.GetClassSubClasses(parentClassId)[i];
-            Def = parentClass == null ? null : parentClass.SubClassList[i];
-            
+                int parentClassId;
+            string parentClassName;
+            Class parentClass;
+                Def = null;
+            if (ParentNode == null)
+                SubClassBase = genDataBase.Root.SubClass[0];
+            else
+            {
+                parentClassId = ParentNode.ClassId;
+                parentClassName = genDataDef.GetClassName(parentClassId);
+                SubClassBase = ParentNode.GenObject.GetSubClass(genDataDef.GetClassName(classId));
+                parentClass = definition.ClassList.Find(parentClassName);
+                var i = genDataDef.Classes[parentClassId].IndexOfSubClass(genDataDef.GetClassName(ClassId));
+                SubClassDef = genDataDef.GetClassSubClasses(parentClassId)[i];
+                if (parentClass != null) Def = parentClass.SubClassList[i];
+            }
+
             Text = genDataDef.GetClassName(ClassId) +
-                   (!string.IsNullOrEmpty(SubClassDef.Reference) ? ":" + SubClassBase.Reference : "");
+                   (SubClassDef != null && !string.IsNullOrEmpty(SubClassDef.Reference)
+                       ? ":" + SubClassBase.Reference
+                       : "");
             ImageIndex = 2;
             ToolTipText = Text;
-            Tag = new SubClassViewModel(ParentNode == null ? null : ParentNode.GenObject.SubClass[i], SubClassBase, Def,
-                                        SubClassDef, !string.IsNullOrEmpty(SubClassDef.Reference));
+            Tag = new SubClassViewModel(ParentNode == null ? null : ParentNode.GenObject.ParentSubClass, SubClassBase, Def,
+                                        SubClassDef, SubClassDef != null && !string.IsNullOrEmpty(SubClassDef.Reference));
 
             for (var j = 0; j < SubClassBase.Count; j++)
             {
