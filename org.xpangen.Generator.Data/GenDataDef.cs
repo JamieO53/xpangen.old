@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Data
             AddClass("");
             CurrentClassId = -1;
             Cache = new GenDataDefReferenceCache(this);
-            Definition = new Definition.Definition(DefinitionCreator.CreateEmpty().GenDataBase);
+            Definition = new Definition.Definition(DefinitionCreator.CreateEmpty());
         }
 
         public int AddClass(string parent, string name)
@@ -184,8 +184,13 @@ namespace org.xpangen.Generator.Data
 
         public GenData AsGenData()
         {
+            return new GenData(AsGenDataBase());
+        }
+        
+        public GenDataBase AsGenDataBase()
+        {
             var f = CreateMinimal();
-            var d = new GenData(f) {DataName = DefinitionName};
+            var d = new GenDataBase(f) {DataName = DefinitionName};
             var a = new GenAttributes(f, 1);
             for (var i = 1; i < Classes.Count; i++)
             {
@@ -221,7 +226,6 @@ namespace org.xpangen.Generator.Data
                     a.SaveFields();
                 }
             }
-            d.First(1);
             return d;
         }
 
@@ -254,7 +258,7 @@ namespace org.xpangen.Generator.Data
                                                                               StringComparison
                                                                                   .InvariantCultureIgnoreCase)
                                                     ? CreateMinimal()
-                                                    : GenData.DataLoader.LoadData(sc.ReferenceDefinition).AsDef();
+                                                    : GenDataBase.DataLoader.LoadData(sc.ReferenceDefinition).AsDef();
             var rf = Cache[sc.ReferenceDefinition];
             for (var k = 1; k < rf.Classes.Count; k++)
             {

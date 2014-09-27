@@ -342,9 +342,9 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Verifies that the Definition references in GeneratorDefinitionModel are loaded correctly")]
         public void GeneratorDefinitionModelDefinitionLoadTest()
         {
-            var defData = GenData.DataLoader.LoadData("ProgramDefinition");
+            var defData = GenDataBase.DataLoader.LoadData("ProgramDefinition");
             var def = defData.AsDef();
-            var data = new GenData(GenData.DataLoader.LoadData(def, "GeneratorDefinitionModel"));
+            var data = new GenData(GenDataBase.DataLoader.LoadData(def, "GeneratorDefinitionModel"));
             data.Cache.Check("definition", "definition");
             var definition = data.Cache["definition"];
             definition.Last(1);

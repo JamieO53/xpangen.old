@@ -139,7 +139,7 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Tests that an empty settings file is correctly initialized")]
         public void EmptySettingsTest()
         {
-            var f = GenData.DataLoader.LoadData("GeneratorEditor").AsDef();
+            var f = GenDataBase.DataLoader.LoadData("GeneratorEditor").AsDef();
             var d = new GenData(f);
             GenParameters.SaveToFile(d.GenDataBase, "Settings.dcb");
             var data = new GeData();

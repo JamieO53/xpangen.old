@@ -92,7 +92,7 @@ namespace org.xpangen.Generator.Data
             }
             else if (!LocalCache.ContainsKey(f))
             {
-                d = GenData.DataLoader.LoadData(f).AsDef();
+                d = GenDataBase.DataLoader.LoadData(f).AsDef();
                 LocalCache.Add(f, d);
             }
             else

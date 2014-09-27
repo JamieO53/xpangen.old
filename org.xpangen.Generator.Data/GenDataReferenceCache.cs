@@ -58,7 +58,7 @@ namespace org.xpangen.Generator.Data
             if (!LocalCache.ContainsKey(p))
             {
                 var fullPath = Path.GetExtension(path) == "" ? p + ".dcb" : path;
-                var d = new GenData(GenData.DataLoader.LoadData(f.AsDef(), fullPath));
+                var d = new GenData(GenDataBase.DataLoader.LoadData(f.AsDef(), fullPath));
                 LocalCache.Add(p, d);
                 foreach (var reference in d.Cache.References)
                     if (!LocalCache.ContainsKey(reference.Path))
@@ -130,7 +130,7 @@ namespace org.xpangen.Generator.Data
                 d = LocalCache[f];
             else
             {
-                d = f.Equals("minimal") ? GenDataDef.CreateMinimal().AsGenData() : new GenData(GenData.DataLoader.LoadData(f));
+                d = f.Equals("minimal") ? GenDataDef.CreateMinimal().AsGenData() : new GenData(GenDataBase.DataLoader.LoadData(f));
                 LocalCache.Add(f, d);
             }
             return d;

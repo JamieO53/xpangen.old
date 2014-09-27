@@ -70,9 +70,9 @@ namespace org.xpangen.Generator.Data
             else
             {
                 var df = defFile.ToLowerInvariant();
-                var f = new GenData(GenData.DataLoader.LoadData(df));
+                var f = DataLoader.LoadData(df);
 
-                d = GenData.DataLoader.LoadData(f.AsDef(), fn);
+                d = DataLoader.LoadData(f.AsDef(), fn);
                 Cache.Add(fn, d);
             }
 
@@ -141,5 +141,10 @@ namespace org.xpangen.Generator.Data
         {
             return DataName;
         }
+
+        /// <summary>
+        ///     The data loader for reference data.
+        /// </summary>
+        public static IGenDataLoader DataLoader { get; set; }
     }
 }
