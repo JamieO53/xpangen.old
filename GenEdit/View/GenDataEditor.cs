@@ -85,7 +85,11 @@ namespace GenEdit.View
                 splitContainer1.ActiveControl = GenDataDataGrid;
                 GenDataEditorViewModel.Data.GenObject = nodeData.GenObject;
             }
-            else GenDataDataGrid.DataSource = null;
+            else
+            {
+                GenDataDataGrid.DataSource = null;
+                GenDataEditorViewModel.Data.GenObject = null;
+            }
             RaiseFocusChanged();
         }
 

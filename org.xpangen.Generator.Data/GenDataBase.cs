@@ -85,7 +85,7 @@ namespace org.xpangen.Generator.Data
 
         public GenObject GetContext(GenObject genObject, string className)
         {
-            if (genObject.ClassNameIs(className)) return genObject;
+            if (genObject == null || genObject.ClassNameIs(className)) return genObject;
             var ancestorContext = GetAncestorContext(genObject, className);
             if (ancestorContext != null && ancestorContext.ClassNameIs(className))
                 return ancestorContext;
