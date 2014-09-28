@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Parameter;
@@ -25,14 +26,18 @@ namespace org.xpangen.Generator.Test
         public void TextProfileTest()
         {
             const string txt = "Text to scan";
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            var profile = new GenCompactProfileParser(f, "", txt);
+            var d = SetUpData();
+            var profile = SetUpProfile(d, txt);
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.TextBlock, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,
                 GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
                 "Original text expected");
+        }
+
+        private static GenCompactProfileParser SetUpProfile(GenData d, string txt)
+        {
+            return new GenCompactProfileParser(d.GenDataDef, "", txt);
         }
 
         /// <summary>
@@ -42,18 +47,34 @@ namespace org.xpangen.Generator.Test
         public void SegmentProfileTest()
         {
             const string txt = "`[Class>:`Class.Name`,`]";
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
-            var profile = new GenCompactProfileParser(f, "", txt);
-            Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
-            Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(txt,
+            const string expectedExpansion = "Class,SubClass,Property,";
+            var expectedFragmentType = new []{FragmentType.Segment} ;
+            const string message = "Class list expected";
+            ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
+        }
+
+        private static GenProfileFragment ValidateExpansion(string txt, FragmentType[] expectedFragmentTypes,
+            string expectedExpansion, string message, string expectedProfileText = null)
+        {
+            var d = SetUpData();
+            return ValidateExpansion(d, txt, expectedFragmentTypes, expectedExpansion, message, expectedProfileText);
+        }
+
+        private static GenProfileFragment ValidateExpansion(GenData d, string txt, FragmentType[] expectedFragmentTypes,
+            string expectedExpansion, string message, string expectedProfileText = null)
+        {
+            var expected = expectedProfileText ?? txt;
+            var profile = new GenCompactProfileParser(d.GenDataDef, "", txt);
+            Assert.AreEqual(expectedFragmentTypes.Count(), profile.Body.Count, "Number of fragments expected");
+            for (var i = 0; i < profile.Body.Count; i++)
+                Assert.AreEqual(expectedFragmentTypes[i], profile.Body.Fragment[i].FragmentType);
+            Assert.AreEqual(expected,
                 profile.ProfileText(
                     ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class,SubClass,Property,",
+            Assert.AreEqual(expectedExpansion,
                 GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Class list expected");
+                message);
+            return profile;
         }
 
         /// <summary>
@@ -63,20 +84,10 @@ namespace org.xpangen.Generator.Test
         public void SegmentTextProfileTest()
         {
             const string txt = "Some text `[Class>:`Class.Name`,`] some more text";
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
-            var profile = new GenCompactProfileParser(f, "", txt);
-            Assert.AreEqual(3, profile.Body.Count, "Three fragments expected");
-            Assert.AreEqual(FragmentType.TextBlock, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[1].FragmentType);
-            Assert.AreEqual(FragmentType.TextBlock, profile.Body.Fragment[2].FragmentType);
-            Assert.AreEqual(txt,
-                profile.ProfileText(
-                    ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Some text Class,SubClass,Property, some more text",
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Class list in text expected");
+            const string expectedExpansion = "Some text Class,SubClass,Property, some more text";
+            var expectedFragmentType = new[] {FragmentType.TextBlock, FragmentType.Segment, FragmentType.TextBlock};
+            const string message = "Class list in text expected";
+            ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
         }
 
         /// <summary>
@@ -86,19 +97,10 @@ namespace org.xpangen.Generator.Test
         public void SegmentListProfileTest()
         {
             const string txt = "`[Class/:`Class.Name``;,`]";
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
-            var profile = new GenCompactProfileParser(f, "", txt);
-            ValidateProfileData(profile, d.GenDataDef);
-            Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
-            Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(txt,
-                profile.ProfileText(
-                    ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class,SubClass,Property",
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Class list expected");
+            const string expectedExpansion = "Class,SubClass,Property";
+            var expectedFragmentType = new[] {FragmentType.Segment};
+            const string message = "Class list expected";
+            ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
         }
 
         /// <summary>
@@ -108,18 +110,10 @@ namespace org.xpangen.Generator.Test
         public void BlockProfileTest()
         {
             const string txt = "`{Block text`]";
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
-            var profile = new GenCompactProfileParser(f, "", txt);
-            Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
-            Assert.AreEqual(FragmentType.Block, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(txt,
-                profile.ProfileText(
-                    ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Block text",
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Block text expected");
+            const string expectedExpansion = "Block text";
+            var expectedFragmentType = new[] { FragmentType.Block };
+            const string message = "Block text expected";
+            ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
         }
 
         /// <summary>
@@ -130,12 +124,11 @@ namespace org.xpangen.Generator.Test
         {
             const string txt =
                 "`[Class/:`Class.Name`{`[SubClass/:`%Class.Name=SubClass.Name:`Class.Name``]`;,`]}`;,`]";
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
-            var profile = new GenCompactProfileParser(f, "", txt);
-            Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
-            Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
+            const string expectedExpansion = "Class{SubClass,Property},SubClass{},Property{}";
+            var expectedFragmentType = new[] { FragmentType.Segment };
+            const string message = "Class/Subclass list expected";
+            var profile = ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
+
             var nestedClass = ((GenSegment) profile.Body.Fragment[0]);
             Assert.AreEqual(3, nestedClass.Body.Count, "Three nested fragments expected");
             Assert.AreEqual(1, nestedClass.Body.SecondaryCount, "One secondary nested fragment expected");
@@ -148,12 +141,6 @@ namespace org.xpangen.Generator.Test
             Assert.IsFalse(((GenLookup) nestedSubClass.Body.Fragment[0]).NoMatch, "No match property for lookup");
             Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.Fragment[2].FragmentType);
             Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.SecondaryFragment[0].FragmentType);
-            Assert.AreEqual(txt,
-                profile.ProfileText(
-                    ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class{SubClass,Property},SubClass{},Property{}",
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Class/Subclass list expected");
         }
 
         /// <summary>
@@ -164,12 +151,11 @@ namespace org.xpangen.Generator.Test
         {
             const string txt =
                 "`[Class/:`Class.Name`{`[SubClass/:`%Class.Name=SubClass.Name:`;`Class.Name``]`;,`]}`;,`]";
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
-            var profile = new GenCompactProfileParser(f, "", txt);
-            Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
-            Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
+            const string expectedExpansion = "Class{},SubClass{},Property{}";
+            var expectedFragmentType = new[] { FragmentType.Segment };
+            const string message = "Class/Subclass list expected";
+            var profile = ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
+
             var nestedClass = ((GenSegment) profile.Body.Fragment[0]);
             Assert.AreEqual(3, nestedClass.Body.Count, "Three nested fragments expected");
             Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.Fragment[0].FragmentType);
@@ -182,12 +168,6 @@ namespace org.xpangen.Generator.Test
                 "No match property for no match lookup");
             Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.Fragment[2].FragmentType);
             Assert.AreEqual(FragmentType.TextBlock, nestedClass.Body.SecondaryFragment[0].FragmentType);
-            Assert.AreEqual(txt,
-                profile.ProfileText(
-                    ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class{},SubClass{},Property{}",
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Class/Subclass list expected");
         }
 
         /// <summary>
@@ -201,18 +181,10 @@ namespace org.xpangen.Generator.Test
                                "`?Class.Name~:Name does not exist `]" +
                                "`?Class.NoName:NoName exists `]" +
                                "`?Class.NoName~:NoName does not exist `]`]";
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
-            var profile = new GenCompactProfileParser(f, "", txt);
-            Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
-            Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(txt,
-                profile.ProfileText(
-                    ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Name exists NoName does not exist ",
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Existence conditions expected");
+            const string expectedExpansion = "Name exists NoName does not exist ";
+            var expectedFragmentType = new[] { FragmentType.Segment };
+            const string message = "Existence conditions expected";
+            ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
         }
 
         /// <summary>
@@ -232,20 +204,12 @@ namespace org.xpangen.Generator.Test
                                "`?Class.Name=Clasz:Class name equals Clasz `]" +
                                "`?Class.Name>Clasz:Class name is greater than Clasz `]" +
                                "`]";
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
-            var profile = new GenCompactProfileParser(f, "", txt);
-            Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
-            Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(txt,
-                profile.ProfileText(
-                    ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class name equals Class " +
+            const string expectedExpansion = "Class name equals Class " +
                             "Class name is greater than Clasa " +
-                            "Class name is less than Clasz ",
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Comparison conditions expected");
+                            "Class name is less than Clasz ";
+            var expectedFragmentType = new[] { FragmentType.Segment };
+            const string message = "Comparison conditions expected";
+            ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
         }
 
         /// <summary>
@@ -271,8 +235,7 @@ namespace org.xpangen.Generator.Test
             f.AddClassInstanceProperty(ClassClassId, "NameGT");
             f.AddClassInstanceProperty(ClassClassId, "NameBlank");
 
-            var d = new GenData(f);
-            SetUpData(d);
+            var d = SetUpData(f);
 
             d.First(ClassClassId);
             Assert.AreEqual("Class", d.Context[ClassClassId].GenObject.Attributes[0]);
@@ -283,17 +246,26 @@ namespace org.xpangen.Generator.Test
             a.SetString("NameBlank", "");
             a.SaveFields();
 
-            var profile = new GenCompactProfileParser(f, "", txt);
-            Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
-            Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(txt,
-                profile.ProfileText(
-                    ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("Class name equals Class " +
+            const string expectedExpansion = "Class name equals Class " +
                             "Class name is greater than Clasa " +
-                            "Class name is less than Clasz ",
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Comparison conditions expected");
+                            "Class name is less than Clasz ";
+            var expectedFragmentType = new[] { FragmentType.Segment };
+            const string message = "Comparison conditions expected";
+            ValidateExpansion(d, txt, expectedFragmentType, expectedExpansion, message);
+        }
+
+        protected new static GenData SetUpData()
+        {
+            var d = new GenData(GenDataDef.CreateMinimal());
+            SetUpData(d);
+            return d;
+        }
+
+        protected static GenData SetUpData(GenDataDef f)
+        {
+            var d = new GenData(f);
+            SetUpData(d);
+            return d;
         }
 
         /// <summary>
@@ -302,20 +274,11 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "No Param Function Profile test")]
         public void NoParamFunctionProfileTest()
         {
-            const string txt =
-                "`@Date:`]";
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
-            var profile = new GenCompactProfileParser(f, "", txt);
-            Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
-            Assert.AreEqual(FragmentType.Function, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(txt,
-                profile.ProfileText(
-                    ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual(DateTime.Today.ToLongDateString(),
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Function output expected");
+            const string txt = "`@Date:`]";
+            var expectedExpansion = DateTime.Today.ToLongDateString();
+            var expectedFragmentType = new[] { FragmentType.Function };
+            const string message = "Function output expected";
+            ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
         }
 
         /// <summary>
@@ -324,20 +287,11 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Single Param Function Profile test")]
         public void SingleParamFunctionProfileTest()
         {
-            const string txt =
-                "`@File:`{filename.txt`]`]";
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
-            var profile = new GenCompactProfileParser(f, "", txt);
-            Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
-            Assert.AreEqual(FragmentType.Function, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(txt,
-                profile.ProfileText(
-                    ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("\r\n //File: filename.txt",
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Function output expected");
+            const string txt = "`@File:`{filename.txt`]`]";
+            const string expectedExpansion = "\r\n //File: filename.txt";
+            var expectedFragmentType = new[] { FragmentType.Function };
+            const string message = "Function output expected";
+            ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
         }
 
         /// <summary>
@@ -354,18 +308,14 @@ namespace org.xpangen.Generator.Test
                 // Blank between parameters for comparison
                 " " + // Pads with a space for readability
                 "`@Get:`{Val`]`]"; // Returns Val (i.e. 10)
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
-            var profile = new GenCompactProfileParser(f, "", txt);
-            Assert.AreEqual(5, profile.Body.Count, "Four function calls and a blank");
-            Assert.AreEqual(FragmentType.Function, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(txt,
-                profile.ProfileText(
-                    ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("5 10",
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Function output expected");
+            const string expectedExpansion = "5 10";
+            var expectedFragmentType = new[]
+                                       {
+                                           FragmentType.Function, FragmentType.Function, FragmentType.Function,
+                                           FragmentType.TextBlock, FragmentType.Function
+                                       };
+            const string message = "Function output expected";
+            ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
         }
 
         /// <summary>
@@ -391,18 +341,24 @@ namespace org.xpangen.Generator.Test
                 // Blank between parameters for comparison
                 " " + // Pads with a space for readability
                 "`@Get:`{Val`]`]"; // Returns Val (i.e. 10)
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
-            var profile = new GenCompactProfileParser(f, "", txt);
-            Assert.AreEqual(5, profile.Body.Count, "Four function calls and one blanks");
-            Assert.AreEqual(FragmentType.Function, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(expected,
-                profile.ProfileText(
-                    ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
-            Assert.AreEqual("5 10",
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Function output expected");
+            const string expectedExpansion = "5 10";
+            var expectedFragmentType = new[]// `@Set:`{Val`] `{5`]`]`@Get:`{Val`]`]`@Add:`{Val`] `{5`]`] 
+                                       {
+                                           FragmentType.Function, FragmentType.Function, FragmentType.Function,
+                                           FragmentType.TextBlock, FragmentType.Function
+                                       };
+            const string message = "Function output expected";
+            ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message, expected);
+            //var d = SetUpData();
+            //var profile = new GenCompactProfileParser(d.GenDataDef, "", txt);
+            //Assert.AreEqual(5, profile.Body.Count, "Four function calls and one blanks");
+            //Assert.AreEqual(FragmentType.Function, profile.Body.Fragment[0].FragmentType);
+            //Assert.AreEqual(expected,
+            //    profile.ProfileText(
+            //        ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
+            //Assert.AreEqual("5 10",
+            //    GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
+            //    "Function output expected");
         }
 
         /// <summary>
@@ -413,16 +369,14 @@ namespace org.xpangen.Generator.Test
         {
             const string txt = "`[Class>:`Class.Name`,`]";
             const string fileName = "GenProfileTest.prf";
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            SetUpData(d);
+            var d = SetUpData();
 
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
             File.WriteAllText(fileName, txt);
 
-            var profile = new GenCompactProfileParser(f, fileName, "");
+            var profile = new GenCompactProfileParser(d.GenDataDef, fileName, "");
             Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
             Assert.AreEqual(FragmentType.Segment, profile.Body.Fragment[0].FragmentType);
             Assert.AreEqual(txt,

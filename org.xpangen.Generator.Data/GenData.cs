@@ -288,10 +288,6 @@ namespace org.xpangen.Generator.Data
         // defined, and SubClass and Property are sub-classes of Class.
         // If defined, the definition is built up by walking the structure and finding
         // all the classes and summarising the result.
-        public GenDataDef AsDef()
-        {
-            return GenDataBase.AsDef();
-        }
 
         /// <summary>
         ///     Cache the references in GenDataBase

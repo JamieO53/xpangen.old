@@ -100,7 +100,7 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Verify that duplicated data context works as expected with reference data")]
         public void DuplicatedContextWithReferenceTests()
         {
-            var f = LoadGenData("ProgramDefinition").AsDef();
+            var f = LoadGenData("ProgramDefinition").GenDataBase.AsDef();
             var d = LoadGenData(f, "GeneratorDefinitionModel");
             d.Context[2].MoveItem(ListMove.Down, 0);
             d.First(2); d.Next(2);

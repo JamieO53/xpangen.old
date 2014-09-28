@@ -195,7 +195,7 @@ namespace org.xpangen.Generator.Test
             dm.First(ClassClassId);
             CreateProperty(dm, "Name", td);
             CreateProperty(dm, "Display", td);
-            var f = dm.AsDef();
+            var f = dm.GenDataBase.AsDef();
             var a = new GenAttributes(f, 1);
             var d = new GenData(f);
             a.GenObject = CreateGenObject(d, d.Root, "TestData", "One");

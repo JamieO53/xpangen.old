@@ -140,8 +140,8 @@ namespace org.xpangen.Generator.Test
         public void EmptySettingsTest()
         {
             var f = GenDataBase.DataLoader.LoadData("GeneratorEditor").AsDef();
-            var d = new GenData(f);
-            GenParameters.SaveToFile(d.GenDataBase, "Settings.dcb");
+            var d = new GenDataBase(f);
+            GenParameters.SaveToFile(d, "Settings.dcb");
             var data = new GeData();
             data.Settings = data.GetDefaultSettings();
             Assert.AreEqual(0, data.Settings.GetFileGroups().Count);
