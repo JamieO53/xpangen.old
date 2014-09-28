@@ -79,6 +79,7 @@
     <Compile Include="ApplicationBaseTests.cs" />
     <Compile Include="CharSetTests.cs" />
     <Compile Include="EditorHelperTests.cs" />
+    <Compile Include="GenDataBaseToDataTests.cs" />
     <Compile Include="GenDataCacheTests.cs" />
     <Compile Include="DataModelTests.cs" />
     <Compile Include="GenDataContextTests.cs" />

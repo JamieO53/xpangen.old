@@ -58,7 +58,7 @@ namespace org.xpangen.Generator.Data
             if (!LocalCache.ContainsKey(p))
             {
                 var fullPath = Path.GetExtension(path) == "" ? p + ".dcb" : path;
-                var d = new GenData(GenDataBase.DataLoader.LoadData(f.AsDef(), fullPath));
+                var d = new GenData(GenDataBase.DataLoader.LoadData(f.GenDataBase.AsDef(), fullPath));
                 LocalCache.Add(p, d);
                 foreach (var reference in d.Cache.References)
                     if (!LocalCache.ContainsKey(reference.Path))

@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Test
         {
             var f = GenDataDef.CreateMinimal();
             var d = new GenData(f);
-            var f0 = d.AsDef();
+            var f0 = d.GenDataBase.AsDef();
             
             Assert.AreEqual(1, f0.Classes.Count); // Root class only
             Assert.AreEqual("", f0.GetClassName(0));
@@ -39,7 +39,7 @@ namespace org.xpangen.Generator.Test
             var f = GenDataDef.CreateMinimal();
             var d = new GenData(f);
             CreateClass(d, "Class");
-            var f0 = d.AsDef();
+            var f0 = d.GenDataBase.AsDef();
             Assert.AreEqual(2, f0.Classes.Count);
             
             // Root class
@@ -61,7 +61,7 @@ namespace org.xpangen.Generator.Test
         {
             var f = GenDataDef.CreateMinimal();
             var d = f.AsGenData();
-            var f0 = d.AsDef();
+            var f0 = d.GenDataBase.AsDef();
             VerifyAsDef(f0);
         }
         
@@ -76,7 +76,7 @@ namespace org.xpangen.Generator.Test
             var fChild = SetUpParentChildReferenceDef("Child", "Grandchild", "GrandchildDef", fGrandchild);
             fChild.DefinitionName = "ChildDef";
             var fParent = SetUpParentChildReferenceDef("Parent", "Child", "ChildDef", fChild);
-            var f = fParent.AsGenData().AsDef();
+            var f = fParent.AsGenData().GenDataBase.AsDef();
             f.DefinitionName = "Parent";
             CompareGenDataDef(fParent, f, "Parent");
         }

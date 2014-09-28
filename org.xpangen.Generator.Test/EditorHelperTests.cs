@@ -15,14 +15,11 @@ namespace org.xpangen.Generator.Test
         public void SettingsLoadTest()
         {
             var model = PopulateGenSettings();
-            var d = new GenData(model.GenDataBase);
             Assert.AreEqual(1, model.GenSettingsList.Count);
             Assert.AreEqual(4, model.GenSettingsList[0].BaseFileList.Count);
             Assert.AreEqual(6, model.GenSettingsList[0].FileGroupList.Count);
             var fileGroup = model.GenSettingsList[0].FileGroupList[5];
             Assert.AreEqual("GeneratorDefinitionModel", fileGroup.Name);
-            d.Last(2);
-            Assert.AreEqual("GeneratorDefinitionModel", d.Context[2].GenObject.Attributes[0]);
         }
 
         [TestCase(Description = "Access file group properties test.")]

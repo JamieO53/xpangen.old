@@ -177,7 +177,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the output profile is created correctly for data with a reference
         /// </summary>
-        [TestCase(Description = "Generator Output Profile for data with a nested reference test")]
+        [Test(Description = "Generator Output Profile for data with a nested reference test")]
         public void ReferenceOutputProfileTest()
         {
             var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");

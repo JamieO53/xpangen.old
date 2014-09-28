@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Test
         public void InheritanceDefinitionSetupTest()
         {
             var df = SetUpVirtualDefinition();
-            var d = (new GenData(df.GenDataBase));
+            var d = df.GenDataBase;
             var def = d.AsDef();
             Assert.AreEqual(VirtualDefinitionProfile, GenDataDefProfile.CreateProfile(def));
             var data = def.AsGenData();
@@ -34,7 +34,7 @@ namespace org.xpangen.Generator.Test
         {
             var df = SetUpVirtualDefinition();
             var d = (new GenData(df.GenDataBase));
-            var p = GenParameters.CreateProfile(d.AsDef());
+            var p = GenParameters.CreateProfile(d.GenDataBase.AsDef());
             var profileText = p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary).Replace(">:", ":");
             Assert.AreEqual(VirtualDefinitionProfile, profileText);
         }
@@ -67,7 +67,7 @@ namespace org.xpangen.Generator.Test
             SetUpParametersFile(dataFile, VirtualDefinitionData);
             var d = PopulateInheritanceData(dataFile);
             var x = GenDataBase.DataLoader.LoadData(d.GenDataDef, dataFile);
-            CompareGenData(d, x);
+            CompareGenData(d.GenDataBase, x);
         }
 
         [TestCase(Description = "Tests the loading of data with inheritance without a definition")]
@@ -77,7 +77,7 @@ namespace org.xpangen.Generator.Test
             SetUpParametersFile(dataFile, VirtualDefinitionData);
             var d = PopulateInheritanceData(dataFile);
             var x = GenDataBase.DataLoader.LoadData(dataFile);
-            CompareGenData(d, x);
+            CompareGenData(d.GenDataBase, x);
         }
 
         [TestCase(Description = "Tests the expansion of a class with inheritance")]
@@ -104,7 +104,7 @@ namespace org.xpangen.Generator.Test
         public void NestedInheritanceDataLoadTest()
         {
             var data = LoadVirtualParentData();
-            var expectedData = SetUpParentOfVirtualData();
+            var expectedData = SetUpParentOfVirtualData().GenDataBase;
             CompareGenData(expectedData, data);
         }
 
