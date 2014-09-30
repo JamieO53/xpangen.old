@@ -74,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindableObject.cs" />
-    <Compile Include="ContextParams.cs" />
     <Compile Include="Definition\Class.cs" />
     <Compile Include="Definition\Definition.cs" />
     <Compile Include="Definition\DefinitionCreator.cs" />

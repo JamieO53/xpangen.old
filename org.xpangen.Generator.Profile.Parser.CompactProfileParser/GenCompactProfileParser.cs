@@ -78,9 +78,11 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                 if (t != TokenType.Close)
                 {
                     if (Scan.Eof && classId != 0)
-                        throw new Exception("<<<<Missing Segment end bracket>>>>");
+                        //throw new Exception("<<<<Missing Segment end bracket>>>>");
+                        OutputText(parentContainer, true, "<<<<Missing Segment end bracket>>>>");
                     if (!Scan.Eof)
-                        throw new Exception("<<<<Unknown text in profile>>>>");
+                        //throw new Exception("<<<<Unknown text in profile>>>>");
+                        OutputText(parentContainer, true, "<<<<Unknown text in profile>>>>");
                 }
                 else
                 {
@@ -89,7 +91,8 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                 }
             }
             else if (classId != 0)
-                throw new Exception("<<<<<Missing Segment end bracket>>>>>");
+                //throw new Exception("<<<<<Missing Segment end bracket>>>>>");
+                OutputText(parentContainer, true, "<<<<Unknown text in profile>>>>");
             GenDataDef.CurrentClassId = saveClassId;
         }
 
@@ -123,7 +126,9 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                         ScanPlaceholder(parentContainer, ref textBlock, isPrimary);
                         break;
                     default:
-                        throw new GeneratorException("Unknown token type: " + nextToken);
+                        //throw new GeneratorException("Unknown token type: " + nextToken);
+                        OutputText(parentContainer, isPrimary, "Unknown token type: " + nextToken);
+                        break;
                 }
                 s = Scan.ScanText();
             }
