@@ -203,6 +203,15 @@ namespace org.xpangen.Generator.Profile
                     var textBlockFragment = (TextBlock) fragment;
                     OutputText(GetBodyText(textBlockFragment.Body()));
                     break;
+                case FragmentType.Annotation:
+                    format = Dictionary[fragmentType.ToString()].Format;
+                    var annotationFragment = (Annotation)fragment;
+                    OutputText(string.Format(format, new object[]
+                                                     {
+                                                         GetBodyText(annotationFragment.Body())
+                                                     }
+                        ));
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

@@ -72,6 +72,11 @@ namespace org.xpangen.Generator.Profile
                         FragmentType = FragmentType.TextBlock,
                         Format = "{0}"
                     });
+            Add(new ProfileFragmentSyntax
+            {
+                FragmentType = FragmentType.Annotation,
+                Format = "`-{0}`]"
+            });
         }
 
         private void Add(ProfileFragmentSyntax item)

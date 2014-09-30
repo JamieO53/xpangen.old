@@ -20,6 +20,7 @@ namespace org.xpangen.Generator.Profile.Profile
             SubClasses.Add("Condition");
             SubClasses.Add("Function");
             SubClasses.Add("TextBlock");
+            SubClasses.Add("Annotation");
             Properties.Add("Name");
             Properties.Add("Primary");
             Properties.Add("Secondary");

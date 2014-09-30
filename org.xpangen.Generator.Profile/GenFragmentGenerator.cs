@@ -73,6 +73,8 @@ namespace org.xpangen.Generator.Profile
                     return new GenFunctionGenerator(genDataDef, genWriter, genObject, fragment);
                 case FragmentType.TextBlock:
                     return new GenContainerGenerator(genDataDef, genWriter, genObject, fragment);
+                case FragmentType.Annotation:
+                    return new GenAnnotationGenerator(genDataDef, genWriter, genObject, fragment);
                 default:
                     return new GenFragmentGenerator(genDataDef, genWriter, fragment, genObject);
             }
@@ -96,6 +98,14 @@ namespace org.xpangen.Generator.Profile
         }
     }
 
+    public class GenAnnotationGenerator : GenContainerGenerator
+    {
+        internal GenAnnotationGenerator(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment)
+            : base(genDataDef, new GenWriter(new NullStream()), genObject, fragment)
+        {
+        }
+    }
+    
     public class GenConditionGenerator : GenContainerGenerator
     {
         internal GenConditionGenerator(GenDataDef genDataDef, GenWriter writer, GenObject genObject, Fragment fragment) 
@@ -202,6 +212,11 @@ namespace org.xpangen.Generator.Profile
             : base(genDataDef, genWriter, fragment, genObject)
         {
             ContainerFragment = (ContainerFragment) Fragment;
+        }
+
+        protected GenContainerGenerator()
+        {
+            throw new NotImplementedException();
         }
 
         protected GenObject OverrideGenObject { get; set; }

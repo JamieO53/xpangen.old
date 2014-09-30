@@ -76,6 +76,7 @@
     <Compile Include="CompactProfileFragmentSyntaxDictionary.cs" />
     <Compile Include="ConditionParameters.cs" />
     <Compile Include="FragmentType.cs" />
+    <Compile Include="GenAnnotation.cs" />
     <Compile Include="GenBlock.cs" />
     <Compile Include="GenCardinality.cs" />
     <Compile Include="GenComparison.cs" />
@@ -108,9 +109,11 @@
     <Compile Include="GenWriter.cs" />
     <Compile Include="IGeneratorLibrary.cs" />
     <Compile Include="LibraryManager.cs" />
+    <Compile Include="NullStream.cs" />
     <Compile Include="ProfileFragmentSyntax.cs" />
     <Compile Include="ProfileFragmentSyntaxDictionary.cs" />
     <Compile Include="GenProfileTextExpander.cs" />
+    <Compile Include="Profile\Annotation.cs" />
     <Compile Include="Profile\Block.cs" />
     <Compile Include="Profile\Condition.cs" />
     <Compile Include="Profile\ContainerFragment.cs" />
@@ -127,6 +130,7 @@
     <Compile Include="Profile\Text.cs" />
     <Compile Include="Profile\TextBlock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringStream.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\org.xpangen.Generator.Data.Model\org.xpangen.Generator.Data.Model.csproj">
