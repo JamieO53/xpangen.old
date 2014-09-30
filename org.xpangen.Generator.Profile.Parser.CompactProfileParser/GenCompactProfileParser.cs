@@ -315,6 +315,15 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             return frag;
         }
 
+        private GenAnnotation ScanAnnotation(int classId, GenContainerFragmentBase parentContainer, bool isPrimary = true)
+        {
+            var frag = new GenAnnotation(new GenFragmentParams(GenDataDef, parentContainer, isPrimary));
+            if (Scan.CheckChar('-'))
+                Scan.SkipChar();
+            ScanBody(classId, frag.Body, frag, frag.Annotation);
+            return frag;
+        }
+
         internal static void AddText(GenContainerFragmentBase parentContainer, FragmentBody fragmentBody, ref GenTextBlock textBlock, string s, GenDataDef genDataDef, bool isPrimary)
         {
             CheckTextBlock(parentContainer, ref textBlock, genDataDef, isPrimary);
