@@ -129,7 +129,7 @@ namespace org.xpangen.Generator.Data
                 if (sc == exclude) continue;
                 if (sc.Definition.SubClass.IsInheritor(className))
                     return sc.Count == 0 ? null : sc[0];
-                var descendentContext = GetDescendentContext(sc[0], className);
+                var descendentContext = sc.Count == 0 ? null : GetDescendentContext(sc[0], className);
                 if (descendentContext == null ||
                     descendentContext.ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase))
                     return descendentContext;

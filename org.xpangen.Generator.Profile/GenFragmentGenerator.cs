@@ -143,7 +143,7 @@ namespace org.xpangen.Generator.Profile
             string s2;
             GetOperands(out s1, out s2);
 
-            var i = String.Compare(s1, s2, StringComparison.Ordinal);
+            var i = String.Compare(s1, s2, StringComparison.OrdinalIgnoreCase);
 
             switch (GenComparison)
             {
@@ -439,14 +439,16 @@ namespace org.xpangen.Generator.Profile
 
         public void Last()
         {
-            Index = SubClassBase.Count - 1;
+            Index = Count - 1;
             if (ClassDef.IsAbstract || !ClassDef.IsInherited) return;
             while (!Eol() && ClassName != SubClassBase[Index].ClassName) Index--;
         }
 
+        private int Count { get { return SubClassBase == null ? 0 : SubClassBase.Count; } }
+
         public bool Eol()
         {
-            if (Index < 0 || Index >= SubClassBase.Count) return true;
+            if (Index < 0 || SubClassBase == null || Index >= Count) return true;
             if (ClassDef.IsAbstract || !ClassDef.IsInherited) return false;
             if (Inheritance && ClassName != SubClassBase[Index].ClassName) return false;
             return false;
