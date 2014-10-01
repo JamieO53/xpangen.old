@@ -159,32 +159,35 @@ namespace org.xpangen.Generator.Test
 
         protected static void ExecuteFunction(GenData genData, string functionName, string variableName, string variableValue, string expected)
         {
+            ExecuteFunction(genData, functionName, expected, new []{variableName, variableValue});
+        }
+
+        protected static void ExecuteFunction(GenData genData, string functionName, string expected, string[] values)
+        {
             var r = new GenProfileFragment(new GenProfileParams(genData.GenDataDef));
             var g = new GenFunction(new GenFunctionParams(genData.GenDataDef, r, functionName));
             r.Body.Add(g);
-            var b = SetFunctionParameters(genData, g, variableName, variableValue);
+            var b = SetFunctionParameters(genData, g, values);
             VerifyFragment(genData, g, "GenFunction", FragmentType.Function, functionName,
-                           "`@" + functionName + ':' + b + "`]", expected, false, null, r.Profile.GenDataBase.GenDataDef);
+                "`@" + functionName + ':' + b + "`]", expected, false, null, r.Profile.GenDataBase.GenDataDef);
         }
 
-        private static string SetFunctionParameters(GenData genData, GenFunction genFunction, string variableName, string variableValue)
+        private static string SetFunctionParameters(GenData genData, GenFunction genFunction, string[] values)
         {
-            if (variableName == "")
-                return "";
+            foreach (var value in values)
+                SetFunctionParameter(genData, genFunction, value);
+            return string.Join(" ", values);
+        }
 
-            var p0 = new GenTextFragment(new GenTextFragmentParams(genData.GenDataDef, genFunction, variableName));
+        private static void SetFunctionParameter(GenData genData, GenFunction genFunction, string value)
+        {
+            var p0 = new GenTextFragment(new GenTextFragmentParams(genData.GenDataDef, genFunction, value));
             genFunction.Body.Add(p0);
-            if (variableValue == "")
-                return variableName;
-
-            var p1 = new GenTextFragment(new GenTextFragmentParams(genData.GenDataDef, genFunction, variableValue));
-            genFunction.Body.Add(p1);
-            return variableName + " " + variableValue;
         }
 
         protected void CheckFunctionVarValue(GenData genData, string expected)
         {
-            ExecuteFunction(genData, "Get", "Var", "", expected);
+            ExecuteFunction(genData, "Get", expected, new []{"Var", ""});
         }
 
         private static GenData SetUpSegmentSeparatorData(string display)

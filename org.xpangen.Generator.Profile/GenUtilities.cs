@@ -167,5 +167,28 @@ namespace org.xpangen.Generator.Profile
                 sa[i] = Decapitalize(sa[i]);
             return string.Join(" ", sa);
         }
+
+        /// <summary>
+        ///     Checks the condition, and if not empty returns the second parameter else the third.
+        /// </summary>
+        /// <param name="condition">The condition.</param>
+        /// <param name="value0">The value returned if the condition is not empty.</param>
+        /// <param name="value1">The value returned if the condition is empty.</param>
+        /// <returns>The edited string.</returns>
+        public static string Cond(string condition, string value0, string value1)
+        {
+            return !string.IsNullOrEmpty(condition) ? value0 : value1;
+        }
+
+        /// <summary>
+        ///     Checks if the first parameter contains the second. The comparison is case insensitive.
+        /// </summary>
+        /// <param name="container">The text being examined.</param>
+        /// <param name="contained">The text being sought.</param>
+        /// <returns>The container text if the sought text is contained, and an empty string otherwise.</returns>
+        public static string Contains(string container, string contained)
+        {
+            return container.ToLowerInvariant().Contains(contained.ToLowerInvariant()) ? container : "";
+        }
     }
 }
