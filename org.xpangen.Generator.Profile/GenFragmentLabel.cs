@@ -46,6 +46,9 @@ namespace org.xpangen.Generator.Profile
                 case FragmentType.Segment:
                     label = ((Segment) fragment).Class;
                     break;
+                case FragmentType.Annotation:
+                    label = "Annotation";
+                    break;
                 case FragmentType.Block:
                     label = "Block";
                     break;
