@@ -7,14 +7,12 @@ namespace org.xpangen.Generator.Test
     [TestFixture]
     public class GenProfileFunctionTests : GenProfileFragmentsTestBase
     {
-        private GenDataDef GenDataDef { get; set; }
-
         private GenData GenData { get; set; }
 
         /// <summary>
         /// Tests the Set, Add, Sub and Get functions for numeric data
         /// </summary>
-        [TestCase(Description="Generator Function Test Set Add Sub Get")]
+        [Test(Description="Generator Function Test Set Add Sub Get")]
         public void GenFunctionTestSetAddSubGet()
         {
             ExecuteFunction(GenData, "Set", "Var", "5", "");
@@ -32,7 +30,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the Map Set and Get functions are created correctly
         /// </summary>
-        [TestCase(Description = "Generator Function test for Map Set and Get")]
+        [Test(Description = "Generator Function test for Map Set and Get")]
         public void GenFunctionTestMapSetGet()
         {
             ExecuteFunction(GenData, "MapSet", "Name 1", "Value 1", "");
@@ -46,7 +44,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests if the StringOrName function is created correctly
         /// </summary>
-        [TestCase(Description = "Generator Function Test for String or Name")]
+        [Test(Description = "Generator Function Test for String or Name")]
         public void GenFunctionTestStringOrName()
         {
             ExecuteFunction(GenData, "StringOrName", "NameValue", "", "NameValue");
@@ -54,9 +52,29 @@ namespace org.xpangen.Generator.Test
         }
 
         /// <summary>
+        /// Tests if the Cond function is created correctly
+        /// </summary>
+        [Test(Description = "Generator Function Test for Cond")]
+        public void GenFunctionTestCond()
+        {
+            ExecuteFunction(GenData, "Cond", "Second", new [] {"", "First", "Second"});
+            ExecuteFunction(GenData, "Cond", "First", new[] { "Something", "First", "Second" });
+        }
+
+        /// <summary>
+        /// Tests if the Contains function is created correctly
+        /// </summary>
+        [Test(Description = "Generator Function Test for Contains")]
+        public void GenFunctionTestContains()
+        {
+            ExecuteFunction(GenData, "Contains", "Container Text", "ner t", "Container Text");
+            ExecuteFunction(GenData, "Contains", "Container Text", "ner_t", "");
+        }
+
+        /// <summary>
         /// Tests for the correct creation of the quoted string function
         /// </summary>
-        [TestCase(Description = "Generator Quote String function test")]
+        [Test(Description = "Generator Quote String function test")]
         public void GenFunctionQuoteString()
         {
             ExecuteFunction(GenData, "QuoteString", "This string has no quotes", "", "'This string has no quotes'");
@@ -68,7 +86,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the Cut String function is created correctly
         /// </summary>
-        [TestCase(Description = "Generator Function test - Cut String")]
+        [Test(Description = "Generator Function test - Cut String")]
         public void GenFunctionCutString()
         {
             ExecuteFunction(GenData, "CutString", "This string is cut", " is", "This string cut");
@@ -78,7 +96,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the function to convert from camel case is created correctly
         /// </summary>
-        [TestCase(Description = "Generator Function test - Un-Identifier")]
+        [Test(Description = "Generator Function test - Un-Identifier")]
         public void GenFunctionUnIdentifier()
         {
             ExecuteFunction(GenData, "UnIdentifier", "I-am_anIdentifier IAm", "", "I am an Identifier I Am");
@@ -87,7 +105,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the function to convert from camel case with lowercase words is created correctly
         /// </summary>
-        [TestCase(Description = "Generator Function test - Un-Identifier Lower case")]
+        [Test(Description = "Generator Function test - Un-Identifier Lower case")]
         public void GenFunctionUnIdentifierLc()
         {
             ExecuteFunction(GenData, "UnIdentifierLc", "I-am_anIdentifier IAm", "", "I am an identifier i am");
@@ -96,7 +114,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the function to convert from camel case is created correctly
         /// </summary>
-        [TestCase(Description = "Generator Function test - Decapitalize")]
+        [Test(Description = "Generator Function test - Decapitalize")]
         public void GenFunctionDecapitalize()
         {
             ExecuteFunction(GenData, "Decapitalize", "DeCapitalize", "", "deCapitalize");
@@ -105,7 +123,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the current date function is created correctly
         /// </summary>
-        [TestCase(Description = "Generator Function test - Date")]
+        [Test(Description = "Generator Function test - Date")]
         public void GenFunctionDate()
         {
             ExecuteFunction(GenData, "Date", "", "", DateTime.Today.ToString("D")); // Long date format
@@ -114,7 +132,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the Current Time function is created correctly
         /// </summary>
-        [TestCase(Description="Generator Function Tests for Time")]
+        [Test(Description="Generator Function Tests for Time")]
         public void GenFunctionTime()
         {
             ExecuteFunction(GenData, "Time", "", "", DateTime.Now.ToShortTimeString()); // Short time format
@@ -123,7 +141,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the function to close the generated file and create a new one is created correctly
         /// </summary>
-        [TestCase(Description = "Generator Function test - File")]
+        [Test(Description = "Generator Function test - File")]
         public void GenFunctionFile()
         {
             ExecuteFunction(GenData, "File", "FileName.txt", "", "\r\n //File: FileName.txt");
@@ -139,7 +157,6 @@ namespace org.xpangen.Generator.Test
         public void SetUp()
         {
             GenData = SetUpData();
-            GenDataDef = GenData.GenDataDef;
         }
 
         /// <summary>

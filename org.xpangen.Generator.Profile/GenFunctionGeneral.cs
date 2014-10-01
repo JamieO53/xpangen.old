@@ -31,11 +31,34 @@ namespace org.xpangen.Generator.Profile
         public IEnumerable<string> Implements()
         {
             return
-                "CutString,Date,File,QuoteString,StringOrName,Time,UnIdentifier,UnIdentifierLC,Decapitalize".Split(',');
+                "CutString,Date,File,QuoteString,StringOrName,Time,UnIdentifier,UnIdentifierLC,Decapitalize,Cond,Contains".Split(',');
         }
 
         /// <summary>
-        ///     Cust the specified substring out of the given string.
+        ///     Checks if the first parameter contains the second. The comparison is case insensitive.
+        /// </summary>
+        /// <param name="container">The text being examined.</param>
+        /// <param name="contained">The text being sought.</param>
+        /// <returns>The container text if the sought text is contained, and an empty string otherwise.</returns>
+        private static string Contains(string container, string contained)
+        {
+            return GenUtilities.Contains(container, contained);
+        }
+
+        /// <summary>
+        ///     Checks the condition, and if not empty returns the second parameter else the third.
+        /// </summary>
+        /// <param name="condition">The condition.</param>
+        /// <param name="value0">The value returned if the condition is not empty.</param>
+        /// <param name="value1">The value returned if the condition is empty.</param>
+        /// <returns>The conditional string.</returns>
+        private static string Cond(string condition, string value0, string value1)
+        {
+            return GenUtilities.Cond(condition, value0, value1);
+        }
+
+        /// <summary>
+        ///     Cuts the specified substring out of the given string.
         /// </summary>
         /// <param name="value1">The original string.</param>
         /// <param name="value2">The string being cut out.</param>
@@ -135,14 +158,21 @@ namespace org.xpangen.Generator.Profile
             var name = "";
             if (param.Length > 0)
                 name = param[0];
-            var value = "";
+            var value0 = "";
             if (param.Length > 1)
-                value = param[1];
+                value0 = param[1];
+            var value1 = "";
+            if (param.Length > 2)
+                value1 = param[2];
 
             switch (function.ToLowerInvariant())
             {
+                case "cond":
+                    return Cond(name, value0, value1);
+                case "contains":
+                    return Contains(name, value0);
                 case "cutstring":
-                    return CutString(name, value);
+                    return CutString(name, value0);
                 case "date":
                     return Date();
                 case "file":
