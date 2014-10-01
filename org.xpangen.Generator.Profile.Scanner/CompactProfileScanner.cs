@@ -56,6 +56,8 @@ namespace org.xpangen.Generator.Profile.Scanner
                 result = TokenType.Condition;
             else if (CheckChar('@'))
                 result = TokenType.Function;
+            else if (CheckChar('-'))
+                result = TokenType.Annotation;
             else if (CheckChar(']'))
                 result = TokenType.Close;
             else if (CheckChar(';'))

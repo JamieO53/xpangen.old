@@ -12,6 +12,7 @@ namespace org.xpangen.Generator.Profile.Scanner
         Condition,
         Function,
         Secondary,
+        Annotation,
         Close,
         Delimiter,
         Name,

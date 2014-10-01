@@ -55,6 +55,21 @@ namespace org.xpangen.Generator.Profile.Profile
             return block;
         }
 
+        public static Annotation AddAnnotation(this FragmentBody body)
+        {
+            var name = CreateContainerFragmentBody(body, "Annotation");
+            var annotation = new Annotation(body.GenDataBase)
+                            {
+                                GenObject = ((GenObject)body.GenObject).CreateGenObject("Annotation"),
+                                Name = name,
+                                Primary = name,
+                                Secondary = "Empty1"
+                            };
+            body.FragmentList.Add(annotation);
+            SetContainerLinks(body, annotation);
+            return annotation;
+        }
+
         public static Condition AddCondition(this FragmentBody body, string class1 = "", string property1 = "", 
             string comparison = "", string class2 = "", string property2 = "", string lit = "", string useLit = "")
         {

@@ -125,6 +125,9 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                     case TokenType.Name:
                         ScanPlaceholder(parentContainer, ref textBlock, isPrimary);
                         break;
+                    case TokenType.Annotation:
+                        frag = ScanAnnotation(classId, parentContainer, isPrimary);
+                        break;
                     default:
                         //throw new GeneratorException("Unknown token type: " + nextToken);
                         OutputText(parentContainer, isPrimary, "Unknown token type: " + nextToken);
