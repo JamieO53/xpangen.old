@@ -111,6 +111,9 @@ namespace org.xpangen.Generator.Profile
                     var segmentParams = ((GenSegmentParams) this);
                     Fragment = fragmentBody.AddSegment(segmentParams.ClassName, segmentParams.Cardinality.ToString());
                     break;
+                case FragmentType.Annotation:
+                    Fragment = fragmentBody.AddAnnotation();
+                    break;
                 case FragmentType.Block:
                     Fragment = fragmentBody.AddBlock();
                     break;

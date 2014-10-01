@@ -31,6 +31,7 @@ namespace org.xpangen.Generator.Profile.Profile
             Classes.Add("Condition");
             Classes.Add("Function");
             Classes.Add("TextBlock");
+            Classes.Add("Annotation");
             SubClasses.Add("ProfileRoot");
             base.GenObject = genDataBase.Root;
         }
@@ -53,6 +54,7 @@ namespace org.xpangen.Generator.Profile.Profile
             f.AddInheritor("ContainerFragment", "Condition");
             f.AddInheritor("ContainerFragment", "Function");
             f.AddInheritor("ContainerFragment", "TextBlock");
+            f.AddInheritor("ContainerFragment", "Annotation");
             f.Classes[1].AddInstanceProperty("Name");
             f.Classes[1].AddInstanceProperty("Title");
             f.Classes[2].AddInstanceProperty("Name");
@@ -87,6 +89,7 @@ namespace org.xpangen.Generator.Profile.Profile
             f.Classes[12].AddInstanceProperty("Name");
             f.Classes[12].AddInstanceProperty("FunctionName");
             f.Classes[13].AddInstanceProperty("Name");
+            f.Classes[14].AddInstanceProperty("Name");
             return f;
         }
 

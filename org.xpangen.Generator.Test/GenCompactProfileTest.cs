@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a text only profile is scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "Text Profile test")]
+        [Test(Description = "Text Profile test")]
         public void TextProfileTest()
         {
             const string txt = "Text to scan";
@@ -43,7 +43,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a profile consiting of a segement is scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "Segment Profile Test")]
+        [Test(Description = "Segment Profile Test")]
         public void SegmentProfileTest()
         {
             const string txt = "`[Class>:`Class.Name`,`]";
@@ -80,7 +80,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a profile consisting of a segment embedded in text is scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "Segment Text Profile test")]
+        [Test(Description = "Segment Text Profile test")]
         public void SegmentTextProfileTest()
         {
             const string txt = "Some text `[Class>:`Class.Name`,`] some more text";
@@ -93,7 +93,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a profile consisting of a delimited list segment is scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "Segment List Profile test")]
+        [Test(Description = "Segment List Profile test")]
         public void SegmentListProfileTest()
         {
             const string txt = "`[Class/:`Class.Name``;,`]";
@@ -106,7 +106,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a profile consisting of a block is scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "Block Profile test")]
+        [Test(Description = "Block Profile test")]
         public void BlockProfileTest()
         {
             const string txt = "`{Block text`]";
@@ -117,9 +117,22 @@ namespace org.xpangen.Generator.Test
         }
 
         /// <summary>
+        ///     Tests that a profile consisting of an annotation is scanned and expanded correctly
+        /// </summary>
+        [Test(Description = "Annotation Profile test")]
+        public void AnnotationProfileTest()
+        {
+            const string txt = "`-Annotation text`]";
+            const string expectedExpansion = "";
+            var expectedFragmentType = new[] { FragmentType.Annotation };
+            const string message = "Empty annotation text expected";
+            ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
+        }
+
+        /// <summary>
         ///     Tests that a profile consiting of a lookup is scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "Lookup Profile test")]
+        [Test(Description = "Lookup Profile test")]
         public void LookupProfileTest()
         {
             const string txt =
@@ -146,7 +159,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a profile consisting of a no-match lookup is scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "No Match Profile test")]
+        [Test(Description = "No Match Profile test")]
         public void NoMatchProfileTest()
         {
             const string txt =
@@ -173,7 +186,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests a profile consisting of existence and non-existence condition tests expands correctly
         /// </summary>
-        [TestCase(Description = "Existence Condition Profile test")]
+        [Test(Description = "Existence Condition Profile test")]
         public void ExistenceConditionProfileTest()
         {
             const string txt = "`[Class':" +
@@ -190,7 +203,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a profile consisting of a combination literal comparison conditions is scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "Literal Condition Profile test")]
+        [Test(Description = "Literal Condition Profile test")]
         public void LiteralConditionProfileTest()
         {
             const string txt = "`[Class':" +
@@ -215,7 +228,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a profile consisting of a combination of identifier comparisons is scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "Identifier Condition Profile test")]
+        [Test(Description = "Identifier Condition Profile test")]
         public void IdentifierConditionProfileTest()
         {
             const string txt = "`[Class':" +
@@ -271,7 +284,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a profile consisting of a prameterless function invocation is scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "No Param Function Profile test")]
+        [Test(Description = "No Param Function Profile test")]
         public void NoParamFunctionProfileTest()
         {
             const string txt = "`@Date:`]";
@@ -284,7 +297,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a profile consisting of a single prameter function invocation is scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "Single Param Function Profile test")]
+        [Test(Description = "Single Param Function Profile test")]
         public void SingleParamFunctionProfileTest()
         {
             const string txt = "`@File:`{filename.txt`]`]";
@@ -297,7 +310,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a profile cosnsiting of a sequence of functions is scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "Function Profile test")]
+        [Test(Description = "Function Profile test")]
         public void FunctionProfileTest()
         {
             const string txt =
@@ -322,7 +335,7 @@ namespace org.xpangen.Generator.Test
         ///     Tests that a profile consisting of a sequence of function invocations with variously formatted literal parameters
         ///     are scanned and expanded correctly
         /// </summary>
-        [TestCase(Description = "Literal Param Function Profile test")]
+        [Test(Description = "Literal Param Function Profile test")]
         public void LiteralParamFunctionProfileTest()
         {
             const string txt =
@@ -364,7 +377,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a profile saved to a file is correctly scanned and expanded from the file
         /// </summary>
-        [TestCase(Description = "File Stream Profile test")]
+        [Test(Description = "File Stream Profile test")]
         public void FileStreamProfileTest()
         {
             const string txt = "`[Class>:`Class.Name`,`]";
@@ -390,7 +403,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         ///     Tests that a profile saved to a new directory is saved correctly
         /// </summary>
-        [TestCase(Description = "New Directory File Stream Profile test")]
+        [Test(Description = "New Directory File Stream Profile test")]
         public void DirectoryFileStreamProfileTest()
         {
             const string dir = "TestDir";
