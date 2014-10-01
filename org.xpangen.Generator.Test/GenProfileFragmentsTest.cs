@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests for the correct creation of a text fragment
         /// </summary>
-        [TestCase(Description="Generator text fragment test")]
+        [Test(Description="Generator text fragment test")]
         public void GenTextFragmentTest()
         {
             var r = new GenProfileFragment(new GenProfileParams(GenData.GenDataDef));
@@ -32,9 +32,28 @@ namespace org.xpangen.Generator.Test
         }
 
         /// <summary>
+        /// Tests for the correct creation of an annotation fragment
+        /// </summary>
+        [Test(Description = "Generator Annotation fragment test")]
+        public void GenAnnotationTest()
+        {
+            var r = new GenProfileFragment(new GenProfileParams(GenData.GenDataDef));
+
+            var g = new GenAnnotation(new GenFragmentParams(GenDataDef, r));
+            r.Body.Add(g);
+            var p =
+                new GenPlaceholderFragment(new GenPlaceholderFragmentParams(GenDataDef, g,
+                    GenDataDef.GetId("Property.Name")));
+            var t = new GenTextFragment(new GenTextFragmentParams(GenData.GenDataDef, g, ","));
+            g.Body.Add(p);
+            g.Body.Add(t);
+            VerifyFragment(GenData, g, "GenAnnotation", FragmentType.Annotation, "Annotation", "`-`Property.Name`,`]", "", false, null, r.Profile.GenDataBase.GenDataDef);
+        }
+
+        /// <summary>
         /// Tests for the correct creation of a placeholder fragment
         /// </summary>
-        [TestCase(Description="Generator placeholder test")]
+        [Test(Description="Generator placeholder test")]
         public void GenPlaceholderTest()
         {
             var r = new GenProfileFragment(new GenProfileParams(GenData.GenDataDef));
@@ -48,7 +67,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests for the correct creation of a block fragment
         /// </summary>
-        [TestCase(Description="Generator Block test")]
+        [Test(Description="Generator Block test")]
         public void GenBlockTest()
         {
             var r = new GenProfileFragment(new GenProfileParams(GenData.GenDataDef));
@@ -67,7 +86,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests for the correct creation of a lookup fragment matching a name
         /// </summary>
-        [TestCase(Description="Generator Lookup Match test")]
+        [Test(Description="Generator Lookup Match test")]
         public void GenLookupMatchTest()
         {
             var d = SetUpLookupData();
@@ -97,7 +116,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests for the correct creation of a lookup fragment where the given name does not match
         /// </summary>
-        [TestCase(Description="Generator Lookup No Match test")]
+        [Test(Description="Generator Lookup No Match test")]
         public void GenLookupNoMatchTest()
         {
             const string txt = "SubClass does not exist";
@@ -135,7 +154,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Checks for the correct creation of a lookup in context fragment
         /// </summary>
-        [TestCase(Description="Generator Lookup Context Test")]
+        [Test(Description="Generator Lookup Context Test")]
         public void GenLookupContextTest()
         {
             var d = SetUpLookupContextData();
@@ -175,7 +194,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests for the correct creation of an attribute value existing condition fragment
         /// </summary>
-        [TestCase(Description="Generator Existence Condition test")]
+        [Test(Description="Generator Existence Condition test")]
         public void GenExistenceConditionTest()
         {
             var d = SetUpComparisonData();
@@ -199,7 +218,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests for the correct creation of a condition matching a literal value
         /// </summary>
-        [TestCase(Description = "Generator Literal Condition test")]
+        [Test(Description = "Generator Literal Condition test")]
         public void GenLiteralConditionTest()
         {
             var d = SetUpComparisonData();
@@ -226,7 +245,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests for the correct creation of a condition testing for a numeric literal value
         /// </summary>
-        [TestCase(Description="Generator Numeric Literal Condition Test")]
+        [Test(Description="Generator Numeric Literal Condition Test")]
         public void GenNumericLiteralConditionTest()
         {
             var d = SetUpNumericComparisonData();
@@ -253,7 +272,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests for the correct creation of a condition testing for the equality of two attribute values
         /// </summary>
-        [TestCase(Description="Generator Identifier Condition test")]
+        [Test(Description="Generator Identifier Condition test")]
         public void GenIdentifierConditionTest()
         {
             var d = SetUpComparisonData();
