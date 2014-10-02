@@ -44,15 +44,16 @@ namespace org.xpangen.Generator.Test
             if (File.Exists(fileName))
                 File.Delete(fileName);
             File.WriteAllText(fileName, input);
-            var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-
-            using (var scan = new ScanReader(stream))
+            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                Assert.AreEqual("Unicode (UTF-8)", scan.Encoding.EncodingName);
-                Assert.AreEqual(output1, scan.ScanWhile(ScanReader.Alpha));
-                CheckScannerNotEofConditions(scan);
-                scan.ScanUntil(ScanReader.Numeric);
-                Assert.AreEqual(output2, scan.ScanWhile(ScanReader.Numeric));
+                using (var scan = new ScanReader(stream))
+                {
+                    Assert.AreEqual("Unicode (UTF-8)", scan.Encoding.EncodingName);
+                    Assert.AreEqual(output1, scan.ScanWhile(ScanReader.Alpha));
+                    CheckScannerNotEofConditions(scan);
+                    scan.ScanUntil(ScanReader.Numeric);
+                    Assert.AreEqual(output2, scan.ScanWhile(ScanReader.Numeric));
+                }
             }
         }
 

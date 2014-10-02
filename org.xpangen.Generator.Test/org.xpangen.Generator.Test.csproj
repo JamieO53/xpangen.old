@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="ApplicationBaseTests.cs" />
     <Compile Include="CharSetTests.cs" />
+    <Compile Include="ComboServerTests.cs" />
     <Compile Include="EditorHelperTests.cs" />
     <Compile Include="GenDataBaseToDataTests.cs" />
     <Compile Include="GenDataCacheTests.cs" />

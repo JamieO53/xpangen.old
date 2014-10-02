@@ -2,7 +2,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
 using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
@@ -10,7 +9,7 @@ namespace org.xpangen.Generator.Data
     public class GenDataBase : BindableObject
     {
         private GenDataBaseReferences _references;
-        protected internal Dictionary<string, GenDataBase> Cache { get; set; }
+        protected internal Dictionary<string, GenDataBase> Cache { get; private set; }
 
         public GenDataBase(GenDataDef genDataDef) : this(genDataDef, null)
         {
@@ -54,11 +53,6 @@ namespace org.xpangen.Generator.Data
         {
             var x = new GenDataToDef(this);
             return x.AsDef();
-        }
-
-        public GenObject CreateGenObject(GenObject parent, string className)
-        {
-            return parent.CreateGenObject(className);
         }
 
         protected internal GenDataBase CheckReference(string defFile, string dataFile)

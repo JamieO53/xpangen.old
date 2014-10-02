@@ -25,16 +25,18 @@ namespace org.xpangen.Generator.Test
         {
             const string txt = "Property=Title[Title='Property Title',DataType=String,Read,Write,PrivateVar,Visibility=3]\r\n";
             GenDataDef.CreateMinimal();
-            var scan = new ParameterScanner(txt);
-            scan.ScanObject();
-            Assert.IsFalse(scan.AtEnd);
-            Assert.AreEqual("Property", scan.RecordType, "Property record type expected");
-            Assert.AreEqual("Title", scan.Attribute("Name"), "Name attribute by default");
-            Assert.AreEqual("Property Title", scan.Attribute("Title"), "Quoted attribute value");
-            Assert.AreEqual("True", scan.Attribute("Read"), "Boolean attribute");
-            Assert.AreEqual("", scan.Attribute("Missing"), "Missing attribute blank by default");
-            scan.ScanObject();
-            Assert.IsTrue(scan.Eof);
+            using (var scan = new ParameterScanner(txt))
+            {
+                scan.ScanObject();
+                Assert.IsFalse(scan.AtEnd);
+                Assert.AreEqual("Property", scan.RecordType, "Property record type expected");
+                Assert.AreEqual("Title", scan.Attribute("Name"), "Name attribute by default");
+                Assert.AreEqual("Property Title", scan.Attribute("Title"), "Quoted attribute value");
+                Assert.AreEqual("True", scan.Attribute("Read"), "Boolean attribute");
+                Assert.AreEqual("", scan.Attribute("Missing"), "Missing attribute blank by default");
+                scan.ScanObject();
+                Assert.IsTrue(scan.Eof);
+            }
         }
 
         private readonly Dictionary<char, string> _escapeChars =
@@ -57,8 +59,8 @@ namespace org.xpangen.Generator.Test
         {
             var escapedString = _escapeChars[escapedChar];
             var txt = string.Format(@"'start{0}end'", escapedString); // ' is the quote character;
-            var scan = new ParameterScanner(txt);
-            Assert.AreEqual(string.Format("start{0}end", escapedChar), scan.ScanQuotedString());
+            using (var scan = new ParameterScanner(txt))
+                Assert.AreEqual(string.Format("start{0}end", escapedChar), scan.ScanQuotedString());
         }
 
         private readonly Dictionary<char, string> _undefinedEscapeChars =
@@ -77,8 +79,10 @@ namespace org.xpangen.Generator.Test
         {
             var escapedString = _undefinedEscapeChars[escapedChar];
             var txt = @"'start" + escapedString + "end'"; // ' is the quote character;
-            var scan = new ParameterScanner(txt);
-            Assert.AreEqual(string.Format("start\\{0}end", escapedString.Substring(1)), scan.ScanQuotedString());
+            using (var scan = new ParameterScanner(txt))
+            {
+                Assert.AreEqual(string.Format("start\\{0}end", escapedString.Substring(1)), scan.ScanQuotedString());
+            }
         }
 
         /// <summary>
