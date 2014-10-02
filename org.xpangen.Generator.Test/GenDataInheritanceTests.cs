@@ -18,7 +18,7 @@ namespace org.xpangen.Generator.Test
     [TestFixture]
     public class GenDataInheritanceTests : GenProfileFragmentsTestBase
     {
-        [TestCase(Description = "Tests the setting up of a definition with inheritance")]
+        [Test(Description = "Tests the setting up of a definition with inheritance")]
         public void InheritanceDefinitionSetupTest()
         {
             var df = SetUpVirtualDefinition();
@@ -29,7 +29,7 @@ namespace org.xpangen.Generator.Test
             CompareGenData(d, data.GenDataBase);
         }
 
-        [TestCase(Description = "Tests the creation of a data profile with inheritance")]
+        [Test(Description = "Tests the creation of a data profile with inheritance")]
         public void InheritanceDataProfileTest()
         {
             var df = SetUpVirtualDefinition();
@@ -39,7 +39,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(VirtualDefinitionProfile, profileText);
         }
 
-        [TestCase(Description = "Tests the saving of data with inheritance")]
+        [Test(Description = "Tests the saving of data with inheritance")]
         public void InheritanceDataSaveTest()
         {
             var dataFile = GetTestDataFileName("InheritanceDataSaveTest");
@@ -50,7 +50,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(VirtualDefinitionData, text);
         }
 
-        [TestCase(Description = "Tests the expansion of data with inheritance")]
+        [Test(Description = "Tests the expansion of data with inheritance")]
         public void InheritanceDataExpansionTest()
         {
             var dataFile = GetTestDataFileName("InheritanceDataExpansionTest");
@@ -60,7 +60,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(VirtualDefinitionData, text);
         }
 
-        [TestCase(Description = "Tests the loading of data with inheritance")]
+        [Test(Description = "Tests the loading of data with inheritance")]
         public void InheritanceDataLoadTest()
         {
             var dataFile = GetTestDataFileName("InheritanceDataLoadTest");
@@ -70,7 +70,7 @@ namespace org.xpangen.Generator.Test
             CompareGenData(d.GenDataBase, x);
         }
 
-        [TestCase(Description = "Tests the loading of data with inheritance without a definition")]
+        [Test(Description = "Tests the loading of data with inheritance without a definition")]
         public void InheritanceDataLoadSansDefinitionTest()
         {
             var dataFile = GetTestDataFileName("InheritanceDataLoadSansDefinitionTest");
@@ -80,7 +80,7 @@ namespace org.xpangen.Generator.Test
             CompareGenData(d.GenDataBase, x);
         }
 
-        [TestCase(Description = "Tests the expansion of a class with inheritance")]
+        [Test(Description = "Tests the expansion of a class with inheritance")]
         public void InheritanceClassExpansionTest()
         {
             var dataFile = GetTestDataFileName("InheritanceClassExpansionTest");
@@ -90,7 +90,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(InheritanceProfileResult, text);
         }
 
-        [TestCase(Description = "Tests the generation of a class with inheritance")]
+        [Test(Description = "Tests the generation of a class with inheritance")]
         public void InheritanceClassGenerationTest()
         {
             var dataFile = GetTestDataFileName("InheritanceClassGenerationTest");
@@ -100,7 +100,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(InheritanceProfileResult, text);
         }
 
-        [TestCase(Description = "Tests the loading of nested data with inheritance")]
+        [Test(Description = "Tests the loading of nested data with inheritance")]
         public void NestedInheritanceDataLoadTest()
         {
             var data = LoadVirtualParentData();
@@ -108,7 +108,7 @@ namespace org.xpangen.Generator.Test
             CompareGenData(expectedData, data);
         }
 
-        [TestCase(Description = "Tests the saving of nested data with inheritance")]
+        [Test(Description = "Tests the saving of nested data with inheritance")]
         public void NestedInheritanceDataSaveTest()
         {
             SaveVirtualAndParentData();
@@ -122,7 +122,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(VirtualParentData, data);
         }
 
-        [TestCase(Description = "Tests the expansion of a nested class with inheritance")]
+        [Test(Description = "Tests the expansion of a nested class with inheritance")]
         public void NestedInheritanceClassExpansionTest()
         {
             var d = LoadVirtualParentData();
