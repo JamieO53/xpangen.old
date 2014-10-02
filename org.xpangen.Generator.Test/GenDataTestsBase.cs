@@ -487,6 +487,20 @@ Child[Reference='child']
             return genObject.SubClass[index].Count == 0 ? null : genObject.SubClass[index][0];
         }
 
+
+        protected static GenObject GetNextObjectInSubClass(GenObject genObject)
+        {
+            var i = genObject.ParentSubClass.IndexOf(genObject);
+            if (i > genObject.ParentSubClass.Count) return null;
+            return genObject.ParentSubClass[i + 1];
+        }
+
+        protected static GenObject GetLastObjectInSubClass(GenObject genObject)
+        {
+            if (genObject.ParentSubClass.Count == 0) return null;
+            return genObject.ParentSubClass[genObject.ParentSubClass.Count - 1];
+        }
+
         /// <summary>
         /// Set the subclass reference.
         /// </summary>

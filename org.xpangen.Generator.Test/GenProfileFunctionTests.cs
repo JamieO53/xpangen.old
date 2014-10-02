@@ -7,7 +7,7 @@ namespace org.xpangen.Generator.Test
     [TestFixture]
     public class GenProfileFunctionTests : GenProfileFragmentsTestBase
     {
-        private GenData GenData { get; set; }
+        private GenDataBase GenData { get; set; }
 
         /// <summary>
         /// Tests the Set, Add, Sub and Get functions for numeric data

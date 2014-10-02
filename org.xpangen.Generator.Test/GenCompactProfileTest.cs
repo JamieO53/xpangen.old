@@ -26,18 +26,10 @@ namespace org.xpangen.Generator.Test
         public void TextProfileTest()
         {
             const string txt = "Text to scan";
-            var d = SetUpData();
-            var profile = SetUpProfile(d, txt);
-            Assert.AreEqual(1, profile.Body.Count, "Only one fragment expected");
-            Assert.AreEqual(FragmentType.TextBlock, profile.Body.Fragment[0].FragmentType);
-            Assert.AreEqual(txt,
-                GenFragmentExpander.Expand(d.GenDataDef, d.Root, profile.Fragment),
-                "Original text expected");
-        }
-
-        private static GenCompactProfileParser SetUpProfile(GenData d, string txt)
-        {
-            return new GenCompactProfileParser(d.GenDataDef, "", txt);
+            const string expectedExpansion = txt;
+            var expectedFragmentType = new[] { FragmentType.TextBlock };
+            const string message = "Original text expected";
+            ValidateExpansion(txt, expectedFragmentType, expectedExpansion, message);
         }
 
         /// <summary>
@@ -267,14 +259,12 @@ namespace org.xpangen.Generator.Test
             ValidateExpansion(d, txt, expectedFragmentType, expectedExpansion, message);
         }
 
-        protected new static GenData SetUpData()
+        private new static GenData SetUpData()
         {
-            var d = new GenData(GenDataDef.CreateMinimal());
-            SetUpData(d);
-            return d;
+            return SetUpData(GenDataDef.CreateMinimal());
         }
 
-        protected static GenData SetUpData(GenDataDef f)
+        private static GenData SetUpData(GenDataDef f)
         {
             var d = new GenData(f);
             SetUpData(d);

@@ -8,7 +8,7 @@ namespace org.xpangen.Generator.Test
 {
     public class GenProfileSegmentTests : GenProfileFragmentsTestBase
     {
-        private GenData GenData { get; set; }
+        private GenDataBase GenData { get; set; }
         /// <summary>
         /// Tests for the correct creation of a segment
         /// </summary>
@@ -45,7 +45,7 @@ namespace org.xpangen.Generator.Test
             g.GenObject = GetFirstObject(GenData);
             Assert.AreEqual(genCardinality.ToString(), ((Segment) g.Fragment).Cardinality);
             Assert.AreEqual("Property", g.Definition.Name);
-            GenData.First(1);
+            //GenData.First(1);
             VerifyFragment(GenData, g, "GenSegment", FragmentType.Segment, "Property", profile, expected, false, null,
                 p.Profile.GenDataBase.GenDataDef);
         }

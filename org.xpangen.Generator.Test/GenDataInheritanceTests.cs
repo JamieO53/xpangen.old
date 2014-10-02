@@ -96,7 +96,7 @@ namespace org.xpangen.Generator.Test
             var dataFile = GetTestDataFileName("InheritanceClassGenerationTest");
             var d = PopulateInheritanceData(dataFile);
             var p = new GenCompactProfileParser(d.GenDataDef, "", InheritanceProfile);
-            var text = GenerateFragment(d, p);
+            var text = GenerateFragment(d.GenDataBase, p);
             Assert.AreEqual(InheritanceProfileResult, text);
         }
 
