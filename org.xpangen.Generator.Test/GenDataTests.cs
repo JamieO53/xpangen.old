@@ -17,7 +17,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the generator data subclass functionality
         /// </summary>
-        [TestCase(Description="Generator data subclass tests")]
+        [Test(Description="Generator data subclass tests")]
         public void GenSubClassTests()
         {
             var f = GenDataDef.CreateMinimal();
@@ -33,7 +33,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(s.GenObject, sc);
         }
 
-        [TestCase(Description = "Verify that the SetUpParentChildData method works as expected")]
+        [Test(Description = "Verify that the SetUpParentChildData method works as expected")]
         public void VerifySetUpParentChildDataMethod()
         {
             var d = SetUpParentChildData("Parent", "Child", "Child");
@@ -48,7 +48,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Child", d.Context[2].GenObject.Attributes[0]);
         }
 
-        [TestCase(Description = "Verify that the SetUpParentChildReferenceData method works as expected")]
+        [Test(Description = "Verify that the SetUpParentChildReferenceData method works as expected")]
         public void VerifySetUpParentChildReferenceDataMethod()
         {
             var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
@@ -66,7 +66,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Grandchild", dataParent.Context[3].GenObject.Attributes[0]);
         }
 
-        [TestCase(Description = "Verify that a referenced object can get a value from the referencing data")]
+        [Test(Description = "Verify that a referenced object can get a value from the referencing data")]
         public void  VerifyParentChildReferenceGetValue()
         {
             var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
@@ -76,7 +76,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("Parent", genObject.GetValue(id));
         }
 
-        [TestCase(Description = "Verify that the SetUpParentChildReferenceData method sets up the data definitions as expected")]
+        [Test(Description = "Verify that the SetUpParentChildReferenceData method sets up the data definitions as expected")]
         public void VerifyParentChildReferenceDataDef()
         {
             var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
@@ -84,7 +84,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(ReferenceGenDataSaveProfile, GenDataDefProfile.CreateProfile(dataParent.GenDataDef));
         }
 
-        [TestCase(Description = "Verify that data context works as expected with reference data")]
+        [Test(Description = "Verify that data context works as expected with reference data")]
         public void ContextWithReferenceTests()
         {
             var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
@@ -97,7 +97,7 @@ namespace org.xpangen.Generator.Test
             }
         }
 
-        [TestCase(Description = "Verify that duplicated data context works as expected with reference data")]
+        [Test(Description = "Verify that duplicated data context works as expected with reference data")]
         public void DuplicatedContextWithReferenceTests()
         {
             var f = LoadGenData("ProgramDefinition").GenDataBase.AsDef();
@@ -122,7 +122,7 @@ namespace org.xpangen.Generator.Test
 
         }
 
-        [TestCase(Description = "Verify that the SetUpParentChildReferenceData method works as expected")]
+        [Test(Description = "Verify that the SetUpParentChildReferenceData method works as expected")]
         public void VerifyNestedSetUpParentChildReferenceDataMethod()
         {
             var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
@@ -144,7 +144,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the attribute functionality of generator classes
         /// </summary>
-        [TestCase(Description = "Generator Attribute Property tests")]
+        [Test(Description = "Generator Attribute Property tests")]
         public void GenAttributePropertyTests()
         {
             var f = new GenDataDef();
@@ -163,7 +163,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the attribute functionality of generator classes
         /// </summary>
-        [TestCase(Description="Generator Attribute tests")]
+        [Test(Description="Generator Attribute tests")]
         public void GenAttributeTests()
         {
             var f = GenDataDef.CreateMinimal();
@@ -177,7 +177,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the generator data context functionality
         /// </summary>
-        [TestCase(Description="Generator context tests")]
+        [Test(Description="Generator context tests")]
         public void GenContextTests()
         {
             var f = GenDataDef.CreateMinimal();
@@ -197,7 +197,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the subclass reordering functionality
         /// </summary>
-        [TestCase(Description="Generator data reorder tests")]
+        [Test(Description="Generator data reorder tests")]
         public void GenDataReorderTests()
         {
             var f = GenDataDef.CreateMinimal();

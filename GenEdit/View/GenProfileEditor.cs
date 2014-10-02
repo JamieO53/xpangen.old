@@ -70,7 +70,7 @@ namespace GenEdit.View
 
             var fragment = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem);
             var context = fragment != null && (genObject ?? genDataBase.Root) != null
-                ? genDataBase.GetContext(genObject ?? genDataBase.Root, fragment.Fragment.ClassName())
+                ? GenObject.GetContext(genObject ?? genDataBase.Root, fragment.Fragment.ClassName())
                 : null;
             text = context != null
                 ? ProfileEditorTreeViewBuilder.GetNodeExpansionText(genDataBase, context, fragment.Fragment)
