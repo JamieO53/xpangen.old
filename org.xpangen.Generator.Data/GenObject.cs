@@ -57,7 +57,7 @@ namespace org.xpangen.Generator.Data
         public int ClassId { get; private set; }
 
         public GenObject Parent { get; private set; }
-        public GenObject RefParent { internal get; set; }
+        public GenObject RefParent { private get; set; }
         public GenSubClasses SubClass { get; private set; }
 
         public GenDataDefClass Definition
@@ -135,7 +135,7 @@ namespace org.xpangen.Generator.Data
             return subClassId == -1 ? null : GetSubClass(subClassId);
         }
 
-        public GenSubClass GetSubClass(int subClassId)
+        private GenSubClass GetSubClass(int subClassId)
         {
             Contract.Requires(subClassId >= 0 && subClassId < GenDataDef.Classes.Count);
             var subClassDef = GenDataDef.Classes[subClassId];
@@ -144,7 +144,7 @@ namespace org.xpangen.Generator.Data
             return idx == -1 ? null : GetSubClassByIndex(subClassId, idx, subClassDef);
         }
 
-        internal GenSubClass GetSubClassByIndex(int subClassId, int idx, GenDataDefClass subClassDef)
+        private GenSubClass GetSubClassByIndex(int subClassId, int idx, GenDataDefClass subClassDef)
         {
             var subClassRef = SubClass[idx] as SubClassReference;
             if (subClassRef != null)
@@ -172,11 +172,6 @@ namespace org.xpangen.Generator.Data
             var k = Definition.IndexOfSubClass(className);
             var l = SubClass[k] as GenSubClass;
             return l != null ? l.CreateObject(classId) : null;
-        }
-
-        private GenDataDefClass GetClassDef(string className)
-        {
-            return GenDataBase.GenDataDef.GetClassDef(className);
         }
 
         private int GetClassId(string className)
@@ -218,7 +213,7 @@ namespace org.xpangen.Generator.Data
             return null;
         }
 
-        public bool ClassNameIs(string className)
+        private bool ClassNameIs(string className)
         {
             return ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase);
         }

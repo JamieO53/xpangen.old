@@ -21,10 +21,12 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description="Scanner EOF test")]
         public void EofTest()
         {
-            var scan = new CompactProfileScanner("");
-            Assert.IsTrue(scan.Eof);
-            scan.SkipChar();
-            Assert.AreEqual(ScanReader.EofChar, scan.Current, "Scan past EOF");
+            using (var scan = new CompactProfileScanner(""))
+            {
+                Assert.IsTrue(scan.Eof);
+                scan.SkipChar();
+                Assert.AreEqual(ScanReader.EofChar, scan.Current, "Scan past EOF");
+            }
         }
 
         /// <summary>
@@ -34,9 +36,11 @@ namespace org.xpangen.Generator.Test
         public void QuotedStringTest()
         {
             const string txt = "/quoted //string/unquoted string"; // / is the quote character;
-            var scan = new CompactProfileScanner(txt);
-            Assert.AreEqual("quoted /string", scan.ScanQuotedString());
-            Assert.IsTrue(scan.CheckChar('u'), "Next character to scan");
+            using (var scan = new CompactProfileScanner(txt))
+            {
+                Assert.AreEqual("quoted /string", scan.ScanQuotedString());
+                Assert.IsTrue(scan.CheckChar('u'), "Next character to scan");
+            }
         }
 
         /// <summary>
@@ -46,30 +50,32 @@ namespace org.xpangen.Generator.Test
         public void CompactTokenTypeTest()
         {
             const string txt = "[{%;?@]`x~";
-            var scan = new CompactProfileScanner(txt);
-            Assert.AreEqual(TokenType.Segment, scan.ScanTokenType());
-            scan.SkipChar();
-            Assert.AreEqual(TokenType.Block, scan.ScanTokenType());
-            scan.SkipChar();
-            Assert.AreEqual(TokenType.Lookup, scan.ScanTokenType());
-            scan.SkipChar();
-            Assert.AreEqual(TokenType.Secondary, scan.ScanTokenType());
-            scan.SkipChar();
-            Assert.AreEqual(TokenType.Condition, scan.ScanTokenType());
-            scan.SkipChar();
-            Assert.AreEqual(TokenType.Function, scan.ScanTokenType());
-            scan.SkipChar();
-            Assert.AreEqual(TokenType.Close, scan.ScanTokenType());
-            scan.SkipChar();
-            Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType());
-            // Automatically skipped
-            Assert.AreEqual(TokenType.Name, scan.ScanTokenType());
-            scan.SkipChar();
-            Assert.IsFalse(scan.Eof);
-            Assert.AreEqual(TokenType.Unknown, scan.ScanTokenType());
-            scan.SkipChar();
-            Assert.IsTrue(scan.Eof);
-            Assert.AreEqual(TokenType.Unknown, scan.ScanTokenType());
+            using (var scan = new CompactProfileScanner(txt))
+            {
+                Assert.AreEqual(TokenType.Segment, scan.ScanTokenType());
+                scan.SkipChar();
+                Assert.AreEqual(TokenType.Block, scan.ScanTokenType());
+                scan.SkipChar();
+                Assert.AreEqual(TokenType.Lookup, scan.ScanTokenType());
+                scan.SkipChar();
+                Assert.AreEqual(TokenType.Secondary, scan.ScanTokenType());
+                scan.SkipChar();
+                Assert.AreEqual(TokenType.Condition, scan.ScanTokenType());
+                scan.SkipChar();
+                Assert.AreEqual(TokenType.Function, scan.ScanTokenType());
+                scan.SkipChar();
+                Assert.AreEqual(TokenType.Close, scan.ScanTokenType());
+                scan.SkipChar();
+                Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType());
+                // Automatically skipped
+                Assert.AreEqual(TokenType.Name, scan.ScanTokenType());
+                scan.SkipChar();
+                Assert.IsFalse(scan.Eof);
+                Assert.AreEqual(TokenType.Unknown, scan.ScanTokenType());
+                scan.SkipChar();
+                Assert.IsTrue(scan.Eof);
+                Assert.AreEqual(TokenType.Unknown, scan.ScanTokenType());
+            }
         }
 
         /// <summary>
@@ -79,9 +85,11 @@ namespace org.xpangen.Generator.Test
         public void TextTest()
         {
             const string txt = "text ``string`post-text string";
-            var scan = new CompactProfileScanner(txt);
-            Assert.AreEqual("text `string", scan.ScanText());
-            Assert.AreEqual("p", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be beyond the delimeter");
+            using (var scan = new CompactProfileScanner(txt))
+            {
+                Assert.AreEqual("text `string", scan.ScanText());
+                Assert.AreEqual("p", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be beyond the delimeter");
+            }
         }
 
         /// <summary>
@@ -91,11 +99,13 @@ namespace org.xpangen.Generator.Test
         public void SegmentClassTest()
         {
             const string txt = "`[Class>:Segment text`]";
-            var scan = new CompactProfileScanner(txt);
-            Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
-            Assert.AreEqual(TokenType.Segment, scan.ScanTokenType());
-            Assert.AreEqual("Class>", scan.ScanSegmentClass(), "Should be the segement class");
-            Assert.AreEqual("S", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be on the body of the segment");
+            using (var scan = new CompactProfileScanner(txt))
+            {
+                Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
+                Assert.AreEqual(TokenType.Segment, scan.ScanTokenType());
+                Assert.AreEqual("Class>", scan.ScanSegmentClass(), "Should be the segement class");
+                Assert.AreEqual("S", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be on the body of the segment");
+            }
         }
 
         /// <summary>
@@ -105,11 +115,13 @@ namespace org.xpangen.Generator.Test
         public void ConditionTest()
         {
             const string txt = "`?Class.Name='Class':Condition text`]";
-            var scan = new CompactProfileScanner(txt);
-            Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
-            Assert.AreEqual(TokenType.Condition, scan.ScanTokenType());
-            Assert.AreEqual("Class.Name='Class'", scan.ScanCondition(), "Should be the condition");
-            Assert.AreEqual("C", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be in the body of the condition");
+            using (var scan = new CompactProfileScanner(txt))
+            {
+                Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
+                Assert.AreEqual(TokenType.Condition, scan.ScanTokenType());
+                Assert.AreEqual("Class.Name='Class'", scan.ScanCondition(), "Should be the condition");
+                Assert.AreEqual("C", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be in the body of the condition");
+            }
         }
 
         /// <summary>
@@ -119,11 +131,13 @@ namespace org.xpangen.Generator.Test
         public void LookupTest()
         {
             const string txt = "`%Class.Name=SubClass.Name:Lookup text`]";
-            var scan = new CompactProfileScanner(txt);
-            Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
-            Assert.AreEqual(TokenType.Lookup, scan.ScanTokenType());
-            Assert.AreEqual("Class.Name=SubClass.Name", scan.ScanLookup(), "Should be the lookup condition");
-            Assert.AreEqual("L", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be in the body of the lookup");
+            using (var scan = new CompactProfileScanner(txt))
+            {
+                Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
+                Assert.AreEqual(TokenType.Lookup, scan.ScanTokenType());
+                Assert.AreEqual("Class.Name=SubClass.Name", scan.ScanLookup(), "Should be the lookup condition");
+                Assert.AreEqual("L", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be in the body of the lookup");
+            }
         }
 
         /// <summary>
@@ -133,14 +147,16 @@ namespace org.xpangen.Generator.Test
         public void NoMatchTest()
         {
             const string txt = "`%Class.Name=SubClass.Name:`;No Match text`]";
-            var scan = new CompactProfileScanner(txt);
-            Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
-            Assert.AreEqual(TokenType.Lookup, scan.ScanTokenType());
-            Assert.AreEqual("Class.Name=SubClass.Name", scan.ScanLookup(), "Should be the lookup condition");
-            Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
-            Assert.AreEqual(TokenType.Secondary, scan.ScanTokenType(), "Should be on the secondary token");
-            scan.SkipChar();
-            Assert.AreEqual("N", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be in the body of the lookup");
+            using (var scan = new CompactProfileScanner(txt))
+            {
+                Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
+                Assert.AreEqual(TokenType.Lookup, scan.ScanTokenType());
+                Assert.AreEqual("Class.Name=SubClass.Name", scan.ScanLookup(), "Should be the lookup condition");
+                Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
+                Assert.AreEqual(TokenType.Secondary, scan.ScanTokenType(), "Should be on the secondary token");
+                scan.SkipChar();
+                Assert.AreEqual("N", scan.Current.ToString(CultureInfo.InvariantCulture), "Should now be in the body of the lookup");
+            }
         }
 
         /// <summary>
@@ -150,11 +166,13 @@ namespace org.xpangen.Generator.Test
         public void FullNameTest()
         {
             const string txt = "`Class.Name`";
-            var scan = new CompactProfileScanner(txt);
-            Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
-            Assert.AreEqual(TokenType.Name, scan.ScanTokenType());
-            Assert.AreEqual("Class.Name", scan.ScanName(), "Should be the fully qualified name");
-            Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType());
+            using (var scan = new CompactProfileScanner(txt))
+            {
+                Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
+                Assert.AreEqual(TokenType.Name, scan.ScanTokenType());
+                Assert.AreEqual("Class.Name", scan.ScanName(), "Should be the fully qualified name");
+                Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType());
+            }
         }
 
         /// <summary>
@@ -164,11 +182,13 @@ namespace org.xpangen.Generator.Test
         public void PartNameTest()
         {
             const string txt = "`Name`";
-            var scan = new CompactProfileScanner(txt);
-            Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
-            Assert.AreEqual(TokenType.Name, scan.ScanTokenType());
-            Assert.AreEqual("Name", scan.ScanName(), "Should be the unqualified name");
-            Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType());
+            using (var scan = new CompactProfileScanner(txt))
+            {
+                Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType(), "Verify and skip over delimiter");
+                Assert.AreEqual(TokenType.Name, scan.ScanTokenType());
+                Assert.AreEqual("Name", scan.ScanName(), "Should be the unqualified name");
+                Assert.AreEqual(TokenType.Delimiter, scan.ScanTokenType());
+            }
         }
 
         /// <summary>
