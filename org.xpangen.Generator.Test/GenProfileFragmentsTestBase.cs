@@ -14,14 +14,14 @@ namespace org.xpangen.Generator.Test
 {
     public class GenProfileFragmentsTestBase : GenDataTestsBase
     {
-        protected static GenData SetUpData()
+        protected static GenDataBase SetUpData()
         {
             var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            var c = CreateGenObject(d, d.Root, "Class", "Class");
-            CreateGenObject(d, c, "SubClass", "SubClass");
-            CreateGenObject(d, c, "Property", "Property");
-            CreateGenObject(d, c, "Property", "Property2");
+            var d = new GenDataBase(f);
+            var c = CreateGenObject(d.Root, "Class", "Class");
+            CreateGenObject(c, "SubClass", "SubClass");
+            CreateGenObject(c, "Property", "Property");
+            CreateGenObject(c, "Property", "Property2");
             return d;
         }
 
@@ -67,7 +67,7 @@ namespace org.xpangen.Generator.Test
             var d = new GenData(f);
             var a = new GenAttributes(f, PropertyClassId);
             SetUpData(d);
-
+            d.Last(ClassClassId);
             d.First(PropertyClassId);
             a.GenObject = d.Context[PropertyClassId].GenObject;
             a.SetNumber("Number", 15);
@@ -76,7 +76,7 @@ namespace org.xpangen.Generator.Test
             return d;
         }
 
-        protected static void TestCondition(GenData genData, string condIn, string condOut, string profileLabel,
+        protected static void TestCondition(GenDataBase genData, string condIn, string condOut, string profileLabel,
                                             bool expected)
         {
             var genDataDef = genData.GenDataDef;
@@ -89,35 +89,35 @@ namespace org.xpangen.Generator.Test
 
             var c = ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseCondition(genDataDef, condIn);
             var g = new GenCondition(new GenConditionParams(genDataDef, root, c));
-
+            g.GenObject = GetFirstObjectOfSubClass(GetLastObjectInSubClass(GetFirstObject(genData)), "Property");
             var t = new GenTextFragment(new GenTextFragmentParams(genDataDef, g, r));
             g.Body.Add(t);
             VerifyFragment(genData, g, "GenCondition", FragmentType.Condition, profileLabel,
                            String.Format("`?{0}:{1}`]", condOut, r), exp, false, null, g.Fragment.GenDataBase.GenDataDef);
         }
 
-        protected static void TestIdentifierComparison(GenData genData, string comparison, bool expectedLt, bool expectedEq,
+        protected static void TestIdentifierComparison(GenDataBase genData, string comparison, bool expectedLt, bool expectedEq,
                                              bool expectedGt)
         {
             var condIn = "Property.Name" + comparison + "Property.Name";
             TestComparisonConditions(genData, expectedLt, expectedEq, expectedGt, condIn, "LT", "EQ", "GT");
         }
 
-        protected static void TestNumericComparison(GenData genData, string comparison, bool expectedLt, bool expectedEq,
+        protected static void TestNumericComparison(GenDataBase genData, string comparison, bool expectedLt, bool expectedEq,
                                              bool expectedGt)
         {
             var condIn = "Property.Number" + comparison;
             TestComparisonConditions(genData, expectedLt, expectedEq, expectedGt, condIn, "1", "15", "1500");
         }
 
-        protected static void TestComparison(GenData genData, string comparison, bool expectedLt, bool expectedEq,
+        protected static void TestComparison(GenDataBase genData, string comparison, bool expectedLt, bool expectedEq,
                                              bool expectedGt)
         {
             var condIn = "Property.Name" + comparison;
             TestComparisonConditions(genData, expectedLt, expectedEq, expectedGt, condIn, "Nama", "Name", "Namz");
         }
 
-        private static void TestComparisonConditions(GenData genData, bool expectedLt, bool expectedEq, bool expectedGt,
+        private static void TestComparisonConditions(GenDataBase genData, bool expectedLt, bool expectedEq, bool expectedGt,
                                                      string condIn, string valueLt, string valueEq, string valueGt)
         {
             TestCondition(genData, condIn + valueLt, "", "", expectedLt); // Property.Name?Nama
@@ -125,12 +125,12 @@ namespace org.xpangen.Generator.Test
             TestCondition(genData, condIn + valueGt, "", "", expectedGt); // Property.Name?Namz
         }
 
-        protected static void VerifyFragment(GenData genData, GenFragment genFragment, string expectedClass, FragmentType expectedType, string profileLabel, string profileText, string expected, bool isText, string parentClassName, GenDataDef profileDataDef)
+        protected static void VerifyFragment(GenDataBase genData, GenFragment genFragment, string expectedClass, FragmentType expectedType, string profileLabel, string profileText, string expected, bool isText, string parentClassName, GenDataDef profileDataDef)
         {
             Assert.AreEqual(expectedClass, genFragment.GetType().Name, "Fragment Class");
             Assert.AreEqual(expectedType, genFragment.FragmentType, "Fragment Type");
             Assert.AreEqual(isText, genFragment.IsTextFragment, "Is text fragment?");
-            if (genFragment.GenObject == null) genFragment.GenObject = genData.Context[3].GenObject;
+            if (genFragment.GenObject == null) genFragment.GenObject = GetFirstObjectOfSubClass(GetFirstObject(genData), "Property");
             var fragment = genFragment.Fragment;
             Assert.AreEqual(expected, GenFragmentExpander.Expand(genData.GenDataDef, genFragment.GenObject, fragment), "Expanded fragment");
             var genFragmentLabel =new GenFragmentLabel(fragment);
@@ -144,7 +144,7 @@ namespace org.xpangen.Generator.Test
             ValidateFragmentData(genDataDef, parentClassName, genFragment, profileDataDef);
         }
 
-        protected static string GenerateFragment(GenData genData, GenFragment fragment)
+        protected static string GenerateFragment(GenDataBase genData, GenFragment fragment)
         {
             using (var s = new MemoryStream(100000))
             {
@@ -157,12 +157,12 @@ namespace org.xpangen.Generator.Test
             }
         }
 
-        protected static void ExecuteFunction(GenData genData, string functionName, string variableName, string variableValue, string expected)
+        protected static void ExecuteFunction(GenDataBase genData, string functionName, string variableName, string variableValue, string expected)
         {
             ExecuteFunction(genData, functionName, expected, new []{variableName, variableValue});
         }
 
-        protected static void ExecuteFunction(GenData genData, string functionName, string expected, string[] values)
+        protected static void ExecuteFunction(GenDataBase genData, string functionName, string expected, string[] values)
         {
             var r = new GenProfileFragment(new GenProfileParams(genData.GenDataDef));
             var g = new GenFunction(new GenFunctionParams(genData.GenDataDef, r, functionName));
@@ -172,20 +172,20 @@ namespace org.xpangen.Generator.Test
                 "`@" + functionName + ':' + b + "`]", expected, false, null, r.Profile.GenDataBase.GenDataDef);
         }
 
-        private static string SetFunctionParameters(GenData genData, GenFunction genFunction, string[] values)
+        private static string SetFunctionParameters(GenDataBase genData, GenFunction genFunction, string[] values)
         {
             foreach (var value in values)
                 SetFunctionParameter(genData, genFunction, value);
             return string.Join(" ", values);
         }
 
-        private static void SetFunctionParameter(GenData genData, GenFunction genFunction, string value)
+        private static void SetFunctionParameter(GenDataBase genData, GenFunction genFunction, string value)
         {
             var p0 = new GenTextFragment(new GenTextFragmentParams(genData.GenDataDef, genFunction, value));
             genFunction.Body.Add(p0);
         }
 
-        protected void CheckFunctionVarValue(GenData genData, string expected)
+        protected void CheckFunctionVarValue(GenDataBase genData, string expected)
         {
             ExecuteFunction(genData, "Get", expected, new []{"Var", ""});
         }
@@ -236,7 +236,7 @@ namespace org.xpangen.Generator.Test
             var g = SetUpSegmentSeparatorFragment(d, cardinality);
             g.GenObject = d.Root;//.SubClass[0][0];
             Assert.AreEqual(expected, GenFragmentExpander.Expand(d.GenDataDef, ((GenFragment) g).GenObject, g.Fragment));
-            var str = GenerateFragment(d, g);
+            var str = GenerateFragment(d.GenDataBase, g);
             Assert.AreEqual(expected, str);
         }
     }

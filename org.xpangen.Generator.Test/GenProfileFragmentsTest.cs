@@ -17,7 +17,7 @@ namespace org.xpangen.Generator.Test
     {
         private GenDataDef GenDataDef { get; set; }
 
-        private GenData GenData { get; set; }
+        private GenDataBase GenData { get; set; }
 
         /// <summary>
         /// Tests for the correct creation of a text fragment
@@ -60,6 +60,7 @@ namespace org.xpangen.Generator.Test
             var g =
                 new GenPlaceholderFragment(new GenPlaceholderFragmentParams(GenDataDef, r,
                     GenDataDef.GetId("Property.Name")));
+            g.GenObject = GetNextObjectInSubClass(GetFirstObjectOfSubClass(GetFirstObject(GenData), "Property"));
             VerifyFragment(GenData, g, "GenPlaceholderFragment", FragmentType.Placeholder, "Property.Name", "`Property.Name`",
                            "Property2", true, null, r.Profile.GenDataBase.GenDataDef);
         }
@@ -80,6 +81,7 @@ namespace org.xpangen.Generator.Test
             var t = new GenTextFragment(new GenTextFragmentParams(GenData.GenDataDef, g, ","));
             g.Body.Add(p);
             g.Body.Add(t);
+            g.GenObject = GetNextObjectInSubClass(GetFirstObjectOfSubClass(GetFirstObject(GenData), "Property"));
             VerifyFragment(GenData, g, "GenBlock", FragmentType.Block, "Block", "`{`Property.Name`,`]", "Property2,", false, null, r.Profile.GenDataBase.GenDataDef);
         }
 
@@ -103,13 +105,13 @@ namespace org.xpangen.Generator.Test
             d.Last(ClassClassId); // Has no subclasses
             d.First(SubClassClassId);
             g.GenObject = d.Context[SubClassClassId].GenObject;
-            VerifyFragment(d, g, "GenLookup", FragmentType.Lookup, "Class.Name=SubClass.Name",
+            VerifyFragment(d.GenDataBase, g, "GenLookup", FragmentType.Lookup, "Class.Name=SubClass.Name",
                            "`%Class.Name=SubClass.Name:`Class.Name`,`]", "", false, null, r.Profile.GenDataBase.GenDataDef);
 
             d.First(ClassClassId); // Has subclasses
             d.First(SubClassClassId);
             g.GenObject = d.Context[SubClassClassId].GenObject;
-            VerifyFragment(d, g, "GenLookup", FragmentType.Lookup, "Class.Name=SubClass.Name",
+            VerifyFragment(d.GenDataBase, g, "GenLookup", FragmentType.Lookup, "Class.Name=SubClass.Name",
                            "`%Class.Name=SubClass.Name:`Class.Name`,`]", "SubClass,", false, null, r.Profile.GenDataBase.GenDataDef);
         }
 
@@ -139,7 +141,7 @@ namespace org.xpangen.Generator.Test
             g.ParentContainer.GenObject = d.Context[ClassClassId].GenObject;
             g.GenObject = d.Context[SubClassClassId].GenObject;
             Assert.AreEqual(txt, GenFragmentExpander.Expand(d.GenDataDef, g.GenObject, g.Fragment));
-            var str = GenerateFragment(d, g);
+            var str = GenerateFragment(d.GenDataBase, g);
             Assert.AreEqual(txt, str);
 
             d.First(ClassClassId); // Has subclasses
@@ -147,7 +149,7 @@ namespace org.xpangen.Generator.Test
             d.First(SubClassClassId);
             Assert.AreEqual("SubClass", d.Context[SubClassClassId].GenObject.Attributes[0]);
             g.GenObject = d.Context[SubClassClassId].GenObject;
-            str = GenerateFragment(d, g);
+            str = GenerateFragment(d.GenDataBase, g);
             Assert.AreEqual("", str);
         }
 
@@ -181,13 +183,13 @@ namespace org.xpangen.Generator.Test
             d.First(parentId);
             d.First(childId); // Valid lookup
             b.GenObject = d.Context[childId].GenObject;
-            VerifyFragment(d, b, "GenBlock", FragmentType.Block, "Block",
+            VerifyFragment(d.GenDataBase, b, "GenBlock", FragmentType.Block, "Block",
                            "`{`Parent.Name`,`%Lookup.Name=Child.Lookup:`Lookup.Name`,`]`]", "Parent,Valid,", false, null, r.Profile.GenDataBase.GenDataDef);
 
             d.First(parentId);
             d.Last(childId); // Invalid lookup
             b.GenObject = d.Context[childId].GenObject;
-            VerifyFragment(d, b, "GenBlock", FragmentType.Block, "Block",
+            VerifyFragment(d.GenDataBase, b, "GenBlock", FragmentType.Block, "Block",
                            "`{`Parent.Name`,`%Lookup.Name=Child.Lookup:`Lookup.Name`,`]`]", "Parent,", false, null, r.Profile.GenDataBase.GenDataDef);
         }
 
@@ -200,19 +202,19 @@ namespace org.xpangen.Generator.Test
             var d = SetUpComparisonData();
 
             // Test for Existence 1
-            TestCondition(d, "Property.Name Exists", "Property.Name", "Property.Name", true);
+            TestCondition(d.GenDataBase, "Property.Name Exists", "Property.Name", "Property.Name", true);
 
             // Test for Existence 2
-            TestCondition(d, "Property.Name", "", "", true);
+            TestCondition(d.GenDataBase, "Property.Name", "", "", true);
             
             // Test for Existence 3
-            TestCondition(d, "Property.NameBlank", "", "", false);
+            TestCondition(d.GenDataBase, "Property.NameBlank", "", "", false);
 
             // Test for non-existence 1
-            TestCondition(d, "Property.Name~", "", "", false);
+            TestCondition(d.GenDataBase, "Property.Name~", "", "", false);
 
             // Test for non-existence 2
-            TestCondition(d, "Property.NameBlank~", "", "", true);
+            TestCondition(d.GenDataBase, "Property.NameBlank~", "", "", true);
         }
 
         /// <summary>
@@ -224,22 +226,22 @@ namespace org.xpangen.Generator.Test
             var d = SetUpComparisonData();
 
             // Test for equality
-            TestComparison(d, "=", false, true, false);
+            TestComparison(d.GenDataBase, "=", false, true, false);
 
             // Test for inequality
-            TestComparison(d, "<>", true, false, true);
+            TestComparison(d.GenDataBase, "<>", true, false, true);
 
             // Test for less than
-            TestComparison(d, "<", false, false, true);
+            TestComparison(d.GenDataBase, "<", false, false, true);
 
             // Test for greater than
-            TestComparison(d, ">", true, false, false);
+            TestComparison(d.GenDataBase, ">", true, false, false);
 
             // Test for less or equal to
-            TestComparison(d, "<=", false, true, true);
+            TestComparison(d.GenDataBase, "<=", false, true, true);
 
             // Test for greater or equal to 1
-            TestComparison(d, ">=", true, true, false);
+            TestComparison(d.GenDataBase, ">=", true, true, false);
         }
 
         /// <summary>
@@ -251,22 +253,22 @@ namespace org.xpangen.Generator.Test
             var d = SetUpNumericComparisonData();
 
             // Test for equality
-            TestNumericComparison(d, "=", false, true, false);
+            TestNumericComparison(d.GenDataBase, "=", false, true, false);
 
             // Test for inequality
-            TestNumericComparison(d, "<>", true, false, true);
+            TestNumericComparison(d.GenDataBase, "<>", true, false, true);
 
             // Test for less than
-            TestNumericComparison(d, "<", false, false, true);
+            TestNumericComparison(d.GenDataBase, "<", false, false, true);
 
             // Test for greater than
-            TestNumericComparison(d, ">", true, false, false);
+            TestNumericComparison(d.GenDataBase, ">", true, false, false);
 
             // Test for less or equal to
-            TestNumericComparison(d, "<=", false, true, true);
+            TestNumericComparison(d.GenDataBase, "<=", false, true, true);
 
             // Test for greater or equal to 1
-            TestNumericComparison(d, ">=", true, true, false);
+            TestNumericComparison(d.GenDataBase, ">=", true, true, false);
         }
 
         /// <summary>
@@ -278,22 +280,22 @@ namespace org.xpangen.Generator.Test
             var d = SetUpComparisonData();
 
             // Test for equality
-            TestIdentifierComparison(d, "=", false, true, false);
+            TestIdentifierComparison(d.GenDataBase, "=", false, true, false);
 
             // Test for inequality
-            TestIdentifierComparison(d, "<>", true, false, true);
+            TestIdentifierComparison(d.GenDataBase, "<>", true, false, true);
 
             // Test for less than
-            TestIdentifierComparison(d, "<", false, false, true);
+            TestIdentifierComparison(d.GenDataBase, "<", false, false, true);
 
             // Test for greater than
-            TestIdentifierComparison(d, ">", true, false, false);
+            TestIdentifierComparison(d.GenDataBase, ">", true, false, false);
 
             // Test for less or equal to
-            TestIdentifierComparison(d, "<=", false, true, true);
+            TestIdentifierComparison(d.GenDataBase, "<=", false, true, true);
 
             // Test for greater or equal to 1
-            TestIdentifierComparison(d, ">=", true, true, false);
+            TestIdentifierComparison(d.GenDataBase, ">=", true, true, false);
         }
 
         /// <summary>
