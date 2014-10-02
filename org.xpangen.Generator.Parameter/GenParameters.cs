@@ -482,12 +482,7 @@ namespace org.xpangen.Generator.Parameter
 
         private int GetBaseClassId(string recordType)
         {
-            var classId = GenDataDef.GetClassId(recordType);
-            Contract.Assert(classId != -1, "Unknown record type: " + recordType);
-            var baseClassId = classId;
-            while (GenDataDef.GetClassIsInherited(baseClassId))
-                baseClassId = GenDataDef.GetClassParent(baseClassId).ClassId;
-            return baseClassId;
+            return GenDataDef.GetBaseClassId(recordType);
         }
 
         private void LoadSubClass(GenObject parent, int baseSubClassId, int subClassIdx)

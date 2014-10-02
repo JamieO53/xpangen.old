@@ -214,11 +214,6 @@ namespace org.xpangen.Generator.Profile
             ContainerFragment = (ContainerFragment) Fragment;
         }
 
-        protected GenContainerGenerator()
-        {
-            throw new NotImplementedException();
-        }
-
         protected GenObject OverrideGenObject { get; set; }
         private ContainerFragment ContainerFragment { get; set; }
         
@@ -340,21 +335,9 @@ namespace org.xpangen.Generator.Profile
             if (GenCardinality != GenCardinality.Inheritance)
                 return GenObject.GetSubClass(ClassName);
             
-            int classRootId;
-            int subClassRootId;
-            GetRootClassIds(out subClassRootId, out classRootId);
-
-            var rootSubClassBase = GenObject.ParentSubClass;
-            Contract.Assert(0 <= classRootId & classRootId < GenDataDef.Classes.Count, "Root ClassId invalid");
-            var parentRootSubClasses = GenDataDef.GetClassParent(classRootId).SubClasses;
-            var idx = parentRootSubClasses.IndexOf(classRootId);
-            Contract.Assert(0 <= idx & idx < parentRootSubClasses.Count, "SubClass index out of range");
-            ISubClassBase subClassBase = new GenSubClass(GenObject.GenDataBase, GenObject, ClassId, parentRootSubClasses[idx]);
-            foreach (var o in rootSubClassBase)
-            {
-                if (GenObjectClassId(o) == ClassId)
-                    subClassBase.Add(o);
-            }
+            ISubClassBase subClassBase = new GenSubClass(GenObject.GenDataBase, GenObject, ClassId, GenObject.ParentSubClass.Definition);
+            if (GenObjectClassId(GenObject) == ClassId)
+                subClassBase.Add(GenObject);
             return subClassBase;
         }
 
@@ -375,21 +358,6 @@ namespace org.xpangen.Generator.Profile
             var idx = GenObject.Definition.IndexOfSubClass(ClassName);
             Contract.Assert(idx != -1, "SubClass not found");
             return idx;
-        }
-
-        private void GetRootClassIds(out int subClassId, out int classId)
-        {
-            classId = GenObjectClassId(GenObject);
-            subClassId = ClassId;
-            while (GenDataDef.GetClassIsInherited(subClassId) &&
-                   GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId) == -1)
-                subClassId = GenDataDef.GetClassParent(subClassId).ClassId;
-            while (GenDataDef.GetClassIsInherited(classId) &&
-                   GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId) == -1)
-                classId = GenDataDef.GetClassParent(classId).ClassId;
-            Contract.Assert(subClassId != -1, "Invalid root subclass");
-            Contract.Assert(classId == subClassId || GenDataDef.GetClassSubClasses(classId).IndexOf(subClassId) != -1,
-                "Subclass is not a subclass of the class");
         }
 
         private int GenObjectClassId(GenObject genObject)

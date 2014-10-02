@@ -3,6 +3,7 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Diagnostics.Contracts;
 using org.xpangen.Generator.Data.Definition;
 
 namespace org.xpangen.Generator.Data
@@ -465,6 +466,16 @@ namespace org.xpangen.Generator.Data
         public bool GetClassIsReference(int classId)
         {
             return GetClassDef(classId).IsReference;
+        }
+
+        public int GetBaseClassId(string className)
+        {
+            var classId = GetClassId(className);
+            Contract.Assert(classId != -1, "Unknown record type: " + className);
+            var baseClassId = classId;
+            while (GetClassIsInherited(baseClassId))
+                baseClassId = GetClassParent(baseClassId).ClassId;
+            return baseClassId;
         }
     }
 }
