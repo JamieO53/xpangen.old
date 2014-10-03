@@ -9,7 +9,7 @@ namespace org.xpangen.Generator.Data
     public class GenDataBase : BindableObject
     {
         private GenDataBaseReferences _references;
-        protected internal Dictionary<string, GenDataBase> Cache { get; private set; }
+        public Dictionary<string, GenDataBase> Cache { get; private set; }
 
         public GenDataBase(GenDataDef genDataDef) : this(genDataDef, null)
         {
@@ -55,7 +55,7 @@ namespace org.xpangen.Generator.Data
             return x.AsDef();
         }
 
-        protected internal GenDataBase CheckReference(string defFile, string dataFile)
+        public GenDataBase CheckReference(string defFile, string dataFile)
         {
             var fn = dataFile.ToLowerInvariant().Replace('\\', '/');
             GenDataBase d;
@@ -71,10 +71,17 @@ namespace org.xpangen.Generator.Data
             }
 
             foreach (var key in d.Cache.Keys)
-            {
                 if (!Cache.ContainsKey(key)) Cache.Add(key, d.Cache[key]);
-            }
             return d;
+        }
+
+        public void CheckReference(string dataFile, GenDataBase genData)
+        {
+            var fn = dataFile.ToLowerInvariant().Replace('\\', '/');
+            if (!Cache.ContainsKey(fn))
+                Cache.Add(fn, genData);
+            foreach (var key in genData.Cache.Keys)
+                if (!Cache.ContainsKey(key)) Cache.Add(key, genData.Cache[key]);
         }
 
         public override string ToString()
@@ -86,5 +93,10 @@ namespace org.xpangen.Generator.Data
         ///     The data loader for reference data.
         /// </summary>
         public static IGenDataLoader DataLoader { get; set; }
+
+        public int GetClassId(string className)
+        {
+            return GenDataDef.GetClassId(className);
+        }
     }
 }

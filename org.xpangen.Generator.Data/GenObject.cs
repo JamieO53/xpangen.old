@@ -100,6 +100,16 @@ namespace org.xpangen.Generator.Data
                 var indexOfProperty = GenDataBase.GenDataDef.GetClassProperties(indexOfClass).IndexOf(id.PropertyName);
                 if (GenDataBase.GenDataDef.GetClassDef(indexOfClass).IsPseudo(indexOfProperty))
                 {
+                    if (id.PropertyName.Equals("First", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        notFound = false;
+                        return ParentSubClass.IndexOf(this) == 0 ? "True" : "";
+                    }
+                    if (id.PropertyName.Equals("Reference", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        notFound = false;
+                        return ParentSubClass.Reference ?? "";
+                    }
                     notFound = true;
                     return "";
                 }

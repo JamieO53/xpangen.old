@@ -17,7 +17,7 @@ namespace org.xpangen.Generator.Test
         [Test(Description = "Test the identification of an object with the same class")]
         public void TestObjectContextWithSameClass()
         {
-            var d = SetUpParentChildDataBase("Parent", "Child", "FirstChild");
+            var d = SetUpParentChildData("Parent", "Child", "FirstChild");
             var parent = GetFirstObject(d);
             var child = GetFirstObjectOfSubClass(parent, "Child");
             
@@ -30,7 +30,7 @@ namespace org.xpangen.Generator.Test
         [Test(Description = "Test the identification of the parent object")]
         public void TestObjectContextOfParent()
         {
-            var d = SetUpParentChildDataBase("Parent", "Child", "FirstChild");
+            var d = SetUpParentChildData("Parent", "Child", "FirstChild");
             var parent = GetFirstObject(d);
             var child = GetFirstObjectOfSubClass(parent, "Child");
             
@@ -43,7 +43,7 @@ namespace org.xpangen.Generator.Test
         [Test(Description = "Test the identification of the child object")]
         public void TestObjectContextOfChild()
         {
-            var d = SetUpParentChildDataBase("Parent", "Child", "FirstChild");
+            var d = SetUpParentChildData("Parent", "Child", "FirstChild");
             var parent = GetFirstObject(d);
             var child = GetFirstObjectOfSubClass(parent, "Child");
             
@@ -131,7 +131,7 @@ namespace org.xpangen.Generator.Test
             var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", "Child", dataChild);
             var parent = GetFirstObject(dataParent);
             var grandchild = GetFirstObjectOfSubClass(GetFirstObject(dataChild), "GrandChild");
-            Assert.IsNotNull(grandchild);
+            Assert.IsNotNull(grandchild.GenDataBase);
             var parentContext = GenObject.GetContext(grandchild, "Parent");
             Assert.AreSame(parent, parentContext);
         }

@@ -102,16 +102,16 @@ namespace org.xpangen.Generator.Test
             g.Body.Add(t);
             Assert.IsFalse(g.NoMatch);
 
-            d.Last(ClassClassId); // Has no subclasses
-            d.First(SubClassClassId);
-            g.GenObject = d.Context[SubClassClassId].GenObject;
-            VerifyFragment(d.GenDataBase, g, "GenLookup", FragmentType.Lookup, "Class.Name=SubClass.Name",
+            var c = GetLastObjectInSubClass(GetFirstObject(d)); // Has no subclasses
+            var s = GetFirstObjectOfSubClass(c, "SubClass");
+            g.GenObject = s;
+            VerifyFragment(d, g, "GenLookup", FragmentType.Lookup, "Class.Name=SubClass.Name",
                            "`%Class.Name=SubClass.Name:`Class.Name`,`]", "", false, null, r.Profile.GenDataBase.GenDataDef);
 
-            d.First(ClassClassId); // Has subclasses
-            d.First(SubClassClassId);
-            g.GenObject = d.Context[SubClassClassId].GenObject;
-            VerifyFragment(d.GenDataBase, g, "GenLookup", FragmentType.Lookup, "Class.Name=SubClass.Name",
+            c = GetFirstObject(d); // Has subclasses
+            s = GetFirstObjectOfSubClass(c, "SubClass");
+            g.GenObject = s;//d.Context[SubClassClassId].GenObject;
+            VerifyFragment(d, g, "GenLookup", FragmentType.Lookup, "Class.Name=SubClass.Name",
                            "`%Class.Name=SubClass.Name:`Class.Name`,`]", "SubClass,", false, null, r.Profile.GenDataBase.GenDataDef);
         }
 
@@ -135,21 +135,21 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("`%Class.Name=SubClass.Name:`;" + txt + "`]",
                             g.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary));
 
-            d.Last(ClassClassId); // Has no subclasses
-            Assert.AreEqual("Property", d.Context[ClassClassId].GenObject.Attributes[0]);
-            d.First(SubClassClassId);
-            g.ParentContainer.GenObject = d.Context[ClassClassId].GenObject;
-            g.GenObject = d.Context[SubClassClassId].GenObject;
+            var c = GetLastObjectInSubClass(GetFirstObject(d)); // Has no subclasses
+            Assert.AreEqual("Property", c.Attributes[0]);
+            var s = GetFirstObjectOfSubClass(c, "SubClass");
+            g.ParentContainer.GenObject = c;
+            g.GenObject = s;
             Assert.AreEqual(txt, GenFragmentExpander.Expand(d.GenDataDef, g.GenObject, g.Fragment));
-            var str = GenerateFragment(d.GenDataBase, g);
+            var str = GenerateFragment(d, g);
             Assert.AreEqual(txt, str);
 
-            d.First(ClassClassId); // Has subclasses
-            Assert.AreEqual("Class", d.Context[ClassClassId].GenObject.Attributes[0]);
-            d.First(SubClassClassId);
-            Assert.AreEqual("SubClass", d.Context[SubClassClassId].GenObject.Attributes[0]);
-            g.GenObject = d.Context[SubClassClassId].GenObject;
-            str = GenerateFragment(d.GenDataBase, g);
+            c = GetFirstObject(d);
+            Assert.AreEqual("Class", c.Attributes[0]);
+            s = GetFirstObjectOfSubClass(c, "SubClass");
+            Assert.AreEqual("SubClass", s.Attributes[0]);
+            g.GenObject = s;
+            str = GenerateFragment(d, g);
             Assert.AreEqual("", str);
         }
 
@@ -178,18 +178,15 @@ namespace org.xpangen.Generator.Test
             g.Body.Add(p1);
             g.Body.Add(t1);
 
-            var parentId = f.GetClassId("Parent");
-            var childId = f.GetClassId("Child");
-            d.First(parentId);
-            d.First(childId); // Valid lookup
-            b.GenObject = d.Context[childId].GenObject;
-            VerifyFragment(d.GenDataBase, b, "GenBlock", FragmentType.Block, "Block",
+            var parent = GenObject.GetContext(d.Root, "Parent");
+            var child = GetFirstObjectOfSubClass(parent, "Child");
+            b.GenObject = child;
+            VerifyFragment(d, b, "GenBlock", FragmentType.Block, "Block",
                            "`{`Parent.Name`,`%Lookup.Name=Child.Lookup:`Lookup.Name`,`]`]", "Parent,Valid,", false, null, r.Profile.GenDataBase.GenDataDef);
 
-            d.First(parentId);
-            d.Last(childId); // Invalid lookup
-            b.GenObject = d.Context[childId].GenObject;
-            VerifyFragment(d.GenDataBase, b, "GenBlock", FragmentType.Block, "Block",
+            child = GetLastObjectInSubClass(child);
+            b.GenObject = child;
+            VerifyFragment(d, b, "GenBlock", FragmentType.Block, "Block",
                            "`{`Parent.Name`,`%Lookup.Name=Child.Lookup:`Lookup.Name`,`]`]", "Parent,", false, null, r.Profile.GenDataBase.GenDataDef);
         }
 

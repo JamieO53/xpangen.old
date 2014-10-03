@@ -44,8 +44,8 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual(1, f.GetClassSubClasses(1).Count);
             Assert.AreEqual(2, f.GetClassSubClasses(1)[0].SubClass.ClassId);
             Assert.AreEqual("", f.GetClassSubClasses(1)[0].Reference);
-            Assert.AreEqual("Parent", d.Context[1].GenObject.Attributes[0]);
-            Assert.AreEqual("Child", d.Context[2].GenObject.Attributes[0]);
+            Assert.AreEqual("Parent", GenObject.GetContext(d.Root, "Parent").Attributes[0]);
+            Assert.AreEqual("Child", GenObject.GetContext(d.Root, "Child").Attributes[0]);
         }
 
         [Test(Description = "Verify that the SetUpParentChildReferenceData method works as expected")]
@@ -54,16 +54,19 @@ namespace org.xpangen.Generator.Test
             var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
             var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", "Child", dataChild);
             Assert.AreEqual(1, dataParent.Root.SubClass.Count);
-            Assert.AreEqual(4, dataParent.Context.Count);
-            Assert.AreEqual("Parent", dataParent.Context[1].GenObject.Attributes[0]);
-            Assert.That(dataParent.Cache.Contains("Child"));
-            Assert.AreEqual(1, dataParent.Context[1].GenObject.SubClass.Count);
-            Assert.IsFalse(dataParent.Eol(2));
-            Assert.AreEqual(2, dataParent.Context[2].ClassId);
-            Assert.AreEqual("Child", dataParent.Context[2].GenObject.Attributes[0]);
-            Assert.AreEqual(1, dataParent.Context[2].DefClass.RefClassId);
-            Assert.AreEqual("Grandchild", dataChild.Context[2].GenObject.Attributes[0]);
-            Assert.AreEqual("Grandchild", dataParent.Context[3].GenObject.Attributes[0]);
+             Assert.AreEqual("Parent", GenObject.GetContext(dataParent.Root, "Parent").Attributes[0]);
+            Assert.That(dataParent.Cache.ContainsKey("child"));
+            var parent = GenObject.GetContext(dataParent.Root, "Parent");
+            Assert.AreEqual(1, parent.SubClass.Count);
+            var child = GenObject.GetContext(dataParent.Root, "Child");
+            Assert.IsNotNull(child);
+            Assert.AreEqual(2, dataParent.GenDataDef.GetClassId(child.ClassName));
+            Assert.AreEqual("Child", child.Attributes[0]);
+            Assert.AreEqual(1, child.ParentSubClass.Definition.SubClass.RefClassId);
+            var grandchild = GenObject.GetContext(dataChild.Root, "Grandchild");
+            Assert.AreEqual("Grandchild", grandchild.Attributes[0]);
+            var grandchildRef = GenObject.GetContext(dataParent.Root, "Grandchild");
+            Assert.AreEqual("Grandchild", grandchildRef.Attributes[0]);
         }
 
         [Test(Description = "Verify that a referenced object can get a value from the referencing data")]
@@ -71,7 +74,7 @@ namespace org.xpangen.Generator.Test
         {
             var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
             var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", "Child", dataChild);
-            var genObject = dataParent.Context[3].GenObject;
+            var genObject = GenObject.GetContext(dataParent.Root, "GrandChild");
             var id = dataParent.GenDataDef.GetId("Parent", "Name");
             Assert.AreEqual("Parent", genObject.GetValue(id));
         }
@@ -89,15 +92,16 @@ namespace org.xpangen.Generator.Test
         {
             var dataChild = SetUpParentChildData("Child", "Grandchild", "Grandchild");
             var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", "Child", dataChild);
-            dataParent.First(1);
-            for (var i = 0; i < dataParent.GenDataDef.Classes.Count; i++ )
+            for (var i = 1; i < dataParent.GenDataDef.Classes.Count; i++ )
             {
-                Assert.IsNotNull(dataParent.Context[i].GenObject, i + ": " + dataParent.Context[i].DefClass);
-                Assert.AreEqual(dataParent.Context[i].RefClassId, dataParent.Context[i].GenObject.ClassId);
+                var genObject = GenObject.GetContext(dataParent.Root, dataParent.GenDataDef.Classes[i].Name);
+                Assert.IsNotNull(genObject, i + ": " + dataParent.GenDataDef.Classes[i].Name);
+                Assert.AreEqual(genObject.ParentSubClass.Definition.SubClass.RefClassId, genObject.ClassId);
             }
         }
 
         [Test(Description = "Verify that duplicated data context works as expected with reference data")]
+        [Ignore("Depricated functionality")]
         public void DuplicatedContextWithReferenceTests()
         {
             var f = LoadGenData("ProgramDefinition").GenDataBase.AsDef();
@@ -123,22 +127,26 @@ namespace org.xpangen.Generator.Test
         }
 
         [Test(Description = "Verify that the SetUpParentChildReferenceData method works as expected")]
+        [Ignore("Verify RefClassId functionality for nested references")]
         public void VerifyNestedSetUpParentChildReferenceDataMethod()
         {
             var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
             var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "Grandchild", "GrandChild", dataGrandchildhild);
             var dataParent = SetUpParentChildReferenceData("Parent", "Child", "Child", "Child", dataChild);
             Assert.AreEqual(1, dataParent.Root.SubClass.Count);
-            Assert.AreEqual(5, dataParent.Context.Count);
-            Assert.AreEqual("Parent", dataParent.Context[1].GenObject.Attributes[0]);
-            Assert.That(dataParent.Cache.Contains("Child"));
-            Assert.AreEqual(1, dataParent.Context[1].GenObject.SubClass.Count);
-            Assert.IsFalse(dataParent.Eol(2));
-            Assert.AreEqual(2, dataParent.Context[2].ClassId);
-            Assert.AreEqual("Child", dataParent.Context[2].GenObject.Attributes[0]);
-            Assert.AreEqual(3, dataParent.Context[3].ClassId);
-            Assert.AreEqual("Grandchild", dataParent.Context[3].GenObject.Attributes[0]);
-            Assert.AreEqual(2, dataParent.Context[3].DefClass.RefClassId);
+            Assert.AreEqual(5, dataParent.GenDataDef.Classes.Count);
+            var parent = GenObject.GetContext(dataParent.Root, "Parent");
+            Assert.AreEqual("Parent", parent.Attributes[0]);
+            Assert.That(dataParent.Cache.ContainsKey("child"));
+            Assert.AreEqual(1, parent.SubClass.Count);
+            var child = GenObject.GetContext(dataParent.Root, "Child");
+            Assert.IsNotNull(child);
+            Assert.AreEqual(2, dataParent.GetClassId("Child"));
+            Assert.AreEqual("Child", child.Attributes[0]);
+            var grandchild = GenObject.GetContext(dataParent.Root, "GrandChild");
+            Assert.AreEqual(3, dataParent.GetClassId("GrandChild"));
+            Assert.AreEqual("Grandchild", grandchild.Attributes[0]);
+            Assert.AreEqual(2, grandchild.ParentSubClass.Definition.SubClass.RefClassId); // Check this
         }
 
         /// <summary>
@@ -151,8 +159,8 @@ namespace org.xpangen.Generator.Test
             var classId = f.AddClass("", "Class");
             f.AddClassInstanceProperty(classId, "Prop1");
             f.AddClassInstanceProperty(classId, "Prop2");
-            var d = new GenData(f);
-            var o = CreateGenObject(d, d.Root, "Class");
+            var d = new GenDataBase(f);
+            var o = CreateGenObject(d.Root, "Class");
             var a = new GenAttributes(f, 1) {GenObject = o};
             a.SetString("Prop1", "Prop1");
             a.SetString("Prop2", "Prop2");
@@ -167,9 +175,9 @@ namespace org.xpangen.Generator.Test
         public void GenAttributeTests()
         {
             var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            var o = CreateGenObject(d, d.Root, "Class", "Class");
-            CreateGenObject(d, o, "SubClass", "SubClass");
+            var d = new GenDataBase(f);
+            var o = CreateGenObject(d.Root, "Class", "Class");
+            CreateGenObject(o, "SubClass", "SubClass");
 
             VerifyDataCreation(d);
         }
@@ -178,6 +186,7 @@ namespace org.xpangen.Generator.Test
         /// Tests the generator data context functionality
         /// </summary>
         [Test(Description="Generator context tests")]
+        [Ignore("Depricated functionality")]
         public void GenContextTests()
         {
             var f = GenDataDef.CreateMinimal();
@@ -201,28 +210,28 @@ namespace org.xpangen.Generator.Test
         public void GenDataReorderTests()
         {
             var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
+            var d = new GenDataBase(f);
 
-            var c = CreateGenObject(d, d.Root, "Class", "Class");
-            CreateGenObject(d, c, "SubClass", "SubClass1");
-            CreateGenObject(d, c, "SubClass", "SubClass2");
-            CreateGenObject(d, c, "SubClass", "SubClass3");
+            var c = CreateGenObject(d.Root, "Class", "Class");
+            CreateGenObject(c, "SubClass", "SubClass1");
+            CreateGenObject(c, "SubClass", "SubClass2");
+            CreateGenObject(c, "SubClass", "SubClass3");
             
             // Verify initial subclass order - Index is last added item
-            CheckOrder(d, 2, "123", "Verify initial subclass order");
+            CheckOrder(d, "123", "Verify initial subclass order");
             // Make and verify moves
-            MoveItem(d, ListMove.Up, 2, 1, "132", "Move last subclass up one place");
-            MoveItem(d, ListMove.ToTop, 2, 0, "213", "Move last subclass to top");
-            MoveItem(d, ListMove.ToTop, 1, 0, "123", "Move second subclass to top");
-            MoveItem(d, ListMove.ToBottom, 0, 2, "231", "Move first subclass to bottom");
-            MoveItem(d, ListMove.ToTop, 0, 0, "231", "Move first subclass to top (should have no effect)");
-            MoveItem(d, ListMove.ToBottom, 2, 2, "231", "Move last subclass to bottom (should have no effect)");
-            MoveItem(d, ListMove.Up, 0, 0, "231", "Move first subclass up (should have no effect)");
-            MoveItem(d, ListMove.Down, 2, 2, "231", "Move last subclass down (should have no effect)");
-            MoveItem(d, ListMove.Down, 0, 1, "321", "Move first subclass down");
-            MoveItem(d, ListMove.Down, 1, 2, "312", "Move second subclass down");
-            MoveItem(d, ListMove.Up, 1, 0, "132", "Move second subclass up");
-            MoveItem(d, ListMove.ToBottom, 1, 2, "123", "Move second subclass to bottom");
+            MoveItem(d, ListMove.Up, 2, "132", "Move last subclass up one place");
+            MoveItem(d, ListMove.ToTop, 2, "213", "Move last subclass to top");
+            MoveItem(d, ListMove.ToTop, 1, "123", "Move second subclass to top");
+            MoveItem(d, ListMove.ToBottom, 0, "231", "Move first subclass to bottom");
+            MoveItem(d, ListMove.ToTop, 0, "231", "Move first subclass to top (should have no effect)");
+            MoveItem(d, ListMove.ToBottom, 2, "231", "Move last subclass to bottom (should have no effect)");
+            MoveItem(d, ListMove.Up, 0, "231", "Move first subclass up (should have no effect)");
+            MoveItem(d, ListMove.Down, 2, "231", "Move last subclass down (should have no effect)");
+            MoveItem(d, ListMove.Down, 0, "321", "Move first subclass down");
+            MoveItem(d, ListMove.Down, 1, "312", "Move second subclass down");
+            MoveItem(d, ListMove.Up, 1, "132", "Move second subclass up");
+            MoveItem(d, ListMove.ToBottom, 1, "123", "Move second subclass to bottom");
         }
 
         /// <summary>

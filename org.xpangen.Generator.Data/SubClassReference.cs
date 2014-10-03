@@ -36,6 +36,11 @@ namespace org.xpangen.Generator.Data
             {
                 _reference = value;
                 GenDataBase.References.Add(value, Definition.Reference);
+                if (GenDataBase.Cache.ContainsKey(value.ToLowerInvariant()))
+                {
+                    foreach (var o in GenDataBase.Cache[value.ToLowerInvariant()].Root.SubClass[0])
+                        o.RefParent = Parent;
+                }
                 GenDataBase.Changed = true;
                 GenDataBase.RaiseDataChanged(Parent.ParentSubClass.Definition.SubClass.Name, "Reference");
             }

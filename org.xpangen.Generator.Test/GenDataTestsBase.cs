@@ -106,7 +106,7 @@ Field=Name
 SubClass=Grandchild[Reference='GrandchildDef']
 .
 Child=Child
-Grandchild[Reference='grandchild']
+Grandchild[Reference='Grandchild']
 ";
 
         protected const string ReferenceParentDefText =
@@ -131,7 +131,7 @@ Field=Name
 SubClass=Child[Reference='ChildDef']
 .
 Parent=Parent
-Child[Reference='child']
+Child[Reference='Child']
 ";
 
         protected string GetTestDataFileName(string testName)
@@ -239,7 +239,7 @@ Child[Reference='child']
             return o;
         }
 
-        public static GenObject CreateGenObject(GenObject parent, string className, string name)
+        protected static GenObject CreateGenObject(GenObject parent, string className, string name = null)
         {
             var o = parent.CreateGenObject(className);
             if (name != null)
@@ -265,14 +265,14 @@ Child[Reference='child']
             d.Last(classId);
         }
 
-        protected static GenObject CreateProperty(GenData d, string name, GenObject parent)
+        protected static void CreateProperty(GenData d, string name, GenObject parent)
         {
-            return CreateGenObject(d, parent, "Property", name);
+            CreateGenObject(d, parent, "Property", name);
         }
 
-        protected static GenObject CreateSubClass(GenData d, string name, GenObject parent)
+        private static void CreateSubClass(GenData d, string name, GenObject parent)
         {
-            return CreateGenObject(d, parent, "SubClass", name);
+            CreateGenObject(d, parent, "SubClass", name);
         }
 
         protected static void VerifyAsDef(GenDataDef f)
@@ -295,7 +295,7 @@ Child[Reference='child']
             VerifyDataCreation(new GenData(d));
         }
 
-        protected static void VerifyDataCreation(GenData d)
+        private static void VerifyDataCreation(GenData d)
         {
             d.First(1);
             d.First(2);
@@ -329,6 +329,19 @@ Child[Reference='child']
             genData.First(ClassClassId);
         }
 
+        protected static void SetUpData(GenDataBase genDataBase)
+        {
+            var c = CreateGenObject(genDataBase.Root, "Class", "Class");
+            CreateGenObject(c, "Property", "Name");
+            var sc = CreateGenObject(genDataBase.Root, "Class", "SubClass");
+            CreateGenObject(sc, "Property", "Name");
+            CreateGenObject(sc, "Property", "Reference");
+            var p = CreateGenObject(genDataBase.Root, "Class", "Property");
+            CreateGenObject(p, "Property", "Name");
+            CreateGenObject(c, "SubClass", "SubClass");
+            CreateGenObject(c, "SubClass", "Property");
+        }
+
         protected static void CreateGenDataSaveText(string fileName, string text = GenDataSaveText)
         {
             if (File.Exists(fileName))
@@ -336,7 +349,7 @@ Child[Reference='child']
             File.WriteAllText(fileName, text);
         }
 
-        protected static GenData SetUpLookupContextData()
+        protected static GenDataBase SetUpLookupContextData()
         {
             var f = new GenDataDef();
             var parentId = f.AddClass("", "Parent");
@@ -348,22 +361,22 @@ Child[Reference='child']
             f.AddClassInstanceProperty(lookupId, "Name");
 
             var a = new GenAttributes(f, 1);
-            var d = new GenData(f);
-            var p = CreateGenObject(d, d.Root, "Parent", "Parent");
-            a.GenObject = CreateGenObject(d, p, "Child", "Child1");
+            var d = new GenDataBase(f);
+            var p = CreateGenObject(d.Root, "Parent", "Parent");
+            a.GenObject = CreateGenObject(p, "Child", "Child1");
             a.SetString("Lookup", "Valid");
             a.SaveFields();
 
-            a.GenObject = CreateGenObject(d, p, "Child", "Child2");
+            a.GenObject = CreateGenObject(p, "Child", "Child2");
             a.SetString("Lookup", "Invalid");
             a.SaveFields();
 
-            a.GenObject = CreateGenObject(d, p, "Lookup", "Valid");
+            a.GenObject = CreateGenObject(p, "Lookup", "Valid");
             
             return d;
         }
 
-        protected static GenData SetUpLookupData()
+        protected static GenDataBase SetUpLookupData()
         {
             var f = GenDataDef.CreateMinimal();
 
@@ -371,35 +384,36 @@ Child[Reference='child']
             return d;
         }
 
-        private static GenData SetUpLookupData(GenDataDef f)
+        private static GenDataBase SetUpLookupData(GenDataDef f)
         {
-            var d = new GenData(f);
-            var c = CreateGenObject(d, d.Root, "Class", "Class");
-            CreateGenObject(d, c, "Property", "Name");
-            var sc = CreateGenObject(d, d.Root, "Class", "SubClass");
-            CreateGenObject(d, sc, "Property", "Name");
-            var p = CreateGenObject(d, d.Root, "Class", "Property");
-            CreateGenObject(d, p, "Property", "Name");
-            CreateGenObject(d, c, "SubClass", "SubClass");
-            CreateGenObject(d, c, "SubClass", "Property");
-            d.First(1);
+            var d = new GenDataBase(f);
+            var c = CreateGenObject(d.Root, "Class", "Class");
+            CreateGenObject(c, "Property", "Name");
+            var sc = CreateGenObject(d.Root, "Class", "SubClass");
+            CreateGenObject(sc, "Property", "Name");
+            var p = CreateGenObject(d.Root, "Class", "Property");
+            CreateGenObject(p, "Property", "Name");
+            CreateGenObject(c, "SubClass", "SubClass");
+            CreateGenObject(c, "SubClass", "Property");
             return d;
         }
 
-        protected static GenData SetUpParentChildReferenceData(string parentClassName, string childClassName, 
-            string childDefName, string childDataName, GenData dataChild)
+        protected static GenDataBase SetUpParentChildReferenceData(string parentClassName, string childClassName, 
+            string childDefName, string childDataName, GenDataBase dataChildBase)
         {
-            var def = SetUpParentChildReferenceDef(parentClassName, childClassName, childDefName, dataChild.GenDataDef);
-            var data = new GenData(def) { DataName = parentClassName };
-            SetUpParentOtherChildReferenceData(parentClassName, childClassName, childDataName, dataChild, data);
+            var def = SetUpParentChildReferenceDef(parentClassName, childClassName, childDefName, dataChildBase.GenDataDef);
+            var data = new GenDataBase(def) { DataName = parentClassName };
+            SetUpParentOtherChildReferenceData(parentClassName, childClassName, childDataName, data,
+                dataChildBase);
             return data;
         }
 
-        private static void SetUpParentOtherChildReferenceData(string parentClassName, string childClassName,
-                                                                 string childDataName, GenData dataChild, GenData data)
+        private static void SetUpParentOtherChildReferenceData(string parentClassName, string childClassName, 
+            string childDataName, GenDataBase dataParent, GenDataBase dataChild)
         {
-            CreateGenObject(data, data.Root, parentClassName, parentClassName);
-            SetUpParentReference(data, dataChild, childClassName + "Def", parentClassName, childClassName, childDataName);
+            var parent = CreateGenObject(dataParent.Root, parentClassName, parentClassName);
+            SetUpParentReference(childClassName + "Def", childClassName, childDataName, dataParent,
+                dataChild, parent);
         }
 
         protected static GenDataDef SetUpParentChildReferenceDef(string parentClassName, string childClassName,
@@ -413,23 +427,12 @@ Child[Reference='child']
             return def;
         }
 
-        protected static GenDataBase SetUpParentChildDataBase(string parentClassName, string childClassName, string childDataName)
+        protected static GenDataBase SetUpParentChildData(string parentClassName, string childClassName, string childDataName)
         {
             var def = SetUpParentChildDef(parentClassName, childClassName);
             var data = new GenDataBase(def) { DataName = parentClassName};
             var parent = CreateGenObject(data.Root, parentClassName, parentClassName);
             CreateGenObject(parent, childClassName, childDataName);
-            return data;
-        }
-
-        protected static GenData SetUpParentChildData(string parentClassName, string childClassName, string childDataName)
-        {
-            //return new GenData(SetUpParentChildDataBase(parentClassName, childClassName, childDataName));
-            var def = SetUpParentChildDef(parentClassName, childClassName);
-            var data = new GenData(def) { DataName = parentClassName };
-            var parent = CreateGenObject(data.Root, parentClassName, parentClassName);
-            CreateGenObject(parent, childClassName, childDataName);
-            data.First(1);
             return data;
         }
 
@@ -449,14 +452,12 @@ Child[Reference='child']
             def.AddClassInstanceProperty(childClassId, "Name");
         }
 
-        private static void SetUpParentReference(GenData dataParent, GenData dataChild, string childDefName,
-                                                 string parentClassName, string childClassName, string childName)
+        private static void SetUpParentReference(string childDefName, string childClassName, 
+            string childName, GenDataBase dataParent, GenDataBase dataChild, GenObject parent)
         {
-            dataParent.Cache.Internal("Minimal", childDefName, dataChild.GenDataDef.AsGenData());
-            dataParent.Cache.Internal(childDefName, childName, dataChild);
-            dataParent.Cache.Merge();
-            SetSubClassReference(dataParent, parentClassName, childClassName, childName);
-            dataParent.First(1);
+            dataParent.CheckReference(childDefName, dataChild.GenDataDef.AsGenDataBase());
+            dataParent.CheckReference(childName, dataChild);
+            SetSubClassReference(parent, childClassName, childName);
         }
 
         /// <summary>
@@ -464,7 +465,7 @@ Child[Reference='child']
         /// </summary>
         /// <param name="d">The data containing the object.</param>
         /// <returns>The first classId 1 object if it exists, otherwise null.</returns>
-        protected static GenObject GetFirstObject(GenData d)
+        private static GenObject GetFirstObject(GenData d)
         {
             var b = d.GenDataBase;
             return GetFirstObject(b);
@@ -484,7 +485,8 @@ Child[Reference='child']
             Contract.Requires(genObject.Definition != null, "The object definition is required");
             var index = genObject.Definition.IndexOfSubClass(subClassName);
             if (index == -1) throw new ArgumentException("Class is not a subclass", subClassName);
-            return genObject.SubClass[index].Count == 0 ? null : genObject.SubClass[index][0];
+            var subClass = genObject.GetSubClass(subClassName);
+            return subClass.Count == 0 ? null : subClass[0];
         }
 
 
@@ -504,42 +506,39 @@ Child[Reference='child']
         /// <summary>
         /// Set the subclass reference.
         /// </summary>
-        /// <param name="data">The generator data.</param>
-        /// <param name="className">The parent class name.</param>
+        /// <param name="parent"></param>
         /// <param name="subClassName">The childe class name.</param>
         /// <param name="reference">The reference path.</param>
-        private static void SetSubClassReference(GenData data, string className, string subClassName, string reference)
+        private static void SetSubClassReference(GenObject parent, string subClassName, string reference)
         {
-            var classId = data.GenDataDef.GetClassId(className);
-            var subClassIndex = data.GenDataDef.GetClassSubClasses(classId).IndexOf(data.GenDataDef.GetClassId(subClassName));
-            var sub = data.Context[classId].GenObject.SubClass[subClassIndex] as SubClassReference;
+            var subClassIndex = parent.Definition.SubClasses.IndexOf(subClassName);
+            var sub = parent.SubClass[subClassIndex] as SubClassReference;
             if (sub != null)
-                sub.Reference = reference.ToLowerInvariant();
+                sub.Reference = reference;
         }
 
-        protected static void MoveItem(GenData d, ListMove move, int itemIndex, int newItemIndex, string order, string action)
+        protected static void MoveItem(GenDataBase d, ListMove move, int itemIndex, string order, string action)
         {
-            d.Context[SubClassClassId].Index = itemIndex;
-            d.Context[SubClassClassId].MoveItem(move, itemIndex);
-            CheckOrder(d, newItemIndex, order, action);
+            var c = GetFirstObject(d);
+            var sc = c.GetSubClass("SubClass");
+            sc.Move(move, itemIndex);
+            CheckOrder(d, order, action);
         }
 
-        protected static void CheckOrder(GenData d, int itemIndex, string order, string action)
+        protected static void CheckOrder(GenDataBase d1, string order, string action)
         {
+            var d = d1;
             var id = d.GenDataDef.GetId("SubClass.Name");
-            Assert.AreEqual(itemIndex, d.Context[id.ClassId].Index, "Expected index value");
-            d.First(ClassClassId);
-            d.First(SubClassClassId);
-            Assert.AreEqual("SubClass" + order[0], d.Context.GetValue(id), action + " first item");
-            d.Next(SubClassClassId);
-            Assert.AreEqual("SubClass" + order[1], d.Context.GetValue(id), action + " second item");
-            d.Next(SubClassClassId);
-            Assert.AreEqual("SubClass" + order[2], d.Context.GetValue(id), action + " third item");
+            var s0 = GenObject.GetContext(d.Root, "SubClass");
+            var s1 = GetNextObjectInSubClass(s0);
+            var s2 = GetNextObjectInSubClass(s1);
+            Assert.AreEqual("SubClass" + order[0], s0.GetValue(id), action + " first item");
+            Assert.AreEqual("SubClass" + order[1], s1.GetValue(id), action + " second item");
+            Assert.AreEqual("SubClass" + order[2], s2.GetValue(id), action + " third item");
         }
 
         protected static void CompareGenDataDef(GenDataDef expected, GenDataDef actual, string path)
         {
-            //Assert.AreEqual(expected.Definition, actual.Definition);
             Assert.AreEqual(expected.Classes.Count, actual.Classes.Count, path);
             for (var i = 0; i < expected.Classes.Count; i++)
             {
@@ -572,10 +571,10 @@ Child[Reference='child']
         protected static GeneratorEditor PopulateGenSettings()
         {
             var f = GenDataBase.DataLoader.LoadData("data/GeneratorEditor").AsDef();
-            var d = new GenData(f);
-            var model = new GeneratorEditor(d.GenDataBase) {GenObject = d.Root};
+            var d = new GenDataBase(f);
+            var model = new GeneratorEditor(d) {GenObject = d.Root};
             model.SaveFields();
-            var settings = new GenSettings(d.GenDataBase) {GenObject = CreateGenObject(d, d.Root, "GenSettings"), HomeDir = "."};
+            var settings = new GenSettings(d) {GenObject = CreateGenObject(d.Root, "GenSettings"), HomeDir = "."};
             model.GenSettingsList.Add(settings);
             settings.AddBaseFile("Minimal", "Minimal.dcb", "Data", "The simplest definition required by the generator",
                 ".dcb");
@@ -969,58 +968,52 @@ Container[Reference='TestData\VirtualData']
             GenParameters.SaveToFile(df.GenDataBase, VirtualDefinitionFile);
             var d = PopulateInheritanceData(VirtualDataFile);
             if (File.Exists(VirtualDataFile)) File.Delete(VirtualDataFile);
-            GenParameters.SaveToFile(d.GenDataBase, VirtualDataFile);
+            GenParameters.SaveToFile(d, VirtualDataFile);
 
             var pdf = SetUpParentOfVirtualDefinition();
             if (File.Exists(VirtualParentDefinitionFile)) File.Delete(VirtualParentDefinitionFile);
             GenParameters.SaveToFile(pdf.GenDataBase, VirtualParentDefinitionFile);
             var pd = SetUpParentOfVirtualData();
             if (File.Exists(VirtualParentDataFile)) File.Delete(VirtualParentDataFile);
-            GenParameters.SaveToFile(pd.GenDataBase, VirtualParentDataFile);
+            GenParameters.SaveToFile(pd, VirtualParentDataFile);
         }
 
-        protected static GenData PopulateInheritanceData(string dataName)
+        protected static GenDataBase PopulateInheritanceData(string dataName)
         {
             var f = SetUpVirtualDefinition().GenDataBase.AsDef();
-            var d = new GenData(f) {DataName = Path.GetFileNameWithoutExtension(dataName)};
-            var container = CreateGenObject(d, d.Root, "Container", "Container");
-            d.First(1);
-            var virtual1 = CreateGenObject(d, container, "Virtual1", "V1Instance1");
+            var d = new GenDataBase(f) {DataName = Path.GetFileNameWithoutExtension(dataName)};
+            var container = CreateGenObject(d.Root, "Container", "Container");
+            var virtual1 = CreateGenObject(container, "Virtual1", "V1Instance1");
             Assert.AreEqual(3, virtual1.ClassId);
             var @abstract = new GenAttributes(f, 3) {GenObject = virtual1};
-            //@abstract.SetString("Name", "V1Instance1");
             @abstract.SetString("V1Field", "Value 1");
             @abstract.SaveFields();
-            d.Last(2);
-            CreateGenObject(d, virtual1, "Child", "V1I1Child1");
-            CreateGenObject(d, virtual1, "Child", "V1I1Child2");
-            var virtual2 = CreateGenObject(d, container, "Virtual2", "V2Instance1");
+            CreateGenObject(virtual1, "Child", "V1I1Child1");
+            CreateGenObject(virtual1, "Child", "V1I1Child2");
+            var virtual2 = CreateGenObject(container, "Virtual2", "V2Instance1");
             Assert.AreEqual(4, virtual2.ClassId);
             @abstract.GenObject = virtual2;
             //@abstract.SetString("Name", "V2Instance1");
             @abstract.SetString("V2Field", "Value 1");
             @abstract.SaveFields();
-            d.Last(2);
-            CreateGenObject(d, virtual2, "Child", "V2I1Child1");
-            CreateGenObject(d, virtual2, "Child", "V2I1Child2");
-            virtual1 = CreateGenObject(d, container, "Virtual1", "V1Instance2");
+            CreateGenObject(virtual2, "Child", "V2I1Child1");
+            CreateGenObject(virtual2, "Child", "V2I1Child2");
+            virtual1 = CreateGenObject(container, "Virtual1", "V1Instance2");
             Assert.AreEqual(3, virtual1.ClassId);
             @abstract.GenObject = virtual1;
             //@abstract.SetString("Name", "V1Instance2");
             @abstract.SetString("V1Field", "Value 2");
             @abstract.SaveFields();
-            d.Last(2);
-            CreateGenObject(d, virtual1, "Child", "V1I2Child1");
-            CreateGenObject(d, virtual1, "Child", "V1I2Child2");
-            virtual2 = CreateGenObject(d, container, "Virtual2", "V2Instance2");
+            CreateGenObject(virtual1, "Child", "V1I2Child1");
+            CreateGenObject(virtual1, "Child", "V1I2Child2");
+            virtual2 = CreateGenObject(container, "Virtual2", "V2Instance2");
             Assert.AreEqual(4, virtual2.ClassId);
             @abstract.GenObject = virtual2;
             //@abstract.SetString("Name", "V2Instance2");
             @abstract.SetString("V2Field", "Value 2");
             @abstract.SaveFields();
-            d.Last(2);
-            CreateGenObject(d, virtual2, "Child", "V2I2Child1");
-            CreateGenObject(d, virtual2, "Child", "V2I2Child2");
+            CreateGenObject(virtual2, "Child", "V2I2Child1");
+            CreateGenObject(virtual2, "Child", "V2I2Child2");
             return d;
         }
 
@@ -1044,7 +1037,7 @@ Container[Reference='TestData\VirtualData']
             return df;
         }
 
-        protected static Definition SetUpParentOfVirtualDefinition()
+        private static Definition SetUpParentOfVirtualDefinition()
         {
             Assert.IsTrue(File.Exists(VirtualDefinitionFile));
             Assert.IsTrue(File.Exists(VirtualDataFile));
@@ -1055,18 +1048,17 @@ Container[Reference='TestData\VirtualData']
             return df;
         }
 
-        protected static GenData SetUpParentOfVirtualData()
+        protected static GenDataBase SetUpParentOfVirtualData()
         {
             Assert.IsTrue(File.Exists(VirtualDefinitionFile));
             Assert.IsTrue(File.Exists(VirtualParentDefinitionFile));
             Assert.IsTrue(File.Exists(VirtualDataFile));
             var f = GenDataBase.DataLoader.LoadData(VirtualParentDefinitionFile).AsDef();
-            var d = new GenData(f) { DataName = "VirtualParentData" };
-            var container = new GenAttributes(f, 1) {GenObject = CreateGenObject(d, d.Root, "Parent", "Parent")};
+            var d = new GenDataBase(f) { DataName = "VirtualParentData" };
+            var container = new GenAttributes(f, 1) {GenObject = CreateGenObject(d.Root, "Parent", "Parent")};
             container.SetString("Name", "Parent");
             container.SaveFields();
-            d.First(1);
-            d.Context[1].GenObject.SubClass[0].Reference = "TestData\\VirtualData";
+            GetFirstObject(d).SubClass[0].Reference = "TestData\\VirtualData";
             return d;
         }
     }

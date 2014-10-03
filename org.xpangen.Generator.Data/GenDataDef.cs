@@ -3,7 +3,6 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
-using System.Diagnostics.Contracts;
 using org.xpangen.Generator.Data.Definition;
 
 namespace org.xpangen.Generator.Data
@@ -160,27 +159,6 @@ namespace org.xpangen.Generator.Data
             def.AddClassInstanceProperty(def.GetClassId("SubClass"), "Reference");
             def.AddClassInstanceProperty(def.GetClassId("SubClass"), "Relationship");
             def.AddClassInstanceProperty(def.GetClassId("Property"), "Name");
-        }
-
-        private static void PopulateDefinition(GenDataDef def)
-        {
-            def.DefinitionName = "Definition";
-            def.AddSubClass("", "Class");
-            def.AddSubClass("Class", "SubClass");
-            def.AddSubClass("Class", "Property");
-            def.AddClassInstanceProperty(1, "Name");
-            def.AddClassInstanceProperty(1, "Title");
-            def.AddClassInstanceProperty(1, "Inheritance");
-            def.AddClassInstanceProperty(2, "Name");
-            def.AddClassInstanceProperty(2, "Reference");
-            def.AddClassInstanceProperty(2, "Relationship");
-            def.AddClassInstanceProperty(3, "Name");
-            def.AddClassInstanceProperty(3, "Title");
-            def.AddClassInstanceProperty(3, "DataType");
-            def.AddClassInstanceProperty(3, "Default");
-            def.AddClassInstanceProperty(3, "LookupType");
-            def.AddClassInstanceProperty(3, "LookupDependence");
-            def.AddClassInstanceProperty(3, "LookupTable");
         }
 
         public GenData AsGenData()
@@ -463,15 +441,10 @@ namespace org.xpangen.Generator.Data
             return GetClassDef(classId).IsAbstract;
         }
 
-        public bool GetClassIsReference(int classId)
-        {
-            return GetClassDef(classId).IsReference;
-        }
-
         public int GetBaseClassId(string className)
         {
             var classId = GetClassId(className);
-            Contract.Assert(classId != -1, "Unknown record type: " + className);
+            if (classId == -1) throw new GeneratorException("Unknown record type: " + className, GenErrorType.Assertion);
             var baseClassId = classId;
             while (GetClassIsInherited(baseClassId))
                 baseClassId = GetClassParent(baseClassId).ClassId;

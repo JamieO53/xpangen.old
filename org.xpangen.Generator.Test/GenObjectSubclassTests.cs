@@ -87,8 +87,9 @@ namespace org.xpangen.Generator.Test
         [TestCase(Description = "Tests the retrieval of a class' referenced subclass")]
         public void GenObjectSubClassLookupWithReferenceSubclass()
         {
-            var dataGrandchildhild = SetUpParentChildDataBase("Grandchild", "Greatgrandchild", "Greatgrandchild");
-            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", new GenData(dataGrandchildhild));
+            var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
+            GenData dataChild1 = new GenData(dataGrandchildhild);
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", dataChild1.GenDataBase);
             var child = dataChild.Root.GetSubClass("Child")[0];
             var sc = child.GetSubClass("Grandchild");
             Assert.AreEqual(1, sc[0].SubClass.Count);

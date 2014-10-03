@@ -20,7 +20,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the parameter scanner functionality
         /// </summary>
-        [TestCase(Description="Generator Parameter Scanner Test")]
+        [Test(Description="Generator Parameter Scanner Test")]
         public void GenParameterScannerTest()
         {
             const string txt = "Property=Title[Title='Property Title',DataType=String,Read,Write,PrivateVar,Visibility=3]\r\n";
@@ -88,7 +88,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the extraction of the data definition from text data
         /// </summary>
-        [TestCase(Description="Generator Text Parameters Definition extraction test")]
+        [Test(Description="Generator Text Parameters Definition extraction test")]
         public void GenTextParameterDefinitionExtractTest()
         {
             var f = GenParameters.ExtractDef(GenDataSaveText);
@@ -98,7 +98,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the extraction of the data definition from file data
         /// </summary>
-        [TestCase(Description = "Generator File Parameters Definition extraction test")]
+        [Test(Description = "Generator File Parameters Definition extraction test")]
         public void GenFileParameterDefinitionExtractTest()
         {
             CreateGenDataSaveText("GenFileParameterDefinitionExtractTest.txt");
@@ -114,7 +114,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the scanning of a parameter file using a file stream with no definition
         /// </summary>
-        [TestCase(Description="Generator Parameter Scanner Test")]
+        [Test(Description="Generator Parameter Scanner Test")]
         public void GenParameterTest()
         {
             CreateGenDataSaveText("GenParameterTest.txt");
@@ -128,7 +128,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that parameters are scanned correctly from literal text with no definition
         /// </summary>
-        [TestCase(Description="Generator Text Parameters test")]
+        [Test(Description="Generator Text Parameters test")]
         public void GenTextParametersTest()
         {
             var d = new GenParameters(GenDataSaveText);
@@ -139,7 +139,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the scanning of a parameter file using a file stream with a definition
         /// </summary>
-        [TestCase(Description="Generator Parameter Scanner Test")]
+        [Test(Description="Generator Parameter Scanner Test")]
         public void GenDefParameterTest()
         {
             CreateGenDataSaveText("GenDefParameterTest.txt");
@@ -154,7 +154,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that parameters are scanned correctly from literal text with a defenition
         /// </summary>
-        [TestCase(Description="Generator Text Parameters test")]
+        [Test(Description="Generator Text Parameters test")]
         public void GenDefTextParametersTest()
         {
             var f0 = GenDataDef.CreateMinimal();
@@ -166,7 +166,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the output profile is created correctly
         /// </summary>
-        [TestCase(Description = "Generator Output Profile test")]
+        [Test(Description = "Generator Output Profile test")]
         public void OutputProfileTest()
         {
             var f0 = GenDataDef.CreateMinimal();
@@ -196,7 +196,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the scanning of a parameter file using a file stream with that is referenced
         /// </summary>
-        [TestCase(Description = "Generator Parameter Scanner Reference Referred Test")]
+        [Test(Description = "Generator Parameter Scanner Reference Referred Test")]
         public void GenParameterReferenceReferredTest()
         {
             CreateGenDataSaveText("Grandchild.dcb", ReferenceGrandchildDefText);
@@ -204,19 +204,20 @@ namespace org.xpangen.Generator.Test
             GenParameters f;
             using (var s = new FileStream("Grandchild.dcb", FileMode.Open, FileAccess.ReadWrite))
                 f = new GenParameters(s) { DataName = "Grandchild" };
-            GenData d;
+            GenDataBase d;
             using (var s = new FileStream("Grandchild.txt", FileMode.Open, FileAccess.ReadWrite))
-                d = new GenData(new GenParameters(f.AsDef(), s) { DataName = "Grandchild" });
-            Assert.AreEqual(3, d.Context.Count);
-            d.First(1);
-            Assert.AreEqual("Grandchild", d.Context[1].GenObject.Attributes[0]);
-            Assert.That(!d.Eol(2));
+                d = new GenParameters(f.AsDef(), s) { DataName = "Grandchild" };
+            Assert.AreEqual(3, d.GenDataDef.Classes.Count);
+            var grandchild = GetFirstObject(d);
+            Assert.AreEqual("Grandchild", grandchild.Attributes[0]);
+            var greatgrandchild = GetFirstObjectOfSubClass(grandchild, "greatgrandchild");
+            Assert.IsNotNull(greatgrandchild);
         }
 
         /// <summary>
         /// Tests the scanning of a parameter file using a file stream with no definition
         /// </summary>
-        [TestCase(Description = "Generator Parameter Scanner Test")]
+        [Test(Description = "Generator Parameter Scanner Test")]
         public void GenParameterNestedReferenceTest()
         {
             CreateGenDataSaveText("Child.dcb", ReferenceChildDefText);
@@ -224,21 +225,21 @@ namespace org.xpangen.Generator.Test
             GenParameters f;
             using (var s = new FileStream("Child.dcb", FileMode.Open, FileAccess.ReadWrite))
                 f = new GenParameters(s) { DataName = "Child" };
-            GenData d;
+            GenDataBase d;
             using (var s = new FileStream("Child.txt", FileMode.Open, FileAccess.ReadWrite))
-                d = new GenData(new GenParameters(f.AsDef(), s) { DataName = "Child" });
+                d = new GenParameters(f.AsDef(), s) { DataName = "Child" };
             Assert.AreEqual(4, d.GenDataDef.Classes.Count);
-            Assert.AreEqual(4, d.Context.Count);
-            d.First(1);
-            Assert.AreEqual("Child", d.Context[1].GenObject.Attributes[0]);
-            Assert.That(!d.Eol(2));
-            Assert.That(d.Cache.Contains("grandchild"));
+            var child = GetFirstObject(d);
+            Assert.AreEqual("Child", child.Attributes[0]);
+            var grandchild = GetFirstObjectOfSubClass(child, "grandchild");
+            Assert.IsNotNull(grandchild);
+            Assert.That(d.Cache.ContainsKey("grandchild"));
         }
 
         /// <summary>
         /// Tests the generator data save functionality
         /// </summary>
-        [TestCase(Description = "Generator data save tests")]
+        [Test(Description = "Generator data save tests")]
         public void GenDataSaveTests()
         {
             const string fileName = "GenDataSaveTest.txt";
@@ -247,14 +248,13 @@ namespace org.xpangen.Generator.Test
             var f = GenDataDef.CreateMinimal();
             f.AddClassInstanceProperty(ClassClassId, "Title");
             var a = new GenAttributes(f, ClassClassId);
-            var d = new GenData(f);
+            var d = new GenDataBase(f);
             SetUpData(d);
-            d.First(ClassClassId);
-            a.GenObject = d.Context[ClassClassId].GenObject;
+            a.GenObject = GetFirstObject(d);
             a.SetString("Title", "Class object");
             a.SaveFields();
 
-            GenParameters.SaveToFile(d.GenDataBase, fileName);
+            GenParameters.SaveToFile(d, fileName);
 
             var file = File.ReadAllText(fileName);
             Assert.AreEqual(expected, file);
@@ -263,7 +263,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the generator data save functionality
         /// </summary>
-        [TestCase(Description = "Generator data with reference save tests")]
+        [Test(Description = "Generator data with reference save tests")]
         public void ParentReferenceGenDataSaveTests()
         {
             const string fileNameDef = "ParentDef.dcb";
@@ -277,12 +277,11 @@ namespace org.xpangen.Generator.Test
 
             var genData = dataParent;
 
-            GenData genData1 = genData.GenDataDef.AsGenData();
-            GenParameters.SaveToFile(genData1.GenDataBase, fileNameDef);
+            GenParameters.SaveToFile(genData.GenDataDef.AsGenData().GenDataBase, fileNameDef);
             var file = File.ReadAllText(fileNameDef);
             Assert.AreEqual(expectedDef, file);
 
-            GenParameters.SaveToFile(genData.GenDataBase, fileName);
+            GenParameters.SaveToFile(genData, fileName);
             file = File.ReadAllText(fileName);
             Assert.AreEqual(expected, file);
         }
@@ -290,7 +289,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the generator data save functionality
         /// </summary>
-        [TestCase(Description = "Generator data with reference save tests")]
+        [Test(Description = "Generator data with reference save tests")]
         public void ChildReferenceGenDataSaveTests()
         {
             const string fileNameDef = "ChildDef.dcb";
@@ -310,7 +309,7 @@ namespace org.xpangen.Generator.Test
             var file = File.ReadAllText(fileNameDef);
             Assert.AreEqual(expectedDef, file);
 
-            GenParameters.SaveToFile(genData.GenDataBase, fileName);
+            GenParameters.SaveToFile(genData, fileName);
             file = File.ReadAllText(fileName);
             Assert.AreEqual(expected, file);
         }
@@ -318,7 +317,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the generator data save functionality
         /// </summary>
-        [TestCase(Description = "Generator data with reference save tests - referenced data")]
+        [Test(Description = "Generator data with reference save tests - referenced data")]
         public void GrandchildReferenceGenDataSaveTests()
         {
             const string fileNameDef = "GrandchildDef.dcb";
@@ -328,14 +327,11 @@ namespace org.xpangen.Generator.Test
 
             var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
 
-            var genData = dataGrandchildhild;
-
-            GenData genData1 = genData.GenDataDef.AsGenData();
-            GenParameters.SaveToFile(genData1.GenDataBase, fileNameDef);
+            GenParameters.SaveToFile(dataGrandchildhild.GenDataDef.AsGenData().GenDataBase, fileNameDef);
             var file = File.ReadAllText(fileNameDef);
             Assert.AreEqual(expectedDef, file);
 
-            GenParameters.SaveToFile(genData.GenDataBase, fileName);
+            GenParameters.SaveToFile(dataGrandchildhild, fileName);
             file = File.ReadAllText(fileName);
             Assert.AreEqual(expected, file);
         }
@@ -343,28 +339,28 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Verifies that the Definition references in GeneratorDefinitionModel are loaded correctly
         /// </summary>
-        [TestCase(Description = "Verifies that the Definition references in GeneratorDefinitionModel are loaded correctly")]
+        [Test(Description = "Verifies that the Definition references in GeneratorDefinitionModel are loaded correctly")]
         public void GeneratorDefinitionModelDefinitionLoadTest()
         {
             var defData = GenDataBase.DataLoader.LoadData("ProgramDefinition");
             var def = defData.AsDef();
-            var data = new GenData(GenDataBase.DataLoader.LoadData(def, "GeneratorDefinitionModel"));
-            data.Cache.Check("definition", "definition");
+            var data = GenDataBase.DataLoader.LoadData(def, "GeneratorDefinitionModel");
             var definition = data.Cache["definition"];
-            definition.Last(1);
-            Assert.AreEqual(7, definition.Context[3].Count);
+            var d = GetLastObjectInSubClass(GetFirstObject(definition));
+            var p = GetFirstObjectOfSubClass(d, "Property");
+            Assert.AreEqual(7, p.ParentSubClass.Count);
             Assert.AreEqual("Property", def.GetClassName(5));
             Assert.AreEqual(7, def.GetClassProperties(5).Count);
-            data.First(2);
-            Assert.AreEqual("Definition", data.Context[2].GenObject.Attributes[0]);
-            Assert.AreEqual("Definition.Class", data.Context[3].DefClass.ToString());
-            Assert.AreEqual("Class", data.Context[3].GenObject.Attributes[0]);
-            data.Next(3);
-            Assert.AreEqual("SubClass", data.Context[3].GenObject.Attributes[0]);
-            data.Next(3);
-            Assert.AreEqual("Property", data.Context[3].GenObject.Attributes[0]);
-            Assert.AreEqual(7, data.Context[3].GenObject.SubClass[1].Count);
-            Assert.AreEqual(7, data.Context[5].Count);
+            var a = GetFirstObjectOfSubClass(GetFirstObject(data), "Assembly");
+            Assert.AreEqual("Definition", a.Attributes[0]);
+            Assert.AreEqual("Definition.Class", a.SubClass[0].Definition.SubClass.ToString());
+            var c = a.GetSubClass("Class")[0]; // Reference
+            Assert.AreEqual("Class", c.Attributes[0]);
+            c = GetNextObjectInSubClass(c);
+            Assert.AreEqual("SubClass", c.Attributes[0]);
+            c = GetNextObjectInSubClass(c);
+            Assert.AreEqual("Property", c.Attributes[0]);
+            Assert.AreEqual(7, c.SubClass[1].Count);
         }
 
         /// <summary>
