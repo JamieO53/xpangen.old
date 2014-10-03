@@ -5,7 +5,6 @@
 using System.IO;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Data.Definition;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
@@ -25,16 +24,16 @@ namespace org.xpangen.Generator.Test
             var d = df.GenDataBase;
             var def = d.AsDef();
             Assert.AreEqual(VirtualDefinitionProfile, GenDataDefProfile.CreateProfile(def));
-            var data = def.AsGenData();
-            CompareGenData(d, data.GenDataBase);
+            var data = def.AsGenDataBase();
+            CompareGenData(d, data);
         }
 
         [Test(Description = "Tests the creation of a data profile with inheritance")]
         public void InheritanceDataProfileTest()
         {
             var df = SetUpVirtualDefinition();
-            var d = (new GenData(df.GenDataBase));
-            var p = GenParameters.CreateProfile(d.GenDataBase.AsDef());
+            var d = df.GenDataBase;
+            var p = GenParameters.CreateProfile(d.AsDef());
             var profileText = p.ProfileText(ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary).Replace(">:", ":");
             Assert.AreEqual(VirtualDefinitionProfile, profileText);
         }
@@ -55,7 +54,7 @@ namespace org.xpangen.Generator.Test
         {
             var dataFile = GetTestDataFileName("InheritanceDataExpansionTest");
             var d = PopulateInheritanceData(dataFile);
-            GenParameters.SaveToFile(d.GenDataBase, dataFile);
+            GenParameters.SaveToFile(d, dataFile);
             var text = File.ReadAllText(dataFile);
             Assert.AreEqual(VirtualDefinitionData, text);
         }
@@ -67,7 +66,7 @@ namespace org.xpangen.Generator.Test
             SetUpParametersFile(dataFile, VirtualDefinitionData);
             var d = PopulateInheritanceData(dataFile);
             var x = GenDataBase.DataLoader.LoadData(d.GenDataDef, dataFile);
-            CompareGenData(d.GenDataBase, x);
+            CompareGenData(d, x);
         }
 
         [Test(Description = "Tests the loading of data with inheritance without a definition")]
@@ -77,7 +76,7 @@ namespace org.xpangen.Generator.Test
             SetUpParametersFile(dataFile, VirtualDefinitionData);
             var d = PopulateInheritanceData(dataFile);
             var x = GenDataBase.DataLoader.LoadData(dataFile);
-            CompareGenData(d.GenDataBase, x);
+            CompareGenData(d, x);
         }
 
         [Test(Description = "Tests the expansion of a class with inheritance")]
@@ -96,7 +95,7 @@ namespace org.xpangen.Generator.Test
             var dataFile = GetTestDataFileName("InheritanceClassGenerationTest");
             var d = PopulateInheritanceData(dataFile);
             var p = new GenCompactProfileParser(d.GenDataDef, "", InheritanceProfile);
-            var text = GenerateFragment(d.GenDataBase, p);
+            var text = GenerateFragment(d, p);
             Assert.AreEqual(InheritanceProfileResult, text);
         }
 
@@ -104,7 +103,7 @@ namespace org.xpangen.Generator.Test
         public void NestedInheritanceDataLoadTest()
         {
             var data = LoadVirtualParentData();
-            var expectedData = SetUpParentOfVirtualData().GenDataBase;
+            var expectedData = SetUpParentOfVirtualData();
             CompareGenData(expectedData, data);
         }
 
