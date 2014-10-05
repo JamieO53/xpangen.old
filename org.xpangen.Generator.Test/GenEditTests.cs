@@ -119,12 +119,12 @@ namespace org.xpangen.Generator.Test
         {
             const string fileName = "GenProfileTest.dcb";
             var f = GenDataDef.CreateMinimal();
-            var d = f.AsGenData();
+            var d = f.AsGenDataBase();
 
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
-            GenParameters.SaveToFile(d.GenDataBase, fileName);
+            GenParameters.SaveToFile(d, fileName);
             Assert.IsTrue(File.Exists(fileName));
             GenDataBase d1;
             using (var stream = new FileStream(fileName, FileMode.Open))

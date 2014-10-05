@@ -60,8 +60,8 @@ namespace org.xpangen.Generator.Test
         public void MinimalGenDataAsDefTest()
         {
             var f = GenDataDef.CreateMinimal();
-            var d = f.AsGenData();
-            var f0 = d.GenDataBase.AsDef();
+            var d = f.AsGenDataBase();
+            var f0 = d.AsDef();
             VerifyAsDef(f0);
         }
         
@@ -76,7 +76,7 @@ namespace org.xpangen.Generator.Test
             var fChild = SetUpParentChildReferenceDef("Child", "Grandchild", "GrandchildDef", fGrandchild);
             fChild.DefinitionName = "ChildDef";
             var fParent = SetUpParentChildReferenceDef("Parent", "Child", "ChildDef", fChild);
-            var f = fParent.AsGenData().GenDataBase.AsDef();
+            var f = fParent.AsGenDataBase().AsDef();
             f.DefinitionName = "Parent";
             CompareGenDataDef(fParent, f, "Parent");
         }

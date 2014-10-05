@@ -399,14 +399,14 @@ namespace org.xpangen.Generator.Test
             const string dir = "TestDir";
             const string fileName = dir + @"\GenProfileTest.dcb";
             var f = GenDataDef.CreateMinimal();
-            var d = f.AsGenData();
+            var d = f.AsGenDataBase();
 
             if (File.Exists(fileName))
                 File.Delete(fileName);
             if (Directory.Exists(dir))
                 Directory.Delete(dir);
 
-            GenParameters.SaveToFile(d.GenDataBase, fileName);
+            GenParameters.SaveToFile(d, fileName);
             Assert.IsTrue(Directory.Exists(dir), "Output directory is not created.");
             Assert.IsTrue(File.Exists(fileName));
             GenParameters d1;

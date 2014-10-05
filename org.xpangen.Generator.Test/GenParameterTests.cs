@@ -277,7 +277,7 @@ namespace org.xpangen.Generator.Test
 
             var genData = dataParent;
 
-            GenParameters.SaveToFile(genData.GenDataDef.AsGenData().GenDataBase, fileNameDef);
+            GenParameters.SaveToFile(genData.GenDataDef.AsGenDataBase(), fileNameDef);
             var file = File.ReadAllText(fileNameDef);
             Assert.AreEqual(expectedDef, file);
 
@@ -303,9 +303,9 @@ namespace org.xpangen.Generator.Test
             var genData = dataChild;
             Assert.AreEqual("GrandchildDef", genData.GenDataDef.GetClassSubClasses(1)[0].Reference);
 
-            var genDataDef = genData.GenDataDef.AsGenData();
-            Assert.AreEqual("GrandchildDef", genDataDef.Context[2].GenObject.Attributes[1]);
-            GenParameters.SaveToFile(genDataDef.GenDataBase, fileNameDef);
+            var d = genData.GenDataDef.AsGenDataBase();
+            Assert.AreEqual("GrandchildDef", GetFirstObjectOfSubClass(GetFirstObject(d), "SubClass").Attributes[1]);
+            GenParameters.SaveToFile(d, fileNameDef);
             var file = File.ReadAllText(fileNameDef);
             Assert.AreEqual(expectedDef, file);
 
@@ -327,7 +327,7 @@ namespace org.xpangen.Generator.Test
 
             var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
 
-            GenParameters.SaveToFile(dataGrandchildhild.GenDataDef.AsGenData().GenDataBase, fileNameDef);
+            GenParameters.SaveToFile(dataGrandchildhild.GenDataDef.AsGenDataBase(), fileNameDef);
             var file = File.ReadAllText(fileNameDef);
             Assert.AreEqual(expectedDef, file);
 
