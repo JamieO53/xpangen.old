@@ -20,23 +20,15 @@ namespace org.xpangen.Generator.Test
         public void EmptyGenDefExtractTest()
         {
             var f = new GenDataDef();
-            var d = f.AsGenData(); // Creates from a minimal definition, i.e. Root class, Class class, SubClass class, Properties class and FieldFilter class
-            var a = new GenAttributes(f, RootClassId);
-            Assert.AreEqual(4, d.Context.Count);
-            
-            Assert.IsFalse(d.Eol(RootClassId));
-            Assert.IsTrue(d.Eol(ClassClassId));
-            Assert.IsTrue(d.Eol(PropertyClassId));
-            Assert.IsTrue(d.Eol(SubClassClassId));
-           
-            Assert.AreEqual(RootClassId, d.Context[RootClassId].ClassId);
-            Assert.IsNull(d.Context[ClassClassId].GenObject);
-            Assert.AreEqual(0, d.Context[SubClassClassId].Count);
-            Assert.AreEqual(0, d.Context[PropertyClassId].Count);
+            var d = f.AsGenDataBase(); // Creates from a minimal definition, i.e. Root class, Class class, SubClass class, Properties class and FieldFilter class
+            new GenAttributes(f, RootClassId);
+            Assert.AreEqual(4, d.GenDataDef.Classes.Count);
 
-            Assert.IsTrue(d.Context[RootClassId].IsFirst());
-            a.GenObject = d.Context[RootClassId].GenObject;
-            Assert.AreEqual(0, d.Context[RootClassId].GenObject.Attributes.Count);
+            var r = d.Root;
+            Assert.IsNotNull(r);
+            Assert.AreEqual(0, r.SubClass[0].Count);
+            Assert.AreEqual(RootClassId, r.ClassId);
+            Assert.AreEqual(0, r.Attributes.Count);
         }
 
         /// <summary>
@@ -47,18 +39,22 @@ namespace org.xpangen.Generator.Test
         {
             var f = new GenDataDef();
             f.AddClass("", "Class");
-            var d = f.AsGenData();
+            var d = f.AsGenDataBase();
             var a = new GenAttributes(d.GenDataDef, ClassClassId);
 
-            Assert.AreEqual(1, d.Context[RootClassId].GenObject.SubClass.Count);
-            d.First(ClassClassId);
-            Assert.AreEqual(1, d.Context[ClassClassId].Count);
-            Assert.AreEqual(2, d.Context[ClassClassId].GenObject.SubClass.Count);
-            Assert.AreEqual(2, d.Context[ClassClassId].GenObject.Attributes.Count);
+            var r = d.Root;
+            Assert.AreEqual(1, r.SubClass.Count);
+            Assert.AreEqual(1, r.SubClass[0].Count);
 
-            Assert.IsNull(d.Context[SubClassClassId].GenObject);
-            Assert.IsNull(d.Context[PropertyClassId].GenObject);
-            a.GenObject = d.Context[ClassClassId].GenObject;
+            var c = GetFirstObject(d);
+            Assert.AreEqual(2, c.SubClass.Count);
+            Assert.AreEqual(2, c.Attributes.Count);
+
+            var s = GetFirstObjectOfSubClass(c, "SubClass");
+            Assert.IsNull(s);
+            var p = GetFirstObjectOfSubClass(c, "Property");
+            Assert.IsNull(p);
+            a.GenObject = c;
             Assert.AreEqual("Class", a.AsString("Name"));
         }
 
@@ -71,20 +67,23 @@ namespace org.xpangen.Generator.Test
             var f = new GenDataDef();
             f.AddClass("", "Class");
             f.AddClass("Class", "Property");
-            var d = f.AsGenData();
+            var d = f.AsGenDataBase();
             var a = new GenAttributes(d.GenDataDef, SubClassClassId);
 
-            Assert.AreEqual(1, d.Context[RootClassId].GenObject.SubClass.Count);
-            d.First(ClassClassId);
-            Assert.AreEqual(2, d.Context[ClassClassId].Count);
-            Assert.AreEqual(2, d.Context[ClassClassId].GenObject.SubClass.Count);
-            Assert.AreEqual(2, d.Context[ClassClassId].GenObject.Attributes.Count);
-            Assert.AreEqual(ClassClassId, d.Context[ClassClassId].GenObject.ClassId);
+            Assert.AreEqual(1, d.Root.SubClass.Count);
 
-            Assert.AreEqual(1, d.Context[SubClassClassId].Count);
-            a.GenObject = d.Context[SubClassClassId].GenObject;
+            Assert.AreEqual(2, d.Root.SubClass[0].Count);
+            
+            var c = GetFirstObject(d);
+            Assert.AreEqual(2, c.SubClass.Count);
+            Assert.AreEqual(2, c.Attributes.Count);
+            Assert.AreEqual(ClassClassId, c.ClassId);
+
+            var s = GetFirstObjectOfSubClass(c, "SubClass");
+            Assert.AreEqual(1, c.GetSubClass("SubClass").Count);
+            a.GenObject = s;
             Assert.AreEqual("Property", a.AsString("Name"));
-            Assert.IsNull(d.Context[PropertyClassId].GenObject);
+            Assert.IsNull(GetFirstObjectOfSubClass(c, "Property"));
         }
 
         /// <summary>
@@ -106,15 +105,15 @@ namespace org.xpangen.Generator.Test
         {
             var fChild = SetUpParentChildDef("Child", "Grandchild");
             var fParent = SetUpParentChildReferenceDef("Parent", "Child", "ChildDef", fChild);
-            var d = fParent.AsGenData();
+            var d = fParent.AsGenDataBase();
             var a = new GenAttributes(fParent, ClassClassId);
 
-            Assert.AreEqual(1, d.Context[ClassClassId].Count);
-            Assert.AreEqual(1, d.Context[RootClassId].GenObject.SubClass.Count);
-            d.First(ClassClassId);
-            a.GenObject = d.Context[ClassClassId].GenObject;
+            var c = GetFirstObject(d);
+            Assert.AreEqual(1, d.Root.SubClass[0].Count);
+
+            a.GenObject = c;
             Assert.AreEqual("Parent", a.AsString("Name"));
-            a = new GenAttributes(d.GenDataDef, SubClassClassId) {GenObject = d.Context[SubClassClassId].GenObject};
+            a = new GenAttributes(d.GenDataDef, SubClassClassId) {GenObject = GetFirstObjectOfSubClass(c, "SubClass")};
             Assert.AreEqual("Child", a.AsString("Name"));
             Assert.AreEqual("ChildDef", a.AsString("Reference"));
         }
