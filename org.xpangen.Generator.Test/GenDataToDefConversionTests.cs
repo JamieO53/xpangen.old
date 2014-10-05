@@ -17,12 +17,12 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the extraction of an empty definition
         /// </summary>
-        [TestCase(Description = "Generator empty definition extract test")]
+        [Test(Description = "Generator empty definition extract test")]
         public void EmptyGenDataAsDefTest()
         {
             var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            var f0 = d.GenDataBase.AsDef();
+            var d = new GenDataBase(f);
+            var f0 = d.AsDef();
             
             Assert.AreEqual(1, f0.Classes.Count); // Root class only
             Assert.AreEqual("", f0.GetClassName(0));
@@ -33,13 +33,13 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the extraction of an empty definition
         /// </summary>
-        [TestCase(Description = "Generator definition with single class extract test")]
+        [Test(Description = "Generator definition with single class extract test")]
         public void EmptyClassGenDataAsDefTest()
         {
             var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
+            var d = new GenDataBase(f);
             CreateClass(d, "Class");
-            var f0 = d.GenDataBase.AsDef();
+            var f0 = d.AsDef();
             Assert.AreEqual(2, f0.Classes.Count);
             
             // Root class
@@ -56,7 +56,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the extraction of an minimal definition
         /// </summary>
-        [TestCase(Description = "Generator minimal definition to data extract test")]
+        [Test(Description = "Generator minimal definition to data extract test")]
         public void MinimalGenDataAsDefTest()
         {
             var f = GenDataDef.CreateMinimal();
@@ -68,7 +68,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the extraction of an minimal definition
         /// </summary>
-        [TestCase(Description = "Generator definition with a reference to data extract test")]
+        [Test(Description = "Generator definition with a reference to data extract test")]
         public void ReferenceGenDataAsDefTest()
         {
             var fGrandchild = SetUpParentChildDef("Grandchild", "Greatgrandchild");

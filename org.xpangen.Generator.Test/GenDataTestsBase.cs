@@ -139,104 +139,90 @@ Child[Reference='Child']
             return "TestData\\" + testName + ".dcb";
         }
 
-        protected static void ValidateMinimalData(GenData d)
+        protected static void ValidateMinimalData(GenDataBase d)
         {
             Assert.AreEqual("Minimal", d.GenDataDef.DefinitionName);
-            Assert.AreEqual(4, d.Context.Count);
+            Assert.AreEqual(4, d.GenDataDef.Classes.Count);
 
-            Assert.IsFalse(d.Eol(RootClassId));
-            Assert.IsFalse(d.Eol(ClassClassId));
-            Assert.IsFalse(d.Eol(SubClassClassId));
-            Assert.IsFalse(d.Eol(PropertyClassId));
+            //Assert.IsFalse(d.Eol(RootClassId));
+            //Assert.IsFalse(d.Eol(ClassClassId));
+            //Assert.IsFalse(d.Eol(SubClassClassId));
+            //Assert.IsFalse(d.Eol(PropertyClassId));
 
-            Assert.AreEqual(RootClassId, d.Context[RootClassId].ClassId);
-            Assert.AreEqual(ClassClassId, d.Context[ClassClassId].ClassId);
-            Assert.AreEqual(SubClassClassId, d.Context[SubClassClassId].ClassId);
-            Assert.AreEqual(PropertyClassId, d.Context[PropertyClassId].ClassId);
+            //Assert.AreEqual(RootClassId, d.Context[RootClassId].ClassId);
+            //Assert.AreEqual(ClassClassId, d.Context[ClassClassId].ClassId);
+            //Assert.AreEqual(SubClassClassId, d.Context[SubClassClassId].ClassId);
+            //Assert.AreEqual(PropertyClassId, d.Context[PropertyClassId].ClassId);
 
-            Assert.IsTrue(d.Context[RootClassId].IsFirst());
-            Assert.IsTrue(d.Context[RootClassId].IsLast());
-            Assert.AreEqual(1, d.Context[RootClassId].GenObject.SubClass.Count);
+            //Assert.IsTrue(d.Context[RootClassId].IsFirst());
+            //Assert.IsTrue(d.Context[RootClassId].IsLast());
+            //Assert.AreEqual(1, d.Context[RootClassId].GenObject.SubClass.Count);
 
             // Class class tests
-            d.First(ClassClassId);
-            Assert.IsFalse(d.Eol(ClassClassId));
-            Assert.IsFalse(d.Eol(SubClassClassId));
-            Assert.IsFalse(d.Eol(PropertyClassId));
-            Assert.IsTrue(d.Context[ClassClassId].IsFirst());
-            Assert.IsTrue(d.Context[SubClassClassId].IsFirst());
-            Assert.IsTrue(d.Context[PropertyClassId].IsFirst());
+            //d.First(ClassClassId);
+            var c = GetFirstObject(d);
+            Assert.IsNotNull(c);
+            Assert.AreNotEqual(0, c.GetSubClass("SubClass").Count);
+            Assert.AreNotEqual(0, c.GetSubClass("Property").Count);
+            //Assert.IsTrue(d.Context[ClassClassId].IsFirst());
+            //Assert.IsTrue(d.Context[SubClassClassId].IsFirst());
+            //Assert.IsTrue(d.Context[PropertyClassId].IsFirst());
 
             var ca = new GenAttributes(d.GenDataDef, ClassClassId);
             var sa = new GenAttributes(d.GenDataDef, SubClassClassId);
             var pa = new GenAttributes(d.GenDataDef, PropertyClassId);
-            ca.GenObject = d.Context[ClassClassId].GenObject;
+            ca.GenObject = c;
             Assert.AreEqual("Class", ca.AsString("Name"));
-            Assert.AreEqual(2, d.Context[ClassClassId].GenObject.SubClass.Count);
-            Assert.AreEqual(2, d.Context[SubClassClassId].Count);
-            Assert.AreEqual(2, d.Context[PropertyClassId].Count);
-            pa.GenObject = d.Context[PropertyClassId].GenObject;
+            Assert.AreEqual(2, c.SubClass.Count);
+            Assert.AreEqual(2, c.GetSubClass("SubClass").Count);
+            Assert.AreEqual(2, c.GetSubClass("Property").Count);
+            pa.GenObject = c.GetSubClass("Property")[0];
             Assert.AreEqual("Name", pa.AsString("Name"));
 
             // SubClass class tests - SubClass
-            Assert.IsTrue(d.Context[SubClassClassId].IsFirst());
-            sa.GenObject = d.Context[SubClassClassId].GenObject;
+            var s = GetFirstObjectOfSubClass(c, "SubClass");
+            Assert.IsNotNull(s);
+            sa.GenObject = s;
             Assert.AreEqual("SubClass", sa.AsString("Name"));
-            Assert.AreEqual(0, d.Context[SubClassClassId].GenObject.SubClass.Count);
+            Assert.AreEqual(0, s.SubClass.Count);
 
             // SubClass class tests - Property
-            d.Next(SubClassClassId);
-            Assert.IsTrue(d.Context[SubClassClassId].IsLast());
-            sa.GenObject = d.Context[SubClassClassId].GenObject;
+            var p = GetNextObjectInSubClass(s);
+            Assert.AreEqual(p.GetSubClass("SubClass").Count - 1, p.GetSubClass("SubClass").IndexOf(p));
+            sa.GenObject = p;
             Assert.AreEqual("Property", sa.AsString("Name"));
-            Assert.AreEqual(0, d.Context[PropertyClassId].GenObject.SubClass.Count);
+            Assert.AreEqual(0, p.SubClass.Count);
 
             // SubClass class tests
-            d.Next(ClassClassId);
-            Assert.IsFalse(d.Eol(ClassClassId));
-            ca.GenObject = d.Context[ClassClassId].GenObject;
+            s = GetNextObjectInSubClass(c);
+            Assert.IsNotNull(s);
+            ca.GenObject = s;
             Assert.AreEqual("SubClass", ca.AsString("Name"));
-            Assert.AreEqual(0, d.Context[SubClassClassId].Count);
-            Assert.AreEqual(3, d.Context[PropertyClassId].Count);
-            pa.GenObject = d.Context[PropertyClassId].GenObject;
+            Assert.AreEqual(0, s.GetSubClass("SubClass").Count);
+            Assert.AreEqual(3, s.GetSubClass("Property").Count);
+            pa.GenObject = s.GetSubClass("Property")[0];
             Assert.AreEqual("Name", pa.AsString("Name"));
-            d.Next(PropertyClassId);
-            pa.GenObject = d.Context[PropertyClassId].GenObject;
+            pa.GenObject = GetNextObjectInSubClass((GenObject) pa.GenObject);
             Assert.AreEqual("Reference", pa.AsString("Name"));
+            pa.GenObject = GetNextObjectInSubClass((GenObject) pa.GenObject);
+            Assert.AreEqual("Relationship", pa.AsString("Name"));
 
             // Property class tests
-            d.Next(ClassClassId);
-            Assert.IsFalse(d.Eol(ClassClassId));
-            ca.GenObject = d.Context[ClassClassId].GenObject;
+            p = GetNextObjectInSubClass(s);
+            Assert.IsNotNull(p);
+            ca.GenObject = p;
             Assert.AreEqual("Property", ca.AsString("Name"));
-            Assert.AreEqual(0, d.Context[SubClassClassId].Count);
-            Assert.AreEqual(1, d.Context[PropertyClassId].Count);
-            pa.GenObject = d.Context[PropertyClassId].GenObject;
+            Assert.AreEqual(0, p.GetSubClass("SubClass").Count);
+            Assert.AreEqual(1, p.GetSubClass("Property").Count);
+            pa.GenObject = p.GetSubClass("Property")[0];
             Assert.AreEqual("Name", pa.AsString("Name"));
         }
 
-        protected static GenData LoadGenData(string path)
+        protected static GenObject CreateClass(GenDataBase d, string name)
         {
-            return new GenData(GenDataBase.DataLoader.LoadData(path));
-        }
-
-        protected GenData LoadGenData(GenDataDef genDataDef, string path)
-        {
-            return new GenData(GenDataBase.DataLoader.LoadData(genDataDef, path));
-        }
-
-        protected static GenObject CreateClass(GenData d, string name)
-        {
-            var c = CreateGenObject(d, d.Root, "Class", name);
-            CreateProperty(d, "Name", c);
+            var c = CreateGenObject(d.Root, "Class", name);
+            CreateProperty("Name", c);
             return c;
-        }
-
-        protected static GenObject CreateGenObject(GenData d, GenObject parent, string className, string name = null)
-        {
-            var o = CreateGenObject(parent, className, name);
-            SetContext(d, className);
-            return o;
         }
 
         protected static GenObject CreateGenObject(GenObject parent, string className, string name = null)
@@ -252,27 +238,9 @@ Child[Reference='Child']
             return o;
         }
 
-        private static void SetContext(GenData d, string className)
+        protected static void CreateProperty(string name, GenObject parent)
         {
-            var classId = d.Context.Classes.IndexOf(className);
-            SetContext(d, classId);
-        }
-
-        private static void SetContext(GenData d, int classId)
-        {
-            if (d.Context.Classes[classId].IsInherited)
-                SetContext(d, d.Context.Classes[classId].Parent.ClassId);
-            d.Last(classId);
-        }
-
-        protected static void CreateProperty(GenData d, string name, GenObject parent)
-        {
-            CreateGenObject(d, parent, "Property", name);
-        }
-
-        private static void CreateSubClass(GenData d, string name, GenObject parent)
-        {
-            CreateGenObject(d, parent, "SubClass", name);
+            CreateGenObject(parent, "Property", name);
         }
 
         protected static void VerifyAsDef(GenDataDef f)
@@ -292,41 +260,14 @@ Child[Reference='Child']
 
         protected static void VerifyDataCreation(GenDataBase d)
         {
-            VerifyDataCreation(new GenData(d));
-        }
-
-        private static void VerifyDataCreation(GenData d)
-        {
-            d.First(1);
-            d.First(2);
-            d.First(3);
+            var c = GetFirstObject(d);
+            var s = GetFirstObjectOfSubClass(c, "SubClass");
             
-            var a = new GenAttributes(d.GenDataDef, 1);
             var id = d.GenDataDef.GetId("Class.Name");
-            Assert.AreEqual("Class", d.Context.GetValue(id));
+            Assert.AreEqual("Class", c.GetValue(id));
 
             id = d.GenDataDef.GetId("SubClass.Name");
-            Assert.AreEqual("SubClass", d.Context.GetValue(id));
-
-            var o = GetFirstObject(d);
-            a.GenObject = o;
-            Assert.AreEqual("Class", a.AsString("Name"));
-
-            o = d.Context[d.GenDataDef.GetClassId("SubClass")][0];
-            a.GenObject = o;
-            Assert.AreEqual("SubClass", a.AsString("Name"));
-        }
-
-        protected static void SetUpData(GenData genData)
-        {
-            var @class = CreateClass(genData, "Class");
-            var subClass = CreateClass(genData, "SubClass");
-            CreateProperty(genData, "Reference", subClass);
-            CreateClass(genData, "Property");
-            CreateSubClass(genData, "SubClass", @class);
-            CreateSubClass(genData, "Property", @class);
-            genData.Context[ClassClassId].Next();
-            genData.First(ClassClassId);
+            Assert.AreEqual("SubClass", s.GetValue(id));
         }
 
         protected static void SetUpData(GenDataBase genDataBase)
@@ -465,18 +406,12 @@ Child[Reference='Child']
         /// </summary>
         /// <param name="d">The data containing the object.</param>
         /// <returns>The first classId 1 object if it exists, otherwise null.</returns>
-        private static GenObject GetFirstObject(GenData d)
+        protected static GenObject GetFirstObject(GenDataBase d)
         {
-            var b = d.GenDataBase;
-            return GetFirstObject(b);
-        }
-
-        protected static GenObject GetFirstObject(GenDataBase b)
-        {
-            if (b.Root == null) return null;
-            if (b.Root.SubClass.Count == 0) return null;
-            if (b.Root.SubClass[0].Count == 0) return null;
-            return b.Root.SubClass[0][0];
+            if (d.Root == null) return null;
+            if (d.Root.SubClass.Count == 0) return null;
+            if (d.Root.SubClass[0].Count == 0) return null;
+            return d.Root.SubClass[0][0];
         }
 
         protected static GenObject GetFirstObjectOfSubClass(GenObject genObject, string subClassName)
@@ -594,41 +529,30 @@ Child[Reference='Child']
             return model;
         }
 
-        protected static void CompareGenData(GenDataBase expectedBase, GenDataBase actualBase)
+        protected static void CompareGenData(GenDataBase expected, GenDataBase actual)
         {
-            var expected = new GenData(expectedBase);
-            var actual = new GenData(actualBase);
             Assert.AreEqual(expected.DataName, actual.DataName);
-            Assert.AreEqual(expected.Context.Count, actual.Context.Count);
-            CompareContext(0, 0, expected, actual);
+            Assert.AreEqual(expected.GenDataDef.Classes.Count, actual.GenDataDef.Classes.Count);
+            CompareContext(expected.Root.SubClass[0], actual.Root.SubClass[0]);
         }
 
-        private static void CompareContext(int expectedId, int actualId, GenData expected, GenData actual)
+        private static void CompareContext(ISubClassBase expectedList, ISubClassBase actualList)
         {
-            var expectedContext = expected.Context[expectedId];
-            var actualContext = actual.Context[actualId];
-            Assert.AreEqual(expectedContext.ToString(), actualContext.ToString());
-            Assert.AreEqual(expectedContext.Count, actualContext.Count, "Class " + expectedId + " objects");
-            Assert.AreEqual(expectedContext.ClassId, actualContext.ClassId);
-            Assert.AreEqual(expectedContext.RefClassId, actualContext.RefClassId);
-            Assert.AreEqual(expectedContext.Reference, expectedContext.Reference);
-            Assert.AreEqual(expectedContext.DefClass.ToString(), actualContext.DefClass.ToString());
-            expected.First(expectedId); actual.First(actualId);
-            while (!expected.Eol(expectedId) && !actual.Eol(actualId))
+            var expectedId = expectedList.ClassId;
+            var actualId = actualList.ClassId;
+            Assert.AreEqual(expectedId, actualId);
+            Assert.AreEqual(expectedList.Count, actualList.Count, "Class " + expectedId + " objects");
+            Assert.AreEqual(expectedList.ClassId, actualList.ClassId);
+            Assert.AreEqual(expectedList.Definition.SubClass.RefClassId, actualList.Definition.SubClass.RefClassId);
+            Assert.AreEqual(expectedList.Reference, expectedList.Reference);
+            Assert.AreEqual(expectedList.Definition.SubClass.ToString(), actualList.Definition.SubClass.ToString());
+            for (var i = 0; i < expectedList.Count; i++)
             {
-                if (expectedContext.DefSubClass != null || actualContext.DefSubClass != null)
-                {
-                    Assert.IsNotNull(expectedContext.DefSubClass);
-                    Assert.IsNotNull(actualContext.DefSubClass);
-                }
-                if (expectedContext.DefSubClass != null && actualContext.DefSubClass != null)
-                    Assert.AreEqual(expectedContext.DefSubClass.ToString(),
-                                    actualContext.DefSubClass.ToString());
-                var expectedObject = expectedContext.GenObject;
-                var actualObject = actualContext.GenObject;
+                var expectedObject = expectedList[i];
+                var actualObject = actualList[i];
                 Assert.AreEqual(expectedObject.ClassId, actualObject.ClassId);
-                var expectedAttributes = new GenAttributes(expected.GenDataDef, expectedObject.ClassId);
-                var actualAttributes = new GenAttributes(actual.GenDataDef, actualObject.ClassId);
+                var expectedAttributes = new GenAttributes(expectedObject.GenDataBase.GenDataDef, expectedObject.ClassId);
+                var actualAttributes = new GenAttributes(actualObject.GenDataBase.GenDataDef, actualObject.ClassId);
                 expectedAttributes.GenObject = expectedObject;
                 actualAttributes.GenObject = actualObject;
                 Assert.GreaterOrEqual(expectedObject.Attributes.Count, actualObject.Attributes.Count);
@@ -639,31 +563,31 @@ Child[Reference='Child']
                         actualAttributes.AsString("Name"));
 
                 Assert.AreEqual(expectedObject.SubClass.Count, actualObject.SubClass.Count);
-                for (var i = 0; i < actualObject.SubClass.Count; i++)
+                for (var j = 0; j < actualObject.SubClass.Count; j++)
                 {
-                    var expectedSubClassDef = expected.Context[expectedId].DefClass.SubClasses[i].SubClass;
-                    var actualSubClassDef = actual.Context[expectedId].DefClass.SubClasses[i].SubClass;
+                    var expectedSubClassName = expectedObject.SubClass[j].Definition.SubClass.Name;
+                    var actualSubClassName = actualObject.SubClass[j].Definition.SubClass.Name;
+                    Assert.AreEqual(expectedSubClassName, actualSubClassName);
+                    var expectedSubClassDef = expectedObject.GetSubClass(expectedSubClassName).Definition.SubClass;
+                    var actualSubClassDef = actualObject.GetSubClass(actualSubClassName).Definition.SubClass;
                     Assert.AreEqual(expectedSubClassDef.ToString(), actualSubClassDef.ToString());
                     Assert.AreEqual(expectedSubClassDef.ClassId, actualSubClassDef.ClassId);
                     Assert.AreEqual(expectedSubClassDef.IsInherited, actualSubClassDef.IsInherited);
                     Assert.AreEqual(expectedSubClassDef.IsAbstract, actualSubClassDef.IsAbstract);
-                    Assert.AreEqual(expectedObject.SubClass[i].ClassId, actualObject.SubClass[i].ClassId);
-                    Assert.AreEqual(expectedObject.SubClass[i].Reference, actualObject.SubClass[i].Reference);
-                    CompareContext(expectedSubClassDef.ClassId,
-                                   actualSubClassDef.ClassId, expected, actual);
+                    Assert.AreEqual(expectedObject.SubClass[j].ClassId, actualObject.SubClass[j].ClassId);
+                    Assert.AreEqual(expectedObject.SubClass[j].Reference, actualObject.SubClass[j].Reference);
+                    CompareContext(expectedObject.SubClass[j], actualObject.SubClass[j]);
                 }
 
-                Assert.AreEqual(expectedContext.DefClass.Inheritors.Count, actualContext.DefClass.Inheritors.Count);
-                for (var i = 0; i < actualContext.DefClass.Inheritors.Count; i++)
+                Assert.AreEqual(expectedObject.Definition.Inheritors.Count, actualObject.Definition.Inheritors.Count);
+                for (var j = 0; j < expectedObject.Definition.Inheritors.Count; j++)
                 {
-                    var expectedDefInheritor = expectedContext.DefClass.Inheritors[i];
-                    var actualDefInheritor = actualContext.DefClass.Inheritors[i];
+                    var expectedDefInheritor = expectedObject.Definition.Inheritors[j];
+                    var actualDefInheritor = actualObject.Definition.Inheritors[j];
                     Assert.AreEqual(expectedDefInheritor.ClassId, actualDefInheritor.ClassId);
                     Assert.Less(expectedId, expectedDefInheritor.ClassId);
                 }
-                expected.Next(expectedId); actual.Next(actualId);
             }
-            Assert.AreEqual(expected.Eol(expectedId), actual.Eol(actualId));
         }
 
         protected static void CompareGenDataBase(GenDataBase expected, GenDataBase actual)

@@ -16,7 +16,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the extraction of an empty definition
         /// </summary>
-        [TestCase(Description = "Generator empty definition extract test")]
+        [Test(Description = "Generator empty definition extract test")]
         public void EmptyGenDefExtractTest()
         {
             var f = new GenDataDef();
@@ -42,7 +42,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the extraction of a definition of a single class without properties or subclasses
         /// </summary>
-        [TestCase(Description = "Generator empty class definition extract test")]
+        [Test(Description = "Generator empty class definition extract test")]
         public void EmptyClassGenDefExtractTest()
         {
             var f = new GenDataDef();
@@ -65,7 +65,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the extraction of a definition of a single class with properties
         /// </summary>
-        [TestCase(Description = "Generator class with property definition extract test")]
+        [Test(Description = "Generator class with property definition extract test")]
         public void ClassWithPropertyGenDefExtractTest()
         {
             var f = new GenDataDef();
@@ -90,18 +90,18 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests the extraction of the minimal definition
         /// </summary>
-        [TestCase(Description = "Generator minimal definition extract test")]
+        [Test(Description = "Generator minimal definition extract test")]
         public void MinimalGenDefExtractTest()
         {
             var f = GenDataDef.CreateMinimal();
-            var d = f.AsGenData();
+            var d = f.AsGenDataBase();
             ValidateMinimalData(d);
         }
 
         /// <summary>
         /// Tests the extraction of a definition of a single class with properties
         /// </summary>
-        [TestCase(Description = "Generator class with property definition extract test")]
+        [Test(Description = "Generator class with property definition extract test")]
         public void ReferenceGenDefExtractTest()
         {
             var fChild = SetUpParentChildDef("Child", "Grandchild");

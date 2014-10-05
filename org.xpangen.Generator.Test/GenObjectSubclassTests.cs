@@ -7,32 +7,32 @@ namespace org.xpangen.Generator.Test
     [TestFixture]
     public class GenObjectSubclassTests: GenDataTestsBase
     {
-        [TestCase(Description="Tests the retrieval of a class' subclass")]
+        [Test(Description="Tests the retrieval of a class' subclass")]
         public void GenObjectSubClassLookup()
         {
             var f = SetUpParentChildDef("Parent", "Child");
             f.AddSubClass("Parent", "SecondChild");
             f.AddClassInstanceProperty(3, "Name");
-            var d = new GenData(f);
-            var parent = CreateGenObject(d, d.Root, "Parent", "Parent");
-            CreateGenObject(d, parent, "Child", "FirstChild");
-            CreateGenObject(d, parent, "SecondChild", "SecondChild");
+            var d = new GenDataBase(f);
+            var parent = CreateGenObject(d.Root, "Parent", "Parent");
+            CreateGenObject(parent, "Child", "FirstChild");
+            CreateGenObject(parent, "SecondChild", "SecondChild");
             var sc = parent.GetSubClass("SecondChild");
             Assert.AreEqual("SecondChild", sc[0].Attributes[0]);
             sc = parent.GetSubClass("Child");
             Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
         }
 
-        [TestCase(Description="Tests the retrieval of a class' inherited subclass")]
+        [Test(Description="Tests the retrieval of a class' inherited subclass")]
         public void GenObjectSubClassLookupWithInheritance()
         {
             var f = SetUpParentChildDef("Parent", "Child");
             f.AddInheritor("Child", "FirstVirtualChild");
             f.AddInheritor("Child", "SecondVirtualChild");
-            var d = new GenData(f);
-            var parent = CreateGenObject(d, d.Root, "Parent", "Parent");
-            CreateGenObject(d, parent, "FirstVirtualChild", "FirstChild");
-            CreateGenObject(d, parent, "SecondVirtualChild", "SecondChild");
+            var d = new GenDataBase(f);
+            var parent = CreateGenObject(d.Root, "Parent", "Parent");
+            CreateGenObject(parent, "FirstVirtualChild", "FirstChild");
+            CreateGenObject(parent, "SecondVirtualChild", "SecondChild");
             var sc = parent.GetSubClass("Child");
             Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
             Assert.AreEqual("SecondChild", sc[1].Attributes[0]);
@@ -42,18 +42,18 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("SecondChild", sc[0].Attributes[0]);
         }
 
-        [TestCase(Description="Tests the retrieval of a class' nested inherited subclass")]
+        [Test(Description="Tests the retrieval of a class' nested inherited subclass")]
         public void GenObjectSubClassLookupWithNestedInheritance()
         {
             var f = SetUpParentChildDef("Parent", "Child");
             f.AddInheritor("Child", "FirstVirtualChild");
             f.AddInheritor("Child", "SecondVirtualChild");
             f.AddInheritor("SecondVirtualChild", "FirstVirtualGrandchildOfSecond");
-            var d = new GenData(f);
-            var parent = CreateGenObject(d, d.Root, "Parent", "Parent");
-            CreateGenObject(d, parent, "FirstVirtualChild", "FirstChild");
-            CreateGenObject(d, parent, "FirstVirtualGrandchildOfSecond", "FirstGrandChild");
-            CreateGenObject(d, parent, "FirstVirtualGrandchildOfSecond", "SecondGrandChild");
+            var d = new GenDataBase(f);
+            var parent = CreateGenObject(d.Root, "Parent", "Parent");
+            CreateGenObject(parent, "FirstVirtualChild", "FirstChild");
+            CreateGenObject(parent, "FirstVirtualGrandchildOfSecond", "FirstGrandChild");
+            CreateGenObject(parent, "FirstVirtualGrandchildOfSecond", "SecondGrandChild");
             var sc = parent.GetSubClass("Child");
             Assert.AreEqual("FirstChild", sc[0].Attributes[0]);
             Assert.AreEqual("FirstGrandChild", sc[1].Attributes[0]);
@@ -65,31 +65,30 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("SecondGrandChild", sc[1].Attributes[0]);
         }
 
-        [TestCase(Description = "Tests the retrieval of a class' inherited subclass")]
+        [Test(Description = "Tests the retrieval of a class' inherited subclass")]
         public void GenObjectSubClassLookupWithInheritanceSubclass()
         {
             var f = SetUpParentChildDef("Parent", "Child");
             f.AddInheritor("Child", "FirstVirtualChild");
             f.AddInheritor("Child", "SecondVirtualChild");
             f.AddSubClass("Child", "GrandChild");
-            var d = new GenData(f);
-            var parent = CreateGenObject(d, d.Root, "Parent", "Parent");
-            var child1 = CreateGenObject(d, parent, "FirstVirtualChild", "FirstChild");
-            var child2 = CreateGenObject(d, parent, "SecondVirtualChild", "SecondChild");
-            CreateGenObject(d, child1, "GrandChild", "FirstGrandchild");
-            CreateGenObject(d, child2, "GrandChild", "SecondGrandchild");
+            var d = new GenDataBase(f);
+            var parent = CreateGenObject(d.Root, "Parent", "Parent");
+            var child1 = CreateGenObject(parent, "FirstVirtualChild", "FirstChild");
+            var child2 = CreateGenObject(parent, "SecondVirtualChild", "SecondChild");
+            CreateGenObject(child1, "GrandChild", "FirstGrandchild");
+            CreateGenObject(child2, "GrandChild", "SecondGrandchild");
             var sc = parent.GetSubClass("Child");
             Assert.AreEqual(1, sc[0].SubClass.Count);
             Assert.AreEqual("FirstGrandchild", sc[0].SubClass[0][0].Attributes[0]);
             Assert.AreEqual("SecondGrandchild", sc[1].SubClass[0][0].Attributes[0]);
         }
 
-        [TestCase(Description = "Tests the retrieval of a class' referenced subclass")]
+        [Test(Description = "Tests the retrieval of a class' referenced subclass")]
         public void GenObjectSubClassLookupWithReferenceSubclass()
         {
             var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
-            GenData dataChild1 = new GenData(dataGrandchildhild);
-            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", dataChild1.GenDataBase);
+            var dataChild = SetUpParentChildReferenceData("Child", "Grandchild", "GrandchildDef", "Grandchild", dataGrandchildhild);
             var child = dataChild.Root.GetSubClass("Child")[0];
             var sc = child.GetSubClass("Grandchild");
             Assert.AreEqual(1, sc[0].SubClass.Count);

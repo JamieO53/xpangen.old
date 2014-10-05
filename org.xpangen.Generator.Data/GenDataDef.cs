@@ -411,11 +411,6 @@ namespace org.xpangen.Generator.Data
             return GetClassDef(classId).SubClasses;
         }
 
-        public GenDataDefSubClassList GetClassSubClasses(string name)
-        {
-            return GetClassDef(name).SubClasses;
-        }
-
         public NameList GetClassProperties(int classId)
         {
             return GetClassDef(classId).Properties;

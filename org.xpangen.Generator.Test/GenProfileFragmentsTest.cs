@@ -199,19 +199,19 @@ namespace org.xpangen.Generator.Test
             var d = SetUpComparisonData();
 
             // Test for Existence 1
-            TestCondition(d.GenDataBase, "Property.Name Exists", "Property.Name", "Property.Name", true);
+            TestCondition(d, "Property.Name Exists", "Property.Name", "Property.Name", true);
 
             // Test for Existence 2
-            TestCondition(d.GenDataBase, "Property.Name", "", "", true);
+            TestCondition(d, "Property.Name", "", "", true);
             
             // Test for Existence 3
-            TestCondition(d.GenDataBase, "Property.NameBlank", "", "", false);
+            TestCondition(d, "Property.NameBlank", "", "", false);
 
             // Test for non-existence 1
-            TestCondition(d.GenDataBase, "Property.Name~", "", "", false);
+            TestCondition(d, "Property.Name~", "", "", false);
 
             // Test for non-existence 2
-            TestCondition(d.GenDataBase, "Property.NameBlank~", "", "", true);
+            TestCondition(d, "Property.NameBlank~", "", "", true);
         }
 
         /// <summary>
@@ -223,22 +223,22 @@ namespace org.xpangen.Generator.Test
             var d = SetUpComparisonData();
 
             // Test for equality
-            TestComparison(d.GenDataBase, "=", false, true, false);
+            TestComparison(d, "=", false, true, false);
 
             // Test for inequality
-            TestComparison(d.GenDataBase, "<>", true, false, true);
+            TestComparison(d, "<>", true, false, true);
 
             // Test for less than
-            TestComparison(d.GenDataBase, "<", false, false, true);
+            TestComparison(d, "<", false, false, true);
 
             // Test for greater than
-            TestComparison(d.GenDataBase, ">", true, false, false);
+            TestComparison(d, ">", true, false, false);
 
             // Test for less or equal to
-            TestComparison(d.GenDataBase, "<=", false, true, true);
+            TestComparison(d, "<=", false, true, true);
 
             // Test for greater or equal to 1
-            TestComparison(d.GenDataBase, ">=", true, true, false);
+            TestComparison(d, ">=", true, true, false);
         }
 
         /// <summary>
@@ -250,22 +250,22 @@ namespace org.xpangen.Generator.Test
             var d = SetUpNumericComparisonData();
 
             // Test for equality
-            TestNumericComparison(d.GenDataBase, "=", false, true, false);
+            TestNumericComparison(d, "=", false, true, false);
 
             // Test for inequality
-            TestNumericComparison(d.GenDataBase, "<>", true, false, true);
+            TestNumericComparison(d, "<>", true, false, true);
 
             // Test for less than
-            TestNumericComparison(d.GenDataBase, "<", false, false, true);
+            TestNumericComparison(d, "<", false, false, true);
 
             // Test for greater than
-            TestNumericComparison(d.GenDataBase, ">", true, false, false);
+            TestNumericComparison(d, ">", true, false, false);
 
             // Test for less or equal to
-            TestNumericComparison(d.GenDataBase, "<=", false, true, true);
+            TestNumericComparison(d, "<=", false, true, true);
 
             // Test for greater or equal to 1
-            TestNumericComparison(d.GenDataBase, ">=", true, true, false);
+            TestNumericComparison(d, ">=", true, true, false);
         }
 
         /// <summary>
@@ -277,22 +277,22 @@ namespace org.xpangen.Generator.Test
             var d = SetUpComparisonData();
 
             // Test for equality
-            TestIdentifierComparison(d.GenDataBase, "=", false, true, false);
+            TestIdentifierComparison(d, "=", false, true, false);
 
             // Test for inequality
-            TestIdentifierComparison(d.GenDataBase, "<>", true, false, true);
+            TestIdentifierComparison(d, "<>", true, false, true);
 
             // Test for less than
-            TestIdentifierComparison(d.GenDataBase, "<", false, false, true);
+            TestIdentifierComparison(d, "<", false, false, true);
 
             // Test for greater than
-            TestIdentifierComparison(d.GenDataBase, ">", true, false, false);
+            TestIdentifierComparison(d, ">", true, false, false);
 
             // Test for less or equal to
-            TestIdentifierComparison(d.GenDataBase, "<=", false, true, true);
+            TestIdentifierComparison(d, "<=", false, true, true);
 
             // Test for greater or equal to 1
-            TestIdentifierComparison(d.GenDataBase, ">=", true, true, false);
+            TestIdentifierComparison(d, ">=", true, true, false);
         }
 
         /// <summary>

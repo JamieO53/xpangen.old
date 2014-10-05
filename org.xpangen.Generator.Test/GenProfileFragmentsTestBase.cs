@@ -25,7 +25,7 @@ namespace org.xpangen.Generator.Test
             return d;
         }
 
-        protected static GenData SetUpComparisonData()
+        protected static GenDataBase SetUpComparisonData()
         {
             var f = GenDataDef.CreateMinimal();
             f.AddClassInstanceProperty(PropertyClassId, "NameLT");
@@ -33,23 +33,21 @@ namespace org.xpangen.Generator.Test
             f.AddClassInstanceProperty(PropertyClassId, "NameGT");
             f.AddClassInstanceProperty(PropertyClassId, "NameBlank");
 
-            var d = new GenData(f);
+            var d = new GenDataBase(f);
             SetUpData(d);
 
-            d.First(ClassClassId);
-            Assert.AreEqual("Class", d.Context[ClassClassId].GenObject.Attributes[0]);
-            var a = new GenAttributes(f, ClassClassId) { GenObject = d.Context[ClassClassId].GenObject };
+            var c = GetFirstObject(d);
+            Assert.AreEqual("Class", c.Attributes[0]);
+            var a = new GenAttributes(f, ClassClassId) { GenObject = c };
             a.SetString("NameLT", "Clasa");
             a.SetString("NameEQ", "Class");
             a.SetString("NameGT", "Clasz");
             a.SetString("NameBlank", "");
             a.SaveFields();
 
-            d.Last(ClassClassId);
-            //d.Prior(ClassClassId);
-            Assert.AreEqual("Property", d.Context[ClassClassId].GenObject.Attributes[0]);
-            d.First(PropertyClassId);
-            a.GenObject = d.Context[PropertyClassId].GenObject;
+            c = GetLastObjectInSubClass(c);
+            Assert.AreEqual("Property", c.Attributes[0]);
+            a.GenObject = GetFirstObjectOfSubClass(c, "Property");
             a.SetString("NameLT", "Nama");
             a.SetString("NameEQ", "Name");
             a.SetString("NameGT", "Namz");
@@ -59,17 +57,15 @@ namespace org.xpangen.Generator.Test
             return d;
         }
 
-        protected static GenData SetUpNumericComparisonData()
+        protected static GenDataBase SetUpNumericComparisonData()
         {
             var f = GenDataDef.CreateMinimal();
             f.AddClassInstanceProperty(PropertyClassId, "Number");
 
-            var d = new GenData(f);
+            var d = new GenDataBase(f);
             var a = new GenAttributes(f, PropertyClassId);
             SetUpData(d);
-            d.Last(ClassClassId);
-            d.First(PropertyClassId);
-            a.GenObject = d.Context[PropertyClassId].GenObject;
+            a.GenObject = GetFirstObjectOfSubClass(GetLastObjectInSubClass(GetFirstObject(d)), "Property");
             a.SetNumber("Number", 15);
             a.SaveFields();
 
@@ -77,7 +73,7 @@ namespace org.xpangen.Generator.Test
         }
 
         protected static void TestCondition(GenDataBase genData, string condIn, string condOut, string profileLabel,
-                                            bool expected)
+                                            bool expected, bool identifier = false)
         {
             var genDataDef = genData.GenDataDef;
             if (condOut == "") condOut = condIn;
@@ -100,7 +96,7 @@ namespace org.xpangen.Generator.Test
                                              bool expectedGt)
         {
             var condIn = "Property.Name" + comparison + "Property.Name";
-            TestComparisonConditions(genData, expectedLt, expectedEq, expectedGt, condIn, "LT", "EQ", "GT");
+            TestComparisonConditions(genData, expectedLt, expectedEq, expectedGt, condIn, "LT", "EQ", "GT", true);
         }
 
         protected static void TestNumericComparison(GenDataBase genData, string comparison, bool expectedLt, bool expectedEq,
@@ -118,11 +114,11 @@ namespace org.xpangen.Generator.Test
         }
 
         private static void TestComparisonConditions(GenDataBase genData, bool expectedLt, bool expectedEq, bool expectedGt,
-                                                     string condIn, string valueLt, string valueEq, string valueGt)
+                                                     string condIn, string valueLt, string valueEq, string valueGt, bool identifier = false)
         {
-            TestCondition(genData, condIn + valueLt, "", "", expectedLt); // Property.Name?Nama
-            TestCondition(genData, condIn + valueEq, "", "", expectedEq); // Property.Name?Name
-            TestCondition(genData, condIn + valueGt, "", "", expectedGt); // Property.Name?Namz
+            TestCondition(genData, condIn + valueLt, "", "", expectedLt, identifier); // Property.Name?Nama
+            TestCondition(genData, condIn + valueEq, "", "", expectedEq, identifier); // Property.Name?Name
+            TestCondition(genData, condIn + valueGt, "", "", expectedGt, identifier); // Property.Name?Namz
         }
 
         protected static void VerifyFragment(GenDataBase genData, GenFragment genFragment, string expectedClass, FragmentType expectedType, string profileLabel, string profileText, string expected, bool isText, string parentClassName, GenDataDef profileDataDef)
@@ -190,33 +186,32 @@ namespace org.xpangen.Generator.Test
             ExecuteFunction(genData, "Get", expected, new []{"Var", ""});
         }
 
-        private static GenData SetUpSegmentSeparatorData(string display)
+        private static GenDataBase SetUpSegmentSeparatorData(string display)
         {
             var fm = GenDataDef.CreateMinimal();
-            var dm = new GenData(fm);
+            var dm = new GenDataBase(fm);
             var td = CreateClass(dm, "TestData");
-            dm.First(ClassClassId);
-            CreateProperty(dm, "Name", td);
-            CreateProperty(dm, "Display", td);
-            var f = dm.GenDataBase.AsDef();
+            CreateProperty("Name", td);
+            CreateProperty("Display", td);
+            var f = dm.AsDef();
             var a = new GenAttributes(f, 1);
-            var d = new GenData(f);
-            a.GenObject = CreateGenObject(d, d.Root, "TestData", "One");
+            var d = new GenDataBase(f);
+            a.GenObject = CreateGenObject(d.Root, "TestData", "One");
             a.SetString("Name", "One");
             a.SetString("Display", display[0] == '1' ? "True" : "");
             a.SaveFields();
-            a.GenObject = CreateGenObject(d, d.Root, "TestData", "Two");
+            a.GenObject = CreateGenObject(d.Root, "TestData", "Two");
             a.SetString("Name", "Two");
             a.SetString("Display", display[1] == '1' ? "True" : "");
             a.SaveFields();
-            a.GenObject = CreateGenObject(d, d.Root, "TestData", "Three");
+            a.GenObject = CreateGenObject(d.Root, "TestData", "Three");
             a.SetString("Name", "Three");
             a.SetString("Display", display[2] == '1' ? "True" : "");
             a.SaveFields();
             return d;
         }
 
-        private static GenSegment SetUpSegmentSeparatorFragment(GenData d, GenCardinality cardinality)
+        private static GenSegment SetUpSegmentSeparatorFragment(GenDataBase d, GenCardinality cardinality)
         {
             var profile = "`[TestData" + (cardinality == GenCardinality.AllDlm ? "/" : "\\") + ":`?TestData.Display:`TestData.Name``]`;, `]";
             var p = new GenCompactProfileParser(d.GenDataDef, "", profile);
@@ -234,9 +229,9 @@ namespace org.xpangen.Generator.Test
         {
             var d = SetUpSegmentSeparatorData(display);
             var g = SetUpSegmentSeparatorFragment(d, cardinality);
-            g.GenObject = d.Root;//.SubClass[0][0];
+            g.GenObject = d.Root;
             Assert.AreEqual(expected, GenFragmentExpander.Expand(d.GenDataDef, ((GenFragment) g).GenObject, g.Fragment));
-            var str = GenerateFragment(d.GenDataBase, g);
+            var str = GenerateFragment(d, g);
             Assert.AreEqual(expected, str);
         }
     }
