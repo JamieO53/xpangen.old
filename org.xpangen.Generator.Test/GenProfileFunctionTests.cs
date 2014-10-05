@@ -151,6 +151,15 @@ namespace org.xpangen.Generator.Test
         }
 
         /// <summary>
+        /// Tests that the function to close the generated file and create a new one is created correctly
+        /// </summary>
+        [Test(Description = "Generator Function test - externa function call")]
+        public void GenExternalFunction()
+        {
+            ExecuteFunction(GenData, "TestFunction", "Echo text", "", "Echo text");
+        }
+
+        /// <summary>
         /// Set up the Generator data definition tests
         /// </summary>
         [TestFixtureSetUp]

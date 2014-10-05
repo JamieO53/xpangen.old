@@ -3,9 +3,61 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
+using System.Configuration;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
 
 namespace org.xpangen.Generator.Profile
 {
+    public class ExternalFunctionSection : ConfigurationSection
+    {
+        public const string SectionName = "ExternalFunctionSection";
+        private const string ExternalFunctionClassCollectionName = "ExternalFunctionClassCollection";
+
+        [ConfigurationProperty("ExternalFunctionClassCollection")]
+        [ConfigurationCollection(typeof(ExternalFunctionClassCollection), AddItemName = "add")]
+        public ExternalFunctionClassCollection ExternalFunctionClassCollection
+        {
+            get { return (ExternalFunctionClassCollection) base[ExternalFunctionClassCollectionName]; }
+        }
+    }
+
+    public class ExternalFunctionClassCollection : ConfigurationElementCollection
+    {
+        protected override ConfigurationElement CreateNewElement()
+        {
+            return new ExternalFunctionClass();
+        }
+
+        protected override object GetElementKey(ConfigurationElement element)
+        {
+            var xfc = ((ExternalFunctionClass) element);
+            return xfc.Assemblyname + "." + xfc.Functionclass;
+        }
+    }
+    public class ExternalFunctionClass : ConfigurationElement
+    {
+        [ConfigurationProperty("assemblypath", IsRequired = true)]
+        public string Assemblypath
+        {
+            get { return (string) this["assemblypath"]; }
+            private set { this["assemblypath"] = value; }
+        }
+        [ConfigurationProperty("assemblyname", IsRequired = true)]
+        public string Assemblyname
+        {
+            get { return (string)this["assemblyname"]; }
+            private set { this["assemblyname"] = value; }
+        }
+        [ConfigurationProperty("functionclass", IsRequired = true)]
+        public string Functionclass 
+        {
+            get { return (string)this["functionclass"]; }
+            private set { this["functionclass"] = value; } 
+        }
+    }
+
     public class LibraryManager : IGeneratorLibrary
     {
         private readonly Dictionary<string, IGeneratorLibrary> _map =
@@ -21,6 +73,38 @@ namespace org.xpangen.Generator.Profile
             Register(GenFunctionCounters.GetInstance());
             Register(GenFunctionMap.GetInstance());
             Register(GenFunctionGeneral.GetInstance());
+            RegisterExternals();
+        }
+
+        private void RegisterExternals()
+        {
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var s = (ExternalFunctionSection)config.GetSection("ExternalFunctionSection");
+            if (s == null)
+                return;
+            foreach (var functionClass in s.ExternalFunctionClassCollection)
+            {
+                RegisterExternalFunctionClass((ExternalFunctionClass)functionClass);
+            }
+        }
+
+        private void RegisterExternalFunctionClass(ExternalFunctionClass externalFunctionClass)
+        {
+            var assemblypath = externalFunctionClass.Assemblypath;
+            var assemblyname = externalFunctionClass.Assemblyname;
+            var functionclass = externalFunctionClass.Functionclass;
+            RegisterExternalFunctionClass(assemblypath, assemblyname, functionclass);
+        }
+
+        private void RegisterExternalFunctionClass(string assemblypath, string assemblyname, string functionclass)
+        {
+            var dll = Assembly.LoadFile(Path.GetFullPath(assemblypath));
+            var c = dll.GetType(assemblyname + "." + functionclass);
+            var m = c.GetMethod("GetInstance");
+            var instance =
+                m.Invoke(null, BindingFlags.Public | BindingFlags.Static, null, null, CultureInfo.InvariantCulture) as
+                    IGeneratorLibrary;
+            if (instance != null) Register(instance);
         }
 
         /// <summary>
