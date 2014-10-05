@@ -161,11 +161,6 @@ namespace org.xpangen.Generator.Data
             def.AddClassInstanceProperty(def.GetClassId("Property"), "Name");
         }
 
-        public GenData AsGenData()
-        {
-            return new GenData(AsGenDataBase());
-        }
-        
         public GenDataBase AsGenDataBase()
         {
             var f = CreateMinimal();

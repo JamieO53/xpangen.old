@@ -89,7 +89,6 @@
     <Compile Include="GenDataDefTests.cs" />
     <Compile Include="GenDataInheritanceTests.cs" />
     <Compile Include="GenDataPseudoPropertyTests.cs" />
-    <Compile Include="GenDataReferenceCacheTests.cs" />
     <Compile Include="GenDataTests.cs" />
     <Compile Include="GenDataTestsBase.cs" />
     <Compile Include="GenDataToDefConversionTests.cs" />
