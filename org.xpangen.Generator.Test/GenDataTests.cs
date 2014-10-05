@@ -14,25 +14,6 @@ namespace org.xpangen.Generator.Test
 	[TestFixture]
     public class GenDataTests : GenDataTestsBase
     {
-        /// <summary>
-        /// Tests the generator data subclass functionality
-        /// </summary>
-        [Test(Description="Generator data subclass tests")]
-        public void GenSubClassTests()
-        {
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-            var c = CreateGenObject(d, d.Root, "Class", "Class");//d.CreateObject("", "Class");
-
-            var i = f.Classes[f.GetClassId("Class")].IndexOfSubClass("SubClass");
-            var s = new GenObjectList(c.SubClass[i], d.GenDataBase, d.Context[f.GetClassId("Class")],
-                                      f.GetClassSubClasses("Class")[i]);
-            var sc = CreateGenObject(d, c, "SubClass", "SubClass");
-            d.Context[f.GetClassId("SubClass")].Last();
-            Assert.AreEqual(d.Context[f.GetClassId("SubClass")].GenObject, sc);
-            Assert.AreEqual(s.GenObject, sc);
-        }
-
         [Test(Description = "Verify that the SetUpParentChildData method works as expected")]
         public void VerifySetUpParentChildDataMethod()
         {
@@ -100,34 +81,7 @@ namespace org.xpangen.Generator.Test
             }
         }
 
-        [Test(Description = "Verify that duplicated data context works as expected with reference data")]
-        [Ignore("Depricated functionality")]
-        public void DuplicatedContextWithReferenceTests()
-        {
-            var f = LoadGenData("ProgramDefinition").GenDataBase.AsDef();
-            var d = LoadGenData(f, "GeneratorDefinitionModel");
-            d.Context[2].MoveItem(ListMove.Down, 0);
-            d.First(2); d.Next(2);
-            Assert.AreEqual("Definition", d.Context[2].GenObject.SubClass[0].Reference);
-            d.Next(5);
-            Assert.AreEqual("Class", d.Context[3].GenObject.Attributes[0]);
-            Assert.AreEqual("Title", d.Context[5].GenObject.Attributes[0]);
-            var duplicate = d.DuplicateContext();
-            duplicate.Next(2);
-            duplicate.Prior(2);
-            duplicate.Next(3);
-            duplicate.Next(5);
-            Assert.AreEqual("SubClass", duplicate.Context[3].GenObject.Attributes[0]);
-            Assert.AreEqual("Reference", duplicate.Context[5].GenObject.Attributes[0]);
-            d.First(3);
-            d.Next(5);
-            Assert.AreEqual("Class", d.Context[3].GenObject.Attributes[0]);
-            Assert.AreEqual("Title", d.Context[5].GenObject.Attributes[0]);
-
-        }
-
         [Test(Description = "Verify that the SetUpParentChildReferenceData method works as expected")]
-        [Ignore("Verify RefClassId functionality for nested references")]
         public void VerifyNestedSetUpParentChildReferenceDataMethod()
         {
             var dataGrandchildhild = SetUpParentChildData("Grandchild", "Greatgrandchild", "Greatgrandchild");
@@ -146,7 +100,7 @@ namespace org.xpangen.Generator.Test
             var grandchild = GenObject.GetContext(dataParent.Root, "GrandChild");
             Assert.AreEqual(3, dataParent.GetClassId("GrandChild"));
             Assert.AreEqual("Grandchild", grandchild.Attributes[0]);
-            Assert.AreEqual(2, grandchild.ParentSubClass.Definition.SubClass.RefClassId); // Check this
+            Assert.AreEqual(1, grandchild.ParentSubClass.Definition.SubClass.RefClassId); // Check this
         }
 
         /// <summary>
@@ -180,27 +134,6 @@ namespace org.xpangen.Generator.Test
             CreateGenObject(o, "SubClass", "SubClass");
 
             VerifyDataCreation(d);
-        }
-
-        /// <summary>
-        /// Tests the generator data context functionality
-        /// </summary>
-        [Test(Description="Generator context tests")]
-        [Ignore("Depricated functionality")]
-        public void GenContextTests()
-        {
-            var f = GenDataDef.CreateMinimal();
-            var d = new GenData(f);
-
-            SetUpData(d);
-            d.First(ClassClassId);
-            d.Last(SubClassClassId);
-            Assert.AreEqual("Property", d.Context[SubClassClassId].GenObject.Attributes[0]);
-            var c = d.DuplicateContext();
-            Assert.AreEqual("Property", c.Context[SubClassClassId].GenObject.Attributes[0]);
-            c.Context[SubClassClassId].First();
-            Assert.AreEqual("SubClass", c.Context[SubClassClassId].GenObject.Attributes[0]);
-            Assert.AreEqual("Property", d.Context[SubClassClassId].GenObject.Attributes[0]);
         }
 
         /// <summary>

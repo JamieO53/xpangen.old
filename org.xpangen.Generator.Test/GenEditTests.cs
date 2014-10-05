@@ -21,7 +21,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the view model is created correctly
         /// </summary>
-        [TestCase(Description="Data creation test")]
+        [Test(Description="Data creation test")]
         public void DataCreationTest()
         {
             Assert.IsNotNull(Data, "GEData object not created");
@@ -34,7 +34,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the base generator data file is opened correctly
         /// </summary>
-        [TestCase(Description="Base File Open test")]
+        [Test(Description="Base File Open test")]
         public void GenBaseFileOpenTest()
         {
             LoadBase("Minimal.dcb");
@@ -49,7 +49,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the base and data generator data files are opened correctly
         /// </summary>
-        [TestCase(Description="Base and Data File Open test")]
+        [Test(Description="Base and Data File Open test")]
         public void GenBaseAndDataFileOpenTest()
         {
             LoadBase("Minimal.dcb");
@@ -63,7 +63,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the data generator data file is reopened correctly
         /// </summary>
-        [TestCase(Description="Data File Reopen test")]
+        [Test(Description="Data File Reopen test")]
         public void GenDataFileReopenTest()
         {
             LoadData("Minimal.dcb");
@@ -75,7 +75,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the settings data is handled correctly
         /// </summary>
-        [TestCase(Description="Confirm that the settings data is handled correctly")]
+        [Test(Description="Confirm that the settings data is handled correctly")]
         public void SettingsTest()
         {
             const string name = "Definition";
@@ -91,7 +91,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the settings data is handled correctly
         /// </summary>
-        [TestCase(Description = "Confirm that the a new file group is created correctly")]
+        [Test(Description = "Confirm that the a new file group is created correctly")]
         public void SettingsNewFileGroupTest()
         {
             const string name = "Test";
@@ -114,7 +114,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that the generator data is saved correctly
         /// </summary>
-        [TestCase(Description="Confirm that the generator data is saved correctly")]
+        [Test(Description="Confirm that the generator data is saved correctly")]
         public void GenDataFileSaveTest()
         {
             const string fileName = "GenProfileTest.dcb";
@@ -126,7 +126,7 @@ namespace org.xpangen.Generator.Test
 
             GenParameters.SaveToFile(d.GenDataBase, fileName);
             Assert.IsTrue(File.Exists(fileName));
-            GenParameters d1;
+            GenDataBase d1;
             using (var stream = new FileStream(fileName, FileMode.Open))
                 d1 = new GenParameters(stream) { DataName = "GenProfileTest" };
 
@@ -136,7 +136,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that an empty settings file is correctly initialized
         /// </summary>
-        [TestCase(Description="Tests that an empty settings file is correctly initialized")]
+        [Test(Description="Tests that an empty settings file is correctly initialized")]
         public void EmptySettingsTest()
         {
             var f = GenDataBase.DataLoader.LoadData("GeneratorEditor").AsDef();
@@ -151,7 +151,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tests that an empty settings file is correctly initialized
         /// </summary>
-        [TestCase(Description = "Tests that design time settings are correctly initialized")]
+        [Test(Description = "Tests that design time settings are correctly initialized")]
         public void DesignTimeSettingsTest()
         {
             Data.GetDesignTimeSettings();

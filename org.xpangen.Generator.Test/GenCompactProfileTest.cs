@@ -52,7 +52,7 @@ namespace org.xpangen.Generator.Test
             return ValidateExpansion(d, txt, expectedFragmentTypes, expectedExpansion, message, expectedProfileText);
         }
 
-        private static GenProfileFragment ValidateExpansion(GenData d, string txt, FragmentType[] expectedFragmentTypes,
+        private static GenProfileFragment ValidateExpansion(GenDataBase d, string txt, FragmentType[] expectedFragmentTypes,
             string expectedExpansion, string message, string expectedProfileText = null)
         {
             var expected = expectedProfileText ?? txt;
@@ -242,9 +242,9 @@ namespace org.xpangen.Generator.Test
 
             var d = SetUpData(f);
 
-            d.First(ClassClassId);
-            Assert.AreEqual("Class", d.Context[ClassClassId].GenObject.Attributes[0]);
-            var a = new GenAttributes(f, ClassClassId) {GenObject = d.Context[ClassClassId].GenObject};
+            var c = GetFirstObject(d);
+            Assert.AreEqual("Class", c.Attributes[0]);
+            var a = new GenAttributes(f, ClassClassId) {GenObject = c};
             a.SetString("NameLT", "Clasa");
             a.SetString("NameEQ", "Class");
             a.SetString("NameGT", "Clasz");
@@ -259,14 +259,14 @@ namespace org.xpangen.Generator.Test
             ValidateExpansion(d, txt, expectedFragmentType, expectedExpansion, message);
         }
 
-        private new static GenData SetUpData()
+        private new static GenDataBase SetUpData()
         {
             return SetUpData(GenDataDef.CreateMinimal());
         }
 
-        private static GenData SetUpData(GenDataDef f)
+        private static GenDataBase SetUpData(GenDataDef f)
         {
-            var d = new GenData(f);
+            var d = new GenDataBase(f);
             SetUpData(d);
             return d;
         }
