@@ -3,7 +3,7 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
-using org.xpangen.Generator.Profile;
+using org.xpangen.Generator.FunctionLibrary;
 
 namespace TestFunction
 {
