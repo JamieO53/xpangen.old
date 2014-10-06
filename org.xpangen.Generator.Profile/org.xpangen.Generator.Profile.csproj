@@ -91,9 +91,6 @@
     <Compile Include="GenFragmentLabel.cs" />
     <Compile Include="GenFragmentParams.cs" />
     <Compile Include="GenFunction.cs" />
-    <Compile Include="GenFunctionCounters.cs" />
-    <Compile Include="GenFunctionGeneral.cs" />
-    <Compile Include="GenFunctionMap.cs" />
     <Compile Include="GenFunctionParams.cs" />
     <Compile Include="GenLookup.cs" />
     <Compile Include="GenLookupParams.cs" />
@@ -107,10 +104,7 @@
     <Compile Include="GenTextBlock.cs" />
     <Compile Include="GenTextFragment.cs" />
     <Compile Include="GenTextFragmentParams.cs" />
-    <Compile Include="GenUtilities.cs" />
     <Compile Include="GenWriter.cs" />
-    <Compile Include="IGeneratorLibrary.cs" />
-    <Compile Include="LibraryManager.cs" />
     <Compile Include="NullStream.cs" />
     <Compile Include="ProfileFragmentSyntax.cs" />
     <Compile Include="ProfileFragmentSyntaxDictionary.cs" />
@@ -143,6 +137,13 @@
       <Project>{879183A8-0A57-494A-B645-27366F1D912E}</Project>
       <Name>org.xpangen.Generator.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\org.xpangen.Generator.FunctionLibrary\org.xpangen.Generator.FunctionLibrary.csproj">
+      <Project>{88B5600D-CFE1-401D-A2F7-3C854B8261A2}</Project>
+      <Name>org.xpangen.Generator.FunctionLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

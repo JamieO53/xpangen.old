@@ -6,6 +6,7 @@ using System;
 using System.Diagnostics.Contracts;
 using System.IO;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.FunctionLibrary;
 using org.xpangen.Generator.Profile.Profile;
 using Function = org.xpangen.Generator.Profile.Profile.Function;
 

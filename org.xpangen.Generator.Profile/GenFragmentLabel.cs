@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Text;
+using org.xpangen.Generator.FunctionLibrary;
 using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile

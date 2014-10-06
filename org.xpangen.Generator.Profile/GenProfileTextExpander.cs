@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.FunctionLibrary;
 using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
