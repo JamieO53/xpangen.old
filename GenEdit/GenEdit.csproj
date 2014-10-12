@@ -96,17 +96,71 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\AnnotationUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\AnnotationUserControl.Designer.cs">
+      <DependentUpon>AnnotationUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\BlockUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\BlockUserControl.Designer.cs">
+      <DependentUpon>BlockUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ConditionUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ConditionUserControl.Designer.cs">
+      <DependentUpon>ConditionUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\FileGroupUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControls\FileGroupUserControl.Designer.cs">
       <DependentUpon>FileGroupUserControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\FunctionUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\FunctionUserControl.Designer.cs">
+      <DependentUpon>FunctionUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\LookupUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\LookupUserControl.Designer.cs">
+      <DependentUpon>LookupUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\PlaceholderUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\PlaceholderUserControl.Designer.cs">
+      <DependentUpon>PlaceholderUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ProfileUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ProfileUserControl.Designer.cs">
+      <DependentUpon>ProfileUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\SegmentUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControls\SegmentUserControl.Designer.cs">
       <DependentUpon>SegmentUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\TextBlockUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\TextBlockUserControl.Designer.cs">
+      <DependentUpon>TextBlockUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\TextUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\TextUserControl.Designer.cs">
+      <DependentUpon>TextUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\UserControlBase.cs">
       <SubType>UserControl</SubType>
@@ -152,11 +206,38 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UserControls\AnnotationUserControl.resx">
+      <DependentUpon>AnnotationUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\BlockUserControl.resx">
+      <DependentUpon>BlockUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ConditionUserControl.resx">
+      <DependentUpon>ConditionUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\FileGroupUserControl.resx">
       <DependentUpon>FileGroupUserControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\FunctionUserControl.resx">
+      <DependentUpon>FunctionUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\LookupUserControl.resx">
+      <DependentUpon>LookupUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\PlaceholderUserControl.resx">
+      <DependentUpon>PlaceholderUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ProfileUserControl.resx">
+      <DependentUpon>ProfileUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\SegmentUserControl.resx">
       <DependentUpon>SegmentUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\TextBlockUserControl.resx">
+      <DependentUpon>TextBlockUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\TextUserControl.resx">
+      <DependentUpon>TextUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\GenDataEditor.resx">
       <DependentUpon>GenDataEditor.cs</DependentUpon>

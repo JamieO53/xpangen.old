@@ -349,4 +349,18 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
   <metadata name="bindingSource`Class.Name`.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-</root>`]`]`]
+</root>`]`@File:`{`Solution.Name`\`Assembly.Namespace`\`Assembly.Subfolder`\DesignerChanges.cs`]`]`[Class:Panel.Controls.Add(this.`@Decapitalize:`{`Class.Name``]`]UserControl);
+`]`[Class:            this.`@Decapitalize:`{`Class.Name``]`]UserControl = new GenEdit.UserControls.`Class.Name`UserControl();
+`]`[Class:            // 
+            // `@Decapitalize:`{`Class.Name``]`]UserControl
+            //`[Property:`?Property.LookupType:
+            this.`@Decapitalize:`{`Class.Name``]`]UserControl.`Property.Name` = null;`]`]
+            this.`@Decapitalize:`{`Class.Name``]`]UserControl.Name = "`@Decapitalize:`{`Class.Name``]`]UserControl";
+            this.`@Decapitalize:`{`Class.Name``]`]UserControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.`@Decapitalize:`{`Class.Name``]`]UserControl.Location = new System.Drawing.Point(0, 20);
+            this.`@Decapitalize:`{`Class.Name``]`]UserControl.`Class.Name` = null;
+            this.`@Decapitalize:`{`Class.Name``]`]UserControl.Size = new System.Drawing.Size(223, 223);
+            this.`@Decapitalize:`{`Class.Name``]`]UserControl.TabIndex = 2;
+            this.`@Decapitalize:`{`Class.Name``]`]UserControl.Visible = false;
+`]`[Class:
+        private UserControls.`Class.Name`UserControl `@Decapitalize:`{`Class.Name``]`]UserControl;`]`]`]

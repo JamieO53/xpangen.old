@@ -45,7 +45,16 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.ProfileNavigatorImageList = new System.Windows.Forms.ImageList(this.components);
-            this.segmentUserControl1 = new GenEdit.UserControls.SegmentUserControl();
+            this.textUserControl = new GenEdit.UserControls.TextUserControl();
+            this.placeholderUserControl = new GenEdit.UserControls.PlaceholderUserControl();
+            this.profileUserControl = new GenEdit.UserControls.ProfileUserControl();
+            this.segmentUserControl = new GenEdit.UserControls.SegmentUserControl();
+            this.blockUserControl = new GenEdit.UserControls.BlockUserControl();
+            this.lookupUserControl = new GenEdit.UserControls.LookupUserControl();
+            this.conditionUserControl = new GenEdit.UserControls.ConditionUserControl();
+            this.functionUserControl = new GenEdit.UserControls.FunctionUserControl();
+            this.textBlockUserControl = new GenEdit.UserControls.TextBlockUserControl();
+            this.annotationUserControl = new GenEdit.UserControls.AnnotationUserControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -95,8 +104,16 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.segmentUserControl1);
-            this.splitContainer2.Panel2.Controls.Add(this.panel2);
+            this.splitContainer2.Panel2.Controls.Add(this.textUserControl);
+            this.splitContainer2.Panel2.Controls.Add(this.placeholderUserControl);
+            this.splitContainer2.Panel2.Controls.Add(this.profileUserControl);
+            this.splitContainer2.Panel2.Controls.Add(this.segmentUserControl);
+            this.splitContainer2.Panel2.Controls.Add(this.blockUserControl);
+            this.splitContainer2.Panel2.Controls.Add(this.lookupUserControl);
+            this.splitContainer2.Panel2.Controls.Add(this.conditionUserControl);
+            this.splitContainer2.Panel2.Controls.Add(this.functionUserControl);
+            this.splitContainer2.Panel2.Controls.Add(this.textBlockUserControl);
+            this.splitContainer2.Panel2.Controls.Add(this.annotationUserControl);
             this.splitContainer2.Size = new System.Drawing.Size(223, 472);
             this.splitContainer2.SplitterDistance = 225;
             this.splitContainer2.TabIndex = 0;
@@ -244,16 +261,107 @@
             this.ProfileNavigatorImageList.Images.SetKeyName(7, "ProfileBrowserCondition.png");
             this.ProfileNavigatorImageList.Images.SetKeyName(8, "ProfileBrowserFunction.png");
             // 
-            // segmentUserControl1
+            // textUserControl
+            //
+            this.textUserControl.Name = "textUserControl";
+            this.textUserControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textUserControl.Location = new System.Drawing.Point(0, 20);
+            this.textUserControl.Text = null;
+            this.textUserControl.Size = new System.Drawing.Size(223, 223);
+            this.textUserControl.TabIndex = 2;
+            this.textUserControl.Visible = false;
             // 
-            this.segmentUserControl1.Cardinality = null;
-            this.segmentUserControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.segmentUserControl1.Location = new System.Drawing.Point(0, 20);
-            this.segmentUserControl1.Name = "segmentUserControl1";
-            this.segmentUserControl1.Segment = null;
-            this.segmentUserControl1.Size = new System.Drawing.Size(223, 223);
-            this.segmentUserControl1.TabIndex = 2;
-            this.segmentUserControl1.Visible = false;
+            // placeholderUserControl
+            //
+            this.placeholderUserControl.Name = "placeholderUserControl";
+            this.placeholderUserControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.placeholderUserControl.Location = new System.Drawing.Point(0, 20);
+            this.placeholderUserControl.Placeholder = null;
+            this.placeholderUserControl.Size = new System.Drawing.Size(223, 223);
+            this.placeholderUserControl.TabIndex = 2;
+            this.placeholderUserControl.Visible = false;
+            // 
+            // profileUserControl
+            //
+            this.profileUserControl.Name = "profileUserControl";
+            this.profileUserControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.profileUserControl.Location = new System.Drawing.Point(0, 20);
+            this.profileUserControl.Profile = null;
+            this.profileUserControl.Size = new System.Drawing.Size(223, 223);
+            this.profileUserControl.TabIndex = 2;
+            this.profileUserControl.Visible = false;
+            // 
+            // segmentUserControl
+            //
+            this.segmentUserControl.Cardinality = null;
+            this.segmentUserControl.Name = "segmentUserControl";
+            this.segmentUserControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.segmentUserControl.Location = new System.Drawing.Point(0, 20);
+            this.segmentUserControl.Segment = null;
+            this.segmentUserControl.Size = new System.Drawing.Size(223, 223);
+            this.segmentUserControl.TabIndex = 2;
+            this.segmentUserControl.Visible = false;
+            // 
+            // blockUserControl
+            //
+            this.blockUserControl.Name = "blockUserControl";
+            this.blockUserControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.blockUserControl.Location = new System.Drawing.Point(0, 20);
+            this.blockUserControl.Block = null;
+            this.blockUserControl.Size = new System.Drawing.Size(223, 223);
+            this.blockUserControl.TabIndex = 2;
+            this.blockUserControl.Visible = false;
+            // 
+            // lookupUserControl
+            //
+            this.lookupUserControl.Name = "lookupUserControl";
+            this.lookupUserControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lookupUserControl.Location = new System.Drawing.Point(0, 20);
+            this.lookupUserControl.Lookup = null;
+            this.lookupUserControl.Size = new System.Drawing.Size(223, 223);
+            this.lookupUserControl.TabIndex = 2;
+            this.lookupUserControl.Visible = false;
+            // 
+            // conditionUserControl
+            //
+            this.conditionUserControl.Comparison = null;
+            this.conditionUserControl.Name = "conditionUserControl";
+            this.conditionUserControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.conditionUserControl.Location = new System.Drawing.Point(0, 20);
+            this.conditionUserControl.Condition = null;
+            this.conditionUserControl.Size = new System.Drawing.Size(223, 223);
+            this.conditionUserControl.TabIndex = 2;
+            this.conditionUserControl.Visible = false;
+            // 
+            // functionUserControl
+            //
+            this.functionUserControl.Name = "functionUserControl";
+            this.functionUserControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.functionUserControl.Location = new System.Drawing.Point(0, 20);
+            this.functionUserControl.Function = null;
+            this.functionUserControl.Size = new System.Drawing.Size(223, 223);
+            this.functionUserControl.TabIndex = 2;
+            this.functionUserControl.Visible = false;
+            // 
+            // textBlockUserControl
+            //
+            this.textBlockUserControl.Name = "textBlockUserControl";
+            this.textBlockUserControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBlockUserControl.Location = new System.Drawing.Point(0, 20);
+            this.textBlockUserControl.TextBlock = null;
+            this.textBlockUserControl.Size = new System.Drawing.Size(223, 223);
+            this.textBlockUserControl.TabIndex = 2;
+            this.textBlockUserControl.Visible = false;
+            // 
+            // annotationUserControl
+            //
+            this.annotationUserControl.Name = "annotationUserControl";
+            this.annotationUserControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.annotationUserControl.Location = new System.Drawing.Point(0, 20);
+            this.annotationUserControl.Annotation = null;
+            this.annotationUserControl.Size = new System.Drawing.Size(223, 223);
+            this.annotationUserControl.TabIndex = 2;
+            this.annotationUserControl.Visible = false;
             // 
             // GenProfileEditor
             // 
@@ -306,7 +414,15 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ImageList ProfileNavigatorImageList;
-        private UserControls.SegmentUserControl segmentUserControl1;
-
+        private UserControls.TextUserControl textUserControl;
+        private UserControls.PlaceholderUserControl placeholderUserControl;
+        private UserControls.ProfileUserControl profileUserControl;
+        private UserControls.SegmentUserControl segmentUserControl;
+        private UserControls.BlockUserControl blockUserControl;
+        private UserControls.LookupUserControl lookupUserControl;
+        private UserControls.ConditionUserControl conditionUserControl;
+        private UserControls.FunctionUserControl functionUserControl;
+        private UserControls.TextBlockUserControl textBlockUserControl;
+        private UserControls.AnnotationUserControl annotationUserControl;
     }
 }
