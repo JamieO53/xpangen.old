@@ -120,7 +120,6 @@
     <Compile Include="Profile\Placeholder.cs" />
     <Compile Include="Profile\Profile.cs" />
     <Compile Include="Profile\ProfileDefinition.cs" />
-    <Compile Include="Profile\ProfileExtensions.cs" />
     <Compile Include="Profile\ProfileRoot.cs" />
     <Compile Include="Profile\Segment.cs" />
     <Compile Include="Profile\Text.cs" />

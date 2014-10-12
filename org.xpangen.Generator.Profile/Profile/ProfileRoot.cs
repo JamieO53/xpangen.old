@@ -23,6 +23,13 @@ namespace org.xpangen.Generator.Profile.Profile
             GenDataBase = genDataBase;
         }
 
+        internal string CreateContainerFragmentBody(string prefix)
+        {
+            var name = prefix + FragmentBodyList.Count;
+            AddFragmentBody(name);
+            return name;
+        }
+
         /// <summary>
         /// The name of the profile root property
         /// </summary>
