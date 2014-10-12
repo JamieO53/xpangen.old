@@ -100,6 +100,30 @@ namespace org.xpangen.Generator.Profile.Profile
             ProfileRootList = new GenNamedApplicationList<ProfileRoot>(this, 1, 0);
         }
 
+        internal ProfileRoot ProfileRoot()
+        {
+            return ProfileRootList[0];
+        }
+
+        private FragmentBody ProfileFragmentBody()
+        {
+            return ProfileRoot().FragmentBodyList[0];
+        }
+
+        public Profile Profile()
+        {
+            return (Profile) ProfileFragmentBody().FragmentList[0];
+        }
+
+        public void Setup()
+        {
+            var root = AddProfileRoot("");
+            var rootBody = root.AddFragmentBody("Root0");
+            root.AddFragmentBody("Empty1");
+            var profile = rootBody.AddProfile();
+            profile.Primary = "Profile2";
+            profile.Secondary = "Empty1";
+        }
         public ProfileRoot AddProfileRoot(string name, string title = "")
         {
             var item = new ProfileRoot(GenDataBase)

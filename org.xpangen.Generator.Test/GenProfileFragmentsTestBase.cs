@@ -124,6 +124,7 @@ namespace org.xpangen.Generator.Test
         protected static void VerifyFragment(GenDataBase genData, GenFragment genFragment, string expectedClass, FragmentType expectedType, string profileLabel, string profileText, string expected, bool isText, string parentClassName, GenDataDef profileDataDef)
         {
             Assert.AreEqual(expectedClass, genFragment.GetType().Name, "Fragment Class");
+            Assert.AreEqual(expectedType, genFragment.Fragment.FragmentType,  "Fragment Fragment Type");
             Assert.AreEqual(expectedType, genFragment.FragmentType, "Fragment Type");
             Assert.AreEqual(isText, genFragment.IsTextFragment, "Is text fragment?");
             if (genFragment.GenObject == null) genFragment.GenObject = GetFirstObjectOfSubClass(GetFirstObject(genData), "Property");
