@@ -65,7 +65,7 @@ namespace org.xpangen.Generator.Editor.Helper
             {
                 GenDataStore.SetData("");
                 GenDataStore.SetBase("");
-                Profile = null;
+                Profile.Profile = null;
                 return;
             }
             GenDataStore.SetBase(Settings.BaseFilePath);
@@ -225,7 +225,7 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public void SetProfile(Data.Model.Settings.Profile profile)
         {
-            Settings.Profile = profile != null ? profile.Name : "";
+            Settings.Profile = profile != null && GenDataDef != null ? profile.Name : "";
             Profile.Profile = Settings.Profile != "" ? new GenCompactProfileParser(GenDataDef, Settings.Profile, "") : null;
         }
 
