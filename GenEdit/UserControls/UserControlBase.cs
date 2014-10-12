@@ -18,7 +18,12 @@ namespace GenEdit.UserControls
             }
         }
 
-        protected UserControlBase(string viewModelName)
+        public UserControlBase()
+        {
+            //MessageBox.Show("UserControlBase");
+        }
+
+        protected UserControlBase(string viewModelName) : this()
         {
             ViewModelName = viewModelName;
         }

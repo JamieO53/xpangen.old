@@ -39,12 +39,12 @@ namespace GenEdit.View
             ProfileExpansionTextBox.Clear();
             ProfileTextBox.Clear();
             if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null ||
-                GenDataEditorViewModel.Data.Profile == null) return;
+                GenDataEditorViewModel.Data.Profile.Profile == null) return;
 
             var builder = new ProfileEditorTreeViewBuilder(GenDataEditorViewModel.Data);
 
             IsBuilding = true;
-            builder.CreateBodyChildTrees(ProfileNavigatorTreeView.Nodes, GenDataEditorViewModel.Data.Profile);
+            builder.CreateBodyChildTrees(ProfileNavigatorTreeView.Nodes, GenDataEditorViewModel.Data.Profile.Profile);
             IsBuilding = false;
             RefreshProfile(GenDataEditorViewModel.Data.GenDataBase, GenDataEditorViewModel.Data.GenObject);
             if (ProfileNavigatorTreeView.Nodes.Count > 0)

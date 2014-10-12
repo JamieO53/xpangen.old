@@ -37,6 +37,7 @@ namespace GenEdit.ViewModel
             var geData = new GeData();
             geData.Settings = IsInDesignMode ? geData.GetDesignTimeSettings() : geData.GetDefaultSettings();
             geData.ComboServer = IsInDesignMode ? GeData.GetDesignTimeComboServer() : geData.GetDefaultComboServer();
+            geData.Profile = IsInDesignMode ? geData.GetDesignTimeProfile(geData.ComboServer) : geData.GetDefaultProfile(geData.ComboServer);
 
             return geData;
         }

@@ -74,8 +74,10 @@
     <Compile Include="GeData.cs" />
     <Compile Include="GeGenData.cs" />
     <Compile Include="GeComboItem.cs" />
+    <Compile Include="GeProfile.cs" />
     <Compile Include="GeSettings.cs" />
     <Compile Include="IGenData.cs" />
+    <Compile Include="IGenDataProfile.cs" />
     <Compile Include="IGenDataSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
