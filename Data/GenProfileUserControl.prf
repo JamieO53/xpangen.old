@@ -6,7 +6,8 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using `Assembly.Namespace`.ViewModel;
-using org.xpangen.Generator.Application;
+using org.xpangen.Generator.Data;`@MapClear:`]`@MapSet:`{CodesUsing`]`]`[Property:`?Property.LookupType=Standard:`@MapSet:`{CodesUsing`]`{
+using org.xpangen.Generator.Data.Model.Codes;`]`]`]`]`@MapGet:`{CodesUsing`]`]
 using `Assembly.BindingNamespace`;
 using org.xpangen.Generator.Editor.Helper;
 
@@ -15,7 +16,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
     public partial class `Class.Name`UserControl : UserControlBase
     {`[Property:`?Property.LookupTable:
         public EventHandler `Property.Name`Selected;
-        public `Property.LookupTable` `Property.LookupTable` { get; set; }`]`]
+        public `?Property.LookupType=Standard:Code`]`?Property.LookupType=Lookup:`Property.LookupTable``] `Property.LookupTable` { get; set; }`]`]
         private `Class.Name` _`@Decapitalize:`{`Class.Name``]`];
         private readonly ToolTip _toolTip = new ToolTip();
 
@@ -64,7 +65,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
         {
             if (`Class.Name` != null && comboBox`Property.Name`.SelectedItem != null)
             {
-                var item = (`Property.LookupTable`) comboBox`Property.Name`.SelectedItem;
+                var item = (`?Property.LookupType=Standard:Code`]`?Property.LookupType=Lookup:`Property.LookupTable``]) comboBox`Property.Name`.SelectedItem;
                 `Class.Name`.`Property.Name` = item.Name;
                 `Property.LookupTable` = item;`%Property.LookupDependence=Property.LookupTable:`?Property.LookupDependence:
                 var `@Decapitalize:`{`Property.Name``]`] = `Class.Name`.`Property.Name`;
@@ -133,8 +134,8 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             this.textBox`Property.Name` = new System.Windows.Forms.TextBox();`]`?Property.LookupType:
             this.comboBox`Property.Name` = new System.Windows.Forms.ComboBox();`]`]
             this.bindingSource`Class.Name` = new System.Windows.Forms.BindingSource(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource`Class.Name`)).BeginInit();
             this.panelUcHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource`Class.Name`)).BeginInit();
             this.SuspendLayout();
             // 
             // panelUcHeader
@@ -168,7 +169,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             // 
             // textBox`Property.Name`
             // 
-            this.textBox`Property.Name`.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.textBox`Property.Name`.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox`Property.Name`.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSource`Class.Name`, "`Property.Name`", true));
             this.textBox`Property.Name`.Location = new System.Drawing.Point(6, `@Get:`{LocationTop`]`]`@Add:`{LocationTop`]`{23`]`]);
@@ -180,7 +181,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             // 
             // comboBox`Property.Name`
             // 
-            this.comboBox`Property.Name`.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.comboBox`Property.Name`.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox`Property.Name`.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bindingSource`Class.Name`, "`Property.Name`", true));
             this.comboBox`Property.Name`.DisplayMember = "Name";
@@ -208,9 +209,9 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             this.Controls.Add(this.comboBox`Property.Name`);`]`]
             this.Name = "`Class.Name`UserControl";
             this.Size = new System.Drawing.Size(259, `@Add:`{LocationTop`]`{5`]`]`@Get:`{LocationTop`]`]);
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource`Class.Name`)).EndInit();
             this.panelUcHeader.ResumeLayout(false);
             this.panelUcHeader.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource`Class.Name`)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -340,12 +341,12 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="bindingSource`Class.Name`.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="bindingSource`Class.Name`.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
 </root>`]`]`]

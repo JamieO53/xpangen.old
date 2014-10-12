@@ -45,13 +45,14 @@ namespace org.xpangen.Generator.Editor.Helper
             get { return GenDataBase != null ? GenDataBase.GenDataDef : null; }
         }
 
-        public GenCompactProfileParser Profile { get; private set; } 
+        public IGenDataProfile Profile { get; set; } 
         public IGenData GenDataStore { get; private set; }
         public IGenDataSettings Settings { get; set; }
 
         public GeData()
         {
             GenDataStore = new GeGenData();
+
         }
 
         /// <summary>
@@ -140,6 +141,16 @@ namespace org.xpangen.Generator.Editor.Helper
             return settings;
         }
 
+        public IGenDataProfile GetDefaultProfile(ComboServer comboServer)
+        {
+            return new GeProfile(comboServer);
+        }
+
+        public IGenDataProfile GetDesignTimeProfile(ComboServer comboServer)
+        {
+            return new GeProfile(comboServer);
+        }
+
         public ComboServer GetDefaultComboServer()
         {
             var data = GenDataBase.DataLoader.LoadData(GenDataBase.DataLoader.LoadData("CodesDefinition").AsDef(),
@@ -182,7 +193,7 @@ namespace org.xpangen.Generator.Editor.Helper
             SaveSettings();
         }
 
-        public ComboServer ComboServer { private get; set; }
+        public ComboServer ComboServer { get; set; }
         public GenObject GenObject { get; set; }
 
         /// <summary>
@@ -215,7 +226,7 @@ namespace org.xpangen.Generator.Editor.Helper
         public void SetProfile(Data.Model.Settings.Profile profile)
         {
             Settings.Profile = profile != null ? profile.Name : "";
-            Profile = Settings.Profile != "" ? new GenCompactProfileParser(GenDataDef, Settings.Profile, "") : null;
+            Profile.Profile = Settings.Profile != "" ? new GenCompactProfileParser(GenDataDef, Settings.Profile, "") : null;
         }
 
         public bool CheckIfDataExists(string value)

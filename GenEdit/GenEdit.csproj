@@ -102,6 +102,12 @@
     <Compile Include="UserControls\FileGroupUserControl.Designer.cs">
       <DependentUpon>FileGroupUserControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\SegmentUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\SegmentUserControl.Designer.cs">
+      <DependentUpon>SegmentUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\UserControlBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -148,6 +154,9 @@
     </Compile>
     <EmbeddedResource Include="UserControls\FileGroupUserControl.resx">
       <DependentUpon>FileGroupUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\SegmentUserControl.resx">
+      <DependentUpon>SegmentUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\GenDataEditor.resx">
       <DependentUpon>GenDataEditor.cs</DependentUpon>

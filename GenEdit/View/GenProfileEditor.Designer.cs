@@ -35,8 +35,6 @@
             this.ProfileNavigatorTreeView = new System.Windows.Forms.TreeView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
@@ -47,6 +45,7 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.ProfileNavigatorImageList = new System.Windows.Forms.ImageList(this.components);
+            this.segmentUserControl1 = new GenEdit.UserControls.SegmentUserControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -78,7 +77,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer1.Size = new System.Drawing.Size(670, 339);
+            this.splitContainer1.Size = new System.Drawing.Size(670, 472);
             this.splitContainer1.SplitterDistance = 223;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -96,11 +95,10 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.listBox1);
-            this.splitContainer2.Panel2.Controls.Add(this.comboBox1);
+            this.splitContainer2.Panel2.Controls.Add(this.segmentUserControl1);
             this.splitContainer2.Panel2.Controls.Add(this.panel2);
-            this.splitContainer2.Size = new System.Drawing.Size(223, 339);
-            this.splitContainer2.SplitterDistance = 173;
+            this.splitContainer2.Size = new System.Drawing.Size(223, 472);
+            this.splitContainer2.SplitterDistance = 225;
             this.splitContainer2.TabIndex = 0;
             // 
             // ProfileNavigatorTreeView
@@ -108,7 +106,7 @@
             this.ProfileNavigatorTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ProfileNavigatorTreeView.Location = new System.Drawing.Point(0, 20);
             this.ProfileNavigatorTreeView.Name = "ProfileNavigatorTreeView";
-            this.ProfileNavigatorTreeView.Size = new System.Drawing.Size(223, 153);
+            this.ProfileNavigatorTreeView.Size = new System.Drawing.Size(223, 205);
             this.ProfileNavigatorTreeView.TabIndex = 1;
             this.ProfileNavigatorTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -132,24 +130,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Profile navigator";
             // 
-            // listBox1
-            // 
-            this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(0, 41);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(223, 121);
-            this.listBox1.TabIndex = 3;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(0, 20);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(223, 21);
-            this.comboBox1.TabIndex = 2;
-            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.label2);
@@ -166,9 +146,9 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(0, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(99, 17);
+            this.label2.Size = new System.Drawing.Size(129, 17);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Data definition";
+            this.label2.Text = "Fragment definition";
             // 
             // splitContainer3
             // 
@@ -186,8 +166,8 @@
             // 
             this.splitContainer3.Panel2.Controls.Add(this.ProfileExpansionTextBox);
             this.splitContainer3.Panel2.Controls.Add(this.panel4);
-            this.splitContainer3.Size = new System.Drawing.Size(443, 339);
-            this.splitContainer3.SplitterDistance = 173;
+            this.splitContainer3.Size = new System.Drawing.Size(443, 472);
+            this.splitContainer3.SplitterDistance = 225;
             this.splitContainer3.TabIndex = 1;
             // 
             // ProfileTextBox
@@ -197,7 +177,7 @@
             this.ProfileTextBox.Multiline = true;
             this.ProfileTextBox.Name = "ProfileTextBox";
             this.ProfileTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.ProfileTextBox.Size = new System.Drawing.Size(443, 153);
+            this.ProfileTextBox.Size = new System.Drawing.Size(443, 205);
             this.ProfileTextBox.TabIndex = 2;
             // 
             // panel3
@@ -227,7 +207,7 @@
             this.ProfileExpansionTextBox.Multiline = true;
             this.ProfileExpansionTextBox.Name = "ProfileExpansionTextBox";
             this.ProfileExpansionTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.ProfileExpansionTextBox.Size = new System.Drawing.Size(443, 142);
+            this.ProfileExpansionTextBox.Size = new System.Drawing.Size(443, 223);
             this.ProfileExpansionTextBox.TabIndex = 3;
             // 
             // panel4
@@ -264,13 +244,24 @@
             this.ProfileNavigatorImageList.Images.SetKeyName(7, "ProfileBrowserCondition.png");
             this.ProfileNavigatorImageList.Images.SetKeyName(8, "ProfileBrowserFunction.png");
             // 
+            // segmentUserControl1
+            // 
+            this.segmentUserControl1.Cardinality = null;
+            this.segmentUserControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.segmentUserControl1.Location = new System.Drawing.Point(0, 20);
+            this.segmentUserControl1.Name = "segmentUserControl1";
+            this.segmentUserControl1.Segment = null;
+            this.segmentUserControl1.Size = new System.Drawing.Size(223, 223);
+            this.segmentUserControl1.TabIndex = 2;
+            this.segmentUserControl1.Visible = false;
+            // 
             // GenProfileEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Name = "GenProfileEditor";
-            this.Size = new System.Drawing.Size(670, 339);
+            this.Size = new System.Drawing.Size(670, 472);
             this.Load += new System.EventHandler(this.GenProfileEditor_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -306,8 +297,6 @@
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.TreeView ProfileNavigatorTreeView;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox ProfileTextBox;
@@ -317,6 +306,7 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ImageList ProfileNavigatorImageList;
+        private UserControls.SegmentUserControl segmentUserControl1;
 
     }
 }
