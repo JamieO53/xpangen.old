@@ -2,6 +2,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace org.xpangen.Generator.Scanner
 {
     /// <summary>
@@ -10,7 +13,7 @@ namespace org.xpangen.Generator.Scanner
     public class CharSet
     {
         private readonly char[] _ca;
-        private readonly char[,] _cra;
+        private readonly char[][] _cra;
 
         /// <summary>
         /// The characters being recognized.
@@ -52,12 +55,9 @@ namespace org.xpangen.Generator.Scanner
             }
 
             _ca = x0.ToCharArray();
-            _cra = new char[x1.Length, 2];
+            _cra = new char[x1.Length][];//Range[x1.Length];
             for (var j = 0; j < x1.Length; j++)
-            {
-                _cra[j, 0] = x1[j];
-                _cra[j, 1] = x2[j];
-            }
+                _cra[j] = new[] {x1[j], x2[j]};
         }
 
         /// <summary>
@@ -69,9 +69,13 @@ namespace org.xpangen.Generator.Scanner
         {
             foreach (char x in _ca)
                 if (x == c) return true;
-            for (var i = 0; i <= _cra.GetUpperBound(0); i++)
-                if (c >= _cra[i, 0] && c <= _cra[i, 1])
-                    return true;
+            for (int i = 0; i < _cra.Length; i++)
+            {
+                var range = _cra[i];
+                if (range[0] > c) continue;
+                if (c > range[1]) continue;
+                return true;
+            }
             return false;
         }
 
