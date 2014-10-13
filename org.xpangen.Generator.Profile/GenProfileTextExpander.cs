@@ -100,10 +100,10 @@ namespace org.xpangen.Generator.Profile
                     break;
                 case FragmentType.Segment:
                     var segmentFragment = (Segment) fragment;
-                    GenCardinality cardinality;
-                    if (!Enum.TryParse(segmentFragment.Cardinality, out cardinality))
-                        throw new GeneratorException("Invalid segment cardinality: " + segmentFragment.Cardinality,
-                            GenErrorType.Assertion);
+                    var cardinality = segmentFragment.GenCardinality;
+                    //if (!Enum.TryParse(segmentFragment.Cardinality, out cardinality))
+                    //    throw new GeneratorException("Invalid segment cardinality: " + segmentFragment.Cardinality,
+                    //        GenErrorType.Assertion);
                     var variant = (cardinality == GenCardinality.AllDlm || cardinality == GenCardinality.BackDlm
                         ? "2"
                         : "1");
