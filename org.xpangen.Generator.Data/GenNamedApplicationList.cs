@@ -3,11 +3,13 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System;
+using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
     public class GenNamedApplicationList<T> : GenApplicationList<T> where T: GenNamedApplicationBase, new()
     {
+        private Dictionary<string, int> _names;
         public GenNamedApplicationList(GenApplicationBase parent, int classId, int classIdx)
         {
             var className = typeof(T).Name;
@@ -27,9 +29,20 @@ namespace org.xpangen.Generator.Data
 
         public new void Add(T item)
         {
+            if (Contains(item.Name)) return;
             item.Parent = Parent;
             item.Classes = Parent.Classes;
             base.Add(item);
+            if (_names == null)
+            {
+                if (Count > 5)
+                {
+                    _names = new Dictionary<string, int>();
+                    for (var i = 0; i < Count; i++)
+                        _names.Add(this[i].Name, i);
+                }
+            }
+            else _names.Add(item.Name, Count - 1);
         }
 
         private void PopulateList(GenApplicationBase parent)
@@ -75,6 +88,7 @@ namespace org.xpangen.Generator.Data
         /// <returns>The index of the named object, otherwise -1.</returns>
         private int IndexOf(string name)
         {
+            if (_names != null) return _names.ContainsKey(name) ? _names[name] : -1;
             for (var i = 0; i < Count; i++)
                 if (this[i].Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
                     return i;

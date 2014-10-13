@@ -2,6 +2,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
+using System.Diagnostics.Contracts;
 using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Profile.Profile
@@ -79,10 +81,15 @@ namespace org.xpangen.Generator.Profile.Profile
             set
             {
                 if (Comparison == value) return;
+                GenComparison c;
+                Contract.Assert(Enum.TryParse(value, out c), "Invalid comparison text: " + value);
+                GenComparison = c;
                 SetString("Comparison", value);
                 if (!DelayedSave) SaveFields();
             }
         }
+
+        public GenComparison GenComparison { get; set; }
 
         /// <summary>
         /// The class of the object being compared to

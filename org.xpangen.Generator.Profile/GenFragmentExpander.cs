@@ -63,9 +63,9 @@ namespace org.xpangen.Generator.Profile
 
         public static string Expand(GenDataDef genDataDef, GenObject genObject, Fragment fragment)
         {
-            FragmentType fragmentType;
-            Enum.TryParse(fragment.GetType().Name, out fragmentType);
-            switch (fragmentType)
+            //FragmentType fragmentType;
+            //Enum.TryParse(fragment.GetType().Name, out fragmentType);
+            switch (fragment.FragmentType)
             {
                 case FragmentType.Null:
                     return "";

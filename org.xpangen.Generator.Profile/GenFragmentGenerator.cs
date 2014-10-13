@@ -56,8 +56,8 @@ namespace org.xpangen.Generator.Profile
 
         private static GenFragmentGenerator Create(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment)
         {
-            FragmentType fragmentType;
-            Enum.TryParse(fragment.GetType().Name, out fragmentType);
+            FragmentType fragmentType = fragment.FragmentType;
+            //Enum.TryParse(fragment.GetType().Name, out fragmentType);
             switch (fragmentType)
             {
                 case FragmentType.Profile:
@@ -137,9 +137,7 @@ namespace org.xpangen.Generator.Profile
         {
             get
             {
-                GenComparison c;
-                Enum.TryParse(Condition.Comparison, out c);
-                return c;
+                return Condition.GenComparison;
             }
         }
 
@@ -156,7 +154,7 @@ namespace org.xpangen.Generator.Profile
 
             var i = String.Compare(s1, s2, StringComparison.OrdinalIgnoreCase);
 
-            switch (GenComparison)
+            switch (Condition.GenComparison)
             {
                 case GenComparison.Exists:
                     return i != 0;
@@ -455,9 +453,7 @@ namespace org.xpangen.Generator.Profile
             : base(genDataDef, genWriter, genObject, fragment)
         {
             Segment = (Segment) fragment;
-            GenCardinality cardinality;
-            Contract.Assert(Enum.TryParse(Segment.Cardinality, out cardinality), "Invalid segment cardinality: " + Segment.Cardinality);
-            GenCardinality = cardinality;
+            GenCardinality = Segment.GenCardinality;
             Navigator = new SegmentNavigator(this);
         }
 

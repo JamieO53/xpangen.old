@@ -710,8 +710,7 @@ Child[Reference='Child']
             var genSegment = (GenSegment) genContainerFragment;
             className = segment.Class;
             Assert.AreEqual(genDataDef.GetClassName(genSegment.ClassId), className, "Segment class");
-            GenCardinality cardinality;
-            Enum.TryParse(((Segment)genSegment.Fragment).Cardinality, out cardinality);
+            var cardinality = ((Segment)genSegment.Fragment).GenCardinality;
             Assert.AreEqual(cardinality.ToString(), segment.Cardinality);
             if (cardinality == GenCardinality.AllDlm ||
                 cardinality == GenCardinality.BackDlm)

@@ -2,6 +2,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
+using System.Diagnostics.Contracts;
 using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Profile.Profile
@@ -60,11 +62,14 @@ namespace org.xpangen.Generator.Profile.Profile
             set
             {
                 if (Cardinality == value) return;
+                GenCardinality genCardinality;
+                Contract.Assert(Enum.TryParse(value, out genCardinality), "Invalid segment cardinality: " + Cardinality); 
+                GenCardinality = genCardinality;
                 SetString("Cardinality", value);
                 if (!DelayedSave) SaveFields();
             }
         }
 
-
+        public GenCardinality GenCardinality { get; set; }
     }
 }
