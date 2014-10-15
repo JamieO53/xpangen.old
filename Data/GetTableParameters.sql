@@ -12,7 +12,7 @@ from	sys.objects o
 join	sys.schemas s
 	on	s.schema_id = o.schema_id
 where	s.name like 'IF_%'
-	and	o.type in ('U', 'P')
+--	and	o.type in ('U', 'V', 'P', 'TF', 'FN', 'IF')
 	and s.schema_id in (
 		select	p.schema_id
 		from	sys.procedures p
