@@ -226,7 +226,7 @@ namespace org.xpangen.Generator.Editor.Helper
         public void SetProfile(Data.Model.Settings.Profile profile)
         {
             Settings.Profile = profile != null && GenDataDef != null ? profile.Name : "";
-            Profile.Profile = Settings.Profile != "" ? new GenCompactProfileParser(GenDataDef, Settings.Profile, "") : null;
+            Profile.LoadProfile(Settings.Profile, GenDataDef);
         }
 
         public bool CheckIfDataExists(string value)
