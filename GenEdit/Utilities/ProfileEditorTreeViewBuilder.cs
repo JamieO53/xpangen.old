@@ -16,29 +16,29 @@ namespace GenEdit.Utilities
         {
         }
 
-        public void CreateBodyChildTrees(TreeNodeCollection items, GenContainerFragmentBase container)
+        public void CreateBodyChildTrees(TreeNodeCollection items, FragmentBody container)
         {
             var i = 0;
-            while (i < container.Body.Count)
+            while (i < container.FragmentList.Count)
             {
-                var fragment = container.Body.Fragment[i];
+                var fragment = container.FragmentList[i];
                 var node = CreateFragmentTree(fragment);
                 items.Add(node);
                 i++;
             }
         }
 
-        public static GenFragment GetNodeData(object selectedItem)
+        public static Fragment GetNodeData(object selectedItem)
         {
-            return selectedItem != null ? ((TreeNode) selectedItem).Tag as GenFragment : null;
+            return selectedItem != null ? ((TreeNode) selectedItem).Tag as Fragment : null;
         }
 
-        private TreeNode CreateFragmentTree(GenFragment genFragment)
+        private TreeNode CreateFragmentTree(Fragment genFragment)
         {
-            var genFragmentLabel = new GenFragmentLabel(genFragment.Fragment);
+            var genFragmentLabel = new GenFragmentLabel(genFragment);
             var item = CreateTreeNode((int)genFragment.FragmentType, genFragmentLabel.ProfileLabel(), null, genFragment);
-            if (genFragment is GenContainerFragmentBase && !(genFragment is GenFunction))
-                CreateBodyChildTrees(item.Nodes, (GenContainerFragmentBase) genFragment);
+            if (genFragment is ContainerFragment && !(genFragment is Function))
+                CreateBodyChildTrees(item.Nodes, ((ContainerFragment) genFragment).Body());
             return item;
         }
 

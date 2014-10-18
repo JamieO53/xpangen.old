@@ -1,16 +1,16 @@
-﻿using System;
+﻿// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
-using org.xpangen.Generator.Profile.Profile;
+using org.xpangen.Generator.Data;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
     public interface IGenDataProfile
     {
         IList GetDataSource(object context, string className);
-        GenCompactProfileParser Profile { get; set; }
+        Profile.Profile.Profile Profile { get; set; }
+        void LoadProfile(string profilePath, GenDataDef genDataDef1);
     }
 }
