@@ -12,6 +12,7 @@ namespace org.xpangen.Generator.Editor.Helper
 {
     public class GeProfile : IGenDataProfile
     {
+        private ProfileFragmentSyntaxDictionary _activeProfileFragmentSyntaxDictionary;
         public ComboServer ComboServer { get; set; }
 
         public GeProfile(ComboServer comboServer)
@@ -26,29 +27,41 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public Profile.Profile.Profile Profile { get; set; }
 
+        public Fragment Fragment { get; set; }
+
         public void LoadProfile(string profilePath, GenDataDef genDataDef)
         {
             Profile = profilePath != "" ? new GenCompactProfileParser(genDataDef, profilePath, "").Profile : null;
         }
 
-        public FragmentBody GetBody(ContainerFragment containerFragment)
+        public FragmentBody GetBody()
         {
+            var containerFragment = (ContainerFragment) Fragment;
             return containerFragment.Body();
         }
 
-        public string GetNodeExpansionText(GenDataBase genData, GenObject genObject, Fragment fragment)
+        public string GetNodeExpansionText(GenDataBase genData, GenObject genObject)
         {
-            if (fragment == null) return "";
-            var context = GenObject.GetContext(genObject ?? genData.Root, fragment.ClassName());
+            if (Fragment == null) return "";
+            var context = GenObject.GetContext(genObject ?? genData.Root, Fragment.ClassName());
             if (context == null) return "";
-            return GenFragmentExpander.Expand(genData.GenDataDef, context, fragment);
+            return GenFragmentExpander.Expand(genData.GenDataDef, context, Fragment);
         }
 
-        public string GetNodeProfileText(Fragment fragment)
+        public string GetNodeProfileText()
         {
-            var text = new GenProfileTextExpander(ProfileFragmentSyntaxDictionary
-                .ActiveProfileFragmentSyntaxDictionary).GetText(fragment);
-            return text;
+            if (Fragment == null) return "";
+            return new GenProfileTextExpander(ActiveProfileFragmentSyntaxDictionary).GetText(Fragment);
+        }
+
+        public ProfileFragmentSyntaxDictionary ActiveProfileFragmentSyntaxDictionary
+        {
+            get
+            {
+                return _activeProfileFragmentSyntaxDictionary ??
+                       ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary;
+            }
+            set { _activeProfileFragmentSyntaxDictionary = value; }
         }
     }
 }

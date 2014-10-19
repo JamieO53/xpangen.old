@@ -1,4 +1,4 @@
-`[Database:`[Table:IF  EXISTS (SELECT * FROM sys.synonyms WHERE name = N'`Table.Name`')
-	DROP SYNONYM dbo.`Table.Name`
+`[Database:`[Schema:`[Table:IF  EXISTS (SELECT * FROM sys.synonyms WHERE name = N'`Schema.SchemaName`.`Table.TableName`')
+	DROP SYNONYM [`Schema.SchemaName`].[`Table.TableName`]
 GO
-`]`]
+`]`]`]
