@@ -11,7 +11,7 @@ namespace org.xpangen.Generator.Test
     [TestFixture]
     public class EditorHelperTests : GenDataTestsBase
     {
-        [TestCase(Description = "Verifies that the test settings are set up correctly.")]
+        [Test(Description = "Verifies that the test settings are set up correctly.")]
         public void SettingsLoadTest()
         {
             var model = PopulateGenSettings();
@@ -22,7 +22,7 @@ namespace org.xpangen.Generator.Test
             Assert.AreEqual("GeneratorDefinitionModel", fileGroup.Name);
         }
 
-        [TestCase(Description = "Access file group properties test.")]
+        [Test(Description = "Access file group properties test.")]
         public void GeSettingsAccessTest()
         {
             var geData = new GeData();
@@ -43,7 +43,7 @@ namespace org.xpangen.Generator.Test
             Assert.Contains(geData.Settings.BaseFile, baseFiles);
         }
 
-        [TestCase(Description = "Access file group properties test.")]
+        [Test(Description = "Access file group properties test.")]
         public void GeSettingsSaveTest()
         {
             var model = PopulateGenSettings();

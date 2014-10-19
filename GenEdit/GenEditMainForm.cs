@@ -22,7 +22,7 @@ namespace GenEdit
                         genProfileEditor1.GenDataEditorViewModel.Data.GenObject);
             genLibrary1.GenDataEditorViewModel = ViewModelLocator.GenDataEditorViewModel;
             genLibrary1.OnDataLoaded = () => genDataEditor1.LoadData();
-            genLibrary1.OnDataLoaded += () => genProfileEditor1.LoadData();
+            //genLibrary1.OnDataLoaded += () => genProfileEditor1.LoadData();
             genLibrary1.OnProfileChanged = () => genProfileEditor1.LoadData();
         }
 

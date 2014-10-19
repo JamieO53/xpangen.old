@@ -15,7 +15,10 @@ namespace org.xpangen.Generator.Editor.Helper
         public void SetBase(string filePath)
         {
             if (filePath == "")
+            {
                 DefGenDataBase = null;
+                GenDataBase = null;
+            }
             else
             {
                 DefGenDataBase = GenDataBase.DataLoader.LoadData(filePath);

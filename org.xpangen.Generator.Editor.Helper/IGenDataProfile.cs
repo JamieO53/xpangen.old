@@ -4,6 +4,7 @@
 
 using System.Collections;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
@@ -12,5 +13,8 @@ namespace org.xpangen.Generator.Editor.Helper
         IList GetDataSource(object context, string className);
         Profile.Profile.Profile Profile { get; set; }
         void LoadProfile(string profilePath, GenDataDef genDataDef1);
+        FragmentBody GetBody(ContainerFragment containerFragment);
+        string GetNodeProfileText(Fragment fragment);
+        string GetNodeExpansionText(GenDataBase genDataBase, GenObject context, Fragment fragment);
     }
 }

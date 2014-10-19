@@ -10,5 +10,10 @@ namespace GenEdit.ViewModel
     public class GenDataEditorViewModel: BindableObject
     {
         public GeData Data { get; set; }
+
+        public bool ProfileIsUndefined()
+        {
+            return Data == null || Data.Profile == null || Data.Profile.Profile == null;
+        }
     }
 }
