@@ -41,19 +41,5 @@ namespace GenEdit.Utilities
                 CreateBodyChildTrees(item.Nodes, ((ContainerFragment) genFragment).Body());
             return item;
         }
-
-        public static string GetNodeExpansionText(GenDataBase genData, GenObject genObject, Fragment fragment)
-        {
-            var context = GenObject.GetContext(genObject, fragment.ClassName());
-            if (context != null)
-                return GenFragmentExpander.Expand(genData.GenDataDef, context, fragment);
-            return "";
-        }
-
-        public static string GetNodeProfileText(ProfileFragmentSyntaxDictionary dictionary, Fragment fragment)
-        {
-            var text = new GenProfileTextExpander(dictionary).GetText(fragment);
-            return text;
-        }
     }
 }

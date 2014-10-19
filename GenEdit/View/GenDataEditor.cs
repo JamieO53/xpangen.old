@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using GenEdit.Controls;
 using GenEdit.ViewModel;
 using org.xpangen.Generator.Data;
-using org.xpangen.Generator.Editor.Helper;
 
 namespace GenEdit.View
 {

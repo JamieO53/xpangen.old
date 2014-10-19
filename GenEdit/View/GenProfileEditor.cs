@@ -38,16 +38,16 @@ namespace GenEdit.View
             ProfileNavigatorTreeView.Nodes.Clear();
             ProfileExpansionTextBox.Clear();
             ProfileTextBox.Clear();
-            if (GenDataEditorViewModel == null || GenDataEditorViewModel.Data == null ||
-                GenDataEditorViewModel.Data.Profile == null || GenDataEditorViewModel.Data.Profile.Profile == null)
+            if (GenDataEditorViewModel == null || GenDataEditorViewModel.ProfileIsUndefined())
                 return;
 
-            var builder = new ProfileEditorTreeViewBuilder(GenDataEditorViewModel.Data);
+            var data = GenDataEditorViewModel.Data;
+            var builder = new ProfileEditorTreeViewBuilder(data);
 
             IsBuilding = true;
-            builder.CreateBodyChildTrees(ProfileNavigatorTreeView.Nodes, GenDataEditorViewModel.Data.Profile.Profile.Body());
+            builder.CreateBodyChildTrees(ProfileNavigatorTreeView.Nodes, data.Profile.GetBody(data.Profile.Profile));
             IsBuilding = false;
-            RefreshProfile(GenDataEditorViewModel.Data.GenDataBase, GenDataEditorViewModel.Data.GenObject);
+            //RefreshProfile(data.GenDataBase, data.GenObject);
             if (ProfileNavigatorTreeView.Nodes.Count > 0)
                 ProfileNavigatorTreeView.SelectedNode = ProfileNavigatorTreeView.Nodes[0];
         }
@@ -56,9 +56,9 @@ namespace GenEdit.View
         {
             var selectedItem = ProfileNavigatorTreeView.SelectedNode;
             var fragment1 = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem);
-            var text = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem) != null
-                ? ProfileEditorTreeViewBuilder.GetNodeProfileText(ProfileFragmentSyntaxDictionary
-                        .ActiveProfileFragmentSyntaxDictionary, fragment1)
+            var dataProfile = GenDataEditorViewModel.Data.Profile;
+            var text = fragment1 != null
+                ? dataProfile.GetNodeProfileText(fragment1)
                 : "";
 
             // Don't change to prevent unnecessary rendering and side effects
@@ -70,12 +70,13 @@ namespace GenEdit.View
 
 
             var fragment = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem);
-            var context = fragment != null && (genObject ?? genDataBase.Root) != null
-                ? GenObject.GetContext(genObject ?? genDataBase.Root, fragment.ClassName())
-                : null;
-            text = context != null
-                ? ProfileEditorTreeViewBuilder.GetNodeExpansionText(genDataBase, context, fragment)
-                : "";
+            text = dataProfile.GetNodeExpansionText(genDataBase, genObject, fragment);
+            //var context = fragment != null && (genObject ?? genDataBase.Root) != null
+            //    ? GenObject.GetContext(genObject ?? genDataBase.Root, fragment.ClassName())
+            //    : null;
+            //text = context != null
+            //    ? dataProfile.GetNodeExpansionText(genDataBase, context, fragment)
+            //    : "";
 
             // Don't change to prevent unnecessary rendering and side effects
             if (text != ProfileExpansionTextBox.Text)

@@ -88,8 +88,11 @@ namespace GenEdit.View
             data.SetFileGroup(selected.Name);
 
             EnableControls(false, true, false, false, false, ProfileIsSpecified());
+            Loading = true;
             fileGroupUserControl1.FileGroup = selected;
+            Loading = false;
             RaiseDataLoaded();
+            FileGroupProfileSelected(sender, e);
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
@@ -109,8 +112,7 @@ namespace GenEdit.View
             Selected = data.NewFileGroup();
             fileGroupUserControl1.FileGroup = Selected;
 
-            EnableControls(newEnabled: false, closeEnabled: false, saveEnabled: true,
-                           saveAsEnabled: false, fileGroupEnabled: false, generateEnabled: false);
+            EnableControls(false, false, true, false, false, false);
         }
 
         private void EnableControls(bool newEnabled, bool closeEnabled, bool saveEnabled, bool saveAsEnabled,
@@ -236,7 +238,10 @@ namespace GenEdit.View
             var data = GenDataEditorViewModel.Data;
             buttonGenerate.Enabled = ProfileIsSpecified();
             data.SetProfile(fileGroupUserControl1.Profile);
-            RaiseProfileChanged();
+            if (!Loading)
+                RaiseProfileChanged();
         }
+
+        private bool Loading { get; set; }
     }
 }
