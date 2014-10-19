@@ -26,6 +26,8 @@ namespace GenEdit.View
         {
             if (IsBuilding) return;
 
+            var newFragment = ProfileEditorTreeViewBuilder.GetNodeData(e.Node);
+            if (newFragment == GenDataEditorViewModel.Data.Profile.Fragment) return;
             RefreshProfile(GenDataEditorViewModel.Data.GenDataBase, GenDataEditorViewModel.Data.GenObject);
         }
 
@@ -42,12 +44,12 @@ namespace GenEdit.View
                 return;
 
             var data = GenDataEditorViewModel.Data;
+            data.Profile.Fragment = data.Profile.Profile;
             var builder = new ProfileEditorTreeViewBuilder(data);
 
             IsBuilding = true;
-            builder.CreateBodyChildTrees(ProfileNavigatorTreeView.Nodes, data.Profile.GetBody(data.Profile.Profile));
+            builder.CreateBodyChildTrees(ProfileNavigatorTreeView.Nodes, data.Profile.GetBody());
             IsBuilding = false;
-            //RefreshProfile(data.GenDataBase, data.GenObject);
             if (ProfileNavigatorTreeView.Nodes.Count > 0)
                 ProfileNavigatorTreeView.SelectedNode = ProfileNavigatorTreeView.Nodes[0];
         }
@@ -55,34 +57,29 @@ namespace GenEdit.View
         public void RefreshProfile(GenDataBase genDataBase, GenObject genObject)
         {
             var selectedItem = ProfileNavigatorTreeView.SelectedNode;
-            var fragment1 = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem);
             var dataProfile = GenDataEditorViewModel.Data.Profile;
-            var text = fragment1 != null
-                ? dataProfile.GetNodeProfileText(fragment1)
-                : "";
+            dataProfile.Fragment = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem);
+            var text = dataProfile.GetNodeProfileText();
 
             // Don't change to prevent unnecessary rendering and side effects
             if (text != ProfileTextBox.Text)
             {
+                var start = ProfileTextBox.SelectionStart;
                 ProfileTextBox.Clear();
                 ProfileTextBox.Text = text;
+                ProfileTextBox.SelectionStart = start;
             }
 
 
-            var fragment = ProfileEditorTreeViewBuilder.GetNodeData(selectedItem);
-            text = dataProfile.GetNodeExpansionText(genDataBase, genObject, fragment);
-            //var context = fragment != null && (genObject ?? genDataBase.Root) != null
-            //    ? GenObject.GetContext(genObject ?? genDataBase.Root, fragment.ClassName())
-            //    : null;
-            //text = context != null
-            //    ? dataProfile.GetNodeExpansionText(genDataBase, context, fragment)
-            //    : "";
+            text = dataProfile.GetNodeExpansionText(genDataBase, genObject);
 
             // Don't change to prevent unnecessary rendering and side effects
             if (text != ProfileExpansionTextBox.Text)
             {
+                var start = ProfileExpansionTextBox.SelectionStart;
                 ProfileExpansionTextBox.Clear();
                 ProfileExpansionTextBox.Text = text;
+                ProfileExpansionTextBox.SelectionStart = start;
             }
         }
     }
