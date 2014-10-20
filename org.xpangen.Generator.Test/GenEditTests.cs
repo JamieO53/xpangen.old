@@ -43,7 +43,7 @@ namespace org.xpangen.Generator.Test
             VerifyGenDataNotLoaded();
             Data.GenDataStore.SetBase("");
             Assert.IsNull(Data.DefGenDataBase, "The data should now be gone");
-            Assert.IsNotNull(Data.GenDataBase, "The new Data object should still be there");
+            Assert.IsNull(Data.GenDataBase, "The new Data object should also be gone");
         }
 
         /// <summary>
