@@ -52,7 +52,6 @@ namespace org.xpangen.Generator.Editor.Helper
         public GeData()
         {
             GenDataStore = new GeGenData();
-
         }
 
         /// <summary>
@@ -141,14 +140,14 @@ namespace org.xpangen.Generator.Editor.Helper
             return settings;
         }
 
-        public IGenDataProfile GetDefaultProfile(ComboServer comboServer)
+        public IGenDataProfile GetDefaultProfile(GeData geData)
         {
-            return new GeProfile(comboServer);
+            return new GeProfile(geData);
         }
 
-        public IGenDataProfile GetDesignTimeProfile(ComboServer comboServer)
+        public IGenDataProfile GetDesignTimeProfile(GeData geData)
         {
-            return new GeProfile(comboServer);
+            return new GeProfile(geData);
         }
 
         public ComboServer GetDefaultComboServer()
@@ -233,6 +232,17 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             var fileName = Path.GetExtension(value) == "" ? Path.ChangeExtension(value, ".dcb") : value;
             return File.Exists(fileName) || File.Exists(Path.Combine("Data", fileName));
+        }
+
+
+        public static GeData GetDefaultGeData(bool isInDesignMode = false)
+        {
+            var geData = new GeData();
+            geData.Settings = isInDesignMode ? geData.GetDesignTimeSettings() : geData.GetDefaultSettings();
+            geData.ComboServer = isInDesignMode ? GetDesignTimeComboServer() : geData.GetDefaultComboServer();
+            geData.Profile = isInDesignMode ? geData.GetDesignTimeProfile(geData) : geData.GetDefaultProfile(geData);
+
+            return geData;
         }
     }
 }

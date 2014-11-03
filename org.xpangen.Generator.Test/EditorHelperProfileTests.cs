@@ -2,13 +2,11 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using org.xpangen.Generator.Editor.Helper;
 using org.xpangen.Generator.Parameter;
+using org.xpangen.Generator.Profile;
+using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Test
 {
@@ -18,14 +16,20 @@ namespace org.xpangen.Generator.Test
     [TestFixture]
     public class EditorHelperProfileTests : GenDataTestsBase
     {
+        private const string NewProfileText = "Profile text";
         [Test(Description = "")]
-        public void EditorSetupTest()
+        public void NewProfileSetupTest()
         {
-            var geData = new GeData();
+            var geData = GeData.GetDefaultGeData(true);
             var model = PopulateGenSettings();
             geData.Settings = new GeSettings(model);
-            var fileGroup = geData.Settings.GetFileGroup("ProgramDefinition");
-            var baseFile = geData.Settings.GetBaseFiles().Find(fileGroup.Profile);
+            geData.SetFileGroup("Definition");
+            geData.Profile.CreateNewProfile("NewProfile", NewProfileText);
+            Assert.AreEqual(FragmentType.Segment, geData.Profile.Fragment.FragmentType);
+            var segment = (Segment) geData.Profile.Fragment;
+            Assert.AreEqual("Class", segment.ClassName());
+            Assert.AreEqual("", geData.Profile.GenObject.ClassName);
+            Assert.AreEqual(NewProfileText, geData.Profile.GetNodeExpansionText(geData.GenDataBase, null));
         }
         /// <summary>
         /// Set up the Generator data definition tests

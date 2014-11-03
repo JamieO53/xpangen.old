@@ -5,6 +5,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.IO;
+using System.Text;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.FunctionLibrary;
 using org.xpangen.Generator.Profile.Profile;
@@ -83,7 +84,57 @@ namespace org.xpangen.Generator.Profile
 
         public static bool Generate(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment)
         {
-            return Create(genDataDef, genWriter, genObject, fragment).Generate();
+            switch (fragment.FragmentType)
+            {
+                case FragmentType.Null:
+                    return false;
+                case FragmentType.Text:
+                    return Write(genWriter, ((Text)fragment).TextValue);
+                case FragmentType.Placeholder:
+                    return Write(genWriter, GetPlaceholderValue(fragment, genObject));
+                case FragmentType.Function:
+                    var fn = (Function)fragment;
+                    var paramFragments = fn.Body().FragmentList;
+                    var param = new string[paramFragments.Count];
+                    for (var i = 0; i < paramFragments.Count; i++)
+                    {
+                        var paramFragment = paramFragments[i];
+                        param[i] = GenFragmentExpander.Expand(genDataDef, genObject, paramFragment);
+                    }
+                    return Write(genWriter, LibraryManager.GetInstance().Execute(fn.FunctionName, param));
+                case FragmentType.TextBlock:
+                    var sb = new StringBuilder();
+                    foreach (var f in ((TextBlock)fragment).Body().FragmentList)
+                    {
+                        if (f.GetType().Name == "Text")
+                            sb.Append(((Text)f).TextValue);
+                        else if (f.GetType().Name == "Placeholder")
+                            sb.Append(GetPlaceholderValue(f, genObject));
+                    }
+                    return Write(genWriter, sb.ToString());
+                default:
+                    return Create(genDataDef, genWriter, genObject, fragment).Generate();
+            }
+        }
+
+        private static bool Write(GenWriter genWriter, string text)
+        {
+            if (text == "") return false;
+            genWriter.Write(text);
+            return true;
+        }
+
+        private static string GetPlaceholderValue(Fragment fragment, GenObject genObject)
+        {
+            bool notFound;
+            var placeholderValue = genObject.GetValue(
+                (new GenDataId
+                {
+                    ClassName = ((Placeholder)fragment).Class,
+                    PropertyName = ((Placeholder)fragment).Property
+                }), out notFound);
+            if (notFound) return "";
+            return placeholderValue;
         }
 
         public static bool GenerateSecondary(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment)

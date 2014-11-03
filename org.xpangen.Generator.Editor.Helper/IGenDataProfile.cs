@@ -10,12 +10,14 @@ namespace org.xpangen.Generator.Editor.Helper
 {
     public interface IGenDataProfile
     {
-        IList GetDataSource(object context, string className);
+        IList GetDataSource(object context, string name);
         Profile.Profile.Profile Profile { get; set; }
         Fragment Fragment { get; set; }
+        GenObject GenObject { get; set; }
         void LoadProfile(string profilePath, GenDataDef genDataDef);
         FragmentBody GetBody();
         string GetNodeProfileText();
         string GetNodeExpansionText(GenDataBase genDataBase, GenObject context);
+        void CreateNewProfile(string newProfile, string newProfileText);
     }
 }
