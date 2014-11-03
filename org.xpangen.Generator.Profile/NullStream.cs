@@ -9,7 +9,6 @@ namespace org.xpangen.Generator.Profile
     public class NullStream: Stream
     {
         private long _length;
-        private long _position;
 
         public NullStream()
         {
@@ -23,21 +22,7 @@ namespace org.xpangen.Generator.Profile
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            switch (origin)
-            {
-                case SeekOrigin.Begin:
-                    _position = offset;
-                    break;
-                case SeekOrigin.Current:
-                    _position += offset;
-                    break;
-                case SeekOrigin.End:
-                    _position -= offset;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("origin");
-            }
-            return _position;
+            throw new NotSupportedException("Not supported: Unseekable stream");
         }
 
         public override void SetLength(long value)
@@ -53,7 +38,7 @@ namespace org.xpangen.Generator.Profile
         public override void Write(byte[] buffer, int offset, int count)
         {
             _length += count;
-            _position += count;
+            Position += count;
         }
 
         public override bool CanRead
@@ -63,7 +48,7 @@ namespace org.xpangen.Generator.Profile
 
         public override bool CanSeek
         {
-            get { return true; }
+            get { return false; }
         }
 
         public override bool CanWrite
@@ -76,10 +61,6 @@ namespace org.xpangen.Generator.Profile
             get { return _length; }
         }
 
-        public override long Position
-        {
-            get { return _position; }
-            set { _position = value; }
-        }
+        public override long Position { get; set; }
     }
 }

@@ -4,7 +4,6 @@
 
 using System;
 using System.Diagnostics.Contracts;
-using System.IO;
 using System.Text;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.FunctionLibrary;
@@ -13,7 +12,7 @@ using Function = org.xpangen.Generator.Profile.Profile.Function;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class GenFragmentGenerator
+    public abstract class GenFragmentGenerator
     {
         private readonly GenDataDef _genDataDef;
         private readonly GenWriter _writer;
@@ -48,18 +47,11 @@ namespace org.xpangen.Generator.Profile
             get { return _fragment; }
         }
 
-        protected virtual bool Generate()
-        {
-            var expanded = GenFragmentExpander.Expand(GenDataDef, GenObject, Fragment);
-            Writer.Write(expanded);
-            return expanded != "";
-        }
+        protected abstract bool Generate();
 
         private static GenFragmentGenerator Create(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment)
         {
-            FragmentType fragmentType = fragment.FragmentType;
-            //Enum.TryParse(fragment.GetType().Name, out fragmentType);
-            switch (fragmentType)
+            switch (fragment.FragmentType)
             {
                 case FragmentType.Profile:
                     return new GenContainerGenerator(genDataDef, genWriter, genObject, fragment);
@@ -71,14 +63,10 @@ namespace org.xpangen.Generator.Profile
                     return new GenLookupGenerator(genDataDef, genWriter, genObject, fragment);
                 case FragmentType.Condition:
                     return new GenConditionGenerator(genDataDef, genWriter, genObject, fragment);
-                case FragmentType.Function:
-                    return new GenFunctionGenerator(genDataDef, genWriter, genObject, fragment);
-                case FragmentType.TextBlock:
-                    return new GenContainerGenerator(genDataDef, genWriter, genObject, fragment);
                 case FragmentType.Annotation:
                     return new GenAnnotationGenerator(genDataDef, genWriter, genObject, fragment);
                 default:
-                    return new GenFragmentGenerator(genDataDef, genWriter, fragment, genObject);
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -342,25 +330,6 @@ namespace org.xpangen.Generator.Profile
         }
 
         private bool NoMatch { get { return Lookup.SecondaryBody().FragmentList.Count > 0; } }
-    }
-
-    public class GenFunctionGenerator : GenFragmentGenerator
-    {
-        public GenFunctionGenerator(GenDataDef genDataDef, GenWriter genWriter, GenObject genObject, Fragment fragment) 
-            : base(genDataDef, genWriter, fragment, genObject)
-        {
-        }
-
-        protected override bool Generate()
-        {
-            var fn = (Function) Fragment;
-            if (String.Compare(fn.FunctionName, "File", StringComparison.OrdinalIgnoreCase) == 0 &&
-                (Writer.Stream == null || Writer.Stream is FileStream))
-            {
-                return (Writer.FileName = GenFragmentExpander.Expand(GenDataDef, GenObject, fn.Body().FragmentList[0])) != "";
-            }
-            return base.Generate();
-        }
     }
 
     public class SegmentNavigator
