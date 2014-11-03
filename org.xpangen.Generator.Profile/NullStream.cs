@@ -9,11 +9,13 @@ namespace org.xpangen.Generator.Profile
     public class NullStream: Stream
     {
         private long _length;
+        private long _position;
 
         public NullStream()
         {
             _length = 0;
         }
+        
         public override void Flush()
         {
             // Ignored
@@ -21,12 +23,26 @@ namespace org.xpangen.Generator.Profile
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            throw new NotSupportedException("Not supported: Unseakable stream");
+            switch (origin)
+            {
+                case SeekOrigin.Begin:
+                    _position = offset;
+                    break;
+                case SeekOrigin.Current:
+                    _position += offset;
+                    break;
+                case SeekOrigin.End:
+                    _position -= offset;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("origin");
+            }
+            return _position;
         }
 
         public override void SetLength(long value)
         {
-            // Ignored
+            _length = value;
         }
 
         public override int Read(byte[] buffer, int offset, int count)
@@ -37,6 +53,7 @@ namespace org.xpangen.Generator.Profile
         public override void Write(byte[] buffer, int offset, int count)
         {
             _length += count;
+            _position += count;
         }
 
         public override bool CanRead
@@ -46,7 +63,7 @@ namespace org.xpangen.Generator.Profile
 
         public override bool CanSeek
         {
-            get { return false; }
+            get { return true; }
         }
 
         public override bool CanWrite
@@ -61,8 +78,8 @@ namespace org.xpangen.Generator.Profile
 
         public override long Position
         {
-            get { return _length; }
-            set { throw new NotSupportedException("Not supported: the position is the same as the length"); }
+            get { return _position; }
+            set { _position = value; }
         }
     }
 }

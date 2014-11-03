@@ -13,21 +13,23 @@ namespace org.xpangen.Generator.Editor.Helper
     public class GeProfile : IGenDataProfile
     {
         private ProfileFragmentSyntaxDictionary _activeProfileFragmentSyntaxDictionary;
-        public ComboServer ComboServer { get; set; }
+        public GeData GeData { get; set; }
 
-        public GeProfile(ComboServer comboServer)
+        public GeProfile(GeData geData)
         {
-            ComboServer = comboServer;
+            GeData = geData;
         }
 
-        public IList GetDataSource(object context, string className)
+        public IList GetDataSource(object context, string name)
         {
-            return ComboServer.GetComboItems(className);
+            return GeData.ComboServer.GetComboItems(name);
         }
 
         public Profile.Profile.Profile Profile { get; set; }
 
         public Fragment Fragment { get; set; }
+
+        public GenObject GenObject { get; set; }
 
         public void LoadProfile(string profilePath, GenDataDef genDataDef)
         {
@@ -42,10 +44,23 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public string GetNodeExpansionText(GenDataBase genData, GenObject genObject)
         {
+            GenObject = genObject;
             if (Fragment == null) return "";
             var context = GenObject.GetContext(genObject ?? genData.Root, Fragment.ClassName());
             if (context == null) return "";
             return GenFragmentExpander.Expand(genData.GenDataDef, context, Fragment);
+        }
+
+        public void CreateNewProfile(string newProfile, string newProfileText)
+        {
+            var profileParams = new GenProfileParams(GeData.GenDataDef);
+            Profile = (Profile.Profile.Profile) profileParams.Fragment;
+            var segment = Profile.Body().AddSegment(GeData.GenDataDef.Classes[1].Name);
+            var textBlock = segment.Body().AddTextBlock();
+            textBlock.Body().AddText(textBlock.Body().FragmentName(FragmentType.Text), newProfileText);
+            Fragment = segment;
+            GeData.GenObject = GeData.GenDataBase.Root;
+            GenObject = GeData.GenObject;
         }
 
         public string GetNodeProfileText()

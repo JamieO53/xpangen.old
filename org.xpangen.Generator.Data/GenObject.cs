@@ -140,7 +140,12 @@ namespace org.xpangen.Generator.Data
 
         public GenSubClass GetSubClass(string subClassName)
         {
-            if (ClassNameIs(subClassName)) return (GenSubClass) ParentSubClass;
+            if (ClassNameIs(subClassName))
+            {
+                var subClass = new GenSubClass(GenDataBase, Parent, ClassId, ParentSubClass.Definition);
+                subClass.Add(this);
+                return subClass;
+            }
             var subClassId = GenDataDef.GetClassId(subClassName);
             return subClassId == -1 ? null : GetSubClass(subClassId);
         }

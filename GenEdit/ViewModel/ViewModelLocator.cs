@@ -29,17 +29,7 @@ namespace GenEdit.ViewModel
 
         private static GeData GeData
         {
-            get { return _geData ?? (_geData = GetDefaultGeData()); }
-        }
-
-        private static GeData GetDefaultGeData()
-        {
-            var geData = new GeData();
-            geData.Settings = IsInDesignMode ? geData.GetDesignTimeSettings() : geData.GetDefaultSettings();
-            geData.ComboServer = IsInDesignMode ? GeData.GetDesignTimeComboServer() : geData.GetDefaultComboServer();
-            geData.Profile = IsInDesignMode ? geData.GetDesignTimeProfile(geData.ComboServer) : geData.GetDefaultProfile(geData.ComboServer);
-
-            return geData;
+            get { return _geData ?? (_geData = GeData.GetDefaultGeData(IsInDesignMode)); }
         }
 
         public static GenDataEditorViewModel GenDataEditorViewModel

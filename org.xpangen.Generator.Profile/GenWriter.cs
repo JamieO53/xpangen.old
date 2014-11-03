@@ -61,7 +61,7 @@ namespace org.xpangen.Generator.Profile
 
         public void Write(string text)
         {
-            if (ProvisionalText != "")
+            if (!string.IsNullOrEmpty(ProvisionalText))
             {
                 Writer.Write(ProvisionalText);
                 ClearProvisionalText();
