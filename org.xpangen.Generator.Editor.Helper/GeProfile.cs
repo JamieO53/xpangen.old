@@ -31,6 +31,8 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public GenObject GenObject { get; set; }
 
+        public string ProfileText { get; private set; }
+
         public void LoadProfile(string profilePath, GenDataDef genDataDef)
         {
             Profile = profilePath != "" ? new GenCompactProfileParser(genDataDef, profilePath, "").Profile : null;
@@ -51,7 +53,7 @@ namespace org.xpangen.Generator.Editor.Helper
             return GenFragmentExpander.Expand(genData.GenDataDef, context, Fragment);
         }
 
-        public void CreateNewProfile(string newProfile, string newProfileText)
+        public void CreateNewProfile(string newProfile, string newProfileTitle, string newProfileText)
         {
             var profileParams = new GenProfileParams(GeData.GenDataDef);
             Profile = (Profile.Profile.Profile) profileParams.Fragment;
@@ -61,12 +63,15 @@ namespace org.xpangen.Generator.Editor.Helper
             Fragment = segment;
             GeData.GenObject = GeData.GenDataBase.Root;
             GenObject = GeData.GenObject;
+            GeData.Settings.BaseFile.AddProfile(newProfile, newProfile + ".prf", GeData.Settings.BaseFile.FilePath,
+                newProfileTitle).SaveFields();
         }
 
         public string GetNodeProfileText()
         {
             if (Fragment == null) return "";
-            return new GenProfileTextExpander(ActiveProfileFragmentSyntaxDictionary).GetText(Fragment);
+            ProfileText = new GenProfileTextExpander(ActiveProfileFragmentSyntaxDictionary).GetText(Fragment);
+            return ProfileText;
         }
 
         public ProfileFragmentSyntaxDictionary ActiveProfileFragmentSyntaxDictionary

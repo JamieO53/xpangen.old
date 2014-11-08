@@ -16,21 +16,37 @@ namespace org.xpangen.Generator.Test
     [TestFixture]
     public class EditorHelperProfileTests : GenDataTestsBase
     {
-        private const string NewProfileText = "Profile text";
         [Test(Description = "")]
         public void NewProfileSetupTest()
         {
-            var geData = GeData.GetDefaultGeData(true);
-            var model = PopulateGenSettings();
-            geData.Settings = new GeSettings(model);
-            geData.SetFileGroup("Definition");
-            geData.Profile.CreateNewProfile("NewProfile", NewProfileText);
+            const string newProfileText = "Profile text";
+            const string fileGroup = "Definition";
+            const string newProfile = "NewProfile";
+            const string newProfileTitle = "New Profile Title";
+            var geData = CreateNewProfile(fileGroup, newProfile, newProfileTitle, newProfileText);
+            
+            Assert.IsTrue(geData.Settings.BaseFile.ProfileList.Contains(newProfile));
+            Assert.IsTrue(geData.Settings.Model.GenDataBase.Changed);
             Assert.AreEqual(FragmentType.Segment, geData.Profile.Fragment.FragmentType);
             var segment = (Segment) geData.Profile.Fragment;
             Assert.AreEqual("Class", segment.ClassName());
             Assert.AreEqual("", geData.Profile.GenObject.ClassName);
-            Assert.AreEqual(NewProfileText, geData.Profile.GetNodeExpansionText(geData.GenDataBase, null));
+            Assert.AreEqual(newProfileText, geData.Profile.GetNodeExpansionText(geData.GenDataBase, null));
+            var nodeProfileText = geData.Profile.GetNodeProfileText();
+            Assert.AreEqual("`[Class>:" + newProfileText + "`]", nodeProfileText);
+            Assert.AreSame(nodeProfileText, geData.Profile.ProfileText);
         }
+
+        private static GeData CreateNewProfile(string fileGroup, string newProfile, string newProfileTitle, string newProfileText)
+        {
+            var geData = GeData.GetDefaultGeData(true);
+            var settings = PopulateGenSettings();
+            geData.Settings = new GeSettings(settings);
+            geData.SetFileGroup(fileGroup);
+            geData.Profile.CreateNewProfile(newProfile, newProfileTitle, newProfileText);
+            return geData;
+        }
+
         /// <summary>
         /// Set up the Generator data definition tests
         /// </summary>
