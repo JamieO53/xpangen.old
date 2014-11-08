@@ -13,11 +13,12 @@ namespace org.xpangen.Generator.Editor.Helper
         IList GetDataSource(object context, string name);
         Profile.Profile.Profile Profile { get; set; }
         Fragment Fragment { get; set; }
-        GenObject GenObject { get; set; }
+        GenObject GenObject { get; }
+        string ProfileText { get; }
         void LoadProfile(string profilePath, GenDataDef genDataDef);
         FragmentBody GetBody();
         string GetNodeProfileText();
         string GetNodeExpansionText(GenDataBase genDataBase, GenObject context);
-        void CreateNewProfile(string newProfile, string newProfileText);
+        void CreateNewProfile(string newProfile, string newProfileTitle, string newProfileText);
     }
 }
