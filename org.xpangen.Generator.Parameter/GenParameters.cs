@@ -470,14 +470,6 @@ namespace org.xpangen.Generator.Parameter
                     while (!Scan.Eof && Scan.RecordType == className)
                         Scan.ScanObject();
             }
-            //Cache.Merge();
-        }
-
-        private int GetClassId(string recordType)
-        {
-            var classId = GenDataDef.GetClassId(recordType);
-            Contract.Assert(classId != -1, "Unknown record type: " + recordType);
-            return classId;
         }
 
         private int GetBaseClassId(string recordType)
