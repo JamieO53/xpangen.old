@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Collections;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile;
@@ -65,6 +66,46 @@ namespace org.xpangen.Generator.Editor.Helper
             GenObject = GeData.GenObject;
             GeData.Settings.BaseFile.AddProfile(newProfile, newProfile + ".prf", GeData.Settings.BaseFile.FilePath,
                 newProfileTitle).SaveFields();
+        }
+
+        public void SubstitutePlaceholder(TextBlock textBlock, string substitutedText, GenDataId id)
+        {
+            var body = textBlock.Body();
+            var fragments = body.FragmentList;
+            var n = fragments.Count;
+            for (var i = n-1; i >= 0; i--)
+            {
+                var text = fragments[i] as Text;
+                if (text == null) continue;
+                var t = text.TextValue;
+                var k = t.IndexOf(substitutedText, StringComparison.Ordinal);
+                var j = i + 1;
+                while (k != -1 && text != null)
+                {
+                    var t0 = t.Substring(0, k);
+                    if (t0 == "")
+                    {
+                        fragments.RemoveAt(i);
+                        j--;
+                    }
+                    else
+                        text.TextValue = t0;
+                    
+                    body.AddPlaceholder(body.FragmentName(FragmentType.Placeholder), id.ClassName, id.PropertyName);
+                    t = t.Substring(k + substitutedText.Length);
+                    for (var l = fragments.Count - 1; l > j; l--)
+                        fragments.Move(ListMove.Up, l);
+                    j++;
+                    if (t != "")
+                    {
+                        text = body.AddText(body.FragmentName(FragmentType.Text), t);
+                        for (var l = fragments.Count - 1; l > j; l--)
+                            fragments.Move(ListMove.Up, l);
+                        j++;
+                    }
+                    k = t.IndexOf(substitutedText, StringComparison.Ordinal);
+                }
+            }
         }
 
         public string GetNodeProfileText()
