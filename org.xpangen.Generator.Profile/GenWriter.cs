@@ -74,8 +74,8 @@ namespace org.xpangen.Generator.Profile
             Writer.Write(text);
             if (position != null)
             {
-                position.Offset = p;
-                position.Length = Position - p;
+                if (position.Offset == 0 && position.Length == 0) position.Offset = p;
+                position.Length = Position - position.Offset;
             }
         }
 
