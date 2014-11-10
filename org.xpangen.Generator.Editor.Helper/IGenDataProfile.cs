@@ -21,5 +21,6 @@ namespace org.xpangen.Generator.Editor.Helper
         string GetNodeExpansionText(GenDataBase genDataBase, GenObject context);
         void CreateNewProfile(string newProfile, string newProfileTitle, string newProfileText);
         void SubstitutePlaceholder(TextBlock textBlock, string substitutedText, GenDataId id);
+        bool IsInputable(int position);
     }
 }

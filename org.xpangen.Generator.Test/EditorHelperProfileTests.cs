@@ -6,6 +6,7 @@ using NUnit.Framework;
 using org.xpangen.Generator.Editor.Helper;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
+using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
 using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Test
@@ -56,20 +57,49 @@ namespace org.xpangen.Generator.Test
                 "`[Class>:Replace this `Class.Name` with a placeholder but not this class. It's title is `Class.Title``]";
             var geData = CreateNewProfile(newProfileText);
             var textBlock = (TextBlock)((Segment)geData.Profile.Fragment).Body().FragmentList[0];
+
+            // Substitutions must be done in this order, because the first contains the second.
             geData.Profile.SubstitutePlaceholder(textBlock, "Class Definition", geData.GenDataDef.GetId("Class.Title")); 
             geData.Profile.SubstitutePlaceholder(textBlock, "Class", geData.GenDataDef.GetId("Class.Name"));
-                // Substitutions must be done in this order, because the first contains the second.
             VerifyProfile(geData, newProfileText, expectedProfileText);
         }
 
+        [Test(Description = "Tests if a position can accept keyboard input")]
+        public void InputablePositionTest()
+        {
+            const string newProfileText =
+                "`[Class>:Class:`Class.Name` - `Class.Title`\r\n\t`[Property>:`Property.Name` - `Property.Title``]`]";
+            var geData = LoadProfile(newProfileText);
+            geData.Profile.Fragment = geData.Profile.Profile;
+            var profileText = geData.Profile.GetNodeProfileText();
+            Assert.AreEqual(newProfileText, profileText);
+            Assert.IsFalse(geData.Profile.IsInputable(1));
+        }
+        
         private static GeData CreateNewProfile(string newProfileText, string fileGroup = "Definition",
             string newProfile = "NewProfile", string newProfileTitle = "New Profile Title")
+        {
+            var geData = SetUpGeData(fileGroup);
+            geData.Profile.CreateNewProfile(newProfile, newProfileTitle, newProfileText);
+            return geData;
+        }
+
+        private static GeData LoadProfile(string newProfileText, string fileGroup = "Definition",
+            string newProfile = "NewProfile", string newProfileTitle = "New Profile Title")
+        {
+            var geData = SetUpGeData(fileGroup);
+            var parser = new GenCompactProfileParser(geData.GenDataDef, "", newProfileText);
+            geData.Profile.Profile = parser.Profile;
+            geData.Settings.BaseFile.AddProfile(newProfile, newProfile + ".prf", "Data", newProfileTitle);
+            return geData;
+        }
+        
+        private static GeData SetUpGeData(string fileGroup)
         {
             var geData = GeData.GetDefaultGeData(true);
             var settings = PopulateGenSettings();
             geData.Settings = new GeSettings(settings);
             geData.SetFileGroup(fileGroup);
-            geData.Profile.CreateNewProfile(newProfile, newProfileTitle, newProfileText);
             return geData;
         }
 

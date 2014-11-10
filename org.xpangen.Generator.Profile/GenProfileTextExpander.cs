@@ -13,24 +13,27 @@ namespace org.xpangen.Generator.Profile
     public class GenProfileTextExpander
     {
         private ProfileFragmentSyntaxDictionary Dictionary { get; set; }
+        public ProfileTextPostionList ProfileTextPostionList { get; private set; }
 
         public GenProfileTextExpander(ProfileFragmentSyntaxDictionary dictionary)
         {
             Dictionary = dictionary;
+            ProfileTextPostionList = new ProfileTextPostionList();
         }
 
         private static FragmentType GetFragmentType(Fragment fragment)
         {
-            var fragmentTypeName = fragment.GetType().Name;
-            FragmentType fragmentType;
-            if (!Enum.TryParse(fragmentTypeName, out fragmentType))
-                throw new GeneratorException("Unknown fragment type: " + fragmentTypeName, GenErrorType.Assertion);
-            return fragmentType;
+            //var fragmentTypeName = fragment.GetType().Name;
+            //FragmentType fragmentType;
+            //if (!Enum.TryParse(fragmentTypeName, out fragmentType))
+            //    throw new GeneratorException("Unknown fragment type: " + fragmentTypeName, GenErrorType.Assertion);
+            //return fragmentType;
+            return fragment.FragmentType;
         }
 
         private GenWriter Writer { get; set; }
 
-        public string GetText(Fragment fragment)
+        public string GetText(Fragment fragment, TextPosition bodyPosition = null)
         {
             var saveWriter = Writer;
             using (var stream = new MemoryStream(100000))
@@ -38,7 +41,7 @@ namespace org.xpangen.Generator.Profile
                 using (var writer = new GenWriter(stream))
                 {
                     Writer = writer;
-                    OutputFragment(fragment);
+                    OutputFragment(fragment, bodyPosition ?? new TextPosition());
                     writer.Flush();
                     stream.Seek(0, SeekOrigin.Begin);
                     Writer = saveWriter;
@@ -48,20 +51,21 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
-        private void OutputText(string text)
+        private void OutputText(string text, TextPosition position)
         {
-            Writer.Write(text);
+            Writer.Write(text, position);
         }
 
-        private string GetBodyText(GenProfileTextExpander pt, FragmentBody body)
+        private string GetBodyText(GenProfileTextExpander pt, FragmentBody body, TextPosition position)
         {
+            position.Offset = Writer.Position;
             var saveWriter = Writer;
             using (var stream = new MemoryStream(100000))
             {
                 using (var writer = new GenWriter(stream))
                 {
                     pt.Writer = writer;
-                    pt.OutputBody(body);
+                    pt.OutputBody(body, position);
                     writer.Flush();
                     stream.Seek(0, SeekOrigin.Begin);
                     pt.Writer = saveWriter;
@@ -71,105 +75,111 @@ namespace org.xpangen.Generator.Profile
             }
         }
 
-        private void OutputBody(FragmentBody body)
+        private void OutputBody(FragmentBody body, TextPosition bodyPosition)
         {
             foreach (var f in body.FragmentList)
-                OutputFragment(f);
+                OutputFragment(f, bodyPosition);
         }
 
-        private void OutputFragment(Fragment fragment)
+        private void OutputFragment(Fragment fragment, TextPosition bodyPosition)
         {
             var fragmentType = GetFragmentType(fragment);
             string format;
+            var fragmentPosition = new ProfileTextPosition(new TextPosition(), new TextPosition(), new TextPosition(),
+                fragment);
             switch (fragmentType)
             {
                 case FragmentType.Null:
                     break;
                 case FragmentType.Text:
-                    OutputText(((Text) fragment).TextValue);
+                    OutputText(((Text) fragment).TextValue, fragmentPosition.Position);
                     break;
                 case FragmentType.Placeholder:
-                    format = Dictionary[fragmentType.ToString()].Format;
+                    format = "`{0}.{1}`";
                     var placeholderFragment = (Placeholder) fragment;
                     OutputText(string.Format(format, new object[]
                                                      {
                                                          placeholderFragment.Class,
                                                          placeholderFragment.Property
                                                      }
-                        ));
+                        ), fragmentPosition.Position);
                     break;
                 case FragmentType.Segment:
                     var segmentFragment = (Segment) fragment;
                     var cardinality = segmentFragment.GenCardinality;
-                    //if (!Enum.TryParse(segmentFragment.Cardinality, out cardinality))
-                    //    throw new GeneratorException("Invalid segment cardinality: " + segmentFragment.Cardinality,
-                    //        GenErrorType.Assertion);
-                    var variant = (cardinality == GenCardinality.AllDlm || cardinality == GenCardinality.BackDlm
-                        ? "2"
-                        : "1");
-                    format = Dictionary[fragmentType + variant].Format;
-                    if (variant == "1")
+                    var separated = cardinality == GenCardinality.AllDlm || cardinality == GenCardinality.BackDlm;
+                    format = (separated
+                        ? "`[{0}{2}:{1}`;{3}`]"
+                        : "`[{0}{2}:{1}`]");
+                    if (!separated)
                         OutputText(string.Format(format, new object[]
                                                          {
                                                              segmentFragment.Class,
-                                                             GetBodyText(segmentFragment.Body()),
+                                                             GetBodyText(segmentFragment.Body(),
+                                                                 fragmentPosition.BodyPosition),
                                                              Dictionary.GenCardinalityText[(int) cardinality]
                                                          }
-                            ));
+                            ), fragmentPosition.Position);
                     else
                         OutputText(string.Format(format, new object[]
                                                          {
                                                              segmentFragment.Class,
-                                                             GetBodyText(segmentFragment.Body()),
+                                                             GetBodyText(segmentFragment.Body(),
+                                                                 fragmentPosition.BodyPosition),
                                                              Dictionary.GenCardinalityText[(int) cardinality],
-                                                             GetBodyText(segmentFragment.SecondaryBody())
+                                                             GetBodyText(segmentFragment.SecondaryBody(),
+                                                                 fragmentPosition.SecondaryBodyPosition)
                                                          }
-                            ));
+                            ), fragmentPosition.Position);
                     break;
                 case FragmentType.Profile:
-                    OutputBody(((Profile.Profile) fragment).Body());
+                    OutputBody(((Profile.Profile) fragment).Body(), bodyPosition);
                     break;
                 case FragmentType.Block:
-                    format = Dictionary[fragmentType.ToString()].Format;
+                    format = "`{{{0}`]";
                     var blockFragment = (Block) fragment;
                     OutputText(string.Format(format, new object[]
                                                      {
-                                                         GetBodyText(blockFragment.Body())
+                                                         GetBodyText(blockFragment.Body(), fragmentPosition.BodyPosition)
                                                      }
-                        ));
+                        ), fragmentPosition.Position);
                     break;
                 case FragmentType.Lookup:
                     var lookupFragment = (Lookup) fragment;
                     var noMatch = lookupFragment.SecondaryBody().FragmentList.Count > 0;
-                    format = Dictionary[fragmentType + (noMatch ? "2" : "1")].Format;
+                    format = noMatch ? "`%{0}={1}:{2}`;{3}`]" : "`%{0}={1}:{2}`]";
                     if (!noMatch)
                         OutputText(string.Format(format, new object[]
                                                          {
                                                              Identifier(lookupFragment.Class1, lookupFragment.Property1),
                                                              Identifier(lookupFragment.Class2, lookupFragment.Property2),
-                                                             GetBodyText(lookupFragment.Body())
+                                                             GetBodyText(lookupFragment.Body(),
+                                                                 fragmentPosition.BodyPosition)
                                                          }
-                            ));
+                            ), fragmentPosition.Position);
                     else
                         OutputText(string.Format(format, new object[]
                                                          {
                                                              Identifier(lookupFragment.Class1, lookupFragment.Property1),
                                                              Identifier(lookupFragment.Class2, lookupFragment.Property2),
-                                                             GetBodyText(lookupFragment.Body()),
-                                                             GetBodyText(lookupFragment.SecondaryBody())
+                                                             GetBodyText(lookupFragment.Body(),
+                                                                 fragmentPosition.BodyPosition),
+                                                             GetBodyText(lookupFragment.SecondaryBody(),
+                                                                 fragmentPosition.SecondaryBodyPosition)
                                                          }
-                            ));
+                            ), fragmentPosition.Position);
                     break;
                 case FragmentType.Condition:
                     var conditionFragment = (Condition) fragment;
-                    format = Dictionary[fragmentType.ToString()].Format;
+                    format = "`?{0}{1}{2}:{3}`]";
                     GenComparison comparison;
                     if (!Enum.TryParse(conditionFragment.Comparison, out comparison))
                         throw new GeneratorException("Invalid condition comparison: " + conditionFragment.Comparison,
                             GenErrorType.Assertion);
                     OutputText(string.Format(format, new object[]
                                                      {
-                                                         Identifier(conditionFragment.Class1, conditionFragment.Property1),
+                                                         Identifier(conditionFragment.Class1,
+                                                             conditionFragment.Property1),
                                                          Dictionary.GenComparisonText[(int) comparison],
                                                          (comparison == GenComparison.Exists ||
                                                           comparison == GenComparison.NotExists)
@@ -178,18 +188,19 @@ namespace org.xpangen.Generator.Profile
                                                                  ? GenUtilities.StringOrName(conditionFragment.Lit)
                                                                  : conditionFragment.Class2 + "." +
                                                                    conditionFragment.Property2),
-                                                         GetBodyText(conditionFragment.Body())
+                                                         GetBodyText(conditionFragment.Body(),
+                                                             fragmentPosition.BodyPosition)
                                                      }
-                        ));
+                        ), fragmentPosition.Position);
                     break;
                 case FragmentType.Function:
                     var functionFragment = (Function) fragment;
-                    format = Dictionary[fragmentType.ToString()].Format;
+                    format = "`@{0}:{1}`]";
 
                     var body = functionFragment.Body().FragmentList;
                     var param = new string[body.Count];
                     for (var i = 0; i < body.Count; i++)
-                        param[i] = GetText(body[i]);
+                        param[i] = GetText(body[i], bodyPosition);
                     var separator = Dictionary.FunctionParameterSeparator;
                     var p = string.Join(separator, param);
 
@@ -198,24 +209,27 @@ namespace org.xpangen.Generator.Profile
                                                          functionFragment.FunctionName,
                                                          p
                                                      }
-                        ));
+                        ), fragmentPosition.Position);
                     break;
                 case FragmentType.TextBlock:
                     var textBlockFragment = (TextBlock) fragment;
-                    OutputText(GetBodyText(textBlockFragment.Body()));
+                    OutputText(GetBodyText(textBlockFragment.Body(), fragmentPosition.BodyPosition),
+                        fragmentPosition.Position);
                     break;
                 case FragmentType.Annotation:
-                    format = Dictionary[fragmentType.ToString()].Format;
-                    var annotationFragment = (Annotation)fragment;
+                    format = "`-{0}`]";
+                    var annotationFragment = (Annotation) fragment;
                     OutputText(string.Format(format, new object[]
                                                      {
-                                                         GetBodyText(annotationFragment.Body())
+                                                         GetBodyText(annotationFragment.Body(),
+                                                             fragmentPosition.BodyPosition)
                                                      }
-                        ));
+                        ), fragmentPosition.Position);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            bodyPosition.Length += fragmentPosition.Position.Length;
         }
 
         private static string Identifier(string className, string propertyName)
@@ -223,10 +237,10 @@ namespace org.xpangen.Generator.Profile
             return className + '.' + propertyName;
         }
 
-        private string GetBodyText(FragmentBody body)
+        private string GetBodyText(FragmentBody body, TextPosition position)
         {
             var pt = new GenProfileTextExpander(Dictionary);
-            return GetBodyText(pt, body);
+            return GetBodyText(pt, body, position);
         }
     }
 }
