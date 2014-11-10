@@ -109,6 +109,7 @@
     <Compile Include="ProfileFragmentSyntax.cs" />
     <Compile Include="ProfileFragmentSyntaxDictionary.cs" />
     <Compile Include="GenProfileTextExpander.cs" />
+    <Compile Include="ProfileTextPosition.cs" />
     <Compile Include="Profile\Annotation.cs" />
     <Compile Include="Profile\Block.cs" />
     <Compile Include="Profile\Condition.cs" />

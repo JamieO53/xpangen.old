@@ -13,6 +13,7 @@ namespace org.xpangen.Generator.Profile
         private string _fileName;
         private StreamWriter _writer;
         public Stream Stream { get; private set; }
+        public int Position { get; private set; }
 
         private StreamWriter Writer
         {
@@ -55,18 +56,27 @@ namespace org.xpangen.Generator.Profile
 
         public GenWriter(Stream stream)
         {
+            Position = 0;
             Stream = stream;
             Writer = stream != null ? new StreamWriter(stream) : null;
         }
 
-        public void Write(string text)
+        public void Write(string text, TextPosition position = null)
         {
+            var p = Position;
             if (!string.IsNullOrEmpty(ProvisionalText))
             {
+                Position += ProvisionalText.Length;
                 Writer.Write(ProvisionalText);
                 ClearProvisionalText();
             }
+            Position += text.Length;
             Writer.Write(text);
+            if (position != null)
+            {
+                position.Offset = p;
+                position.Length = Position - p;
+            }
         }
 
         public void ClearProvisionalText()
