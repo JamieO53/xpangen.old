@@ -73,9 +73,25 @@ namespace org.xpangen.Generator.Test
             geData.Profile.Fragment = geData.Profile.Profile;
             var profileText = geData.Profile.GetNodeProfileText();
             Assert.AreEqual(newProfileText, profileText);
-            Assert.IsFalse(geData.Profile.IsInputable(1));
+            ValidateProfileTextPosition(true,  geData,  0, "Outside segment", FragmentType.Segment);
+            ValidateProfileTextPosition(false, geData,  1, "In segment prefix", FragmentType.Segment);
+            ValidateProfileTextPosition(false, geData,  8, "In segment prefix", FragmentType.Segment);
+            ValidateProfileTextPosition(true,  geData,  9, "Start of text", FragmentType.Text);
+            ValidateProfileTextPosition(true,  geData, 10, "Text", FragmentType.Text);
+            ValidateProfileTextPosition(true,  geData, 15, "End of text", FragmentType.Placeholder);
+            ValidateProfileTextPosition(false, geData, 16, "In placeholder", FragmentType.Placeholder);
+            ValidateProfileTextPosition(false, geData, 26, "In placeholder", FragmentType.Placeholder);
+            ValidateProfileTextPosition(true,  geData, 27, "Start of text", FragmentType.Text);
         }
-        
+
+        private static void ValidateProfileTextPosition(bool expected, GeData geData, int position, string message, FragmentType fragmentType)
+        {
+            var pos = ((GeProfile) geData.Profile).ProfileTextPostionList.FindAtPosition(position);
+            Assert.IsNotNull(pos);
+            Assert.AreEqual(fragmentType, pos.Fragment.FragmentType);
+            Assert.AreEqual(expected, geData.Profile.IsInputable(position), message);
+        }
+
         private static GeData CreateNewProfile(string newProfileText, string fileGroup = "Definition",
             string newProfile = "NewProfile", string newProfileTitle = "New Profile Title")
         {

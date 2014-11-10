@@ -14,8 +14,9 @@ namespace org.xpangen.Generator.Editor.Helper
     public class GeProfile : IGenDataProfile
     {
         private ProfileFragmentSyntaxDictionary _activeProfileFragmentSyntaxDictionary;
-        public ProfileTextPostionList _ProfileTextPostionList;
         public GeData GeData { get; set; }
+
+        public ProfileTextPostionList ProfileTextPostionList { get; private set; }
 
         public GeProfile(GeData geData)
         {
@@ -137,14 +138,21 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             if (Fragment == null) return "";
             var textExpander = new GenProfileTextExpander(ActiveProfileFragmentSyntaxDictionary);
-            _ProfileTextPostionList = textExpander.ProfileTextPostionList;
+            ProfileTextPostionList = textExpander.ProfileTextPostionList;
             ProfileText = textExpander.GetText(Fragment);
             return ProfileText;
         }
 
         public bool IsInputable(int position)
         {
-            return (position == 0 || position == ProfileText.Length);
+            if (position == 0 || position == ProfileText.Length) return true;
+            var pos = ProfileTextPostionList.FindAtPosition(position);
+            if (pos.Position.Offset == position) return true;
+            if (pos.Fragment.FragmentType == FragmentType.Text) return true;
+            return false;
+            //return pos.BodyPosition.Length != 0 &&
+            //       (pos.BodyPosition.Offset <= position && pos.BodyPosition.EndPosition >= position ||
+            //        pos.SecondaryBodyPosition.Offset <= position && pos.SecondaryBodyPosition.EndPosition >= position);
         }
 
         public ProfileFragmentSyntaxDictionary ActiveProfileFragmentSyntaxDictionary

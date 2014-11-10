@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
@@ -10,8 +8,17 @@ namespace org.xpangen.Generator.Profile
     {
         public ProfileTextPosition FindAtPosition(int position)
         {
-            var key = position*ProfileTextPosition.TwoTo32;
-            return this.FirstOrDefault(p => key >= p.Key).Value;
+            return
+                this.LastOrDefault(
+                    p => p.Value.Position.Offset <= position && position <= p.Value.Position.EndPosition)
+                    .Value;
+        }
+
+        public new void Add(long key, ProfileTextPosition value)
+        {
+            if (ContainsKey(key)) return;
+                // Function parameters get added twice
+            base.Add(key, value);
         }
     }
 
@@ -20,17 +27,17 @@ namespace org.xpangen.Generator.Profile
         public int Offset { get; set; }
         public int Length { get; set; }
         public long Key { get { return Offset*ProfileTextPosition.TwoTo32 + Length; } }
-
-        public TextPosition(int offset, int length) : this()
-        {
-            Offset = offset;
-            Length = length;
-        }
+        public int EndPosition { get { return Offset + Length; }}
 
         public TextPosition()
         {
             Offset = 0;
             Length = 0;
+        }
+
+        public override string ToString()
+        {
+            return Offset + ":" + Length;
         }
     }
 
@@ -51,5 +58,14 @@ namespace org.xpangen.Generator.Profile
         public TextPosition BodyPosition { get; private set; }
         public TextPosition SecondaryBodyPosition { get; private set; }
         public Fragment Fragment { get; private set; }
+
+        public override string ToString()
+        {
+            return Position +
+                   (BodyPosition.Length != 0 || SecondaryBodyPosition.Length != 0
+                       ? "(" + BodyPosition + (SecondaryBodyPosition.Length != 0 ? ";" + SecondaryBodyPosition : "") +
+                         ")"
+                       : "");
+        }
     }
 }
