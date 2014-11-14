@@ -77,12 +77,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\ClassTreeNode.cs" />
@@ -331,21 +327,9 @@
       <Project>{CDF47B32-3EE1-4E90-AA0F-FDA5070C71D9}</Project>
       <Name>org.xpangen.Generator.Parameter</Name>
     </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Profile.Parser.CompactProfileParser\org.xpangen.Generator.Profile.Parser.CompactProfileParser.csproj">
-      <Project>{63F6122C-817E-4476-A11A-5ECC2AFBCA1E}</Project>
-      <Name>org.xpangen.Generator.Profile.Parser.CompactProfileParser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Profile.Scanner\org.xpangen.Generator.Profile.Scanner.csproj">
-      <Project>{3E376268-5166-42B4-964D-EED99122C68C}</Project>
-      <Name>org.xpangen.Generator.Profile.Scanner</Name>
-    </ProjectReference>
     <ProjectReference Include="..\org.xpangen.Generator.Profile\org.xpangen.Generator.Profile.csproj">
       <Project>{BC2435D5-863A-4EC4-AB98-6DD124A04179}</Project>
       <Name>org.xpangen.Generator.Profile</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\org.xpangen.Generator.Scanner\org.xpangen.Generator.Scanner.csproj">
-      <Project>{116BF740-18A1-4612-8CB0-8C2127821F6F}</Project>
-      <Name>org.xpangen.Generator.Scanner</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
