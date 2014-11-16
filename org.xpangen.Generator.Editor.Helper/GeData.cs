@@ -15,6 +15,8 @@ namespace org.xpangen.Generator.Editor.Helper
 {
     public class GeData
     {
+        private readonly Stack<IGenUndoRedo> _undoStack = new Stack<IGenUndoRedo>();
+        private readonly Stack<IGenUndoRedo> _redoStack = new Stack<IGenUndoRedo>();
         public bool Changed
         {
             get
@@ -45,7 +47,7 @@ namespace org.xpangen.Generator.Editor.Helper
             get { return GenDataBase != null ? GenDataBase.GenDataDef : null; }
         }
 
-        public IGenDataProfile Profile { get; set; } 
+        public IGenDataProfile Profile { get; private set; } 
         public IGenData GenDataStore { get; private set; }
         public IGenDataSettings Settings { get; set; }
 
@@ -140,17 +142,17 @@ namespace org.xpangen.Generator.Editor.Helper
             return settings;
         }
 
-        public IGenDataProfile GetDefaultProfile(GeData geData)
+        private IGenDataProfile GetDefaultProfile(GeData geData)
         {
             return new GeProfile(geData);
         }
 
-        public IGenDataProfile GetDesignTimeProfile(GeData geData)
+        private IGenDataProfile GetDesignTimeProfile(GeData geData)
         {
             return new GeProfile(geData);
         }
 
-        public ComboServer GetDefaultComboServer()
+        private ComboServer GetDefaultComboServer()
         {
             var data = GenDataBase.DataLoader.LoadData(GenDataBase.DataLoader.LoadData("CodesDefinition").AsDef(),
                                                    "Data/Standard Editor Codes.dcb");
@@ -192,7 +194,7 @@ namespace org.xpangen.Generator.Editor.Helper
             SaveSettings();
         }
 
-        public ComboServer ComboServer { get; set; }
+        public ComboServer ComboServer { get; private set; }
         public GenObject GenObject { get; set; }
 
         /// <summary>
@@ -243,6 +245,27 @@ namespace org.xpangen.Generator.Editor.Helper
             geData.Profile = isInDesignMode ? geData.GetDesignTimeProfile(geData) : geData.GetDefaultProfile(geData);
 
             return geData;
+        }
+
+        public void Undo()
+        {
+            if (_undoStack.Count == 0) return;
+            var undoRedo = _undoStack.Pop();
+            _redoStack.Push(undoRedo);
+            undoRedo.Undo();
+        }
+
+        public void Redo()
+        {
+            var undoRedo = _redoStack.Pop();
+            if (_redoStack.Count == 0) return;
+            _undoStack.Push(undoRedo);
+            undoRedo.Redo();
+        }
+
+        public void AddRedoUndo(IGenUndoRedo item)
+        {
+            _undoStack.Push(item);
         }
     }
 }

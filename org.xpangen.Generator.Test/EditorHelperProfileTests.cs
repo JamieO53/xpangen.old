@@ -48,6 +48,23 @@ namespace org.xpangen.Generator.Test
             VerifyProfile(geData, newProfileText, expectedProfileText);
         }
 
+        [Test(Description = "Test the substitution of a placeholder for given text and undo.")]
+        public void PlaceholderSubstitutionUndoTest()
+        {
+            const string newProfileText =
+                "Replace this Class with a placeholder but not this class. Here is another replacement Class.";
+            const string expectedProfileText =
+                "`[Class>:Replace this `Class.Name` with a placeholder but not this class. Here is another replacement `Class.Name`.`]";
+            const string expectedUndoProfileText =
+                "`[Class>:Replace this Class with a placeholder but not this class. Here is another replacement Class.`]";
+            var geData = CreateNewProfile(newProfileText);
+            var textBlock = (TextBlock) ((Segment) geData.Profile.Fragment).Body().FragmentList[0];
+            geData.Profile.SubstitutePlaceholder(textBlock, "Class", geData.GenDataDef.GetId("Class.Name"));
+            VerifyProfile(geData, newProfileText, expectedProfileText);
+            geData.Undo();
+            VerifyProfile(geData, newProfileText, expectedUndoProfileText);
+        }
+
         [Test(Description = "Test the substitution of two placeholders for given text.")]
         public void MultiplePlaceholderSubstitutionTest()
         {
@@ -62,6 +79,27 @@ namespace org.xpangen.Generator.Test
             geData.Profile.SubstitutePlaceholder(textBlock, "Class Definition", geData.GenDataDef.GetId("Class.Title")); 
             geData.Profile.SubstitutePlaceholder(textBlock, "Class", geData.GenDataDef.GetId("Class.Name"));
             VerifyProfile(geData, newProfileText, expectedProfileText);
+        }
+
+        [Test(Description = "Test the substitution of two placeholders for given text and undo.")]
+        public void MultiplePlaceholderSubstitutionUndoTest()
+        {
+            const string newProfileText =
+                "Replace this Class with a placeholder but not this class. It's title is Class Definition";
+            const string expectedProfileText =
+                "`[Class>:Replace this `Class.Name` with a placeholder but not this class. It's title is `Class.Title``]";
+            const string expectedUndoProfileText =
+                "`[Class>:Replace this Class with a placeholder but not this class. It's title is Class Definition`]";
+            var geData = CreateNewProfile(newProfileText);
+            var textBlock = (TextBlock)((Segment)geData.Profile.Fragment).Body().FragmentList[0];
+
+            // Substitutions must be done in this order, because the first contains the second.
+            geData.Profile.SubstitutePlaceholder(textBlock, "Class Definition", geData.GenDataDef.GetId("Class.Title")); 
+            geData.Profile.SubstitutePlaceholder(textBlock, "Class", geData.GenDataDef.GetId("Class.Name"));
+            VerifyProfile(geData, newProfileText, expectedProfileText);
+            geData.Undo();
+            geData.Undo();
+            VerifyProfile(geData, newProfileText, expectedUndoProfileText);
         }
 
         [Test(Description = "Tests if a position can accept keyboard input")]
