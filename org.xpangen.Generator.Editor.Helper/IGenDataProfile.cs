@@ -22,5 +22,6 @@ namespace org.xpangen.Generator.Editor.Helper
         void CreateNewProfile(string newProfile, string newProfileTitle, string newProfileText);
         void SubstitutePlaceholder(TextBlock textBlock, string substitutedText, GenDataId id);
         bool IsInputable(int position);
+        void GetFragmentsAt(out Fragment before, out Fragment after, int position);
     }
 }

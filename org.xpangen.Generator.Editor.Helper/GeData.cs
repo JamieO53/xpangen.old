@@ -266,6 +266,7 @@ namespace org.xpangen.Generator.Editor.Helper
         public void AddRedoUndo(IGenUndoRedo item)
         {
             _undoStack.Push(item);
+            _redoStack.Clear();
         }
     }
 }

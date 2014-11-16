@@ -138,6 +138,16 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public ProfileTextPostionList ProfileTextPostionList { get; private set; }
 
+        public ProfileFragmentSyntaxDictionary ActiveProfileFragmentSyntaxDictionary
+        {
+            get
+            {
+                return _activeProfileFragmentSyntaxDictionary ??
+                       ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary;
+            }
+            set { _activeProfileFragmentSyntaxDictionary = value; }
+        }
+
         public GeProfile(GeData geData)
         {
             GeData = geData;
@@ -233,14 +243,33 @@ namespace org.xpangen.Generator.Editor.Helper
             if (pos.Fragment.FragmentType == FragmentType.Text) return true;
             return false;
         }
-        public ProfileFragmentSyntaxDictionary ActiveProfileFragmentSyntaxDictionary
+
+        public void GetFragmentsAt(out Fragment before, out Fragment after, int position)
         {
-            get
+            //if (position == 0)
+            //{
+            //    before = null;
+            //    after = Fragment;
+            //    return;
+            //}
+            //if (position == ProfileText.Length)
+            //{
+            //    before = Fragment;
+            //    after = null;
+            //    return;
+            //}
+            var pos = ProfileTextPostionList.FindAtPosition(position);
+            if (pos.Position.Offset == position)
             {
-                return _activeProfileFragmentSyntaxDictionary ??
-                       ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary;
+                after = pos.Fragment;
+                var fragments = ((FragmentBody) after.Parent).FragmentList;
+                var i = fragments.IndexOf(after);
+                if (i == 0) before = null;
+                else before = fragments[i - 1];
+                return;
             }
-            set { _activeProfileFragmentSyntaxDictionary = value; }
+            before = pos.Fragment;
+            after = pos.Fragment;
         }
     }
 }

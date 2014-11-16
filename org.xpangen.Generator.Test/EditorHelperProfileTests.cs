@@ -102,6 +102,30 @@ namespace org.xpangen.Generator.Test
             VerifyProfile(geData, newProfileText, expectedUndoProfileText);
         }
 
+        [Test(Description = "Tests the identification of an object by position")]
+        public void FragementsAtPositionTest()
+        {
+            const string newProfileText =
+                "`[Class>:Class:`Class.Name` - `Class.Title`\r\n\t`[Property>:`Property.Name` - `Property.Title``]`]";
+            var geData = LoadProfile(newProfileText);
+            geData.Profile.Fragment = geData.Profile.Profile;
+            geData.Profile.GetNodeProfileText();
+            var classSegment = (Segment) geData.Profile.Profile.Body().FragmentList[0];
+            VerifyFragmentsAtPosition(geData, 0, null, classSegment);
+            VerifyFragmentsAtPosition(geData, 1, classSegment, classSegment);
+            VerifyFragmentsAtPosition(geData, 8, classSegment, classSegment);
+            var classTextBlockBody = ((TextBlock) classSegment.Body().FragmentList[0]).Body();
+            var classText = classTextBlockBody.FragmentList[0];
+            VerifyFragmentsAtPosition(geData, 9, null, classText);
+            VerifyFragmentsAtPosition(geData, 10, classText, classText);
+            var classNamePlaceholder = classTextBlockBody.FragmentList[1];
+            VerifyFragmentsAtPosition(geData, 15, classText, classNamePlaceholder);
+            VerifyFragmentsAtPosition(geData, 16, classNamePlaceholder, classNamePlaceholder);
+            VerifyFragmentsAtPosition(geData, 26, classNamePlaceholder, classNamePlaceholder);
+            var classTextHyphen = classTextBlockBody.FragmentList[2];
+            VerifyFragmentsAtPosition(geData, 27, classNamePlaceholder, classTextHyphen);
+        }
+
         [Test(Description = "Tests if a position can accept keyboard input")]
         public void InputablePositionTest()
         {
@@ -120,6 +144,15 @@ namespace org.xpangen.Generator.Test
             ValidateProfileTextPosition(false, geData, 16, "In placeholder", FragmentType.Placeholder);
             ValidateProfileTextPosition(false, geData, 26, "In placeholder", FragmentType.Placeholder);
             ValidateProfileTextPosition(true,  geData, 27, "Start of text", FragmentType.Text);
+        }
+
+        private static void VerifyFragmentsAtPosition(GeData geData, int position, Fragment expectedBefore,
+            Fragment expectedAfter)
+        {
+            Fragment before, after;
+            geData.Profile.GetFragmentsAt(out before, out after, position);
+            Assert.AreSame(expectedBefore, before, "Before position " + position);
+            Assert.AreSame(expectedAfter, after, "After position " + position);
         }
 
         private static void ValidateProfileTextPosition(bool expected, GeData geData, int position, string message, FragmentType fragmentType)
