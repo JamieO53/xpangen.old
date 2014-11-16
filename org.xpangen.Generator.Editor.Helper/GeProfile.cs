@@ -11,10 +11,130 @@ using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
+    public class ReplaceSelectionWithPlaceholderCommand : IGenCommand
+    {
+        public Text Text { get; private set; }
+        public int SelectionStart { get; private set; }
+        public int SelectionEnd { get; private set; }
+        public GenDataId Id { get; private set; }
+        public FragmentBody Body { get; private set; }
+        public int FragmentIndex { get; private set; }
+        public string Prefix { get; private set; }
+        public string Suffix { get; private set; }
+        public Placeholder Placeholder { get; private set; }
+
+
+        public ReplaceSelectionWithPlaceholderCommand(Text text, int selectionStart, int selectionEnd, GenDataId id)
+        {
+            var prefix = text.TextValue.Substring(0, selectionStart);
+            var suffix = text.TextValue.Substring(selectionEnd);
+            Text = text;
+            SelectionStart = selectionStart;
+            SelectionEnd = selectionEnd;
+            Id = id;
+            Body = (FragmentBody) Text.Parent;
+            FragmentIndex = Body.FragmentList.IndexOf(Text) + 1;
+            Prefix = prefix;
+            Suffix = suffix;
+        }
+
+        private void SetTextToPrefix()
+        {
+            if (Prefix == "")
+            {
+                Body.FragmentList.Remove(Text);
+                FragmentIndex--;
+            }
+            else
+                Text.TextValue = Prefix;
+        }
+
+        private void AddPlaceholderFragment()
+        {
+            Placeholder = Body.AddPlaceholder(Body.FragmentName(FragmentType.Placeholder), Id.ClassName, Id.PropertyName);
+            FixAddedFragmentPosition();
+        }
+
+        private void FixAddedFragmentPosition()
+        {
+            for (var l = Body.FragmentList.Count - 1; l > FragmentIndex; l--)
+                Body.FragmentList.Move(ListMove.Up, l);
+            FragmentIndex++;
+        }
+
+        private void AddSuffixText()
+        {
+            if (Suffix == "") return;
+            Text = Body.AddText(Body.FragmentName(FragmentType.Text), Suffix);
+            FixAddedFragmentPosition();
+        }
+
+        public void Execute()
+        {
+            SetTextToPrefix();
+            AddPlaceholderFragment();
+            AddSuffixText();
+        }
+    }
+
+    public class ReplacePlaceholderWithTextCommand : IGenCommand
+    {
+        public Placeholder Placeholder { get; private set; }
+        public string SubstitutedText { get; private set; }
+        public int SelectionStart { get; private set; }
+        public int SelectionEnd { get; private set; }
+        public GenDataId Id { get; private set; }
+
+        public ReplacePlaceholderWithTextCommand(Placeholder placeholder, string substitutedText)
+        {
+            Placeholder = placeholder;
+            SubstitutedText = substitutedText;
+            SelectionStart = 0;
+            SelectionEnd = SubstitutedText.Length;
+            Id = new GenDataId {ClassName = placeholder.Class, PropertyName = placeholder.Property};
+        }
+
+        public void Execute()
+        {
+            var body = (FragmentBody) Placeholder.Parent;
+            var i = body.FragmentList.IndexOf(Placeholder);
+            if (i != 0 && body.FragmentList[i - 1] is Text)
+            {
+                var text = (Text) body.FragmentList[i - 1];
+                SelectionStart = text.TextValue.Length;
+                SelectionEnd = SelectionStart + SubstitutedText.Length;
+                text.TextValue += SubstitutedText;
+                body.FragmentList.RemoveAt(i);
+                
+                if (i >= body.FragmentList.Count || !(body.FragmentList[i] is Text)) return;
+                text.TextValue += ((Text) body.FragmentList[i]).TextValue;
+                body.FragmentList.RemoveAt(i);
+            }
+            else
+            {
+                if (i + 1 < body.FragmentList.Count && body.FragmentList[i + 1] is Text)
+                {
+                    var text = ((Text) body.FragmentList[i + 1]);
+                    text.TextValue = SubstitutedText + text.TextValue;
+                }
+                else
+                {
+                    var text = body.AddText(body.FragmentName(FragmentType.Text), SubstitutedText);
+                    for (int j = body.FragmentList.Count - 1; j < i; j--)
+                    {
+                        body.FragmentList.Move(ListMove.Up, j);
+                    }
+                }
+                body.FragmentList.RemoveAt(i);
+            }
+        }
+    }
+
     public class GeProfile : IGenDataProfile
     {
         private ProfileFragmentSyntaxDictionary _activeProfileFragmentSyntaxDictionary;
-        public GeData GeData { get; set; }
+
+        private GeData GeData { get; set; }
 
         public ProfileTextPostionList ProfileTextPostionList { get; private set; }
 
@@ -72,6 +192,7 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public void SubstitutePlaceholder(TextBlock textBlock, string substitutedText, GenDataId id)
         {
+            GenMultiUndoRedo multi = null;
             var body = textBlock.Body();
             var n = body.FragmentList.Count;
             for (var i = n - 1; i >= 0; i--)
@@ -81,57 +202,18 @@ namespace org.xpangen.Generator.Editor.Helper
                 
                 var t = text.TextValue;
                 var k = t.IndexOf(substitutedText, StringComparison.Ordinal);
-                var fragmentIndex = i + 1;
                 while (k != -1 && text != null)
                 {
-                    var prefix = t.Substring(0, k);
-                    var suffix = t.Substring(k + substitutedText.Length);
-                    text = SplitTextAtPlaceholder(prefix, id, suffix, text, body, ref fragmentIndex);
-                    t = suffix;
+                    var command = new ReplaceSelectionWithPlaceholderCommand(text, k, k + substitutedText.Length, id);
+                    command.Execute();
+                    var undoCommand = new ReplacePlaceholderWithTextCommand(command.Placeholder, substitutedText);
+                    (multi = multi ?? new GenMultiUndoRedo()).Add(new GenUndoRedo(undoCommand, command));
+                    text = command.Text;
+                    t = command.Suffix;
                     k = t.IndexOf(substitutedText, StringComparison.Ordinal);
                 }
             }
-        }
-
-        private static Text SplitTextAtPlaceholder(string prefix, GenDataId id, string suffix, Text text,
-            FragmentBody body, ref int fragmentIndex)
-        {
-            SetTextToPrefix(prefix, text, body, ref fragmentIndex);
-
-            AddPlaceholderFragment(id, body, ref fragmentIndex);
-            return AddSuffixText(suffix, body, ref fragmentIndex);
-        }
-
-        private static Text AddSuffixText(string suffix, FragmentBody body, ref int fragmentIndex)
-        {
-            if (suffix == "") return null;
-            var text = body.AddText(body.FragmentName(FragmentType.Text), suffix);
-            FixAddedFragmentPosition(body, ref fragmentIndex);
-            return text;
-        }
-
-        private static void AddPlaceholderFragment(GenDataId id, FragmentBody body, ref int fragmentIndex)
-        {
-            body.AddPlaceholder(body.FragmentName(FragmentType.Placeholder), id.ClassName, id.PropertyName);
-            FixAddedFragmentPosition(body, ref fragmentIndex);
-        }
-
-        private static void SetTextToPrefix(string prefix, Text text, FragmentBody body, ref int fragmentIndex)
-        {
-            if (prefix == "")
-            {
-                body.FragmentList.Remove(text);
-                fragmentIndex--;
-            }
-            else
-                text.TextValue = prefix;
-        }
-
-        private static void FixAddedFragmentPosition(FragmentBody body, ref int fragmentIndex)
-        {
-            for (var l = body.FragmentList.Count - 1; l > fragmentIndex; l--)
-                body.FragmentList.Move(ListMove.Up, l);
-            fragmentIndex++;
+            if (multi != null) GeData.AddRedoUndo(multi);
         }
 
         public string GetNodeProfileText()
@@ -150,11 +232,7 @@ namespace org.xpangen.Generator.Editor.Helper
             if (pos.Position.Offset == position) return true;
             if (pos.Fragment.FragmentType == FragmentType.Text) return true;
             return false;
-            //return pos.BodyPosition.Length != 0 &&
-            //       (pos.BodyPosition.Offset <= position && pos.BodyPosition.EndPosition >= position ||
-            //        pos.SecondaryBodyPosition.Offset <= position && pos.SecondaryBodyPosition.EndPosition >= position);
         }
-
         public ProfileFragmentSyntaxDictionary ActiveProfileFragmentSyntaxDictionary
         {
             get
