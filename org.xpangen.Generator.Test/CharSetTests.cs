@@ -18,7 +18,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Verifies a CharSet consisting of a list of characters
         /// </summary>
-        [TestCase]
+        [Test]
         public void ListOfCharactersTest()
         {
             var cs = new CharSet("abcABC");
@@ -33,7 +33,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Verifies a CharSet consisting of a range of characters
         /// </summary>
-        [TestCase]
+        [Test]
         public void RangeOfCharactersTest()
         {
             var cs = new CharSet("a-c");
@@ -48,7 +48,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Verifies a CharSet consisting of multiple ranges of characters
         /// </summary>
-        [TestCase]
+        [Test]
         public void MultipleRangeOfCharactersTest()
         {
             var cs = new CharSet("a-cA-C");
@@ -63,7 +63,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Verifies a CharSet consisting of escaped special characters
         /// </summary>
-        [TestCase]
+        [Test]
         public void EscapedCharactersTest()
         {
             var cs = new CharSet(@"\n\r\t\\\-");
@@ -77,7 +77,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Verifies a CharSet consisting of a individual characters and ranges of characters
         /// </summary>
-        [TestCase]
+        [Test]
         public void CharactersAndRangesOfCharactersTest()
         {
             var cs = new CharSet("aA-Cb0-2c");
