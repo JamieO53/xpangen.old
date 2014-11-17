@@ -11,7 +11,21 @@ using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
-    public class ReplaceSelectionWithPlaceholderCommand : IGenCommand
+    public abstract class ProfileCommandBase : IGenCommand
+    {
+        public ProfileCommandBase(GeProfile geProfile)
+        {
+            GeProfile = geProfile;
+        }
+
+        public GeProfile GeProfile { get; private set; }
+        public virtual void Execute()
+        {
+            GeProfile.GetNodeProfileText();
+        }
+    }
+
+    public class ReplaceSelectionWithPlaceholderCommand : ProfileCommandBase
     {
         public Text Text { get; private set; }
         public int SelectionStart { get; private set; }
@@ -24,7 +38,7 @@ namespace org.xpangen.Generator.Editor.Helper
         public Placeholder Placeholder { get; private set; }
 
 
-        public ReplaceSelectionWithPlaceholderCommand(Text text, int selectionStart, int selectionEnd, GenDataId id)
+        public ReplaceSelectionWithPlaceholderCommand(Text text, int selectionStart, int selectionEnd, GenDataId id, GeProfile geProfile) : base(geProfile)
         {
             var prefix = text.TextValue.Substring(0, selectionStart);
             var suffix = text.TextValue.Substring(selectionEnd);
@@ -69,15 +83,16 @@ namespace org.xpangen.Generator.Editor.Helper
             FixAddedFragmentPosition();
         }
 
-        public void Execute()
+        public override void Execute()
         {
             SetTextToPrefix();
             AddPlaceholderFragment();
             AddSuffixText();
+            base.Execute();
         }
     }
 
-    public class ReplacePlaceholderWithTextCommand : IGenCommand
+    public class ReplacePlaceholderWithTextCommand : ProfileCommandBase
     {
         public Placeholder Placeholder { get; private set; }
         public string SubstitutedText { get; private set; }
@@ -85,7 +100,7 @@ namespace org.xpangen.Generator.Editor.Helper
         public int SelectionEnd { get; private set; }
         public GenDataId Id { get; private set; }
 
-        public ReplacePlaceholderWithTextCommand(Placeholder placeholder, string substitutedText)
+        public ReplacePlaceholderWithTextCommand(Placeholder placeholder, string substitutedText, GeProfile geProfile) : base(geProfile)
         {
             Placeholder = placeholder;
             SubstitutedText = substitutedText;
@@ -94,7 +109,7 @@ namespace org.xpangen.Generator.Editor.Helper
             Id = new GenDataId {ClassName = placeholder.Class, PropertyName = placeholder.Property};
         }
 
-        public void Execute()
+        public override void Execute()
         {
             var body = (FragmentBody) Placeholder.Parent;
             var i = body.FragmentList.IndexOf(Placeholder);
@@ -127,6 +142,7 @@ namespace org.xpangen.Generator.Editor.Helper
                 }
                 body.FragmentList.RemoveAt(i);
             }
+            base.Execute();
         }
     }
 
@@ -214,9 +230,9 @@ namespace org.xpangen.Generator.Editor.Helper
                 var k = t.IndexOf(substitutedText, StringComparison.Ordinal);
                 while (k != -1 && text != null)
                 {
-                    var command = new ReplaceSelectionWithPlaceholderCommand(text, k, k + substitutedText.Length, id);
+                    var command = new ReplaceSelectionWithPlaceholderCommand(text, k, k + substitutedText.Length, id, this);
                     command.Execute();
-                    var undoCommand = new ReplacePlaceholderWithTextCommand(command.Placeholder, substitutedText);
+                    var undoCommand = new ReplacePlaceholderWithTextCommand(command.Placeholder, substitutedText, this);
                     (multi = multi ?? new GenMultiUndoRedo()).Add(new GenUndoRedo(undoCommand, command));
                     text = command.Text;
                     t = command.Suffix;
@@ -224,6 +240,7 @@ namespace org.xpangen.Generator.Editor.Helper
                 }
             }
             if (multi != null) GeData.AddRedoUndo(multi);
+            GetNodeProfileText();
         }
 
         public string GetNodeProfileText()
@@ -246,18 +263,6 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public void GetFragmentsAt(out Fragment before, out Fragment after, int position)
         {
-            //if (position == 0)
-            //{
-            //    before = null;
-            //    after = Fragment;
-            //    return;
-            //}
-            //if (position == ProfileText.Length)
-            //{
-            //    before = Fragment;
-            //    after = null;
-            //    return;
-            //}
             var pos = ProfileTextPostionList.FindAtPosition(position);
             if (pos.Position.Offset == position)
             {
