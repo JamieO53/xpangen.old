@@ -58,10 +58,19 @@ namespace org.xpangen.Generator.Test
             const string expectedUndoProfileText =
                 "`[Class>:Replace this Class with a placeholder but not this class. Here is another replacement Class.`]";
             var geData = CreateNewProfile(newProfileText);
-            var textBlock = (TextBlock) ((Segment) geData.Profile.Fragment).Body().FragmentList[0];
+            var textBlock = (TextBlock)((Segment)geData.Profile.Fragment).Body().FragmentList[0];
+            ValidateProfileTextPosition(true, geData, 22, "End of text before substitution", FragmentType.Text);
+            ValidateProfileTextPosition(true, geData, 23, "Substituted placholder position", FragmentType.Text);
+            VerifyFragmentsAtPosition(geData, 22, textBlock.Body().FragmentList[0], textBlock.Body().FragmentList[0]);
             geData.Profile.SubstitutePlaceholder(textBlock, "Class", geData.GenDataDef.GetId("Class.Name"));
+            ValidateProfileTextPosition(true, geData, 22, "End of text before substitution", FragmentType.Placeholder);
+            ValidateProfileTextPosition(false, geData, 23, "Substituted placholder", FragmentType.Placeholder);
+            VerifyFragmentsAtPosition(geData, 22, textBlock.Body().FragmentList[0], textBlock.Body().FragmentList[1]);
             VerifyProfile(geData, newProfileText, expectedProfileText);
             geData.Undo();
+            ValidateProfileTextPosition(true, geData, 22, "End of text before substitution", FragmentType.Text);
+            ValidateProfileTextPosition(true, geData, 23, "Substituted placholder position", FragmentType.Text);
+            VerifyFragmentsAtPosition(geData, 22, textBlock.Body().FragmentList[0], textBlock.Body().FragmentList[0]);
             VerifyProfile(geData, newProfileText, expectedUndoProfileText);
         }
 
@@ -168,6 +177,7 @@ namespace org.xpangen.Generator.Test
         {
             var geData = SetUpGeData(fileGroup);
             geData.Profile.CreateNewProfile(newProfile, newProfileTitle, newProfileText);
+            geData.Profile.GetNodeProfileText(); 
             return geData;
         }
 
