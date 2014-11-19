@@ -39,10 +39,15 @@ namespace org.xpangen.Generator.Profile.Profile
                 var lookup = fragment as Lookup;
                 if (lookup != null) return lookup.Class1;
                 if (fragment is Profile) return "";
-                var parent = ((ContainerFragment)fragment.FragmentBody().Links["Parent"]);
+                var parent = fragment.ParentFragment;
                 if (parent == null) return "";
                 fragment = parent;
             }
+        }
+
+        public ContainerFragment ParentFragment
+        {
+            get { return ((ContainerFragment)FragmentBody().Links["Parent"]); }
         }
 
         public ProfileDefinition ProfileDefinition()

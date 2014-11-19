@@ -139,7 +139,7 @@ namespace org.xpangen.Generator.Test
         public void InputablePositionTest()
         {
             const string newProfileText =
-                "`[Class>:Class:`Class.Name` - `Class.Title`\r\n\t`[Property>:`Property.Name` - `Property.Title``]`]";
+                  "`[Class>:Class:`Class.Name` - `Class.Title`\r\n\t`[Property>:`Property.Name` - `Property.Title``]`]";
             var geData = LoadProfile(newProfileText);
             geData.Profile.Fragment = geData.Profile.Profile;
             var profileText = geData.Profile.GetNodeProfileText();
@@ -153,6 +153,28 @@ namespace org.xpangen.Generator.Test
             ValidateProfileTextPosition(false, geData, 16, "In placeholder", FragmentType.Placeholder);
             ValidateProfileTextPosition(false, geData, 26, "In placeholder", FragmentType.Placeholder);
             ValidateProfileTextPosition(true,  geData, 27, "Start of text", FragmentType.Text);
+        }
+
+        [Test(Description = "Tests if text fragments get selected correctly")]
+        public void TextSelectionTest()
+        {
+            const string newProfileText =
+                "`[Class>:Class:`Class.Name` - `Class.Title`\r\n\t`[Property>:`Property.Name` - `Property.Title``]`]";
+            var geData = LoadProfile(newProfileText);
+            geData.Profile.Fragment = geData.Profile.Profile;
+            geData.Profile.GetNodeProfileText();
+            ValidateTextSelection(false, geData, 0, newProfileText.Length, "", "Whole profile text");
+            ValidateTextSelection(true, geData, 9, 15, "Class:", "Whole text fragment");
+            ValidateTextSelection(true, geData, 10, 14, "lass", "Whole text fragment");
+            ValidateTextSelection(false, geData, 9, 16, "Class:`", "Text and partial placeholder");
+            ValidateTextSelection(true, geData, 9, 27, "Class:`Class.Name`", "Text and placeholder");
+            ValidateTextSelection(false, geData, 46, 94, "`[Property>:`Property.Name` - `Property.Title``]", "Segment");
+            ValidateTextSelection(false, geData, 43, 74, "\r\n\t`[Property>:`Property.Name` ", "Outside container to inside container");
+        }
+
+        private void ValidateTextSelection(bool isSelectable, GeData geData, int start, int end, string expectedText, string comment)
+        {
+            Assert.AreEqual(geData.Profile.IsSelectable(start, end, true), isSelectable, "Is the specified text selectable? (" + comment + ")");
         }
 
         private static void VerifyFragmentsAtPosition(GeData geData, int position, Fragment expectedBefore,
