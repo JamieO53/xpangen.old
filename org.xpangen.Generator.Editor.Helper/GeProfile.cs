@@ -276,5 +276,18 @@ namespace org.xpangen.Generator.Editor.Helper
             before = pos.Fragment;
             after = pos.Fragment;
         }
+
+        public bool IsSelectable(int start, int end, bool textSelection)
+        {
+            if (start > end) return false;
+            if (start < 0 || end > ProfileText.Length) return false;
+            Fragment beforeStart, afterStart, beforeEnd, afterEnd;
+            GetFragmentsAt(out beforeStart, out afterStart, start);
+            GetFragmentsAt(out beforeEnd, out afterEnd, end);
+            if (afterStart == null || beforeEnd == null) return false;
+            if (afterStart.Parent != beforeEnd.Parent) return false;
+            if (textSelection && !(afterStart.ParentFragment is TextBlock)) return false;
+            return IsInputable(start) && IsInputable(end);
+        }
     }
 }
