@@ -23,5 +23,6 @@ namespace org.xpangen.Generator.Editor.Helper
         void SubstitutePlaceholder(TextBlock textBlock, string substitutedText, GenDataId id);
         bool IsInputable(int position);
         void GetFragmentsAt(out Fragment before, out Fragment after, int position);
+        bool IsSelectable(int start, int end, bool b);
     }
 }
