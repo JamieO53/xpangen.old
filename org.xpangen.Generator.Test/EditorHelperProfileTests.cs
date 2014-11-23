@@ -1,6 +1,6 @@
-﻿// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+﻿// // This Source Code Form is subject to the terms of the Mozilla Public
+// // License, v. 2.0. If a copy of the MPL was not distributed with this
+// //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using NUnit.Framework;
 using org.xpangen.Generator.Editor.Helper;
@@ -12,7 +12,7 @@ using org.xpangen.Generator.Profile.Profile;
 namespace org.xpangen.Generator.Test
 {
     /// <summary>
-    /// Tests the profile editor functionality
+    ///     Tests the profile editor functionality
     /// </summary>
     [TestFixture]
     public class EditorHelperProfileTests : GenDataTestsBase
@@ -25,7 +25,7 @@ namespace org.xpangen.Generator.Test
             const string expectedProfileText = "`[Class>:" + newProfileText + "`]";
 
             var geData = CreateNewProfile(newProfileText);
-            
+
             Assert.IsTrue(geData.Settings.BaseFile.ProfileList.Contains(newProfile));
             Assert.IsTrue(geData.Settings.Model.GenDataBase.Changed);
             Assert.AreEqual(FragmentType.Segment, geData.Profile.Fragment.FragmentType);
@@ -58,7 +58,7 @@ namespace org.xpangen.Generator.Test
             const string expectedUndoProfileText =
                 "`[Class>:Replace this Class with a placeholder but not this class. Here is another replacement Class.`]";
             var geData = CreateNewProfile(newProfileText);
-            var textBlock = (TextBlock)((Segment)geData.Profile.Fragment).Body().FragmentList[0];
+            var textBlock = (TextBlock) ((Segment) geData.Profile.Fragment).Body().FragmentList[0];
             ValidateProfileTextPosition(true, geData, 22, "End of text before substitution", FragmentType.Text);
             ValidateProfileTextPosition(true, geData, 23, "Substituted placholder position", FragmentType.Text);
             VerifyFragmentsAtPosition(geData, 22, textBlock.Body().FragmentList[0], textBlock.Body().FragmentList[0]);
@@ -82,10 +82,10 @@ namespace org.xpangen.Generator.Test
             const string expectedProfileText =
                 "`[Class>:Replace this `Class.Name` with a placeholder but not this class. It's title is `Class.Title``]";
             var geData = CreateNewProfile(newProfileText);
-            var textBlock = (TextBlock)((Segment)geData.Profile.Fragment).Body().FragmentList[0];
+            var textBlock = (TextBlock) ((Segment) geData.Profile.Fragment).Body().FragmentList[0];
 
             // Substitutions must be done in this order, because the first contains the second.
-            geData.Profile.SubstitutePlaceholder(textBlock, "Class Definition", geData.GenDataDef.GetId("Class.Title")); 
+            geData.Profile.SubstitutePlaceholder(textBlock, "Class Definition", geData.GenDataDef.GetId("Class.Title"));
             geData.Profile.SubstitutePlaceholder(textBlock, "Class", geData.GenDataDef.GetId("Class.Name"));
             VerifyProfile(geData, newProfileText, expectedProfileText);
         }
@@ -100,10 +100,10 @@ namespace org.xpangen.Generator.Test
             const string expectedUndoProfileText =
                 "`[Class>:Replace this Class with a placeholder but not this class. It's title is Class Definition`]";
             var geData = CreateNewProfile(newProfileText);
-            var textBlock = (TextBlock)((Segment)geData.Profile.Fragment).Body().FragmentList[0];
+            var textBlock = (TextBlock) ((Segment) geData.Profile.Fragment).Body().FragmentList[0];
 
             // Substitutions must be done in this order, because the first contains the second.
-            geData.Profile.SubstitutePlaceholder(textBlock, "Class Definition", geData.GenDataDef.GetId("Class.Title")); 
+            geData.Profile.SubstitutePlaceholder(textBlock, "Class Definition", geData.GenDataDef.GetId("Class.Title"));
             geData.Profile.SubstitutePlaceholder(textBlock, "Class", geData.GenDataDef.GetId("Class.Name"));
             VerifyProfile(geData, newProfileText, expectedProfileText);
             geData.Undo();
@@ -144,15 +144,18 @@ namespace org.xpangen.Generator.Test
             geData.Profile.Fragment = geData.Profile.Profile;
             var profileText = geData.Profile.GetNodeProfileText();
             Assert.AreEqual(newProfileText, profileText);
-            ValidateProfileTextPosition(true,  geData,  0, "Outside segment", FragmentType.Segment);
-            ValidateProfileTextPosition(false, geData,  1, "In segment prefix", FragmentType.Segment);
-            ValidateProfileTextPosition(false, geData,  8, "In segment prefix", FragmentType.Segment);
-            ValidateProfileTextPosition(true,  geData,  9, "Start of text", FragmentType.Text);
-            ValidateProfileTextPosition(true,  geData, 10, "Text", FragmentType.Text);
-            ValidateProfileTextPosition(true,  geData, 15, "End of text", FragmentType.Placeholder);
+            ValidateProfileTextPosition(true, geData, 0, "Outside segment", FragmentType.Segment);
+            ValidateProfileTextPosition(false, geData, 1, "In segment prefix", FragmentType.Segment);
+            ValidateProfileTextPosition(false, geData, 8, "In segment prefix", FragmentType.Segment);
+            ValidateProfileTextPosition(true, geData, 9, "Start of text", FragmentType.Text);
+            ValidateProfileTextPosition(true, geData, 10, "Text", FragmentType.Text);
+            ValidateProfileTextPosition(true, geData, 15, "End of text", FragmentType.Placeholder);
             ValidateProfileTextPosition(false, geData, 16, "In placeholder", FragmentType.Placeholder);
             ValidateProfileTextPosition(false, geData, 26, "In placeholder", FragmentType.Placeholder);
-            ValidateProfileTextPosition(true,  geData, 27, "Start of text", FragmentType.Text);
+            ValidateProfileTextPosition(true, geData, 27, "Start of text", FragmentType.Text);
+            ValidateProfileTextPosition(true, geData, 94, "Between segment and containing segment", FragmentType.Segment);
+            ValidateProfileTextPosition(true, geData, 58, "Between placeholder and containing segment end", FragmentType.Placeholder);
+            ValidateProfileTextPosition(true, geData, 92, "Between placeholder and containing segment end", FragmentType.TextBlock);
         }
 
         [Test(Description = "Tests if text fragments get selected correctly")]
@@ -169,12 +172,35 @@ namespace org.xpangen.Generator.Test
             ValidateTextSelection(false, geData, 9, 16, "Class:`", "Text and partial placeholder");
             ValidateTextSelection(true, geData, 9, 27, "Class:`Class.Name`", "Text and placeholder");
             ValidateTextSelection(false, geData, 46, 94, "`[Property>:`Property.Name` - `Property.Title``]", "Segment");
-            ValidateTextSelection(false, geData, 43, 74, "\r\n\t`[Property>:`Property.Name` ", "Outside container to inside container");
+            ValidateTextSelection(false, geData, 43, 74, "\r\n\t`[Property>:`Property.Name` ",
+                "Outside container to inside container");
         }
 
-        private void ValidateTextSelection(bool isSelectable, GeData geData, int start, int end, string expectedText, string comment)
+        [Test(Description = "Tests if text fragments get selected correctly")]
+        public void FragmentSelectionTest()
         {
-            Assert.AreEqual(geData.Profile.IsSelectable(start, end, true), isSelectable, "Is the specified text selectable? (" + comment + ")");
+            const string newProfileText =
+                "`[Class>:Class:`Class.Name` - `Class.Title`\r\n\t`[Property>:`Property.Name` - `Property.Title``]`]";
+            var geData = LoadProfile(newProfileText);
+            geData.Profile.Fragment = geData.Profile.Profile;
+            geData.Profile.GetNodeProfileText();
+            ValidateFragmentSelection(true, geData, 0, newProfileText.Length, newProfileText, "Whole profile text");
+            ValidateFragmentSelection(true, geData, 46, 94, "`[Property>:`Property.Name` - `Property.Title``]",
+                "Whole text fragment");
+        }
+
+        private void ValidateFragmentSelection(bool isSelectable, GeData geData, int start, int end, string expectedText,
+            string comment)
+        {
+            Assert.AreEqual(geData.Profile.IsSelectable(start, end, false), isSelectable,
+                "Is the specified profile text selectable? (" + comment + ")");
+        }
+
+        private void ValidateTextSelection(bool isSelectable, GeData geData, int start, int end, string expectedText,
+            string comment)
+        {
+            Assert.AreEqual(geData.Profile.IsSelectable(start, end, true), isSelectable,
+                "Is the specified text selectable? (" + comment + ")");
         }
 
         private static void VerifyFragmentsAtPosition(GeData geData, int position, Fragment expectedBefore,
@@ -186,7 +212,8 @@ namespace org.xpangen.Generator.Test
             Assert.AreSame(expectedAfter, after, "After position " + position);
         }
 
-        private static void ValidateProfileTextPosition(bool expected, GeData geData, int position, string message, FragmentType fragmentType)
+        private static void ValidateProfileTextPosition(bool expected, GeData geData, int position, string message,
+            FragmentType fragmentType)
         {
             var pos = ((GeProfile) geData.Profile).ProfileTextPostionList.FindAtPosition(position);
             Assert.IsNotNull(pos);
@@ -199,7 +226,7 @@ namespace org.xpangen.Generator.Test
         {
             var geData = SetUpGeData(fileGroup);
             geData.Profile.CreateNewProfile(newProfile, newProfileTitle, newProfileText);
-            geData.Profile.GetNodeProfileText(); 
+            geData.Profile.GetNodeProfileText();
             return geData;
         }
 
@@ -212,7 +239,7 @@ namespace org.xpangen.Generator.Test
             geData.Settings.BaseFile.AddProfile(newProfile, newProfile + ".prf", "Data", newProfileTitle);
             return geData;
         }
-        
+
         private static GeData SetUpGeData(string fileGroup)
         {
             var geData = GeData.GetDefaultGeData(true);
@@ -231,7 +258,7 @@ namespace org.xpangen.Generator.Test
         }
 
         /// <summary>
-        /// Set up the Generator data definition tests
+        ///     Set up the Generator data definition tests
         /// </summary>
         [TestFixtureSetUp]
         public void SetUp()
@@ -240,12 +267,11 @@ namespace org.xpangen.Generator.Test
         }
 
         /// <summary>
-        /// Tear down the Generator data definition tests
+        ///     Tear down the Generator data definition tests
         /// </summary>
         [TestFixtureTearDown]
         public void TearDown()
         {
-
         }
     }
 }

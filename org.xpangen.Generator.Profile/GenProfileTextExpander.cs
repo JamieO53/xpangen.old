@@ -50,7 +50,7 @@ namespace org.xpangen.Generator.Profile
             bodyPosition.Offset = Writer.Position;
             foreach (var f in body.FragmentList)
                 OutputFragment(f, bodyPosition);
-            bodyPosition.Length = Writer.Position - bodyPosition.Length;
+            bodyPosition.Length = Writer.Position - bodyPosition.Offset; //bodyPosition.Length;
         }
 
         private void OutputFragment(Fragment fragment, TextPosition bodyPosition)

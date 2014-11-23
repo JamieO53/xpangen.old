@@ -257,6 +257,7 @@ namespace org.xpangen.Generator.Editor.Helper
             if (position == 0 || position == ProfileText.Length) return true;
             var pos = ProfileTextPostionList.FindAtPosition(position);
             if (pos.Position.Offset == position) return true;
+            if (pos.Position.Offset + pos.Position.Length == position) return true;
             if (pos.Fragment.FragmentType == FragmentType.Text) return true;
             return false;
         }
@@ -264,6 +265,12 @@ namespace org.xpangen.Generator.Editor.Helper
         public void GetFragmentsAt(out Fragment before, out Fragment after, int position)
         {
             var pos = ProfileTextPostionList.FindAtPosition(position);
+            if (pos == null)
+            {
+                before = Profile;
+                after = null;
+                return;
+            }
             if (pos.Position.Offset == position)
             {
                 after = pos.Fragment;
@@ -273,6 +280,25 @@ namespace org.xpangen.Generator.Editor.Helper
                 else before = fragments[i - 1];
                 return;
             }
+            //if (pos.BodyPosition.Length > 0)
+            //{
+            //    if (position == pos.BodyPosition.Offset)
+            //    {
+            //        before = null;
+            //        var fragments = ((ContainerFragment) pos.Fragment).Body().FragmentList;
+            //        if (fragments.Count > 0)
+            //        {
+            //            after = fragments[0];
+            //            if (after is TextBlock)
+            //            {
+            //                fragments = ((TextBlock) after).Body().FragmentList;
+            //                if (fragments.Count > 0) after = fragments[0];
+            //            }
+            //        }
+            //        else after = null;
+            //        return;
+            //    }
+            //}
             before = pos.Fragment;
             after = pos.Fragment;
         }
@@ -285,7 +311,8 @@ namespace org.xpangen.Generator.Editor.Helper
             GetFragmentsAt(out beforeStart, out afterStart, start);
             GetFragmentsAt(out beforeEnd, out afterEnd, end);
             if (afterStart == null || beforeEnd == null) return false;
-            if (afterStart.Parent != beforeEnd.Parent) return false;
+            if (afterStart.ParentFragment != beforeEnd.ParentFragment && afterStart != beforeEnd.ParentFragment &&
+                afterStart.ParentFragment != beforeEnd) return false;
             if (textSelection && !(afterStart.ParentFragment is TextBlock)) return false;
             return IsInputable(start) && IsInputable(end);
         }
