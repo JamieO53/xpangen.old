@@ -119,10 +119,12 @@ namespace org.xpangen.Generator.Profile.Profile
         {
             var root = AddProfileRoot("");
             var rootBody = root.AddFragmentBody("Root0");
+            rootBody.Links.Add("Parent", null);
             root.AddFragmentBody("Empty1");
             var profile = rootBody.AddProfile();
             profile.Primary = "Profile2";
             profile.Secondary = "Empty1";
+            //profile.CheckBody();
         }
         public ProfileRoot AddProfileRoot(string name, string title = "")
         {
