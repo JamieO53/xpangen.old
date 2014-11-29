@@ -21,9 +21,15 @@ namespace org.xpangen.Generator.Profile
                     if (value.Position.Length < minLength)
                         minLength = value.Position.Length;
             }
+            if (minLength == int.MaxValue)
+                foreach (var value in Values)
+                {
+                    if (value.Position.Offset + value.Position.Length == position && value.Position.Length < minLength)
+                        minLength = value.Position.Length;
+                }
             foreach (var value in Values)
             {
-                if (value.Position.Offset <= position && position < value.Position.Offset + value.Position.Length &&
+                if (value.Position.Offset <= position && position <= value.Position.Offset + value.Position.Length &&
                     value.Position.Length == minLength)
                 {
                     var container = value.Fragment as ContainerFragment;
@@ -40,10 +46,6 @@ namespace org.xpangen.Generator.Profile
                 }
             }
             return null;
-            return
-                this.FirstOrDefault(
-                    p => p.Value.Position.Offset <= position && position <= p.Value.Position.EndPosition)
-                    .Value;
         }
 
         public new void Add(long key, ProfileTextPosition value)

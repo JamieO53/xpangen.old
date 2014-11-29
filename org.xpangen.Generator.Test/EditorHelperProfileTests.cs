@@ -2,6 +2,7 @@
 // // License, v. 2.0. If a copy of the MPL was not distributed with this
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Collections.Generic;
 using NUnit.Framework;
 using org.xpangen.Generator.Editor.Helper;
 using org.xpangen.Generator.Parameter;
@@ -144,7 +145,7 @@ namespace org.xpangen.Generator.Test
             geData.Profile.Fragment = geData.Profile.Profile;
             var profileText = geData.Profile.GetNodeProfileText();
             Assert.AreEqual(newProfileText, profileText);
-            ValidateProfileTextPosition(true, geData, 0, "Outside segment", FragmentType.Segment);
+            ValidateProfileTextPosition(true, geData, 0, "Outside start of segment", FragmentType.Segment);
             ValidateProfileTextPosition(false, geData, 1, "In segment prefix", FragmentType.Segment);
             ValidateProfileTextPosition(false, geData, 8, "In segment prefix", FragmentType.Segment);
             ValidateProfileTextPosition(true, geData, 9, "Start of text", FragmentType.Text);
@@ -156,6 +157,7 @@ namespace org.xpangen.Generator.Test
             ValidateProfileTextPosition(true, geData, 94, "Between segment and containing segment", FragmentType.Segment);
             ValidateProfileTextPosition(true, geData, 58, "Between placeholder and containing segment end", FragmentType.Placeholder);
             ValidateProfileTextPosition(true, geData, 92, "Between placeholder and containing segment end", FragmentType.TextBlock);
+            ValidateProfileTextPosition(true, geData, 96, "Outside end of segment", FragmentType.Segment);
         }
 
         [Test(Description = "Tests if text fragments get selected correctly")]
@@ -184,16 +186,36 @@ namespace org.xpangen.Generator.Test
             var geData = LoadProfile(newProfileText);
             geData.Profile.Fragment = geData.Profile.Profile;
             geData.Profile.GetNodeProfileText();
-            ValidateFragmentSelection(true, geData, 0, newProfileText.Length, newProfileText, "Whole profile text");
+            ValidateFragmentSelection(true, geData, 0, newProfileText.Length, newProfileText, "Whole profile text",
+                new[] {FragmentType.Segment}, "", "");
             ValidateFragmentSelection(true, geData, 46, 94, "`[Property>:`Property.Name` - `Property.Title``]",
-                "Whole text fragment");
+                "Whole text fragment", new[]{FragmentType.Segment}, "", "");
         }
 
-        private void ValidateFragmentSelection(bool isSelectable, GeData geData, int start, int end, string expectedText,
-            string comment)
+        private void ValidateFragmentSelection(bool isSelectable, GeData geData, int start, int end,
+            string expectedText, string comment, IList<FragmentType> fragmentTypes, string expectedPrefix, string expectedSuffix)
         {
             Assert.AreEqual(geData.Profile.IsSelectable(start, end, false), isSelectable,
                 "Is the specified profile text selectable? (" + comment + ")");
+            var fragments = geData.Profile.GetSelection(start, end);
+            Assert.AreEqual(fragmentTypes.Count, fragments.Fragments.Count);
+            for (var i = 0; i < fragments.Fragments.Count; i++)
+                Assert.AreEqual(fragmentTypes[i], fragments.Fragments[i].FragmentType,
+                    "Fragment[" + i + "] (" + comment + ")");
+            if (fragments.HasPrefix)
+                Assert.AreEqual(expectedPrefix, fragments.TextPrefix.AsPrefix, "Prefix (" + comment + ")");
+            else
+                Assert.IsNull(fragments.TextPrefix.Text, "Null Prefix (" + comment + ")");
+            if (fragments.HasSuffix)
+            {
+                Assert.AreEqual(expectedSuffix, fragments.TextSuffix.AsSuffix, "Prefix (" + comment + ")");
+                Assert.AreEqual("", expectedPrefix, "Blank Prefix (" + comment + ")");
+            }
+            else
+            {
+                Assert.IsNull(fragments.TextSuffix.Text, "Null Suffix (" + comment + ")");
+                Assert.AreEqual("", expectedSuffix, "Blank Suffix (" + comment + ")");
+            }
         }
 
         private void ValidateTextSelection(bool isSelectable, GeData geData, int start, int end, string expectedText,
@@ -201,6 +223,8 @@ namespace org.xpangen.Generator.Test
         {
             Assert.AreEqual(geData.Profile.IsSelectable(start, end, true), isSelectable,
                 "Is the specified text selectable? (" + comment + ")");
+            if (!isSelectable) return;
+            var fragments = geData.Profile.GetSelection(start, end);
         }
 
         private static void VerifyFragmentsAtPosition(GeData geData, int position, Fragment expectedBefore,
