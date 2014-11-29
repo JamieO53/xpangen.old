@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics.Contracts;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Parser.CompactProfileParser;
@@ -280,25 +281,6 @@ namespace org.xpangen.Generator.Editor.Helper
                 else before = fragments[i - 1];
                 return;
             }
-            //if (pos.BodyPosition.Length > 0)
-            //{
-            //    if (position == pos.BodyPosition.Offset)
-            //    {
-            //        before = null;
-            //        var fragments = ((ContainerFragment) pos.Fragment).Body().FragmentList;
-            //        if (fragments.Count > 0)
-            //        {
-            //            after = fragments[0];
-            //            if (after is TextBlock)
-            //            {
-            //                fragments = ((TextBlock) after).Body().FragmentList;
-            //                if (fragments.Count > 0) after = fragments[0];
-            //            }
-            //        }
-            //        else after = null;
-            //        return;
-            //    }
-            //}
             before = pos.Fragment;
             after = pos.Fragment;
         }
@@ -315,6 +297,18 @@ namespace org.xpangen.Generator.Editor.Helper
                 afterStart.ParentFragment != beforeEnd) return false;
             if (textSelection && !(afterStart.ParentFragment is TextBlock)) return false;
             return IsInputable(start) && IsInputable(end);
+        }
+
+        public FragmentSelection GetSelection(int start, int end)
+        {
+            Contract.Assert(IsSelectable(start, end, false));
+            var fragmentSelection = new FragmentSelection();
+            Fragment beforeStart, afterStart, beforeEnd, afterEnd;
+            GetFragmentsAt(out beforeStart, out afterStart, start);
+            GetFragmentsAt(out beforeEnd, out afterEnd, end);
+            if (afterStart == beforeEnd)
+                fragmentSelection.Fragments.Add(afterStart);
+            return fragmentSelection;
         }
     }
 }

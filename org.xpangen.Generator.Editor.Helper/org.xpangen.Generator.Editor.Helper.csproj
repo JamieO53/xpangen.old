@@ -71,6 +71,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ComboServer.cs" />
+    <Compile Include="FragmentSelection.cs" />
     <Compile Include="GeData.cs" />
     <Compile Include="GeGenData.cs" />
     <Compile Include="GeComboItem.cs" />

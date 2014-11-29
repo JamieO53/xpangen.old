@@ -24,5 +24,6 @@ namespace org.xpangen.Generator.Editor.Helper
         bool IsInputable(int position);
         void GetFragmentsAt(out Fragment before, out Fragment after, int position);
         bool IsSelectable(int start, int end, bool b);
+        FragmentSelection GetSelection(int start, int end);
     }
 }
