@@ -277,8 +277,12 @@ namespace org.xpangen.Generator.Editor.Helper
                 after = pos.Fragment;
                 var fragments = ((FragmentBody) after.Parent).FragmentList;
                 var i = fragments.IndexOf(after);
-                if (i == 0) before = null;
-                else before = fragments[i - 1];
+                if (i == 0 && after.ParentFragment.FragmentType == FragmentType.TextBlock)
+                {
+                    fragments = ((FragmentBody) after.ParentFragment.Parent).FragmentList;
+                    i = fragments.IndexOf(after.ParentFragment);
+                }
+                before = i == 0 ? null : fragments[i - 1];
                 return;
             }
             before = pos.Fragment;

@@ -29,6 +29,9 @@ namespace org.xpangen.Generator.Editor.Helper
         public bool HasPrefix { get { return _textPrefix != null; }}
 
         public bool HasSuffix { get { return _textSuffix != null; }}
+
+        public string Prefix { get { return HasPrefix ? TextPrefix.AsPrefix : ""; } }
+        public string Suffix { get { return HasSuffix ? TextSuffix.AsSuffix : ""; } }
     }
 
     public class TextSelection
@@ -36,7 +39,7 @@ namespace org.xpangen.Generator.Editor.Helper
         public Text Text { get; set; }
         int Position { get; set; }
 
-        public string AsPrefix
+        internal string AsPrefix
         {
             get
             {
@@ -45,7 +48,8 @@ namespace org.xpangen.Generator.Editor.Helper
                 return Text.TextValue.Substring(Position);
             }
         }
-        public string AsSuffix
+
+        internal string AsSuffix
         {
             get
             {

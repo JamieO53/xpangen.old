@@ -178,40 +178,38 @@ namespace org.xpangen.Generator.Test
                 "Outside container to inside container");
         }
 
-        [Test(Description = "Tests if text fragments get selected correctly")]
+        [Test(Description = "Tests if fragments get selected correctly")]
         public void FragmentSelectionTest()
         {
             const string newProfileText =
-                "`[Class>:Class:`Class.Name` - `Class.Title`\r\n\t`[Property>:`Property.Name` - `Property.Title``]`]";
+                  "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\n`]";
             var geData = LoadProfile(newProfileText);
             geData.Profile.Fragment = geData.Profile.Profile;
             geData.Profile.GetNodeProfileText();
             ValidateFragmentSelection(true, geData, 0, newProfileText.Length, newProfileText, "Whole profile text",
                 new[] {FragmentType.Segment}, "", "");
-            ValidateFragmentSelection(true, geData, 46, 94, "`[Property>:`Property.Name` - `Property.Title``]",
+            ValidateFragmentSelection(true, geData, 43, 94, "`[Property>:\r\n\t`Property.Name` - `Property.Title``]",
                 "Whole text fragment", new[]{FragmentType.Segment}, "", "");
         }
 
         private void ValidateFragmentSelection(bool isSelectable, GeData geData, int start, int end,
             string expectedText, string comment, IList<FragmentType> fragmentTypes, string expectedPrefix, string expectedSuffix)
         {
-            Assert.AreEqual(geData.Profile.IsSelectable(start, end, false), isSelectable,
+            Assert.AreEqual(isSelectable, geData.Profile.IsSelectable(start, end, false),
                 "Is the specified profile text selectable? (" + comment + ")");
             var fragments = geData.Profile.GetSelection(start, end);
             Assert.AreEqual(fragmentTypes.Count, fragments.Fragments.Count);
             for (var i = 0; i < fragments.Fragments.Count; i++)
                 Assert.AreEqual(fragmentTypes[i], fragments.Fragments[i].FragmentType,
                     "Fragment[" + i + "] (" + comment + ")");
-            if (fragments.HasPrefix)
-                Assert.AreEqual(expectedPrefix, fragments.TextPrefix.AsPrefix, "Prefix (" + comment + ")");
-            else
-                Assert.IsNull(fragments.TextPrefix.Text, "Null Prefix (" + comment + ")");
-            if (fragments.HasSuffix)
+                Assert.AreEqual(expectedPrefix, fragments.Prefix, "Prefix (" + comment + ")");
+            if (!fragments.HasPrefix)
             {
-                Assert.AreEqual(expectedSuffix, fragments.TextSuffix.AsSuffix, "Prefix (" + comment + ")");
+                Assert.IsNull(fragments.TextPrefix.Text, "Null Prefix (" + comment + ")");
                 Assert.AreEqual("", expectedPrefix, "Blank Prefix (" + comment + ")");
             }
-            else
+            Assert.AreEqual(expectedSuffix, fragments.Suffix, "Suffix (" + comment + ")");
+            if (!fragments.HasSuffix)
             {
                 Assert.IsNull(fragments.TextSuffix.Text, "Null Suffix (" + comment + ")");
                 Assert.AreEqual("", expectedSuffix, "Blank Suffix (" + comment + ")");
