@@ -160,7 +160,7 @@ namespace org.xpangen.Generator.Profile
                     throw new ArgumentOutOfRangeException();
             }
             bodyPosition.Length += fragmentPosition.Position.Length;
-            ProfileTextPostionList.Add(fragmentPosition.Position.Key, fragmentPosition);
+            ProfileTextPostionList.Add(fragmentPosition);
         }
 
         private static string Identifier(string className, string propertyName)

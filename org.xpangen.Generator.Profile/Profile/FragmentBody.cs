@@ -49,16 +49,16 @@ namespace org.xpangen.Generator.Profile.Profile
             return fragmentType.ToString() + FragmentList.Count;
         }
 
-        internal ProfileDefinition ProfileDefinition()
+        internal ProfileDefinition ProfileDefinition
         {
-            return (ProfileDefinition) Parent.Parent;
+            get { return (ProfileDefinition) Parent.Parent; }
         }
 
         private void SetContainerLinks(ContainerFragment containerFragment)
         {
             containerFragment.Links.Add("ContainerBody", this);
             containerFragment.Links.Add("GenObject", null);
-            var bodies = containerFragment.ProfileDefinition().ProfileRoot().FragmentBodyList;
+            var bodies = containerFragment.ProfileDefinition.ProfileRoot().FragmentBodyList;
             containerFragment.Links.Add("PrimaryBody", bodies.Find(containerFragment.Primary));
             containerFragment.Links.Add("SecondaryBody", bodies.Find(containerFragment.Secondary));
             if (containerFragment.Primary != "Empty1")
@@ -67,7 +67,7 @@ namespace org.xpangen.Generator.Profile.Profile
 
         private string CreateContainerFragmentBody(string prefix)
         {
-            var root = ProfileDefinition().ProfileRoot();
+            var root = ProfileDefinition.ProfileRoot();
             return CreateContainerFragmentBody(root, prefix);
         }
 

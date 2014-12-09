@@ -140,7 +140,7 @@ namespace org.xpangen.Generator.Test
         public void InputablePositionTest()
         {
             const string newProfileText =
-                  "`[Class>:Class:`Class.Name` - `Class.Title`\r\n\t`[Property>:`Property.Name` - `Property.Title``]`]";
+                "`[Class>:Class:`Class.Name` - `Class.Title`\r\n\t`[Property>:`Property.Name` - `Property.Title``]`]";
             var geData = LoadProfile(newProfileText);
             geData.Profile.Fragment = geData.Profile.Profile;
             var profileText = geData.Profile.GetNodeProfileText();
@@ -155,8 +155,10 @@ namespace org.xpangen.Generator.Test
             ValidateProfileTextPosition(false, geData, 26, "In placeholder", FragmentType.Placeholder);
             ValidateProfileTextPosition(true, geData, 27, "Start of text", FragmentType.Text);
             ValidateProfileTextPosition(true, geData, 94, "Between segment and containing segment", FragmentType.Segment);
-            ValidateProfileTextPosition(true, geData, 58, "Between placeholder and containing segment end", FragmentType.Placeholder);
-            ValidateProfileTextPosition(true, geData, 92, "Between placeholder and containing segment end", FragmentType.TextBlock);
+            ValidateProfileTextPosition(true, geData, 58, "Between placeholder and containing segment end",
+                FragmentType.Placeholder);
+            ValidateProfileTextPosition(true, geData, 92, "Between placeholder and containing segment end",
+                FragmentType.TextBlock);
             ValidateProfileTextPosition(true, geData, 96, "Outside end of segment", FragmentType.Segment);
         }
 
@@ -182,27 +184,44 @@ namespace org.xpangen.Generator.Test
         public void FragmentSelectionTest()
         {
             const string newProfileText =
-                  "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\n`]";
+                "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]";
             var geData = LoadProfile(newProfileText);
             geData.Profile.Fragment = geData.Profile.Profile;
             geData.Profile.GetNodeProfileText();
             ValidateFragmentSelection(true, geData, 0, newProfileText.Length, newProfileText, "Whole profile text",
-                new[] {FragmentType.Segment}, "", "");
+                new[] {FragmentType.Segment}, "", "", "");
             ValidateFragmentSelection(true, geData, 43, 94, "`[Property>:\r\n\t`Property.Name` - `Property.Title``]",
-                "Whole text fragment", new[]{FragmentType.Segment}, "", "");
+                "Whole Property segment", new[] {FragmentType.Segment}, "", "", "");
+            ValidateFragmentSelection(true, geData, 9, 15, "Class:", "Whole Text fragment", new[] {FragmentType.Text},
+                "", "", "");
+            ValidateFragmentSelection(true, geData, 10, 15, "lass:", "End of Text fragment", new FragmentType[0],
+                "lass:", "", "");
+            ValidateFragmentSelection(true, geData, 9, 14, "Class", "Start of Text fragment", new FragmentType[0],
+                "", "Class", "");
+            ValidateFragmentSelection(true, geData, 10, 14, "lass", "Substring of Text fragment", new FragmentType[0],
+                "", "", "lass");
+            ValidateFragmentSelection(true, geData, 29, 94,
+                " `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]",
+                "Text and whole Property segment", new[] {FragmentType.Placeholder, FragmentType.Segment}, " ", "", "");
+            ValidateFragmentSelection(true, geData, 43, 112,
+                "`[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name`",
+                "Whole Property segment and following text",
+                new[] {FragmentType.Segment, FragmentType.Text, FragmentType.Placeholder}, "", "", "");
         }
 
-        private void ValidateFragmentSelection(bool isSelectable, GeData geData, int start, int end,
-            string expectedText, string comment, IList<FragmentType> fragmentTypes, string expectedPrefix, string expectedSuffix)
+        private static void ValidateFragmentSelection(bool isSelectable, GeData geData, int start, int end,
+            string expectedText, string comment, IList<FragmentType> fragmentTypes, string expectedPrefix,
+            string expectedSuffix, string expectedInfix)
         {
             Assert.AreEqual(isSelectable, geData.Profile.IsSelectable(start, end, false),
                 "Is the specified profile text selectable? (" + comment + ")");
             var fragments = geData.Profile.GetSelection(start, end);
+            Assert.AreEqual(expectedText, fragments.ProfileText);
             Assert.AreEqual(fragmentTypes.Count, fragments.Fragments.Count);
             for (var i = 0; i < fragments.Fragments.Count; i++)
                 Assert.AreEqual(fragmentTypes[i], fragments.Fragments[i].FragmentType,
                     "Fragment[" + i + "] (" + comment + ")");
-                Assert.AreEqual(expectedPrefix, fragments.Prefix, "Prefix (" + comment + ")");
+            Assert.AreEqual(expectedPrefix, fragments.Prefix, "Prefix (" + comment + ")");
             if (!fragments.HasPrefix)
             {
                 Assert.IsNull(fragments.TextPrefix.Text, "Null Prefix (" + comment + ")");
@@ -213,6 +232,12 @@ namespace org.xpangen.Generator.Test
             {
                 Assert.IsNull(fragments.TextSuffix.Text, "Null Suffix (" + comment + ")");
                 Assert.AreEqual("", expectedSuffix, "Blank Suffix (" + comment + ")");
+            }
+            Assert.AreEqual(expectedInfix, fragments.Infix, "Infix (" + comment + ")");
+            if (!fragments.HasInfix)
+            {
+                Assert.IsNull(fragments.TextInfix.Text, "Null Infix (" + comment + ")");
+                Assert.AreEqual("", expectedInfix, "Blank Infix (" + comment + ")");
             }
         }
 

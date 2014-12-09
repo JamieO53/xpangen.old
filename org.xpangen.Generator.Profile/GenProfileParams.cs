@@ -10,7 +10,7 @@ namespace org.xpangen.Generator.Profile
     public class GenProfileParams : GenFragmentParams
     {
         public GenProfileParams(GenDataDef genDataDef, Profile.Profile profile = null)
-            : this(genDataDef, profile == null ? CreateProfileDefinition() : profile.ProfileDefinition())
+            : this(genDataDef, profile == null ? CreateProfileDefinition() : profile.ProfileDefinition)
         {
         }
 

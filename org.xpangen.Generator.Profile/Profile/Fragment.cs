@@ -47,17 +47,17 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public ContainerFragment ParentFragment
         {
-            get { return ((ContainerFragment)FragmentBody().Links["Parent"]); }
+            get { return ((ContainerFragment)FragmentBody.Links["Parent"]); }
         }
 
-        public ProfileDefinition ProfileDefinition()
+        public ProfileDefinition ProfileDefinition
         {
-            return FragmentBody().ProfileDefinition();
+            get {return FragmentBody.ProfileDefinition;}
         }
 
-        private FragmentBody FragmentBody()
+        private FragmentBody FragmentBody
         {
-            return (FragmentBody) Parent;
+            get { return (FragmentBody) Parent; }
         }
 
         public FragmentType FragmentType { get; set; }
