@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile;
@@ -266,27 +267,37 @@ namespace org.xpangen.Generator.Editor.Helper
         public void GetFragmentsAt(out Fragment before, out Fragment after, int position)
         {
             var pos = ProfileTextPostionList.FindAtPosition(position);
+           
             if (pos == null)
             {
                 before = Profile;
                 after = null;
                 return;
             }
-            if (pos.Position.Offset == position)
+            
+            if (pos.Position.Offset + pos.Position.Length == position)
             {
-                after = pos.Fragment;
-                var fragments = ((FragmentBody) after.Parent).FragmentList;
-                var i = fragments.IndexOf(after);
-                if (i == 0 && after.ParentFragment.FragmentType == FragmentType.TextBlock)
-                {
-                    fragments = ((FragmentBody) after.ParentFragment.Parent).FragmentList;
-                    i = fragments.IndexOf(after.ParentFragment);
-                }
-                before = i == 0 ? null : fragments[i - 1];
+                before = pos.Fragment;
+                after = null;
                 return;
             }
-            before = pos.Fragment;
+            
+            if (pos.Position.Offset != position && pos.Position.Offset + pos.Position.Length != position)
+            {
+                before = pos.Fragment;
+                after = pos.Fragment;
+                return;
+            }
+
             after = pos.Fragment;
+            var fragments = ((FragmentBody) after.Parent).FragmentList;
+            var i = fragments.IndexOf(after);
+            if (i == 0 && after.ParentFragment.FragmentType == FragmentType.TextBlock)
+            {
+                fragments = ((FragmentBody) after.ParentFragment.Parent).FragmentList;
+                i = fragments.IndexOf(after.ParentFragment);
+            }
+            before = i == 0 ? null : fragments[i - 1];
         }
 
         public bool IsSelectable(int start, int end, bool textSelection)
@@ -297,22 +308,95 @@ namespace org.xpangen.Generator.Editor.Helper
             GetFragmentsAt(out beforeStart, out afterStart, start);
             GetFragmentsAt(out beforeEnd, out afterEnd, end);
             if (afterStart == null || beforeEnd == null) return false;
-            if (afterStart.ParentFragment != beforeEnd.ParentFragment && afterStart != beforeEnd.ParentFragment &&
-                afterStart.ParentFragment != beforeEnd) return false;
+            if (afterStart.ParentFragment != beforeEnd.ParentFragment)
+                if (afterStart.ParentFragment != beforeEnd.ParentFragment.ParentFragment)
+                    if (afterStart.ParentFragment.ParentFragment != beforeEnd.ParentFragment)
+                        return false;
             if (textSelection && !(afterStart.ParentFragment is TextBlock)) return false;
             return IsInputable(start) && IsInputable(end);
         }
 
         public FragmentSelection GetSelection(int start, int end)
         {
-            Contract.Assert(IsSelectable(start, end, false));
+            Contract.Requires(IsSelectable(start, end, false));
             var fragmentSelection = new FragmentSelection();
             Fragment beforeStart, afterStart, beforeEnd, afterEnd;
             GetFragmentsAt(out beforeStart, out afterStart, start);
             GetFragmentsAt(out beforeEnd, out afterEnd, end);
-            if (afterStart == beforeEnd)
-                fragmentSelection.Fragments.Add(afterStart);
+            if (beforeStart != afterStart && beforeEnd != afterEnd)
+            {
+                if (afterStart == beforeEnd)
+                    fragmentSelection.Fragments.Add(afterStart);
+                else if (afterStart.ParentFragment == beforeEnd.ParentFragment)
+                {
+                    var fragments = ((FragmentBody) afterStart.Parent).FragmentList;
+                    CopySelectionFragments(fragments, fragmentSelection.Fragments, fragments.IndexOf(afterStart),
+                        fragments.IndexOf(beforeEnd));
+                }
+                else
+                {
+                    var prefixText = afterStart.ParentFragment is TextBlock;
+                    var suffixText = beforeEnd.ParentFragment is TextBlock;
+                    var fragments = prefixText
+                        ? ((FragmentBody) afterStart.ParentFragment.Parent).FragmentList
+                        : ((FragmentBody) afterStart.Parent).FragmentList;
+                    int i;
+                    if (prefixText)
+                    {
+                        i = fragments.IndexOf(afterStart.ParentFragment) + 1;
+                        var textFragments = ((FragmentBody) afterStart.Parent).FragmentList;
+                        CopySelectionFragments(textFragments, fragmentSelection.Fragments,
+                            textFragments.IndexOf(afterStart), textFragments.Count - 1);
+                    }
+                    else i = fragments.IndexOf(afterStart);
+                    var j = suffixText ? fragments.IndexOf(beforeEnd.ParentFragment) - 1 : fragments.IndexOf(beforeEnd);
+                    CopySelectionFragments(fragments, fragmentSelection.Fragments, i, j);
+                    if (suffixText)
+                    {
+                        var textFragments = ((FragmentBody) beforeEnd.Parent).FragmentList;
+                        CopySelectionFragments(textFragments, fragmentSelection.Fragments, 0,
+                            textFragments.IndexOf(beforeEnd));
+                    }
+                }
+            }
+            else if (beforeStart == afterStart && beforeEnd != afterEnd)
+            {
+                Contract.Assert(beforeStart is Text);
+                var pos = ProfileTextPostionList.GetFragmentPosition(afterStart);
+                fragmentSelection.SetPrefix((Text) afterStart, start - pos.Position.Offset);
+                if (afterStart != beforeEnd)
+                {
+                    var fragments = ((FragmentBody) afterStart.Parent).FragmentList;
+                    var n = fragments.Count;
+                    var i = fragments.IndexOf(afterStart);
+                    CopySelectionFragments(fragments, fragmentSelection.Fragments, i + 1, n - 1);
+                    fragmentSelection.Fragments.Add(beforeEnd);
+                }
+            }
+            else if (beforeStart != afterStart && beforeEnd == afterEnd)
+            {
+                Contract.Assert(afterEnd is Text);
+                var pos = ProfileTextPostionList.GetFragmentPosition(beforeEnd);
+                fragmentSelection.SetSuffix((Text) beforeEnd, end - pos.Position.Offset);
+                if (beforeEnd != afterStart)
+                    fragmentSelection.Fragments.Add(afterStart);
+            }
+            else if (beforeStart == afterStart && beforeEnd == afterEnd)
+            {
+                Contract.Assert(afterEnd is Text);
+                var pos = ProfileTextPostionList.GetFragmentPosition(beforeEnd);
+                fragmentSelection.SetInfix((Text) beforeEnd, start - pos.Position.Offset, end - pos.Position.Offset);
+            }
+
+            fragmentSelection.ProfileText = ProfileText.Substring(start, end - start);
             return fragmentSelection;
+        }
+
+        private static void CopySelectionFragments(GenNamedApplicationList<Fragment> fragments,
+            List<Fragment> selectionFragments, int first, int last)
+        {
+            for (var i = first; i <= last; i++)
+                selectionFragments.Add(fragments[i]);
         }
     }
 }

@@ -5,8 +5,10 @@ using org.xpangen.Generator.Profile.Profile;
 
 namespace org.xpangen.Generator.Profile
 {
-    public class ProfileTextPostionList : SortedDictionary<long, ProfileTextPosition>
+    public class ProfileTextPostionList : List<ProfileTextPosition>
     {
+        private Dictionary<Fragment, ProfileTextPosition> _fragmenPositions =
+            new Dictionary<Fragment, ProfileTextPosition>();
         /// <summary>
         /// Matches the shortest fragment at the selected position.
         /// </summary>
@@ -15,44 +17,58 @@ namespace org.xpangen.Generator.Profile
         public ProfileTextPosition FindAtPosition(int position)
         {
             var minLength = int.MaxValue;
-            foreach (var value in Values)
+            foreach (var value in this)
             {
                 if (value.Position.Offset <= position && position < value.Position.Offset + value.Position.Length)
                     if (value.Position.Length < minLength)
                         minLength = value.Position.Length;
             }
             if (minLength == int.MaxValue)
-                foreach (var value in Values)
+                foreach (var value in this)
                 {
                     if (value.Position.Offset + value.Position.Length == position && value.Position.Length < minLength)
                         minLength = value.Position.Length;
                 }
-            foreach (var value in Values)
+            foreach (var value in this)
             {
                 if (value.Position.Offset <= position && position <= value.Position.Offset + value.Position.Length &&
                     value.Position.Length == minLength)
                 {
                     var container = value.Fragment as ContainerFragment;
-                    if (container != null && position == value.BodyPosition.EndPosition &&
-                        container.Body().FragmentList.Count > 0)
-                    {
-                        var fragment = container.Body().FragmentList[container.Body().FragmentList.Count - 1];
-                        foreach (var value1 in Values)
-                        {
-                            if (value1.Fragment == fragment) return value1;
-                        }
-                    }
+                    if (container == null || position != value.BodyPosition.EndPosition ||
+                        container.Body().FragmentList.Count <= 0) return value;
+                    var fragment = container.Body().FragmentList[container.Body().FragmentList.Count - 1];
+                    foreach (var value1 in this)
+                        if (value1.Fragment == fragment) return value1;
                     return value;
                 }
             }
             return null;
         }
 
-        public new void Add(long key, ProfileTextPosition value)
+        public ProfileTextPosition GetFragmentPosition(Fragment fragment)
         {
-            if (ContainsKey(key)) return;
+            Contract.Requires(ContainsFragment(fragment));
+            return _fragmenPositions[fragment];
+        }
+
+        public bool ContainsFragment(Fragment fragment)
+        {
+            return _fragmenPositions.ContainsKey(fragment);
+        }
+
+        public new void Add(ProfileTextPosition value)
+        {
+            Contract.Ensures(ContainsFragment(value.Fragment));
+            if (ContainsValue(value)) return;
                 // Function parameters get added twice
-            base.Add(key, value);
+            base.Add(value);
+            _fragmenPositions.Add(value.Fragment, value);
+        }
+
+        private bool ContainsValue(ProfileTextPosition value)
+        {
+            return this.Any(item => value.Position.Key == item.Position.Key && value.Fragment == item.Fragment);
         }
     }
 

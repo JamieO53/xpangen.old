@@ -616,7 +616,7 @@ Child[Reference='Child']
         {
             var profileDataDef = profile.Profile.GenDataBase.GenDataDef;
             VerifyObjectClass(profileDataDef, "Profile", profile.Profile.GenObject);
-            var profileDefinition = profile.Profile.ProfileDefinition();
+            var profileDefinition = profile.Profile.ProfileDefinition;
             VerifyObjectClass(profileDataDef, "ProfileRoot", profileDefinition.ProfileRootList[0].GenObject);
             var fragmentBodies = profileDefinition.ProfileRootList[0].FragmentBodyList;
             Assert.AreEqual("Root0", fragmentBodies[0].Name, "Root body name");

@@ -85,11 +85,11 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public FragmentBody CheckBody()
         {
-            var root = ProfileDefinition().ProfileRoot();
+            var root = ProfileDefinition.ProfileRoot();
             if (Primary == "Empty1")
             {
                 Primary = root.CreateContainerFragmentBody(GetType().Name);
-                Links["PrimaryBody"] = ProfileDefinition().ProfileRoot().FragmentBodyList.Find(Primary);
+                Links["PrimaryBody"] = ProfileDefinition.ProfileRoot().FragmentBodyList.Find(Primary);
                 Body().Links.Add("Parent", this);
             }
             return root.FragmentBodyList.Find(Primary);
@@ -97,11 +97,11 @@ namespace org.xpangen.Generator.Profile.Profile
 
         public FragmentBody CheckSecondaryBody()
         {
-            var root = ProfileDefinition().ProfileRoot();
+            var root = ProfileDefinition.ProfileRoot();
             if (Secondary == "Empty1")
             {
                 Secondary = root.CreateContainerFragmentBody(GetType().Name);
-                Links["SecondaryBody"] = ProfileDefinition().ProfileRoot().FragmentBodyList.Find(Secondary);
+                Links["SecondaryBody"] = ProfileDefinition.ProfileRoot().FragmentBodyList.Find(Secondary);
                 SecondaryBody().Links.Add("Parent", this);
             }
             return root.FragmentBodyList.Find(Secondary);
