@@ -180,64 +180,169 @@ namespace org.xpangen.Generator.Test
                 "Outside container to inside container");
         }
 
-        [Test(Description = "Tests if fragments get selected correctly")]
-        public void FragmentSelectionTest()
+        [Test(Description = "Tests if fragments get selected correctly"), TestCaseSource(typeof(ValidateFragmentSelectionParamsList))]
+        public void FragmentSelectionTest(ValidateFragmentSelectionParams selectionParams)
         {
-            const string newProfileText =
-                "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]";
-            var geData = LoadProfile(newProfileText);
-            geData.Profile.Fragment = geData.Profile.Profile;
-            geData.Profile.GetNodeProfileText();
-            ValidateFragmentSelection(true, geData, 0, newProfileText.Length, newProfileText, "Whole profile text",
-                new[] {FragmentType.Segment}, "", "", "");
-            ValidateFragmentSelection(true, geData, 43, 94, "`[Property>:\r\n\t`Property.Name` - `Property.Title``]",
-                "Whole Property segment", new[] {FragmentType.Segment}, "", "", "");
-            ValidateFragmentSelection(true, geData, 9, 15, "Class:", "Whole Text fragment", new[] {FragmentType.Text},
-                "", "", "");
-            ValidateFragmentSelection(true, geData, 10, 15, "lass:", "End of Text fragment", new FragmentType[0],
-                "lass:", "", "");
-            ValidateFragmentSelection(true, geData, 9, 14, "Class", "Start of Text fragment", new FragmentType[0],
-                "", "Class", "");
-            ValidateFragmentSelection(true, geData, 10, 14, "lass", "Substring of Text fragment", new FragmentType[0],
-                "", "", "lass");
-            ValidateFragmentSelection(true, geData, 29, 94,
-                " `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]",
-                "Text and whole Property segment", new[] {FragmentType.Placeholder, FragmentType.Segment}, " ", "", "");
-            ValidateFragmentSelection(true, geData, 43, 112,
-                "`[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name`",
-                "Whole Property segment and following text",
-                new[] {FragmentType.Segment, FragmentType.Text, FragmentType.Placeholder}, "", "", "");
+            ValidateFragmentSelection(selectionParams);
         }
 
-        private static void ValidateFragmentSelection(bool isSelectable, GeData geData, int start, int end,
-            string expectedText, string comment, IList<FragmentType> fragmentTypes, string expectedPrefix,
-            string expectedSuffix, string expectedInfix)
+        public class FragmentSelectionCutTestParamsList : List<FragmentSelectionCutTestParams>
         {
-            Assert.AreEqual(isSelectable, geData.Profile.IsSelectable(start, end, false),
-                "Is the specified profile text selectable? (" + comment + ")");
-            var fragments = geData.Profile.GetSelection(start, end);
-            Assert.AreEqual(expectedText, fragments.ProfileText);
-            Assert.AreEqual(fragmentTypes.Count, fragments.Fragments.Count);
+            public FragmentSelectionCutTestParamsList()
+            {
+                Add(new FragmentSelectionCutTestParams(
+                "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]", 
+                "Whole profile text",
+                0, 115, "", 
+                "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]"));
+            }
+        }
+        
+         public class FragmentSelectionCutTestParams
+        {
+            public FragmentSelectionCutTestParams(string newProfileText, string comment, int start, int end, string expectedText, string expectedSelectionText)
+            {
+                NewProfileText = newProfileText;
+                Comment = comment;
+                Start = start;
+                End = end;
+                ExpectedText = expectedText;
+                ExpectedSelectionText = expectedSelectionText;
+            }
+            public string NewProfileText { get; private set; }
+             public string Comment { get; set; }
+             public int Start { get; private set; }
+            public int End { get; private set; }
+            public string ExpectedText { get; private set; }
+            public string ExpectedSelectionText { get; private set; }
+        }
+
+       [Test(Description = "Tests selection cut"), TestCaseSource(typeof(FragmentSelectionCutTestParamsList))]
+        public void FragmentSelectionCutTest(FragmentSelectionCutTestParams cutParams)
+        {
+            var geData = LoadProfile(cutParams.NewProfileText);
+            geData.Profile.Fragment = geData.Profile.Profile;
+            geData.Profile.GetNodeProfileText();
+           Assert.That(geData.Profile.IsSelectable(cutParams.Start, cutParams.End),
+               cutParams.Comment + " - not selectable");
+           var fragments = geData.Profile.GetSelection(cutParams.Start, cutParams.End);
+           geData.Profile.Cut(fragments);
+        }
+
+       public class ValidateFragmentSelectionParamsList : List<ValidateFragmentSelectionParams>
+       {
+           public ValidateFragmentSelectionParamsList()
+           {
+               Add(
+                   new ValidateFragmentSelectionParams(
+                       "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                       true, 0,
+                       "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]"
+                           .Length,
+                       "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                       "Whole profile text", new[] {FragmentType.Segment}, "", "", ""));
+               Add(
+                   new ValidateFragmentSelectionParams(
+                       "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                       true, 43, 94, "`[Property>:\r\n\t`Property.Name` - `Property.Title``]", "Whole Property segment",
+                       new[] {FragmentType.Segment}, "", "", ""));
+               Add(
+                   new ValidateFragmentSelectionParams(
+                       "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                       true, 9, 15, "Class:", "Whole Text fragment", new[] {FragmentType.Text}, "", "", ""));
+               Add(
+                   new ValidateFragmentSelectionParams(
+                       "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                       true, 10, 15, "lass:", "End of Text fragment", new FragmentType[0], "lass:", "", ""));
+               Add(
+                   new ValidateFragmentSelectionParams(
+                       "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                       true, 9, 14, "Class", "Start of Text fragment", new FragmentType[0], "", "Class", ""));
+               Add(
+                   new ValidateFragmentSelectionParams(
+                       "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                       true, 10, 14, "lass", "Substring of Text fragment", new FragmentType[0], "", "", "lass"));
+               Add(
+                   new ValidateFragmentSelectionParams(
+                       "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                       true, 29, 94, " `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]",
+                       "Text and whole Property segment", new[] {FragmentType.Placeholder, FragmentType.Segment}, " ",
+                       "", ""));
+               Add(
+                   new ValidateFragmentSelectionParams(
+                       "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                       true, 43, 112, "`[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name`",
+                       "Whole Property segment and following text",
+                       new[] {FragmentType.Segment, FragmentType.Text, FragmentType.Placeholder}, "", "", ""));
+           }
+       }
+
+        public class ValidateFragmentSelectionParams
+        {
+            public ValidateFragmentSelectionParams(string newProfileText, bool isSelectable, int start, int end,
+                string expectedText, string comment, IList<FragmentType> fragmentTypes, string expectedPrefix,
+                string expectedSuffix, string expectedInfix)
+            {
+                NewProfileText = newProfileText;
+                IsSelectable = isSelectable;
+                Start = start;
+                End = end;
+                ExpectedText = expectedText;
+                Comment = comment;
+                FragmentTypes = fragmentTypes;
+                ExpectedPrefix = expectedPrefix;
+                ExpectedSuffix = expectedSuffix;
+                ExpectedInfix = expectedInfix;
+            }
+
+            public string NewProfileText { get; private set; }
+            public bool IsSelectable { get; private set; }
+            public int Start { get; private set; }
+            public int End { get; private set; }
+            public string ExpectedText { get; private set; }
+            public string Comment { get; private set; }
+            public IList<FragmentType> FragmentTypes { get; private set; }
+            public string ExpectedPrefix { get; private set; }
+            public string ExpectedSuffix { get; private set; }
+            public string ExpectedInfix { get; private set; }
+
+            public override string ToString()
+            {
+                return Comment;
+            }
+        }
+
+        private static void ValidateFragmentSelection(ValidateFragmentSelectionParams selectionParams)
+        {
+            var geData = LoadProfile(selectionParams.NewProfileText);
+            geData.Profile.Fragment = geData.Profile.Profile;
+            geData.Profile.GetNodeProfileText();
+            Assert.AreEqual(selectionParams.IsSelectable,
+                geData.Profile.IsSelectable(selectionParams.Start, selectionParams.End, false),
+                "Is the specified profile text selectable? (" + selectionParams.Comment + ")");
+            var fragments = geData.Profile.GetSelection(selectionParams.Start, selectionParams.End);
+            Assert.AreEqual(selectionParams.ExpectedText, fragments.ProfileText);
+            Assert.AreEqual(selectionParams.FragmentTypes.Count, fragments.Fragments.Count);
             for (var i = 0; i < fragments.Fragments.Count; i++)
-                Assert.AreEqual(fragmentTypes[i], fragments.Fragments[i].FragmentType,
-                    "Fragment[" + i + "] (" + comment + ")");
-            Assert.AreEqual(expectedPrefix, fragments.Prefix, "Prefix (" + comment + ")");
+                Assert.AreEqual(selectionParams.FragmentTypes[i], fragments.Fragments[i].FragmentType,
+                    "Fragment[" + i + "] (" + selectionParams.Comment + ")");
+            Assert.AreEqual(selectionParams.ExpectedPrefix, fragments.Prefix, "Prefix (" + selectionParams.Comment + ")");
             if (!fragments.HasPrefix)
             {
-                Assert.IsNull(fragments.TextPrefix.Text, "Null Prefix (" + comment + ")");
-                Assert.AreEqual("", expectedPrefix, "Blank Prefix (" + comment + ")");
+                Assert.IsNull(fragments.TextPrefix.Text, "Null Prefix (" + selectionParams.Comment + ")");
+                Assert.AreEqual("", selectionParams.ExpectedPrefix, "Blank Prefix (" + selectionParams.Comment + ")");
             }
-            Assert.AreEqual(expectedSuffix, fragments.Suffix, "Suffix (" + comment + ")");
+            Assert.AreEqual(selectionParams.ExpectedSuffix, fragments.Suffix, "Suffix (" + selectionParams.Comment + ")");
             if (!fragments.HasSuffix)
             {
-                Assert.IsNull(fragments.TextSuffix.Text, "Null Suffix (" + comment + ")");
-                Assert.AreEqual("", expectedSuffix, "Blank Suffix (" + comment + ")");
+                Assert.IsNull(fragments.TextSuffix.Text, "Null Suffix (" + selectionParams.Comment + ")");
+                Assert.AreEqual("", selectionParams.ExpectedSuffix, "Blank Suffix (" + selectionParams.Comment + ")");
             }
-            Assert.AreEqual(expectedInfix, fragments.Infix, "Infix (" + comment + ")");
+            Assert.AreEqual(selectionParams.ExpectedInfix, fragments.Infix, "Infix (" + selectionParams.Comment + ")");
             if (!fragments.HasInfix)
             {
-                Assert.IsNull(fragments.TextInfix.Text, "Null Infix (" + comment + ")");
-                Assert.AreEqual("", expectedInfix, "Blank Infix (" + comment + ")");
+                Assert.IsNull(fragments.TextInfix.Text, "Null Infix (" + selectionParams.Comment + ")");
+                Assert.AreEqual("", selectionParams.ExpectedInfix, "Blank Infix (" + selectionParams.Comment + ")");
             }
         }
 

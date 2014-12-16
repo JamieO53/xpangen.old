@@ -319,7 +319,7 @@ namespace org.xpangen.Generator.Editor.Helper
         public FragmentSelection GetSelection(int start, int end)
         {
             Contract.Requires(IsSelectable(start, end, false));
-            var fragmentSelection = new FragmentSelection();
+            var fragmentSelection = new FragmentSelection(start, end);
             Fragment beforeStart, afterStart, beforeEnd, afterEnd;
             GetFragmentsAt(out beforeStart, out afterStart, start);
             GetFragmentsAt(out beforeEnd, out afterEnd, end);
@@ -390,6 +390,12 @@ namespace org.xpangen.Generator.Editor.Helper
 
             fragmentSelection.ProfileText = ProfileText.Substring(start, end - start);
             return fragmentSelection;
+        }
+
+        public void Cut(FragmentSelection fragments)
+        {
+            ProfileText = ProfileText.Substring(0, fragments.Start) + ProfileText.Substring(fragments.End);
+            Profile = new GenCompactProfileParser(GeData.GenDataDef, "", ProfileText).Profile;
         }
 
         private static void CopySelectionFragments(GenNamedApplicationList<Fragment> fragments,
