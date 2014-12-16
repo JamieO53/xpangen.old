@@ -10,9 +10,11 @@ namespace org.xpangen.Generator.Editor.Helper
         private TextSelection _textSuffix;
         private TextSelection _textInfix;
 
-        public FragmentSelection()
+        public FragmentSelection(int start, int end)
         {
             Fragments = new List<Fragment>();
+            Start = start;
+            End = end;
         }
 
         public void SetPrefix(Text text, int position)
@@ -66,6 +68,8 @@ namespace org.xpangen.Generator.Editor.Helper
             get { return _textInfix = _textInfix ?? new TextSelection(); }
         }
 
+        public int Start { get; private set; }
+        public int End { get; private set; }
         public bool HasPrefix { get { return _textPrefix != null; }}
         public bool HasSuffix { get { return _textSuffix != null; }}
         public bool HasInfix { get { return _textInfix != null; }}
