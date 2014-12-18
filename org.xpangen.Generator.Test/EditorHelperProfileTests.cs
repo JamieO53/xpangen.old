@@ -60,17 +60,18 @@ namespace org.xpangen.Generator.Test
                 "`[Class>:Replace this Class with a placeholder but not this class. Here is another replacement Class.`]";
             var geData = CreateNewProfile(newProfileText);
             var textBlock = (TextBlock) ((Segment) geData.Profile.Fragment).Body().FragmentList[0];
-            ValidateProfileTextPosition(true, geData, 22, "End of text before substitution", FragmentType.Text);
-            ValidateProfileTextPosition(true, geData, 23, "Substituted placholder position", FragmentType.Text);
+            ValidateProfileTextPosition(true, 22, "End of text before substitution", FragmentType.Text, expectedUndoProfileText, ref geData);
+            ValidateProfileTextPosition(true, 23, "Substituted placholder position", FragmentType.Text, expectedUndoProfileText, ref geData);
             VerifyFragmentsAtPosition(geData, 22, textBlock.Body().FragmentList[0], textBlock.Body().FragmentList[0]);
+            VerifyProfile(geData, newProfileText, expectedUndoProfileText);
             geData.Profile.SubstitutePlaceholder(textBlock, "Class", geData.GenDataDef.GetId("Class.Name"));
-            ValidateProfileTextPosition(true, geData, 22, "End of text before substitution", FragmentType.Placeholder);
-            ValidateProfileTextPosition(false, geData, 23, "Substituted placholder", FragmentType.Placeholder);
+            ValidateProfileTextPosition(true, 22, "End of text before substitution", FragmentType.Placeholder, expectedProfileText, ref geData);
+            ValidateProfileTextPosition(false, 23, "Substituted placholder", FragmentType.Placeholder, expectedProfileText, ref geData);
             VerifyFragmentsAtPosition(geData, 22, textBlock.Body().FragmentList[0], textBlock.Body().FragmentList[1]);
             VerifyProfile(geData, newProfileText, expectedProfileText);
             geData.Undo();
-            ValidateProfileTextPosition(true, geData, 22, "End of text before substitution", FragmentType.Text);
-            ValidateProfileTextPosition(true, geData, 23, "Substituted placholder position", FragmentType.Text);
+            ValidateProfileTextPosition(true, 22, "End of text before substitution", FragmentType.Text, expectedUndoProfileText, ref geData);
+            ValidateProfileTextPosition(true, 23, "Substituted placholder position", FragmentType.Text, expectedUndoProfileText, ref geData);
             VerifyFragmentsAtPosition(geData, 22, textBlock.Body().FragmentList[0], textBlock.Body().FragmentList[0]);
             VerifyProfile(geData, newProfileText, expectedUndoProfileText);
         }
@@ -139,27 +140,23 @@ namespace org.xpangen.Generator.Test
         [Test(Description = "Tests if a position can accept keyboard input")]
         public void InputablePositionTest()
         {
-            const string newProfileText =
-                "`[Class>:Class:`Class.Name` - `Class.Title`\r\n\t`[Property>:`Property.Name` - `Property.Title``]`]";
-            var geData = LoadProfile(newProfileText);
-            geData.Profile.Fragment = geData.Profile.Profile;
-            var profileText = geData.Profile.GetNodeProfileText();
-            Assert.AreEqual(newProfileText, profileText);
-            ValidateProfileTextPosition(true, geData, 0, "Outside start of segment", FragmentType.Segment);
-            ValidateProfileTextPosition(false, geData, 1, "In segment prefix", FragmentType.Segment);
-            ValidateProfileTextPosition(false, geData, 8, "In segment prefix", FragmentType.Segment);
-            ValidateProfileTextPosition(true, geData, 9, "Start of text", FragmentType.Text);
-            ValidateProfileTextPosition(true, geData, 10, "Text", FragmentType.Text);
-            ValidateProfileTextPosition(true, geData, 15, "End of text", FragmentType.Placeholder);
-            ValidateProfileTextPosition(false, geData, 16, "In placeholder", FragmentType.Placeholder);
-            ValidateProfileTextPosition(false, geData, 26, "In placeholder", FragmentType.Placeholder);
-            ValidateProfileTextPosition(true, geData, 27, "Start of text", FragmentType.Text);
-            ValidateProfileTextPosition(true, geData, 94, "Between segment and containing segment", FragmentType.Segment);
-            ValidateProfileTextPosition(true, geData, 58, "Between placeholder and containing segment end",
-                FragmentType.Placeholder);
-            ValidateProfileTextPosition(true, geData, 92, "Between placeholder and containing segment end",
-                FragmentType.TextBlock);
-            ValidateProfileTextPosition(true, geData, 96, "Outside end of segment", FragmentType.Segment);
+            const string newProfileText = "`[Class>:Class:`Class.Name` - `Class.Title`\r\n\t`[Property>:`Property.Name` - `Property.Title``]`]";
+            GeData geData = null;
+            ValidateProfileTextPosition(true, 0, "refside start of segment", FragmentType.Segment, newProfileText, ref geData);
+            ValidateProfileTextPosition(false, 1, "In segment prefix", FragmentType.Segment, newProfileText, ref geData);
+            ValidateProfileTextPosition(false, 8, "In segment prefix", FragmentType.Segment, newProfileText, ref geData);
+            ValidateProfileTextPosition(true, 9, "Start of text", FragmentType.Text, newProfileText, ref geData);
+            ValidateProfileTextPosition(true, 10, "Text", FragmentType.Text, newProfileText, ref geData);
+            ValidateProfileTextPosition(true, 15, "End of text", FragmentType.Placeholder, newProfileText, ref geData);
+            ValidateProfileTextPosition(false, 16, "In placeholder", FragmentType.Placeholder, newProfileText, ref geData);
+            ValidateProfileTextPosition(false, 26, "In placeholder", FragmentType.Placeholder, newProfileText, ref geData);
+            ValidateProfileTextPosition(true, 27, "Start of text", FragmentType.Text, newProfileText, ref geData);
+            ValidateProfileTextPosition(true, 94, "Between segment and containing segment", FragmentType.Segment, newProfileText, ref geData);
+            ValidateProfileTextPosition(true, 58, "Between placeholder and containing segment end",
+                FragmentType.Placeholder, newProfileText, ref geData);
+            ValidateProfileTextPosition(true, 92, "Between placeholder and containing segment end",
+                FragmentType.TextBlock, newProfileText, ref geData);
+            ValidateProfileTextPosition(true, 96, "refside end of segment", FragmentType.Segment, newProfileText, ref geData);
         }
 
         [Test(Description = "Tests if text fragments get selected correctly")]
@@ -364,10 +361,16 @@ namespace org.xpangen.Generator.Test
             Assert.AreSame(expectedAfter, after, "After position " + position);
         }
 
-        private static void ValidateProfileTextPosition(bool expected, GeData geData, int position, string message,
-            FragmentType fragmentType)
+        private static void ValidateProfileTextPosition(bool expected, int position, string message, FragmentType fragmentType, string newProfileText, ref GeData geData)
         {
-            var pos = ((GeProfile) geData.Profile).ProfileTextPostionList.FindAtPosition(position);
+            if (geData == null)
+            {
+                geData = LoadProfile(newProfileText);
+                geData.Profile.Fragment = geData.Profile.Profile;
+                var profileText = geData.Profile.GetNodeProfileText();
+                Assert.AreEqual(newProfileText, profileText);
+            }
+            var pos = ((GeProfile)geData.Profile).ProfileTextPostionList.FindAtPosition(position);
             Assert.IsNotNull(pos);
             Assert.AreEqual(fragmentType, pos.Fragment.FragmentType);
             Assert.AreEqual(expected, geData.Profile.IsInputable(position), message);
