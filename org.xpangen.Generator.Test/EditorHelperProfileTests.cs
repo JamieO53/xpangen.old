@@ -188,10 +188,47 @@ namespace org.xpangen.Generator.Test
             public FragmentSelectionCutTestParamsList()
             {
                 Add(new FragmentSelectionCutTestParams(
-                "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]", 
-                "Whole profile text",
-                0, 115, "", 
-                "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]"));
+                    "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]", 
+                    "Whole profile text",
+                    0, 115, "", 
+                    "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]"));
+                Add(new FragmentSelectionCutTestParams(
+                    "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                    "Whole Property segment",
+                    43, 94, "`[Class>:Class:`Class.Name` - `Class.Title`\r\nEnd `Class.Name` `]",
+                    "`[Property>:\r\n\t`Property.Name` - `Property.Title``]"));
+                Add(new FragmentSelectionCutTestParams(
+                    "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                    "Whole Text fragment",
+                    9, 15, "`[Class>:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                    "Class:"));
+                Add(new FragmentSelectionCutTestParams(
+                    "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                    "End of Text fragment",
+                    10, 15, "`[Class>:C`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                    "lass:"));
+                Add(new FragmentSelectionCutTestParams(
+                    "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                    "Start of Text fragment",
+                    9, 14, 
+                    "`[Class>::`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                    "Class"));
+                Add(new FragmentSelectionCutTestParams(
+                    "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                    "Substring of Text fragment",
+                    10, 14,
+                    "`[Class>:C:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                    "lass"));
+                Add(new FragmentSelectionCutTestParams(
+                    "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                    "Text and whole Property segment",
+                    29, 94, "`[Class>:Class:`Class.Name` -\r\nEnd `Class.Name` `]",
+                    " `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]"));
+                Add(new FragmentSelectionCutTestParams(
+                    "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                    "Whole Property segment and following text",
+                    43, 112, "`[Class>:Class:`Class.Name` - `Class.Title` `]",
+                    "`[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name`"));
             }
         }
         
@@ -212,6 +249,10 @@ namespace org.xpangen.Generator.Test
             public int End { get; private set; }
             public string ExpectedText { get; private set; }
             public string ExpectedSelectionText { get; private set; }
+             public override string ToString()
+             {
+                 return Comment;
+             }
         }
 
        [Test(Description = "Tests selection cut"), TestCaseSource(typeof(FragmentSelectionCutTestParamsList))]
@@ -224,6 +265,8 @@ namespace org.xpangen.Generator.Test
                cutParams.Comment + " - not selectable");
            var fragments = geData.Profile.GetSelection(cutParams.Start, cutParams.End);
            geData.Profile.Cut(fragments);
+           Assert.AreEqual(cutParams.ExpectedText, geData.Profile.ProfileText, cutParams.Comment + " - Profile text after cut");
+           Assert.AreEqual(cutParams.ExpectedSelectionText, fragments.ProfileText, cutParams.Comment + " - Cut text");
         }
 
        public class ValidateFragmentSelectionParamsList : List<ValidateFragmentSelectionParams>
