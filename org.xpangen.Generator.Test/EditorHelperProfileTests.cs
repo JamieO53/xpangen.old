@@ -269,6 +269,66 @@ namespace org.xpangen.Generator.Test
            Assert.AreEqual(cutParams.ExpectedSelectionText, fragments.ProfileText, cutParams.Comment + " - Cut text");
         }
 
+       public class FragmentInsertTestParamsList : List<FragmentInsertTestParams>
+       {
+           public FragmentInsertTestParamsList()
+           {
+               Add(new FragmentInsertTestParams("",
+                   "Whole profile text", 0, "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]", "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]"));
+               Add(new FragmentInsertTestParams("`[Class>:Class:`Class.Name` - `Class.Title`\r\nEnd `Class.Name` `]",
+                   "Whole Property segment", 43, "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]", "`[Property>:\r\n\t`Property.Name` - `Property.Title``]"));
+               Add(new FragmentInsertTestParams("`[Class>:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                   "Whole Text fragment", 9, "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]", "Class:"));
+               Add(new FragmentInsertTestParams("`[Class>:C`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                   "End of Text fragment", 10, "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]", "lass:"));
+               Add(new FragmentInsertTestParams("`[Class>::`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                   "Start of Text fragment", 9, "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]", "Class"));
+               Add(new FragmentInsertTestParams("`[Class>:C:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]",
+                   "Substring of Text fragment", 10, "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]", "lass"));
+               Add(new FragmentInsertTestParams("`[Class>:Class:`Class.Name` -\r\nEnd `Class.Name` `]",
+                   "Text and whole Property segment", 29, "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]", " `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]"));
+               Add(new FragmentInsertTestParams("`[Class>:Class:`Class.Name` - `Class.Title` `]",
+                   "Whole Property segment and following text", 43, "`[Class>:Class:`Class.Name` - `Class.Title``[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name` `]", "`[Property>:\r\n\t`Property.Name` - `Property.Title``]\r\nEnd `Class.Name`"));
+           }
+       }
+
+       public class FragmentInsertTestParams
+       {
+           public FragmentInsertTestParams(string newProfileText, string comment, int position, string expectedText, string expectedSelectionText)
+           {
+               NewProfileText = newProfileText;
+               Comment = comment;
+               Position = position;
+               ExpectedText = expectedText;
+               ExpectedSelectionText = expectedSelectionText;
+           }
+           public string NewProfileText { get; private set; }
+           public string Comment { get; set; }
+           public int Position { get; private set; }
+           public string ExpectedText { get; private set; }
+           public string ExpectedSelectionText { get; private set; }
+           public override string ToString()
+           {
+               return Comment;
+           }
+       }
+
+       [Test(Description = "Tests selection insertion"), TestCaseSource(typeof(FragmentInsertTestParamsList))]
+       public void FragmentInsertTest(FragmentInsertTestParams insertParams)
+       {
+           var geData = LoadProfile(insertParams.NewProfileText);
+           geData.Profile.Fragment = geData.Profile.Profile;
+           geData.Profile.GetNodeProfileText();
+           Assert.That(geData.Profile.IsInputable(insertParams.Position),
+               insertParams.Comment + " - not selectable");
+           var fragments = new FragmentSelection(insertParams.Position,
+               insertParams.Position + insertParams.ExpectedSelectionText.Length);
+           fragments.ProfileText = insertParams.ExpectedSelectionText;
+           geData.Profile.Insert(fragments);
+           Assert.AreEqual(insertParams.ExpectedText, geData.Profile.ProfileText, insertParams.Comment + " - Profile text after insertion");
+           Assert.AreEqual(insertParams.ExpectedSelectionText, fragments.ProfileText, insertParams.Comment + " - Insert text");
+       }
+
        public class ValidateFragmentSelectionParamsList : List<ValidateFragmentSelectionParams>
        {
            public ValidateFragmentSelectionParamsList()

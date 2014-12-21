@@ -398,6 +398,11 @@ namespace org.xpangen.Generator.Editor.Helper
             Profile = new GenCompactProfileParser(GeData.GenDataDef, "", ProfileText).Profile;
         }
 
+        public void Insert(FragmentSelection fragments)
+        {
+            throw new NotImplementedException();
+        }
+
         private static void CopySelectionFragments(GenNamedApplicationList<Fragment> fragments,
             List<Fragment> selectionFragments, int first, int last)
         {
