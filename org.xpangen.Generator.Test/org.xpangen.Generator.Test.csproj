@@ -80,6 +80,7 @@
     <Compile Include="CharSetTests.cs" />
     <Compile Include="ComboServerTests.cs" />
     <Compile Include="EditorHelperProfileTests.cs" />
+    <Compile Include="EditorHelperProfileTestsBase.cs" />
     <Compile Include="EditorHelperTests.cs" />
     <Compile Include="GenDataBaseToDataTests.cs" />
     <Compile Include="DataModelTests.cs" />

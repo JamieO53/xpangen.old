@@ -26,6 +26,7 @@ namespace org.xpangen.Generator.Editor.Helper
         bool IsSelectable(int start, int end, bool textSelection = false);
         FragmentSelection GetSelection(int start, int end);
         void Cut(FragmentSelection fragments);
-        void Insert(FragmentSelection fragments);
+        void Insert(int position, FragmentSelection fragments);
+        void Insert(int position, string text);
     }
 }
