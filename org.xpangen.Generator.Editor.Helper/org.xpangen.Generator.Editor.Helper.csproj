@@ -84,6 +84,7 @@
     <Compile Include="IGenData.cs" />
     <Compile Include="IGenDataProfile.cs" />
     <Compile Include="IGenDataSettings.cs" />
+    <Compile Include="ModifyProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

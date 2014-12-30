@@ -152,9 +152,9 @@ namespace org.xpangen.Generator.Editor.Helper
     {
         private ProfileFragmentSyntaxDictionary _activeProfileFragmentSyntaxDictionary;
 
-        private GeData GeData { get; set; }
+        public GeData GeData { get; set; }
 
-        public ProfileTextPostionList ProfileTextPostionList { get; private set; }
+        public ProfileTextPostionList ProfileTextPostionList { get; set; }
 
         public ProfileFragmentSyntaxDictionary ActiveProfileFragmentSyntaxDictionary
         {
@@ -394,42 +394,14 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public void Cut(FragmentSelection fragments)
         {
-            Contract.Requires(IsSelectable(fragments.Start, fragments.End, false));
-            Contract.Ensures(IsInputable(fragments.Start));
-            var fragment = Fragment;
-            Fragment = Profile;
-            GetNodeProfileText();
-            var nodeFragmentPosition = ProfileTextPostionList.GetFragmentPosition(fragment);
-            Profile =
-                new GenCompactProfileParser(GeData.GenDataDef, "",
-                    ProfileText.Substring(0, fragments.Start) + ProfileText.Substring(fragments.End)).Profile;
-            Fragment = Profile;
-            GetNodeProfileText();
-            Fragment after;
-            Fragment before;
-            GetFragmentsAt(out before, out after, nodeFragmentPosition.Position.Offset);
-            Fragment = after;
-            GetNodeProfileText();
+            var modifyProfile = new ModifyProfile(this);
+            modifyProfile.CutSelection(fragments);
         }
 
         public void Insert(int position, FragmentSelection fragments)
         {
-            Contract.Requires(IsInputable(position));
-            Contract.Ensures(IsSelectable(position, position + fragments.ProfileText.Length, false));
-            var fragment = Fragment;
-            Fragment = Profile;
-            GetNodeProfileText();
-            var nodeFragmentPosition = ProfileTextPostionList.GetFragmentPosition(fragment);
-            Profile =
-                new GenCompactProfileParser(GeData.GenDataDef, "",
-                    ProfileText.Insert(nodeFragmentPosition.Position.Offset + position, fragments.ProfileText)).Profile;
-            Fragment = Profile;
-            GetNodeProfileText();
-            Fragment after;
-            Fragment before;
-            GetFragmentsAt(out before, out after, nodeFragmentPosition.Position.Offset);
-            Fragment = after;
-            GetNodeProfileText();
+            var modifyProfile = new ModifyProfile(this);
+            modifyProfile.InsertSelection(position, fragments);
         }
 
         public void Insert(int position, string text)
