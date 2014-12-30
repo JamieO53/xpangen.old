@@ -394,15 +394,53 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public void Cut(FragmentSelection fragments)
         {
-            ProfileText = ProfileText.Substring(0, fragments.Start) + ProfileText.Substring(fragments.End);
-            Profile = new GenCompactProfileParser(GeData.GenDataDef, "", ProfileText).Profile;
+            Contract.Requires(IsSelectable(fragments.Start, fragments.End, false));
+            Contract.Ensures(IsInputable(fragments.Start));
+            var fragment = Fragment;
+            Fragment = Profile;
+            GetNodeProfileText();
+            var nodeFragmentPosition = ProfileTextPostionList.GetFragmentPosition(fragment);
+            Profile =
+                new GenCompactProfileParser(GeData.GenDataDef, "",
+                    ProfileText.Substring(0, fragments.Start) + ProfileText.Substring(fragments.End)).Profile;
+            Fragment = Profile;
+            GetNodeProfileText();
+            Fragment after;
+            Fragment before;
+            GetFragmentsAt(out before, out after, nodeFragmentPosition.Position.Offset);
+            Fragment = after;
+            GetNodeProfileText();
         }
 
-        public void Insert(FragmentSelection fragments)
+        public void Insert(int position, FragmentSelection fragments)
         {
-            throw new NotImplementedException();
+            Contract.Requires(IsInputable(position));
+            Contract.Ensures(IsSelectable(position, position + fragments.ProfileText.Length, false));
+            var fragment = Fragment;
+            Fragment = Profile;
+            GetNodeProfileText();
+            var nodeFragmentPosition = ProfileTextPostionList.GetFragmentPosition(fragment);
+            Profile =
+                new GenCompactProfileParser(GeData.GenDataDef, "",
+                    ProfileText.Insert(nodeFragmentPosition.Position.Offset + position, fragments.ProfileText)).Profile;
+            Fragment = Profile;
+            GetNodeProfileText();
+            Fragment after;
+            Fragment before;
+            GetFragmentsAt(out before, out after, nodeFragmentPosition.Position.Offset);
+            Fragment = after;
+            GetNodeProfileText();
         }
 
+        public void Insert(int position, string text)
+        {
+            Contract.Requires(IsInputable(position));
+            Contract.Ensures(IsSelectable(position, position + text.Length, false));
+            var fragments = new FragmentSelection(position, position + text.Length);
+            fragments.ProfileText = text;
+            Insert(position, fragments);
+        }
+        
         private static void CopySelectionFragments(GenNamedApplicationList<Fragment> fragments,
             List<Fragment> selectionFragments, int first, int last)
         {
