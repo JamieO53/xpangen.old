@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Collections.Generic;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Profile;
@@ -190,28 +191,27 @@ namespace org.xpangen.Generator.Test
                            "`{`Parent.Name`,`%Lookup.Name=Child.Lookup:`Lookup.Name`,`]`]", "Parent,", false, null, r.Profile.GenDataBase.GenDataDef);
         }
 
+        public class TestConditionParamsList : List<TestConditionParams>
+        {
+            public TestConditionParamsList()
+            {
+                Add(new TestConditionParams("Property.Name Exists", "Property.Name", "Property.Name", true, "Test for Existence 1"));
+                Add(new TestConditionParams("Property.Name", "", "", true, "Test for Existence 2"));
+                Add(new TestConditionParams("Property.NameBlank", "", "", false, "Test for Existence 3"));
+                Add(new TestConditionParams("Property.Name~", "", "", false, "Test for non-existence 1"));
+                Add(new TestConditionParams("Property.NameBlank~", "", "", true, "Test for non-existence 2"));
+            }
+        }
+        
         /// <summary>
         /// Tests for the correct creation of an attribute value existing condition fragment
         /// </summary>
-        [Test(Description="Generator Existence Condition test")]
-        public void GenExistenceConditionTest()
+        [Test(Description="Generator Existence Condition test"), TestCaseSource(typeof(TestConditionParamsList))]
+        public void GenExistenceConditionTest(TestConditionParams conditionParams)
         {
             var d = SetUpComparisonData();
 
-            // Test for Existence 1
-            TestCondition(d, "Property.Name Exists", "Property.Name", "Property.Name", true);
-
-            // Test for Existence 2
-            TestCondition(d, "Property.Name", "", "", true);
-            
-            // Test for Existence 3
-            TestCondition(d, "Property.NameBlank", "", "", false);
-
-            // Test for non-existence 1
-            TestCondition(d, "Property.Name~", "", "", false);
-
-            // Test for non-existence 2
-            TestCondition(d, "Property.NameBlank~", "", "", true);
+            TestCondition(d, conditionParams);
         }
 
         /// <summary>

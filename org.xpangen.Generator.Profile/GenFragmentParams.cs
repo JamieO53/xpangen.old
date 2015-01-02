@@ -72,7 +72,7 @@ namespace org.xpangen.Generator.Profile
         {
             get
             {
-                Contract.Assert(FragmentExists, "Fragment expected");
+                Contract.Requires(FragmentExists, "Fragment expected");
                 return _fragment;
             }
             private set { _fragment = value; }
