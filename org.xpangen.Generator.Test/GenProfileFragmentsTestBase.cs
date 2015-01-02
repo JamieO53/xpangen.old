@@ -72,24 +72,53 @@ namespace org.xpangen.Generator.Test
             return d;
         }
 
-        protected static void TestCondition(GenDataBase genData, string condIn, string condOut, string profileLabel,
-                                            bool expected, bool identifier = false)
+        
+        public class TestConditionParams
+        {
+            public TestConditionParams(string condIn, string condOut, string profileLabel, bool expected, string comment, bool identifier = false)
+            {
+                CondIn = condIn;
+                CondOut = condOut;
+                ProfileLabel = profileLabel;
+                Expected = expected;
+                Comment = comment;
+                Identifier = identifier;
+            }
+
+            public string CondIn { get; private set; }
+
+            public string CondOut { get; set; }
+
+            public string ProfileLabel { get; set; }
+
+            public bool Expected { get; private set; }
+            public string Comment { get; set; }
+
+            public bool Identifier { get; private set; }
+
+            public override string ToString()
+            {
+                return Comment;
+            }
+        }
+
+        protected static void TestCondition(GenDataBase genData, TestConditionParams testConditionParams)
         {
             var genDataDef = genData.GenDataDef;
-            if (condOut == "") condOut = condIn;
-            if (profileLabel == "") profileLabel = condIn;
+            if (testConditionParams.CondOut == "") testConditionParams.CondOut = testConditionParams.CondIn;
+            if (testConditionParams.ProfileLabel == "") testConditionParams.ProfileLabel = testConditionParams.CondIn;
 
             var root = new GenProfileFragment(new GenProfileParams(genDataDef));
             const string r = "Condition holds";
-            var exp = expected ? r : "";
+            var exp = testConditionParams.Expected ? r : "";
 
-            var c = ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseCondition(genDataDef, condIn);
+            var c = ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary.ParseCondition(genDataDef, testConditionParams.CondIn);
             var g = new GenCondition(new GenConditionParams(genDataDef, root, c));
             g.GenObject = GetFirstObjectOfSubClass(GetLastObjectInSubClass(GetFirstObject(genData)), "Property");
             var t = new GenTextFragment(new GenTextFragmentParams(genDataDef, g, r));
             g.Body.Add(t);
-            VerifyFragment(genData, g, "GenCondition", FragmentType.Condition, profileLabel,
-                           String.Format("`?{0}:{1}`]", condOut, r), exp, false, null, g.Fragment.GenDataBase.GenDataDef);
+            VerifyFragment(genData, g, "GenCondition", FragmentType.Condition, testConditionParams.ProfileLabel,
+                           String.Format("`?{0}:{1}`]", testConditionParams.CondOut, r), exp, false, null, g.Fragment.GenDataBase.GenDataDef);
         }
 
         protected static void TestIdentifierComparison(GenDataBase genData, string comparison, bool expectedLt, bool expectedEq,
@@ -116,9 +145,9 @@ namespace org.xpangen.Generator.Test
         private static void TestComparisonConditions(GenDataBase genData, bool expectedLt, bool expectedEq, bool expectedGt,
                                                      string condIn, string valueLt, string valueEq, string valueGt, bool identifier = false)
         {
-            TestCondition(genData, condIn + valueLt, "", "", expectedLt, identifier); // Property.Name?Nama
-            TestCondition(genData, condIn + valueEq, "", "", expectedEq, identifier); // Property.Name?Name
-            TestCondition(genData, condIn + valueGt, "", "", expectedGt, identifier); // Property.Name?Namz
+            TestCondition(genData, new TestConditionParams(condIn + valueLt, "", "", expectedLt, "", identifier: identifier)); // Property.Name?Nama
+            TestCondition(genData, new TestConditionParams(condIn + valueEq, "", "", expectedEq, "", identifier: identifier)); // Property.Name?Name
+            TestCondition(genData, new TestConditionParams(condIn + valueGt, "", "", expectedGt, "", identifier: identifier)); // Property.Name?Namz
         }
 
         protected static void VerifyFragment(GenDataBase genData, GenFragment genFragment, string expectedClass, FragmentType expectedType, string profileLabel, string profileText, string expected, bool isText, string parentClassName, GenDataDef profileDataDef)

@@ -10,10 +10,13 @@ namespace org.xpangen.Generator.Profile
     {
         public GenFragmentLabel(Fragment fragment)
         {
+            Contract.Ensures(Fragment == fragment);
+            Contract.Ensures(Fragment.GetType().Name == FragmentType.ToString());
             Fragment = fragment;
-            FragmentType fragmentType;
-            Contract.Assert(Enum.TryParse(Fragment.GetType().Name, out fragmentType), "Fragment type invalid: " + Fragment.GetType().Name);
-            FragmentType = fragmentType;
+            //FragmentType fragmentType;
+            //Contract.Assert(Enum.TryParse(Fragment.GetType().Name, out fragmentType), "Fragment type invalid: " + Fragment.GetType().Name);
+            //FragmentType = fragmentType;
+            FragmentType = fragment.FragmentType;
         }
 
         /// <summary>
