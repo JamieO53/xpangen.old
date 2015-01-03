@@ -15,12 +15,12 @@ namespace org.xpangen.Generator.Editor.Helper
 {
     public abstract class ProfileCommandBase : IGenCommand
     {
-        public ProfileCommandBase(GeProfile geProfile)
+        protected ProfileCommandBase(GeProfile geProfile)
         {
             GeProfile = geProfile;
         }
 
-        public GeProfile GeProfile { get; private set; }
+        protected GeProfile GeProfile { get; set; }
         public virtual void Execute()
         {
             GeProfile.GetNodeProfileText();
@@ -30,28 +30,26 @@ namespace org.xpangen.Generator.Editor.Helper
     public class ReplaceSelectionWithPlaceholderCommand : ProfileCommandBase
     {
         public Text Text { get; private set; }
-        public int SelectionStart { get; private set; }
-        public int SelectionEnd { get; private set; }
-        public GenDataId Id { get; private set; }
-        public FragmentBody Body { get; private set; }
-        public int FragmentIndex { get; private set; }
-        public string Prefix { get; private set; }
+        private int SelectionStart { get; set; }
+        private int SelectionEnd { get; set; }
+        private GenDataId Id { get; set; }
+        private FragmentBody Body { get; set; }
+        private int FragmentIndex { get; set; }
+        private string Prefix { get; set; }
         public string Suffix { get; private set; }
         public Placeholder Placeholder { get; private set; }
 
 
         public ReplaceSelectionWithPlaceholderCommand(Text text, int selectionStart, int selectionEnd, GenDataId id, GeProfile geProfile) : base(geProfile)
         {
-            var prefix = text.TextValue.Substring(0, selectionStart);
-            var suffix = text.TextValue.Substring(selectionEnd);
             Text = text;
             SelectionStart = selectionStart;
             SelectionEnd = selectionEnd;
             Id = id;
             Body = (FragmentBody) Text.Parent;
             FragmentIndex = Body.FragmentList.IndexOf(Text) + 1;
-            Prefix = prefix;
-            Suffix = suffix;
+            Prefix = Text.TextValue.Substring(0, SelectionStart);
+            Suffix = Text.TextValue.Substring(SelectionEnd);
         }
 
         private void SetTextToPrefix()
@@ -96,11 +94,11 @@ namespace org.xpangen.Generator.Editor.Helper
 
     public class ReplacePlaceholderWithTextCommand : ProfileCommandBase
     {
-        public Placeholder Placeholder { get; private set; }
-        public string SubstitutedText { get; private set; }
-        public int SelectionStart { get; private set; }
-        public int SelectionEnd { get; private set; }
-        public GenDataId Id { get; private set; }
+        private Placeholder Placeholder { get; set; }
+        private string SubstitutedText { get; set; }
+        private int SelectionStart { get; set; }
+        private int SelectionEnd { get; set; }
+        private GenDataId Id { get; set; }
 
         public ReplacePlaceholderWithTextCommand(Placeholder placeholder, string substitutedText, GeProfile geProfile) : base(geProfile)
         {
@@ -108,7 +106,7 @@ namespace org.xpangen.Generator.Editor.Helper
             SubstitutedText = substitutedText;
             SelectionStart = 0;
             SelectionEnd = SubstitutedText.Length;
-            Id = new GenDataId {ClassName = placeholder.Class, PropertyName = placeholder.Property};
+            Id = new GenDataId {ClassName = Placeholder.Class, PropertyName = Placeholder.Property};
         }
 
         public override void Execute()
@@ -136,11 +134,9 @@ namespace org.xpangen.Generator.Editor.Helper
                 }
                 else
                 {
-                    var text = body.AddText(body.FragmentName(FragmentType.Text), SubstitutedText);
-                    for (int j = body.FragmentList.Count - 1; j < i; j--)
-                    {
+                    body.AddText(body.FragmentName(FragmentType.Text), SubstitutedText);
+                    for (var j = body.FragmentList.Count - 1; j < i; j--)
                         body.FragmentList.Move(ListMove.Up, j);
-                    }
                 }
                 body.FragmentList.RemoveAt(i);
             }
@@ -148,22 +144,59 @@ namespace org.xpangen.Generator.Editor.Helper
         }
     }
 
+    public class CutSelectionCommand : ProfileCommandBase
+    {
+        public FragmentSelection Fragments { get; set; }
+
+        public CutSelectionCommand(GeProfile geProfile, FragmentSelection fragments)
+            : base(geProfile)
+        {
+            Fragments = fragments;
+        }
+
+        public override void Execute()
+        {
+            var modifyProfile = new ModifyProfile(GeProfile);
+            modifyProfile.CutSelection(Fragments);
+            base.Execute();
+        }
+    }
+
+    public class InsertSelectionCommand : ProfileCommandBase
+    {
+        public int Position { get; set; }
+        public FragmentSelection Fragments { get; set; }
+
+        public InsertSelectionCommand(GeProfile geProfile, int position, FragmentSelection fragments)
+            : base(geProfile)
+        {
+            Position = position;
+            Fragments = fragments;
+        }
+
+        public override void Execute()
+        {
+            var modifyProfile = new ModifyProfile(GeProfile);
+            modifyProfile.InsertSelection(Position, Fragments);
+            base.Execute();
+        }
+    }
+    
     public class GeProfile : IGenDataProfile
     {
         private ProfileFragmentSyntaxDictionary _activeProfileFragmentSyntaxDictionary;
 
-        public GeData GeData { get; set; }
+        public GeData GeData { get; private set; }
 
-        public ProfileTextPostionList ProfileTextPostionList { get; set; }
+        public ProfileTextPostionList ProfileTextPostionList { get; private set; }
 
-        public ProfileFragmentSyntaxDictionary ActiveProfileFragmentSyntaxDictionary
+        private ProfileFragmentSyntaxDictionary ActiveProfileFragmentSyntaxDictionary
         {
             get
             {
-                return _activeProfileFragmentSyntaxDictionary ??
-                       ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary;
+                return (_activeProfileFragmentSyntaxDictionary = _activeProfileFragmentSyntaxDictionary ??
+                       ProfileFragmentSyntaxDictionary.ActiveProfileFragmentSyntaxDictionary);
             }
-            set { _activeProfileFragmentSyntaxDictionary = value; }
         }
 
         public GeProfile(GeData geData)
@@ -180,7 +213,7 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public Fragment Fragment { get; set; }
 
-        public GenObject GenObject { get; set; }
+        public GenObject GenObject { get; private set; }
 
         public string ProfileText { get; private set; }
 
@@ -394,25 +427,34 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public void Cut(FragmentSelection fragments)
         {
-            var modifyProfile = new ModifyProfile(this);
-            modifyProfile.CutSelection(fragments);
+            var command = new CutSelectionCommand(this, fragments);
+            command.Execute();
+            var undoCommand = new InsertSelectionCommand(this, fragments.Start, fragments);
+            AddRedoUndo(undoCommand, command);
         }
 
         public void Insert(int position, FragmentSelection fragments)
         {
-            var modifyProfile = new ModifyProfile(this);
-            modifyProfile.InsertSelection(position, fragments);
+            var command = new InsertSelectionCommand(this, position, fragments);
+            command.Execute();
+            var undoCommand = new CutSelectionCommand(this, fragments);
+            AddRedoUndo(undoCommand, command);
         }
 
         public void Insert(int position, string text)
         {
             Contract.Requires(IsInputable(position));
             Contract.Ensures(IsSelectable(position, position + text.Length, false));
-            var fragments = new FragmentSelection(position, position + text.Length);
-            fragments.ProfileText = text;
+            var fragments = new FragmentSelection(position, position + text.Length) {ProfileText = text};
             Insert(position, fragments);
         }
         
+        private void AddRedoUndo(IGenCommand undoCommand, IGenCommand redoCommand)
+        {
+            var undoRedo = new GenUndoRedo(undoCommand, redoCommand);
+            GeData.AddRedoUndo(undoRedo);
+        }
+
         private static void CopySelectionFragments(GenNamedApplicationList<Fragment> fragments,
             List<Fragment> selectionFragments, int first, int last)
         {
