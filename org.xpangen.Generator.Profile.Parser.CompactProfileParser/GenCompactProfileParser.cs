@@ -98,6 +98,7 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
 
         internal GenFragment ScanFragment(int classId, ref TokenType nextToken, out string s, GenContainerFragmentBase parentContainer, FragmentBody fragmentBody, ref GenTextBlock textBlock, bool isPrimary)
         {
+            //Contract.Requires(nextToken != TokenType.Delimiter);
             Contract.Ensures(Contract.OldValue(nextToken) == TokenType.Name ||
                              Contract.Result<GenFragment>() != null);
             var oldToken = nextToken;

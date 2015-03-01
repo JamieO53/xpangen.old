@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text;
 using org.xpangen.Generator.Scanner;
@@ -45,6 +46,7 @@ namespace org.xpangen.Generator.Profile.Scanner
         /// </summary>
         public TokenType ScanTokenType()
         {
+            Contract.Ensures(Contract.Result<TokenType>() != TokenType.Delimiter);
             TokenType result;
             if (CheckChar('['))
                 result = TokenType.Segment;
@@ -119,7 +121,8 @@ namespace org.xpangen.Generator.Profile.Scanner
             if (CheckChar('.'))
             {
                 SkipChar();
-                return s + "." + ScanWhile(Identifier);
+                s += "." + ScanWhile(Identifier);
+                return s;
             }
             return s;
         }
