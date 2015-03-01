@@ -41,6 +41,7 @@ namespace org.xpangen.Generator.Scanner
             get { return _reader.Encoding; }
         }
 
+        public readonly ScanBuffer Buffer = new ScanBuffer();
         public static readonly CharSet Alpha = new CharSet("a-zA-Z");
         public static readonly CharSet AlphaNumeric = new CharSet("a-zA-Z0-9");
         public static readonly CharSet Numeric = new CharSet("0-9");
@@ -295,6 +296,7 @@ namespace org.xpangen.Generator.Scanner
         /// </summary>
         public void SkipChar()
         {
+            Buffer.Append(Current);
             _reader.SkipChar();
         }
 
