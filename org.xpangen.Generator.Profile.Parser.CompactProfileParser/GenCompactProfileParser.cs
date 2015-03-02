@@ -98,50 +98,39 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
 
         internal GenFragment ScanFragment(int classId, ref TokenType nextToken, out string s, GenContainerFragmentBase parentContainer, FragmentBody fragmentBody, ref GenTextBlock textBlock, bool isPrimary)
         {
-            //Contract.Requires(nextToken != TokenType.Delimiter);
             Contract.Ensures(Contract.OldValue(nextToken) == TokenType.Name ||
                              Contract.Result<GenFragment>() != null);
             var oldToken = nextToken;
             GenFragment frag = null;
             s = "";
-            //try
-            //{
-                switch (oldToken)
-                {
-                    case TokenType.Segment:
-                        frag = ScanSegment(parentContainer, isPrimary);
-                        break;
-                    case TokenType.Block:
-                        frag = ScanBlock(classId, parentContainer, isPrimary);
-                        break;
-                    case TokenType.Lookup:
-                        frag = ScanLookup(parentContainer, isPrimary);
-                        break;
-                    case TokenType.Condition:
-                        frag = ScanCondition(classId, parentContainer, isPrimary);
-                        break;
-                    case TokenType.Function:
-                        frag = ScanFunction(parentContainer, isPrimary);
-                        break;
-                    case TokenType.Name:
-                        ScanPlaceholder(parentContainer, ref textBlock, isPrimary);
-                        break;
-                    case TokenType.Annotation:
-                        frag = ScanAnnotation(classId, parentContainer, isPrimary);
-                        break;
-                    default:
-                        //throw new GeneratorException("Unknown token type: " + nextToken);
-                        OutputText(parentContainer, isPrimary, "Unknown token type: " + nextToken);
-                        break;
-                }
-                s = Scan.ScanText();
-            //}
-            //catch (Exception e)
-            //{
-            //    var text = e.Message;
-            //    OutputText(parentContainer, isPrimary, text);
-            //    frag = null;
-            //}
+            switch (oldToken)
+            {
+                case TokenType.Segment:
+                    frag = ScanSegment(parentContainer, isPrimary);
+                    break;
+                case TokenType.Block:
+                    frag = ScanBlock(classId, parentContainer, isPrimary);
+                    break;
+                case TokenType.Lookup:
+                    frag = ScanLookup(parentContainer, isPrimary);
+                    break;
+                case TokenType.Condition:
+                    frag = ScanCondition(classId, parentContainer, isPrimary);
+                    break;
+                case TokenType.Function:
+                    frag = ScanFunction(parentContainer, isPrimary);
+                    break;
+                case TokenType.Name:
+                    ScanPlaceholder(parentContainer, ref textBlock, isPrimary);
+                    break;
+                case TokenType.Annotation:
+                    frag = ScanAnnotation(classId, parentContainer, isPrimary);
+                    break;
+                default:
+                    OutputText(parentContainer, isPrimary, "Unknown token type: " + nextToken);
+                    throw new GeneratorException("Unknown token type: " + nextToken + "; " + Scan.Buffer);
+            }
+            s = Scan.ScanText();
             return frag;
         }
 
