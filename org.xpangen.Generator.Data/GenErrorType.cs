@@ -8,6 +8,8 @@ namespace org.xpangen.Generator.Data
     {
         Unspecified,
         NoOutputFile,
+        DataError,
+        ProfileError,
         Assertion
     }
 }

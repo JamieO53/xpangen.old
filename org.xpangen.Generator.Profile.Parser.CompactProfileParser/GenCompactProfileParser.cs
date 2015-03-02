@@ -104,8 +104,8 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
             var oldToken = nextToken;
             GenFragment frag = null;
             s = "";
-            try
-            {
+            //try
+            //{
                 switch (oldToken)
                 {
                     case TokenType.Segment:
@@ -135,13 +135,13 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
                         break;
                 }
                 s = Scan.ScanText();
-            }
-            catch (Exception e)
-            {
-                var text = e.Message;
-                OutputText(parentContainer, isPrimary, text);
-                frag = null;
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    var text = e.Message;
+            //    OutputText(parentContainer, isPrimary, text);
+            //    frag = null;
+            //}
             return frag;
         }
 
@@ -338,6 +338,8 @@ namespace org.xpangen.Generator.Profile.Parser.CompactProfileParser
         private void AddText(GenContainerFragmentBase parentContainer, 
             ref GenTextBlock textBlock, GenDataId id, GenDataDef genDataDef, bool isPrimary)
         {
+            if (id.ClassId == -1 || id.PropertyId == -1)
+                throw new GeneratorException(Scan.Buffer.ToString() + id, GenErrorType.ProfileError);
             CheckTextBlock(parentContainer, ref textBlock, genDataDef, isPrimary);
             textBlock.Body.Add(
                 new GenPlaceholderFragment(new GenPlaceholderFragmentParams(GenDataDef, textBlock, id)));

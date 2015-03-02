@@ -105,15 +105,16 @@ namespace org.xpangen.Generator.Data
                     }
             }
 
-            if (id.ClassId == -1 && id.PropertyId == -1)
+            if (id.ClassId == -1 || id.PropertyId == -1)
             {
-                throw new Exception("<<<<Unknown Class: " + name + ">>>>");
+                id.ClassName = className;
+                id.PropertyName = propertyName;
             }
-            if (id.PropertyId == -1 && className != "")
-                throw new Exception("<<<<Unknown Class/Property: " + name + ">>>>");
-
-            id.ClassName = Classes[id.ClassId].Name;
-            id.PropertyName = Classes[id.ClassId].Properties[id.PropertyId];
+            else
+            {
+                id.ClassName = Classes[id.ClassId].Name;
+                id.PropertyName = Classes[id.ClassId].Properties[id.PropertyId];
+            }
             return id;
         }
 
