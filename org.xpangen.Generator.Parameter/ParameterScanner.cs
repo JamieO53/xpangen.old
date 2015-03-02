@@ -73,6 +73,8 @@ namespace org.xpangen.Generator.Parameter
             _fields.Clear();
             _values.Clear();
             RecordType = ScanWhile(Identifier);
+            if (RecordType == "")
+                throw new GeneratorException("Empty record type: " + Buffer);
             ScanWhile(Spacing);
             if (CheckChar('='))
             {
