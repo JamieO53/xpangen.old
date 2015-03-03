@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace org.xpangen.Generator.Scanner
 {
@@ -12,6 +13,8 @@ namespace org.xpangen.Generator.Scanner
     /// </summary>
     public class CharSet
     {
+        private readonly int _charCount;
+        private char _c0, _c1, _c2, _c3;
         private readonly char[] _ca;
         private readonly char[][] _cra;
 
@@ -45,19 +48,36 @@ namespace org.xpangen.Generator.Scanner
                     if (c1 == '\\' && i + 1 < n)
                     {
                         i++;
-                        c1 = EscapeCharacter(c1);
+                        c1 = EscapeCharacter(expression[i]);
                     }
                     x1 += c0;
                     x2 += c1;
+                    i++;
                 }
                 else
                     x0 += c0;
             }
 
             _ca = x0.ToCharArray();
-            _cra = new char[x1.Length][];//Range[x1.Length];
+            _charCount = x0.Length;
+            if (_charCount > 0)
+                if (_charCount <= 4)
+                {
+                    _c0 = _ca[0];
+                    if (_charCount > 1) _c1 = _ca[1];
+                    if (_charCount > 2) _c2 = _ca[2];
+                    if (_charCount > 3) _c3 = _ca[3];
+                }
+            
+            _cra = new char[x1.Length][];
+            if (x1.Length == 0) return;
+            
+            var sl = new SortedList<char, char[]>(x1.Length);
             for (var j = 0; j < x1.Length; j++)
-                _cra[j] = new[] {x1[j], x2[j]};
+                sl.Add(x1[j], new[] {x1[j], x2[j]});
+            _cra = sl.Values.ToArray();
+            //for (var j = 0; j < x1.Length; j++)
+            //    _cra[j] = new[] {x1[j], x2[j]};
         }
 
         /// <summary>
@@ -67,16 +87,51 @@ namespace org.xpangen.Generator.Scanner
         /// <returns>Is the character in the CharSet?</returns>
         public bool Match(char c)
         {
-            foreach (char x in _ca)
-                if (x == c) return true;
-            for (int i = 0; i < _cra.Length; i++)
+            // The follwing is an optimization of this code
+            // i.e. the loop is unrolled, and the contents of the loop moved to scalars.
+            //foreach (var x in _ca)
+            //    if (x == c) return true;
+            switch (_charCount)
             {
-                var range = _cra[i];
-                if (range[0] > c) continue;
-                if (c > range[1]) continue;
-                return true;
+                case 0:
+                    break;
+                case 1:
+                    if (c == _c0) return true;
+                    break;
+                case 2:
+                    if (c == _c0 || c == _c1) return true;
+                    break;
+                case 3:
+                    if (c == _c0 || c == _c1 || c == _c2) return true;
+                    break;
+                case 4:
+                    if (c == _c0 || c == _c1 || c == _c2 || c == _c3) return true;
+                    break;
+                default:
+                    foreach (var x in _ca)
+                        if (x == c) return true;
+                    break;
             }
-            return false;
+            
+            // The following is an optimization of this code
+            //for (var i = 0; i < _cra.Length; i++)
+            //{
+            //    var range = _cra[i];
+            //    if (range[0] > c) continue;
+            //    return c <= range[1];
+            //}
+
+            var n = _cra.Length;
+            if (n == 0) return false;
+            
+            var i = -1;
+            char[] cra;
+            do
+            {
+                i++;
+                cra = _cra[i];
+            } while (i < n - 1 && cra[1] < c);
+            return cra[0] <= c && c <= cra[1];
         }
 
         /// <summary>
