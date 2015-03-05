@@ -78,7 +78,7 @@ namespace org.xpangen.Generator.Profile
             private set { _fragment = value; }
         }
 
-        private bool FragmentExists
+        public bool FragmentExists
         {
             get { return _fragment != null; }
         }

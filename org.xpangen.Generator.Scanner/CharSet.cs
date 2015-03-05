@@ -76,8 +76,6 @@ namespace org.xpangen.Generator.Scanner
             for (var j = 0; j < x1.Length; j++)
                 sl.Add(x1[j], new[] {x1[j], x2[j]});
             _cra = sl.Values.ToArray();
-            //for (var j = 0; j < x1.Length; j++)
-            //    _cra[j] = new[] {x1[j], x2[j]};
         }
 
         /// <summary>
@@ -120,17 +118,18 @@ namespace org.xpangen.Generator.Scanner
             //    if (range[0] > c) continue;
             //    return c <= range[1];
             //}
+            //return false;
 
             var n = _cra.Length;
             if (n == 0) return false;
             
-            var i = -1;
+            var i = 0;
             char[] cra;
             do
             {
-                i++;
                 cra = _cra[i];
-            } while (i < n - 1 && cra[1] < c);
+                i++;
+            } while (i < n && cra[1] < c);
             return cra[0] <= c && c <= cra[1];
         }
 

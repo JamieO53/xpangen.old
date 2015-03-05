@@ -46,7 +46,6 @@ namespace org.xpangen.Generator.Profile.Scanner
         /// </summary>
         public TokenType ScanTokenType()
         {
-            Contract.Ensures(Contract.Result<TokenType>() != TokenType.Delimiter);
             TokenType result;
             if (CheckChar('['))
                 result = TokenType.Segment;
