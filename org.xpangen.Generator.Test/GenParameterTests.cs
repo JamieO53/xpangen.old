@@ -220,6 +220,9 @@ namespace org.xpangen.Generator.Test
         [Test(Description = "Generator Parameter Scanner Test")]
         public void GenParameterNestedReferenceTest()
         {
+            EnsureFileExists("ChildDef.dcb", ".");
+            EnsureFileExists("GrandchildDef.dcb", ".");
+            EnsureFileExists("Grandchild.dcb", ".");
             CreateGenDataSaveText("Child.dcb", ReferenceChildDefText);
             CreateGenDataSaveText("Child.txt", ReferenceChildText);
             GenParameters f;

@@ -205,6 +205,12 @@
     <None Include="TestData\GeneratorDefinitionModelTest.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Grandchild.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\GrandchildDef.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\ProgramDefinitionTest.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
