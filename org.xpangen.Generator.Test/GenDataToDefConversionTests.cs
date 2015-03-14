@@ -2,6 +2,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System.IO;
+using System.Reflection;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Parameter;
@@ -71,6 +73,7 @@ namespace org.xpangen.Generator.Test
         [Test(Description = "Generator definition with a reference to data extract test")]
         public void ReferenceGenDataAsDefTest()
         {
+            EnsureFileExists("ChildDef.dcb", ".");
             var fGrandchild = SetUpParentChildDef("Grandchild", "Greatgrandchild");
             fGrandchild.DefinitionName = "GrandchildDef";
             var fChild = SetUpParentChildReferenceDef("Child", "Grandchild", "GrandchildDef", fGrandchild);
@@ -79,6 +82,17 @@ namespace org.xpangen.Generator.Test
             var f = fParent.AsGenDataBase().AsDef();
             f.DefinitionName = "Parent";
             CompareGenDataDef(fParent, f, "Parent");
+        }
+
+        private void EnsureFileExists(string fileName, string target)
+        {
+            var path = Path.Combine(target, fileName);
+            if (!File.Exists(path))
+            {
+                var sourcePath = Path.Combine("TestData", fileName);
+                Assert.That(File.Exists(sourcePath), "Source file " + sourcePath + " cannot be found");
+                File.Copy(sourcePath, path);
+            }
         }
 
         /// <summary>

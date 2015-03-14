@@ -199,6 +199,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
+    <None Include="TestData\ChildDef.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\GeneratorDefinitionModelTest.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
