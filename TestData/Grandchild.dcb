@@ -1,0 +1,9 @@
+Definition=Grandchild
+Class=Grandchild
+Field=Name
+SubClass=Greatgrandchild
+Class=Greatgrandchild
+Field=Name
+.
+Grandchild=Grandchild
+Greatgrandchild=Greatgrandchild

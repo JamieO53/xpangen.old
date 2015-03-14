@@ -984,5 +984,16 @@ Container[Reference='TestData\VirtualData']
             GetFirstObject(d).SubClass[0].Reference = "TestData\\VirtualData";
             return d;
         }
+
+        protected void EnsureFileExists(string fileName, string target)
+        {
+            var path = Path.Combine(target, fileName);
+            if (!File.Exists(path))
+            {
+                var sourcePath = Path.Combine("TestData", fileName);
+                Assert.That(File.Exists(sourcePath), "Source file " + sourcePath + " cannot be found");
+                File.Copy(sourcePath, path);
+            }
+        }
     }
 }

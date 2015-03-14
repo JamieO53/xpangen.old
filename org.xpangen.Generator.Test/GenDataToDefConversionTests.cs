@@ -74,6 +74,7 @@ namespace org.xpangen.Generator.Test
         public void ReferenceGenDataAsDefTest()
         {
             EnsureFileExists("ChildDef.dcb", ".");
+            EnsureFileExists("GrandchildDef.dcb", ".");
             var fGrandchild = SetUpParentChildDef("Grandchild", "Greatgrandchild");
             fGrandchild.DefinitionName = "GrandchildDef";
             var fChild = SetUpParentChildReferenceDef("Child", "Grandchild", "GrandchildDef", fGrandchild);
@@ -82,17 +83,6 @@ namespace org.xpangen.Generator.Test
             var f = fParent.AsGenDataBase().AsDef();
             f.DefinitionName = "Parent";
             CompareGenDataDef(fParent, f, "Parent");
-        }
-
-        private void EnsureFileExists(string fileName, string target)
-        {
-            var path = Path.Combine(target, fileName);
-            if (!File.Exists(path))
-            {
-                var sourcePath = Path.Combine("TestData", fileName);
-                Assert.That(File.Exists(sourcePath), "Source file " + sourcePath + " cannot be found");
-                File.Copy(sourcePath, path);
-            }
         }
 
         /// <summary>
