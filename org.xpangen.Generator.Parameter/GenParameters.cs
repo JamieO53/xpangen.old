@@ -189,13 +189,19 @@ namespace org.xpangen.Generator.Parameter
                 if (genDataDef.GetClassProperties(classId).Count > 0 && !genDataDef.GetClassDef(classId).IsAbstract)
                 {
                     var j = 0;
-                    if (String.Compare(genDataDef.GetClassProperties(classId)[0], "Name", StringComparison.OrdinalIgnoreCase) == 0)
+                    if (
+                        String.Compare(genDataDef.GetClassProperties(classId)[0], "Name",
+                            StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         sb.Append("=");
                         AddText(genDataDef, ref textBlock, classProfile, sb);
-                        AddText(genDataDef, ref textBlock, classProfile, genDataDef.GetId(genDataDef.GetClassName(classId), "Name"));
+                        AddText(genDataDef, ref textBlock, classProfile,
+                            genDataDef.GetId(genDataDef.GetClassName(classId), "Name"));
                         j = 1;
                     }
+                    else
+                        AddText(genDataDef, ref textBlock, classProfile, sb);
+                    
                     if (genDataDef.GetClassProperties(classId).Count > j)
                     {
                         AddText(genDataDef, ref textBlock, classProfile, "[");
