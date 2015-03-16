@@ -27,6 +27,13 @@ namespace org.xpangen.Generator.Data
         void NameChanged(GenNamedApplicationBase item);
         bool Move(ListMove move, int itemIndex);
         void Add(T item);
+
+        /// <summary>
+        /// Find the index of the object.
+        /// </summary>
+        /// <param name="name">The name of the sought object.</param>
+        /// <returns>The index of the named object, otherwise -1.</returns>
+        int IndexOf(string name);
     }
 
     public class GenNamedApplicationList<T> : GenApplicationList<T>, IGenNamedApplicationList<T> where T : GenNamedApplicationBase, new()
@@ -111,7 +118,7 @@ namespace org.xpangen.Generator.Data
         /// </summary>
         /// <param name="name">The name of the sought object.</param>
         /// <returns>The index of the named object, otherwise -1.</returns>
-        private int IndexOf(string name)
+        public int IndexOf(string name)
         {
             if (_names != null) return _names.ContainsKey(name) ? _names[name] : -1;
             for (var i = 0; i < Count; i++)
