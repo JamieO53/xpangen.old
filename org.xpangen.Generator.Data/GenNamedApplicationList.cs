@@ -4,10 +4,32 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenNamedApplicationList<T> : GenApplicationList<T> where T: GenNamedApplicationBase, new()
+    public interface IGenNamedApplicationList<T> where T : GenNamedApplicationBase, new()
+    {
+        /// <summary>
+        /// Find the named object.
+        /// </summary>
+        /// <param name="name">The name of the sought object.</param>
+        /// <returns>The named object if it is in the list, otherwise the default object.</returns>
+        T Find(string name);
+
+        /// <summary>
+        /// Does the list contain an object with this name?
+        /// </summary>
+        /// <param name="name">The name of the sought object.</param>
+        /// <returns>Is the named object in the list?</returns>
+        bool Contains(string name);
+
+        void NameChanged(GenNamedApplicationBase item);
+        bool Move(ListMove move, int itemIndex);
+        void Add(T item);
+    }
+
+    public class GenNamedApplicationList<T> : GenApplicationList<T>, IGenNamedApplicationList<T> where T : GenNamedApplicationBase, new()
     {
         private Dictionary<string, int> _names;
         public GenNamedApplicationList(GenApplicationBase parent, int classId, int classIdx)
@@ -34,15 +56,18 @@ namespace org.xpangen.Generator.Data
             item.Classes = Parent.Classes;
             base.Add(item);
             if (_names == null)
-            {
-                if (Count > 5)
-                {
-                    _names = new Dictionary<string, int>();
-                    for (var i = 0; i < Count; i++)
-                        _names.Add(this[i].Name, i);
-                }
-            }
+                PopulateNameDictionary();
             else _names.Add(item.Name, Count - 1);
+        }
+
+        private void PopulateNameDictionary()
+        {
+            if (Count > 5)
+            {
+                _names = new Dictionary<string, int>();
+                for (var i = 0; i < Count; i++)
+                    _names.Add(this[i].Name, i);
+            }
         }
 
         private void PopulateList(GenApplicationBase parent)
@@ -93,6 +118,30 @@ namespace org.xpangen.Generator.Data
                 if (this[i].Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
                     return i;
             return -1;
+        }
+
+        public void NameChanged(GenNamedApplicationBase item)
+        {
+            Contract.Requires(item.GetType() == typeof (T),
+                "Invalid parameter type: " + item.GetType().Name + ", " + typeof (T).Name + " expected");
+            Contract.Requires(IndexOf((T)item) != -1, "Item not found in list: " + item.Name);
+            if (_names == null) return;
+            var index = IndexOf((T) item);
+            foreach (var namePair in _names)
+            {
+                if (namePair.Value != index) continue;
+                _names.Remove(namePair.Key);
+                _names.Add(item.Name, index);
+                break;
+            }
+        }
+
+        public override bool Move(ListMove move, int itemIndex)
+        {
+            var moved = base.Move(move, itemIndex);
+            if (moved && _names != null)
+                PopulateNameDictionary();
+            return moved;
         }
     }
 }

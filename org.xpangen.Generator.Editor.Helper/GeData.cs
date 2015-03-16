@@ -80,13 +80,16 @@ namespace org.xpangen.Generator.Editor.Helper
         /// <returns>The new file group.</returns>
         public FileGroup NewFileGroup()
         {
-            return new FileGroup(Settings.Model.GenDataBase)
-                       {
-                           GenObject =
-                               ((GenObject)Settings.Model.GenSettingsList[0].GenObject).CreateGenObject("FileGroup"),
-                           DelayedSave = true,
-                           BaseFileName = "Definition"
-                       };
+            var fileGroup = Settings.Model.GenSettingsList[0].AddFileGroup("", "", "", "Definition");
+            Settings.FileGroup = fileGroup;
+            return fileGroup;
+            //return new FileGroup(Settings.Model.GenDataBase)
+            //           {
+            //               GenObject =
+            //                   ((GenObject)Settings.Model.GenSettingsList[0].GenObject).CreateGenObject("FileGroup"),
+            //               DelayedSave = true,
+            //               BaseFileName = "Definition"
+            //           };
         }
 
         /// <summary>
@@ -105,7 +108,11 @@ namespace org.xpangen.Generator.Editor.Helper
                 GenParameters.SaveToFile(d, fileName);
             }
             if (Settings.FindFileGroup(fileGroup.Name) == null)
-                Settings.GetFileGroups().Add(fileGroup);
+            {
+                Settings.Model.GenSettingsList[0].AddFileGroup(fileGroup.Name, fileGroup.FileName, fileGroup.FilePath,
+                    fileGroup.BaseFileName, fileGroup.Profile, fileGroup.GeneratedFile);
+                    //.GetFileGroups().Add(fileGroup);
+                }
             SetFileGroup(fileGroup.Name);
             SaveSettings();
         }
@@ -226,7 +233,7 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public void SetProfile(Data.Model.Settings.Profile profile)
         {
-            Settings.Profile = profile != null && GenDataDef != null ? profile.Name : "";
+            Settings.Profile = profile != null ? profile.Name : "";
             Profile.LoadProfile(Settings.Profile, GenDataDef);
         }
 

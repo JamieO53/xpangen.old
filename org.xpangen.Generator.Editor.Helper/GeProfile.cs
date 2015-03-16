@@ -219,7 +219,9 @@ namespace org.xpangen.Generator.Editor.Helper
 
         public void LoadProfile(string profilePath, GenDataDef genDataDef)
         {
-            Profile = profilePath != "" ? new GenCompactProfileParser(genDataDef, profilePath, "").Profile : null;
+            Profile = genDataDef != null && profilePath != ""
+                ? new GenCompactProfileParser(genDataDef, profilePath, "").Profile
+                : null;
         }
 
         public FragmentBody GetBody()
