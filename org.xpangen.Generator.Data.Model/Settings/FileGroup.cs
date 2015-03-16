@@ -35,6 +35,9 @@ namespace org.xpangen.Generator.Data.Model.Settings
                 if (Name == value) return;
                 SetString("Name", value);
                 if (!DelayedSave) SaveFields();
+                if (Parent == null || Parent.Lists == null) return;
+                var parentList = ((GenNamedApplicationList<FileGroup>) Parent.Lists["FileGroup"]);
+                if (parentList != null) parentList.NameChanged(this);
             }
         }
 
