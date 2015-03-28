@@ -95,5 +95,11 @@ namespace org.xpangen.Generator.Editor.Helper
         /// </summary>
         /// <param name="fileGroup">The file group being removed</param>
         void RemoveFileGroup(string fileGroup);
+
+        /// <summary>
+        /// Create a new base file as required
+        /// </summary>
+        /// <param name="fileGroup">The name of the new base file</param>
+        void AddBaseFile(FileGroup fileGroup);
     }
 }
