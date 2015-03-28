@@ -120,9 +120,7 @@ namespace org.xpangen.Generator.Editor.Helper
         private void SaveSettings()
         {
             if (SaveToDisk)
-            {
                 GenParameters.SaveToFile(Settings.Model.GenDataBase, "Data/Settings.dcb");
-            }
         }
 
         private static string BuildFilePath(string filePath, string fileName)
@@ -237,10 +235,9 @@ namespace org.xpangen.Generator.Editor.Helper
             Profile.LoadProfile(Settings.Profile, GenDataDef);
         }
 
-        public bool CheckIfDataExists(string value)
+        public static bool CheckIfDataExists(string value)
         {
-            var fileName = Path.GetExtension(value) == "" ? Path.ChangeExtension(value, ".dcb") : value;
-            return File.Exists(fileName) || File.Exists(Path.Combine("Data", fileName));
+            return File.Exists(GenParameters.GetFullPath(value));
         }
 
 
@@ -274,6 +271,16 @@ namespace org.xpangen.Generator.Editor.Helper
         {
             _undoStack.Push(item);
             _redoStack.Clear();
+        }
+
+        /// <summary>
+        /// Remove the specified fileGroup
+        /// </summary>
+        /// <param name="fileGroup">The file group being removed</param>
+        public void RemoveFileGroup(string fileGroup)
+        {
+            Settings.RemoveFileGroup(fileGroup);
+            SaveSettings();
         }
     }
 }

@@ -5,6 +5,7 @@
 using System;
 using System.Windows.Forms;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Editor.Helper;
 
 namespace GenEdit.ViewModel
 {
@@ -50,7 +51,7 @@ namespace GenEdit.ViewModel
                     case SubClassField.Reference:
                         if (Parent != null)
                         {
-                            if (!ViewModelLocator.GenDataEditorViewModel.Data.CheckIfDataExists(value))
+                            if (!GeData.CheckIfDataExists(value))
                                 MessageBox.Show("The reference file does not exist: " + value, "Reference Data");
                             else
                                 Parent.Reference = value;

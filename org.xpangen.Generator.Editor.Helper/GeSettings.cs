@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.IO;
+using System.Linq;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Settings;
 
@@ -212,6 +213,35 @@ namespace org.xpangen.Generator.Editor.Helper
             if (contextObject.Parent != null)
                 return GetDataSource(contextObject.Parent, className);
             return null;
+        }
+
+        /// <summary>
+        /// Remove the specified fileGroup
+        /// </summary>
+        /// <param name="fileGroup">The file group being removed</param>
+        public void RemoveFileGroup(string fileGroup)
+        {
+            var groups = GetFileGroups();
+            var group = groups.Find(fileGroup);
+            if (group == null) return;
+
+            if (group.BaseFileName == "Definition")
+                RemoveBaseFile(fileGroup);
+            groups.Remove(group);
+        }
+
+        private void RemoveBaseFile(string baseFileName)
+        {
+            var baseFiles = GetBaseFiles();
+            var baseFile = baseFiles.Find(baseFileName);
+            if (baseFile == null) return;
+
+            var groups = GetFileGroups();
+            while (groups.Any(x => x.BaseFileName == baseFileName))
+            {
+                var group = groups.First(x => x.BaseFileName == baseFileName);
+                groups.Remove(group);
+            }
         }
 
         /// <summary>

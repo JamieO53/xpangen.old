@@ -523,14 +523,33 @@ namespace org.xpangen.Generator.Parameter
 
         public static FileStream CreateStream(string filePath)
         {
-            var path = filePath.Replace('/', '\\') + (Path.GetExtension(filePath) == "" ? ".dcb" : "");
-            if (!File.Exists(path) && Path.GetDirectoryName(path) == "" && Directory.Exists("data"))
-            {
-                path = "data\\" + Path.GetFileName(path);
-            }
+            var path = GetFullPath(filePath);
             if (!File.Exists(path))
                 throw new ArgumentException("The generator data file does not exist: " + path, "filePath");
             return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        }
+
+        /// <summary>
+        /// Get the full path of the specified parameter file
+        /// </summary>
+        /// <param name="filePath">The path of the sought parameter file</param>
+        /// <returns>The full file path if it exists, otherwise the original path</returns>
+        public static string GetFullPath(string filePath)
+        {
+            Contract.Ensures(Contract.Result<string>() == filePath ||
+                             Contract.Result<string>() ==
+                             filePath.Replace('/', '\\') + (Path.GetExtension(filePath) == "" ? ".dcb" : "") &&
+                             File.Exists(Contract.Result<string>()) ||
+                             Directory.Exists("data") &&
+                             Contract.Result<string>() ==
+                             filePath.Replace('/', '\\') + filePath.Replace('/', '\\') +
+                             (Path.GetExtension(filePath) == "" ? ".dcb" : "") &&
+                             File.Exists(Contract.Result<string>()) ||
+                             Directory.Exists("data"));
+            var path = filePath.Replace('/', '\\') + (Path.GetExtension(filePath) == "" ? ".dcb" : "");
+            if (!File.Exists(path) && Path.GetDirectoryName(path) == "" && Directory.Exists("data"))
+                path = "data\\" + Path.GetFileName(path);
+            return File.Exists(path) ? path : filePath;
         }
     }
 }
