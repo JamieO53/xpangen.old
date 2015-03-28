@@ -89,5 +89,11 @@ namespace org.xpangen.Generator.Editor.Helper
         void Check();
 
         IList GetDataSource(object context, string className);
+        
+        /// <summary>
+        /// Remove the specified fileGroup
+        /// </summary>
+        /// <param name="fileGroup">The file group being removed</param>
+        void RemoveFileGroup(string fileGroup);
     }
 }

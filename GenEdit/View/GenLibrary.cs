@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GenEdit.ViewModel;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Model.Settings;
+using org.xpangen.Generator.Editor.Helper;
 
 namespace GenEdit.View
 {
@@ -84,7 +85,22 @@ namespace GenEdit.View
                 return;
             }
             var data = GenDataEditorViewModel.Data;
-            
+
+            if (!GeData.CheckIfDataExists(selected.Name))
+            {
+                var msg = MessageBox.Show("Remove the file group?", "The data file does not exist",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                var savedBackground = Background;
+                Background = true;
+                if (msg == DialogResult.Yes)
+                {
+                    data.RemoveFileGroup(selected.Name);
+                    comboBoxFileGroup.Items.RemoveAt(comboBoxFileGroup.SelectedIndex);
+                }
+                comboBoxFileGroup.SelectedItem = null;
+                Background = savedBackground;
+                return;
+            }
             data.SetFileGroup(selected.Name);
 
             EnableControls(false, true, false, false, false, ProfileIsSpecified());

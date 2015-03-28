@@ -4,6 +4,7 @@
 
 using System.IO;
 using org.xpangen.Generator.Data;
+using org.xpangen.Generator.Parameter;
 
 namespace org.xpangen.Generator.Editor.Helper
 {
@@ -33,11 +34,9 @@ namespace org.xpangen.Generator.Editor.Helper
             if (filePath == "")
                 GenDataBase = null;
             else
-            {
                 GenDataBase = DefGenDataBase == null
-                              ? GenDataBase.DataLoader.LoadData(filePath)
-                              : GenDataBase.DataLoader.LoadData(DefGenDataBase.AsDef(), filePath);
-            }
+                    ? GenDataBase.DataLoader.LoadData(filePath)
+                    : GenDataBase.DataLoader.LoadData(DefGenDataBase.AsDef(), filePath);
         }
     }
 }
