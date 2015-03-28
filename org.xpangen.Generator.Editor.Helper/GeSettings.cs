@@ -230,6 +230,21 @@ namespace org.xpangen.Generator.Editor.Helper
             groups.Remove(group);
         }
 
+        /// <summary>
+        /// Create a new base file as required
+        /// </summary>
+        /// <param name="fileGroup">The name of the new base file</param>
+        public void AddBaseFile(FileGroup fileGroup)
+        {
+            var baseFiles = GetBaseFiles();
+            var baseFile = baseFiles.Find(fileGroup.Name);
+            if (baseFile != null) return;
+
+            baseFile = Model.GenSettingsList[0].AddBaseFile(fileGroup.Name, fileGroup.FileName, fileGroup.FilePath, "",
+                Path.GetExtension(fileGroup.FileName));
+            baseFile.SaveFields();
+        }
+
         private void RemoveBaseFile(string baseFileName)
         {
             var baseFiles = GetBaseFiles();
