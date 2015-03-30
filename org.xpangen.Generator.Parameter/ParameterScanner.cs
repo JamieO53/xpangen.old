@@ -139,7 +139,9 @@ namespace org.xpangen.Generator.Parameter
                 _fields.Add(field);
                 _values.Add(value);
                 if (!CheckChar(',') && !CheckChar(']'))
-                    throw new Exception("Invalid character encountered while scanning attributes (" + this + "): " + Current);
+                    throw new GeneratorException(
+                        "Invalid character encountered while scanning attributes (" + this + "): " + Buffer + Current,
+                        GenErrorType.DataError);
             } while (!Eof && !CheckChar(']'));
             SkipChar();
         }
