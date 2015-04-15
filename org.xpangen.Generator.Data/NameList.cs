@@ -4,12 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 
 namespace org.xpangen.Generator.Data
 {
     public class NameList : List<string>
     {
-        private Dictionary<string, int> _names;
+        private readonly Dictionary<string, int> _names = new Dictionary<string, int>();
+
         /// <summary>
         /// Searches for the specified object and returns the zero-based index of the first occurrence within the entire text list. The comparisons are case insensitive.
         /// </summary>
@@ -21,13 +23,16 @@ namespace org.xpangen.Generator.Data
         /// <returns>The index of the added item.</returns>
         public new int IndexOf(string item)
         {
-            if (_names != null) return _names.ContainsKey(item) ? _names[item] : -1;
-            var i = 0;
-            while (i < Count && String.Compare(this[i], item, StringComparison.OrdinalIgnoreCase) != 0)
-                i++;
-            return i >= Count ? -1 : i;
+            int result;
+            if (_names.TryGetValue(item.ToUpperInvariant(), out result)) return result;
+            return -1;
         }
 
+        public new void Clear()
+        {
+            base.Clear();
+            _names.Clear();
+        }
         /// <summary>
         /// Adds an object to the end of the string list.
         /// </summary>
@@ -39,16 +44,7 @@ namespace org.xpangen.Generator.Data
             {
                 i = Count;
                 base.Add(item);
-                if (_names == null)
-                {
-                    if (Count > 5)
-                    {
-                        _names = new Dictionary<string, int>();
-                        for (var j = 0; j < Count; j++)
-                            _names.Add(this[j], j);
-                    }
-                }
-                else _names.Add(item, Count - 1);
+                _names.Add(item.ToUpperInvariant(), Count - 1);
             }
             return i;
         }
