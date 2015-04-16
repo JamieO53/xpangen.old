@@ -19,8 +19,6 @@ namespace org.xpangen.Generator.Parameter
         /// </summary>
         public string RecordType { get; private set; }
 
-        private static readonly CharSet Spacing = new CharSet("\r\n ");
-
         private readonly TextList _fields = new TextList();
         private readonly TextList _names = new TextList();
         private readonly TextList _values = new TextList();
@@ -61,12 +59,12 @@ namespace org.xpangen.Generator.Parameter
                 }
             }
 
-            ScanWhile(Spacing);
+            ScanWhile(WhiteSpace);
             AtEnd = Eof || CheckChar('.');
             if (AtEnd)
             {
                 SkipChar();
-                ScanWhile(Spacing);
+                ScanWhile(WhiteSpace);
                 return;
             }
 
@@ -75,7 +73,7 @@ namespace org.xpangen.Generator.Parameter
             RecordType = ScanWhile(Identifier);
             if (RecordType == "")
                 throw new GeneratorException("Empty record type: " + Buffer);
-            ScanWhile(Spacing);
+            ScanWhile(WhiteSpace);
             if (CheckChar('='))
             {
                 SkipChar();
@@ -84,10 +82,10 @@ namespace org.xpangen.Generator.Parameter
                     while (!Eof && !CheckChar('}'))
                     {
                         SkipChar(); // { or ,
-                        ScanWhile(Spacing);
+                        ScanWhile(WhiteSpace);
                         var name = StringOrIdentifier();
                         _names.Add(name);
-                        ScanWhile(Spacing);
+                        ScanWhile(WhiteSpace);
                     }
                     SkipChar();
                     _fields.Add("Name");
@@ -97,7 +95,7 @@ namespace org.xpangen.Generator.Parameter
                 else
                 {
                     var name = StringOrIdentifier();
-                    ScanWhile(Spacing);
+                    ScanWhile(WhiteSpace);
                     _fields.Add("Name");
                     _values.Add(name);
                     if (CheckChar('['))
@@ -122,20 +120,20 @@ namespace org.xpangen.Generator.Parameter
             do
             {
                 SkipChar(); // [ or ,
-                ScanWhile(Spacing);
+                ScanWhile(WhiteSpace);
                 var field = ScanWhile(Identifier);
                 string value;
-                ScanWhile(Spacing);
+                ScanWhile(WhiteSpace);
                 if (CheckChar('='))
                 {
                     SkipChar();
-                    ScanWhile(Spacing);
+                    ScanWhile(WhiteSpace);
                     value = StringOrIdentifier();
                 }
                 else
                     value = "True";
 
-                ScanWhile(Spacing);
+                ScanWhile(WhiteSpace);
                 _fields.Add(field);
                 _values.Add(value);
                 if (!CheckChar(',') && !CheckChar(']'))
