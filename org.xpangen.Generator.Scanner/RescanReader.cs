@@ -15,6 +15,7 @@ namespace org.xpangen.Generator.Scanner
     {
         private IScanReader _scanReader;
         private Stack<IScanReader> _stack;
+        private char _current = ScanReader.EofChar;
 
         /// <summary>
         /// The current scan character
@@ -23,10 +24,8 @@ namespace org.xpangen.Generator.Scanner
         /// </summary>
         public char Current
         {
-            get
-            {
-                return _scanReader != null ? _scanReader.Current : ScanReader.EofChar;
-            }
+            get { return _current; }
+            private set { _current = value; }
         }
 
         /// <summary>
@@ -56,6 +55,7 @@ namespace org.xpangen.Generator.Scanner
                 _stack.Push(_scanReader);
             }
             _scanReader = scanReader;
+            Current = _scanReader.Current;
             if (Encoding == null)
                 Encoding = scanReader.Encoding;
         }
@@ -68,8 +68,11 @@ namespace org.xpangen.Generator.Scanner
         public void SkipChar()
         {
 
-            if (_scanReader != null) 
+            if (_scanReader != null)
+            {
                 _scanReader.SkipChar();
+                Current = _scanReader.Current;
+            }
             if (_scanReader == null || _scanReader.Current == ScanReader.EofChar)
                 CheckEof();
         }
@@ -86,6 +89,7 @@ namespace org.xpangen.Generator.Scanner
                 if (_stack != null && _stack.Count > 0)
                 {
                     _scanReader = _stack.Pop();
+                    Current = _scanReader.Current;
                 }
             }
         }

@@ -11,6 +11,7 @@ namespace org.xpangen.Generator.Data
     public class NameList : List<string>
     {
         private readonly Dictionary<string, int> _names = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> _ucnames = new Dictionary<string, int>();
 
         /// <summary>
         /// Searches for the specified object and returns the zero-based index of the first occurrence within the entire text list. The comparisons are case insensitive.
@@ -24,7 +25,7 @@ namespace org.xpangen.Generator.Data
         public new int IndexOf(string item)
         {
             int result;
-            if (_names.TryGetValue(item.ToUpperInvariant(), out result)) return result;
+            if (_names.TryGetValue(item, out result) || _ucnames.TryGetValue(item.ToUpperInvariant(), out result)) return result;
             return -1;
         }
 
@@ -32,6 +33,7 @@ namespace org.xpangen.Generator.Data
         {
             base.Clear();
             _names.Clear();
+            _ucnames.Clear();
         }
         /// <summary>
         /// Adds an object to the end of the string list.
@@ -44,7 +46,8 @@ namespace org.xpangen.Generator.Data
             {
                 i = Count;
                 base.Add(item);
-                _names.Add(item.ToUpperInvariant(), Count - 1);
+                _names.Add(item, Count - 1);
+                _ucnames.Add(item.ToUpperInvariant(), Count - 1);
             }
             return i;
         }
