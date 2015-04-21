@@ -36,9 +36,9 @@ namespace gen
                 //LoadParametersWithDef();
                 //LoadProfile();
 
-                var thread = new Thread(LoadParametersWithDef);
+                var thread = new Thread(LoadProfile);
                 thread.Start();
-                LoadProfile();
+                LoadParametersWithDef();
                 thread.Join();
             }
             else
