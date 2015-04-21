@@ -3,6 +3,8 @@
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
@@ -30,8 +32,14 @@ namespace gen
             if (Args.Definition != "")
             {
                 LoadDef(args);
-                LoadParametersWithDef();
+
+                //LoadParametersWithDef();
+                //LoadProfile();
+
+                var thread = new Thread(LoadParametersWithDef);
+                thread.Start();
                 LoadProfile();
+                thread.Join();
             }
             else
             {
