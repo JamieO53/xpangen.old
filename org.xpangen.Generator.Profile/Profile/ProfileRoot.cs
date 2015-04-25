@@ -31,20 +31,6 @@ namespace org.xpangen.Generator.Profile.Profile
         }
 
         /// <summary>
-        /// The name of the profile root property
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
         /// The description of the profile root for the data editor hint
         /// </summary>
         public string Title

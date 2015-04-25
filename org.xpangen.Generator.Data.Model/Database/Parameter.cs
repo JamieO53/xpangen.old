@@ -28,20 +28,6 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         /// <summary>
-        /// Parameter name
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
         /// Parameter name as on the database
         /// </summary>
         public string ParameterName

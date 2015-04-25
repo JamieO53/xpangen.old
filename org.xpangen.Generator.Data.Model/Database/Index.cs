@@ -25,20 +25,6 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         /// <summary>
-        /// The name of the index
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
         /// Is this the table's primary key?
         /// </summary>
         public string IsPrimaryKey

@@ -73,7 +73,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             GenDataBase = genDataBase;
         }
 
-`[Property:`?Class.Inheritance~:        /// <summary>
+`[Property:`?Property.Name<>'Name':`?Class.Inheritance~:        /// <summary>
         /// `Property.Title`
         /// </summary>
         public`?Property.Name='Name': override`] string `Property.Name`
@@ -115,7 +115,7 @@ namespace `Assembly.Namespace`.`Assembly.Subfolder`
             }
         }
 
-`]`]`]`[SubClass:`%Class.Name=SubClass.Name:`?Class.Inheritance<>Virtual:        public GenNamedApplicationList<`Class.Name`> `Class.Name`List { get; private set; }
+`]`]`]`]`[SubClass:`%Class.Name=SubClass.Name:`?Class.Inheritance<>Virtual:        public GenNamedApplicationList<`Class.Name`> `Class.Name`List { get; private set; }
 `]`]`]`[SubClass':
         protected override void GenObjectSetNotification()
         {

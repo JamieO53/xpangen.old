@@ -27,20 +27,6 @@ namespace org.xpangen.Generator.Profile.Profile
         }
 
         /// <summary>
-        /// Generated name of the fragment
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
         /// Is the body expanded if the lookup fails?
         /// </summary>
         public string NoMatch

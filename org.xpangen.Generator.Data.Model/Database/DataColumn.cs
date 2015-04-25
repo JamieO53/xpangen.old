@@ -19,20 +19,6 @@ namespace org.xpangen.Generator.Data.Model.Database
             GenDataBase = genDataBase;
         }
 
-        /// <summary>
-        /// The name of the data column
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
 
     }
 }

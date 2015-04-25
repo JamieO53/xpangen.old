@@ -22,20 +22,6 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         /// <summary>
-        /// Database schema name
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
         /// The schema name as on the database
         /// </summary>
         public string SchemaName
