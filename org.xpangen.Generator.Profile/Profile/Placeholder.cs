@@ -24,20 +24,6 @@ namespace org.xpangen.Generator.Profile.Profile
         }
 
         /// <summary>
-        /// Generated name of the fragment
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
         /// The class containing the value to substitute in place
         /// </summary>
         public string Class

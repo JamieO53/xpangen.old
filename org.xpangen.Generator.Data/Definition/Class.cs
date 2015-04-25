@@ -24,20 +24,6 @@ namespace org.xpangen.Generator.Data.Definition
         }
 
         /// <summary>
-        /// Class name: must be well formed
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
         /// Class description: used as a hint when editing
         /// </summary>
         public string Title
@@ -56,7 +42,7 @@ namespace org.xpangen.Generator.Data.Definition
         /// </summary>
         public string Inheritance
         {
-            private get { return AsString("Inheritance"); }
+            get { return AsString("Inheritance"); }
             set
             {
                 if (Inheritance == value) return;

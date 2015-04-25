@@ -89,7 +89,8 @@ namespace org.xpangen.Generator.Profile
                         var paramFragment = paramFragments[i];
                         param[i] = GenFragmentExpander.Expand(genDataDef, genObject, paramFragment);
                     }
-                    return Write(genWriter, LibraryManager.GetInstance().Execute(fn.FunctionName, param));
+                    return (fn.FunctionName != "File" || !genWriter.CheckFile(param[0])) &&
+                           Write(genWriter, LibraryManager.GetInstance().Execute(fn.FunctionName, param));
                 case FragmentType.TextBlock:
                     var sb = new StringBuilder();
                     foreach (var f in ((TextBlock)fragment).Body().FragmentList)

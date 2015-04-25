@@ -22,20 +22,6 @@ namespace org.xpangen.Generator.Data.Model.Codes
         }
 
         /// <summary>
-        /// The name of the code
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
         /// Description of the codes table
         /// </summary>
         public string Title

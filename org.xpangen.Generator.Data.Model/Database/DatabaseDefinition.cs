@@ -42,10 +42,10 @@ namespace org.xpangen.Generator.Data.Model.Database
             f.AddSubClass("", "Database");
             f.AddSubClass("Database", "Schema");
             f.AddSubClass("Schema", "Object");
-            f.AddSubClass("Object", "Table");
-            f.AddSubClass("Object", "View");
-            f.AddSubClass("Object", "Procedure");
-            f.AddSubClass("Object", "Function");
+            f.AddInheritor("Object", "Table");
+            f.AddInheritor("Object", "View");
+            f.AddInheritor("Object", "Procedure");
+            f.AddInheritor("Object", "Function");
             f.AddSubClass("Object", "Column");
             f.AddSubClass("Object", "Index");
             f.AddSubClass("Object", "ForeignKey");

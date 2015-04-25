@@ -34,7 +34,7 @@ namespace org.xpangen.Generator.Profile
                 if (_fileName == value) return;
                 _fileName = value;
 
-                if (Stream != null && !(Stream is FileStream)) return;
+                if (!IsFileStream) return;
 
                 if (_writer != null) _writer.Dispose();
                 if (Stream != null) Stream.Dispose();
@@ -45,6 +45,11 @@ namespace org.xpangen.Generator.Profile
                 Stream = new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite);
                 Writer = new StreamWriter(Stream);
             }
+        }
+
+        public bool IsFileStream
+        {
+            get { return Stream == null || Stream is FileStream; }
         }
 
         private static void EnsurePathExists(string fileName)
@@ -113,6 +118,17 @@ namespace org.xpangen.Generator.Profile
         ~GenWriter()
         {
             Dispose(false);
+        }
+
+        public bool CheckFile(string filePath)
+        {
+            if (IsFileStream)
+            {
+                var path = filePath.Replace('/', Path.DirectorySeparatorChar);
+                FileName = path;
+                return true;
+            }
+            return false;
         }
     }
 }

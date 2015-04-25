@@ -22,25 +22,11 @@ namespace org.xpangen.Generator.Data.Definition
         }
 
         /// <summary>
-        /// Subclass name: refers to a class and is used for hierarchical browsing
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
         /// Location of the subclass
         /// </summary>
         public string Reference
         {
-            private get { return AsString("Reference"); }
+            get { return AsString("Reference"); }
             set
             {
                 if (Reference == value) return;
@@ -54,7 +40,7 @@ namespace org.xpangen.Generator.Data.Definition
         /// </summary>
         public string Relationship
         {
-            private get { return AsString("Relationship"); }
+            get { return AsString("Relationship"); }
             set
             {
                 if (Relationship == value) return;

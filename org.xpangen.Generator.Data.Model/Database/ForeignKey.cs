@@ -25,20 +25,6 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         /// <summary>
-        /// The name of the foreign key constraint
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
         /// The schema of the related table
         /// </summary>
         public string ReferenceSchema

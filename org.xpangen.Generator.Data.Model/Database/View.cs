@@ -21,20 +21,6 @@ namespace org.xpangen.Generator.Data.Model.Database
         }
 
         /// <summary>
-        /// View name
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
         /// The view name as on the database
         /// </summary>
         public string ViewName

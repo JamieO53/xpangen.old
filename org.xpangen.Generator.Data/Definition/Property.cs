@@ -26,20 +26,6 @@ namespace org.xpangen.Generator.Data.Definition
         }
 
         /// <summary>
-        /// Property name: must be well formed
-        /// </summary>
-        public override string Name
-        {
-            get { return AsString("Name"); }
-            set
-            {
-                if (Name == value) return;
-                SetString("Name", value);
-                if (!DelayedSave) SaveFields();
-            }
-        }
-
-        /// <summary>
         /// Property description: used as a hint when editing
         /// </summary>
         public string Title
