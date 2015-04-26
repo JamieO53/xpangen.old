@@ -15,7 +15,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Verify that generator model data can be reordered correctly.
         /// </summary>
-        [TestCase(Description="Tests the reordering of application list data")]
+        [Test(Description="Tests the reordering of application list data")]
         public void ApplicationListReorderTest()
         {
             var d = CreateOrderedGenData(6);
@@ -42,7 +42,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Verify that generator model data can be reordered correctly.
         /// </summary>
-        [TestCase(Description="Tests the reordering of renamed application list data")]
+        [Test(Description="Tests the reordering of renamed application list data")]
         public void ApplicationListReorderWithRenameTest()
         {
             var d = CreateOrderedGenData(6);

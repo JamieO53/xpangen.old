@@ -4,8 +4,23 @@
 
 namespace org.xpangen.Generator.Data
 {
-    public class GenApplicationList<T> : GenList<T> where T : GenApplicationBase
+    public interface IGenApplicationList : IGenList
     {
+    }
+
+    public interface IGenApplicationList<in T> : IGenApplicationList where T : GenApplicationBase, new()
+    {
+        void Add(T item);
+    }
+
+    public class GenApplicationList<T> : GenList<T>, IGenApplicationList<T> where T : GenApplicationBase, new()
+    {
+        protected new void Add(T item)
+        {
+            base.Add(item);
+            item.List = this;
+        }
+        
         public override bool Move(ListMove move, int itemIndex)
         {
             var item = this[itemIndex] as GenApplicationBase;

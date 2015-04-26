@@ -40,6 +40,7 @@ namespace org.xpangen.Generator.Data
             }
         }
 
+        internal IGenList List { get; set; }
         public Dictionary<string, IList> Lists 
         {
             get { return _lists ?? (_lists = new Dictionary<string, IList>()); }
