@@ -17,6 +17,7 @@ namespace org.xpangen.Generator.Data
                 if (Name == value) return;
                 SetString("Name", value);
                 if (!DelayedSave) SaveFields();
+                if (List != null) ((IGenNamedApplicationList)List).NameChanged(this);
             }
         }
 

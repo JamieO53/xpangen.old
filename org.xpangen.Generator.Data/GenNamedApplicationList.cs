@@ -8,7 +8,24 @@ using System.Diagnostics.Contracts;
 
 namespace org.xpangen.Generator.Data
 {
-    public interface IGenNamedApplicationList<T> where T : GenNamedApplicationBase, new()
+    public interface IGenNamedApplicationList : IGenApplicationList
+    {
+        /// <summary>
+        /// Indicates that the specified item's name has changed
+        /// </summary>
+        /// <param name="item">The changed item</param>
+        void NameChanged(GenNamedApplicationBase item);
+
+        /// <summary>
+        /// Does the list contain an object with this name?
+        /// </summary>
+        /// <param name="name">The name of the sought object.</param>
+        /// <returns>Is the named object in the list?</returns>
+        bool Contains(string name);
+        
+    }
+    
+    public interface IGenNamedApplicationList<T> : IGenNamedApplicationList, IGenApplicationList<T> where T : GenNamedApplicationBase, new()
     {
         /// <summary>
         /// Find the named object.
@@ -17,16 +34,7 @@ namespace org.xpangen.Generator.Data
         /// <returns>The named object if it is in the list, otherwise the default object.</returns>
         T Find(string name);
 
-        /// <summary>
-        /// Does the list contain an object with this name?
-        /// </summary>
-        /// <param name="name">The name of the sought object.</param>
-        /// <returns>Is the named object in the list?</returns>
-        bool Contains(string name);
-
-        void NameChanged(GenNamedApplicationBase item);
-        bool Move(ListMove move, int itemIndex);
-        void Add(T item);
+        new void Add(T item);
 
         /// <summary>
         /// Find the index of the object.
@@ -61,6 +69,7 @@ namespace org.xpangen.Generator.Data
             if (Contains(item.Name)) return;
             item.Parent = Parent;
             item.Classes = Parent.Classes;
+            item.List = this;
             base.Add(item);
             if (_names == null)
                 PopulateNameDictionary();

@@ -7,11 +7,16 @@ using System.Collections.Generic;
 
 namespace org.xpangen.Generator.Data
 {
+    public interface IGenList
+    {
+        bool Move(ListMove move, int itemIndex);
+    }
+
     /// <summary>
     /// Extends List&lt;T&gt; with move operations
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class GenList<T> : List<T>
+    public class GenList<T> : List<T>, IGenList
     {
         public virtual bool Move(ListMove move, int itemIndex)
         {

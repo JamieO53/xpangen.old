@@ -988,12 +988,10 @@ Container[Reference='TestData\VirtualData']
         protected void EnsureFileExists(string fileName, string target)
         {
             var path = Path.Combine(target, fileName);
-            if (!File.Exists(path))
-            {
-                var sourcePath = Path.Combine("TestData", fileName);
-                Assert.That(File.Exists(sourcePath), "Source file " + sourcePath + " cannot be found");
-                File.Copy(sourcePath, path);
-            }
+            if (File.Exists(path)) File.Delete(path);
+            var sourcePath = Path.Combine("TestData", fileName);
+            Assert.That(File.Exists(sourcePath), "Source file " + sourcePath + " cannot be found");
+            File.Copy(sourcePath, path);
         }
     }
 }
