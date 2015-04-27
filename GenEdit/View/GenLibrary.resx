@@ -112,18 +112,18 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="saveGeneratedFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="saveGeneratedFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>168, 14</value>
   </metadata>
-  <metadata name="toolStripLibrary.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="toolStripLibrary.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>354, 14</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="buttonNew.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -179,17 +179,17 @@
   <data name="buttonClose.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI9SURBVDhPfZPNaxNBGMZfY1JTlB4ULwXLlB6EghCIgl4i
-        5FD8B9Q/QG8eRG8eRNLQQ8WiORSK7UmtNF4iFlttEjwYIfRgkR7ErVk0EJN0N9l8bZLN1+PMZhNiSXzg
-        YXdn5ve87+zskiUnNxvlW0TXnths+1GPR497PNUNh2PHR3SFz/XFNK0ARVGh5vLI5zVohQKKxSJ+xWII
-        Tk7ih98PeWnJtDQ/j9WJieorogsWT0xRVaQzGWQPFYj7XJ4HaRpeuFwIX76IknyAb/77+PrwHooHEsJu
-        NwJEcYsnJoBDReEd5HgHebODbDaLVecJfJmyIXpnDvWCCqOoYuf2HD6etWHtGOkWz7fAARPmVQu89VKp
-        BFmW8WZ8HOFpQuSuF0ZJgVFWEHvkxa6b8PI41S2emNhvHy6XUalU8CedRnB2FqEzdmjSHvYDXsivvagk
-        9/DhvB3Pib5bPDEBDcLVahX1eh2x9XW849vYPG3Hp0uE3RuEqMuOkINqN4muWzyxModE24Nwo9Ewn7dX
-        VhCamcHbsTFsnXJikzFcJXrAuZNdnAeIhSJkEG42m6YNw0AqlUI8Hjed4afFmeku2hXTOajrOmq1mgn0
-        AlqtFtrttuleWKfTEQHiI+uLVTl4tHoPFoCwGBPz4Uikw5mpLtoVE5UHqx+FRXeJRAK/k0k8XV4OWlxf
-        /YBh1cWYJEn8asC3uPjZYv6RGTCq/TI/2p+8um9hYSgsxEa9OKH3W9udx88CG9baofrv78x9jnuIiP4C
-        bJ9UejuVRJgAAAAASUVORK5CYII=
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAI8SURBVDhPfZPNaxNBGMZfY1JTlB4ULwXLlB6EghCIgl4i
+        5FD8B9Q/QG8eRG8eRNLQQ8WiORSK9aRWGi8Vq1UTgwcjhB4s0oO4NYsGYpLuJpuv3WTz9Tiz2YRYEh94
+        2N2Z+T3vOzu7ZMvNzUb5GtGlBw7Hbszn0xM+n7HuckUCRBf4XF9M04pQFBVqvoBCQYNWLKJUKuFXPI7w
+        5CR+BIOQl5YsS/PzWJ2YMJ4TnbF5YoqqIpPNIrevQNznCzxI0/DU40H0/FmU5T18C97G17u3UNqTEPV6
+        ESJK2DwxAewrCu8gzzsoWB3kcjmsuo/gy5QDsRtzqBdVmCUVketz+HDSgSeHSLd5vgUOWDCvWuStl8tl
+        yLKMl+PjiE4TPt70wywrMCsK4vf82PYSnh2mus0TE/vtw5UKqtUq/mQyCM/OYuOEE5q0g92QH/ILP6qp
+        Hbw/7cRjou82T0xAg7BhGKjX64ivreE138bmcSc+nSNsXyHEPE5suKh2leiyzROrcEi0PQg3Gg3r+d3K
+        CjZmZvBqbAxbx9zYZAwXie5w7mgX5wFioQgZhJvNpmXTNJFOp5FIJCxn+WlxZrqLdsV0Duq6jlqtZgG9
+        gFarhXa7bbkX1ul0RID4yPpiBgcPVu/BAhAWY2I+Eo12ODPVRbtiovJg9YOw6C6ZTOJ3KoWHy8thm+ur
+        HzCsuhiTJIlfTQQWFz/bzD+yAka1X+FH+5NXDywsDIWF2KgXJ/Tm7Vbn/qPQur12qP77O3Of4h4ior9n
+        m1R0hspPwgAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="buttonGenerate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

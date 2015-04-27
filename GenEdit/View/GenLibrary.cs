@@ -86,7 +86,7 @@ namespace GenEdit.View
             }
             var data = GenDataEditorViewModel.Data;
 
-            if (!GeData.CheckIfDataExists(selected.Name))
+            if (!GeData.CheckIfDataExists(Path.Combine(selected.FilePath, selected.FileName)))
             {
                 var msg = MessageBox.Show("Remove the file group?", "The data file does not exist",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
