@@ -267,6 +267,9 @@
     <None Include="Data\GeneratorDefinitionModel.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Data\GeneratorDefinitionUserControl.dcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data\GeneratorEditor.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
