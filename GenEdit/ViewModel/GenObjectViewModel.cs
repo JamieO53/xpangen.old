@@ -24,6 +24,11 @@ namespace GenEdit.ViewModel
                     _fields = new ObservableCollection<FieldViewModelBase>();
                     var n = GenAttributes.Properties.Count;
                     var def = Definition as Class;
+                    if (def != null && def.Inheritance == "Abstract")
+                    {
+                        var classList = ((Definition)def.Parent).ClassList;
+                        def = classList[GenAttributes.ClassId - 1];
+                    }
 
                     for (var i = 0; i < n; i++)
                     {
