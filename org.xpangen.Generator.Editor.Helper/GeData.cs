@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using org.xpangen.Generator.Data;
@@ -125,7 +126,9 @@ namespace org.xpangen.Generator.Editor.Helper
 
         private void SaveSettings()
         {
-            if (SaveToDisk)
+            if ((SaveToDisk &&
+                 (Settings.FileGroup == null || Settings.FileGroup.FileName == null ||
+                  !Settings.FileGroup.FileName.Equals("Settings.dcb", StringComparison.InvariantCultureIgnoreCase))))
                 GenParameters.SaveToFile(Settings.Model.GenDataBase, "Data/Settings.dcb");
         }
 
