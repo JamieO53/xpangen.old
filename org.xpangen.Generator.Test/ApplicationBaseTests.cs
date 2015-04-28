@@ -13,6 +13,22 @@ namespace org.xpangen.Generator.Test
     public class ApplicationBaseTests : GenDataTestsBase
     {
         /// <summary>
+        /// Verify that an item is correctly removed from an application list
+        /// </summary>
+        [Test(Description="Tests the removal of an item from an application list")]
+        public void ApplicationItemRemoveTest()
+        {
+            var d = CreateOrderedGenData(6);
+            var c = new Class(d) { GenObject = d.Root.SubClass[0][0] };
+            CheckOrder(c, "123456", "Verify initial subclass order");
+
+            var item = c.SubClassList[3];
+            Assert.AreEqual("SubClass4", item.Name);
+            c.SubClassList.Remove(item);
+            CheckOrder(c, "12356", "Verify items remaining after object is removed");
+        }
+
+        /// <summary>
         /// Verify that generator model data can be reordered correctly.
         /// </summary>
         [Test(Description="Tests the reordering of application list data")]
@@ -88,6 +104,9 @@ namespace org.xpangen.Generator.Test
 
         private static void CheckOrder(Class c, string order, string action)
         {
+            Assert.AreEqual(order.Length, c.SubClassList.Count, action + " the number of items in the list");
+            Assert.AreEqual(order.Length, ((GenObject) c.GenObject).SubClass[0].Count,
+                action + " the number of items in the GenObject subclass list");
             for (var i = 0; i < c.SubClassList.Count; i++)
                 Assert.AreEqual("SubClass" + order[i], c.SubClassList[i].Name, action + " in list - item " + (i + 1));
             for (var i = 0; i < c.SubClassList.Count; i++)

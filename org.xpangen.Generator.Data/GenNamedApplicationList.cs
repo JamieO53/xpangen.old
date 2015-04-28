@@ -22,7 +22,13 @@ namespace org.xpangen.Generator.Data
         /// <param name="name">The name of the sought object.</param>
         /// <returns>Is the named object in the list?</returns>
         bool Contains(string name);
-        
+
+        /// <summary>
+        /// Find the index of the object.
+        /// </summary>
+        /// <param name="name">The name of the sought object.</param>
+        /// <returns>The index of the named object, otherwise -1.</returns>
+        int IndexOf(string name);
     }
     
     public interface IGenNamedApplicationList<T> : IGenNamedApplicationList, IGenApplicationList<T> where T : GenNamedApplicationBase, new()
@@ -34,19 +40,33 @@ namespace org.xpangen.Generator.Data
         /// <returns>The named object if it is in the list, otherwise the default object.</returns>
         T Find(string name);
 
+        /// <summary>
+        /// Adds an object to the end of the <see cref="T:IGenNamedApplicationList`1"/>.
+        /// </summary>
+        /// <param name="item">The object to be added to the end of the <see cref="T:IGenNamedApplicationList`1"/>. The value can be null for reference types.</param>
         new void Add(T item);
 
         /// <summary>
-        /// Find the index of the object.
+        /// Removes the specified item from the  <see cref="T:IGenNamedApplicationList`1"/>.
         /// </summary>
-        /// <param name="name">The name of the sought object.</param>
-        /// <returns>The index of the named object, otherwise -1.</returns>
-        int IndexOf(string name);
+        /// <param name="item"></param>
+        new void Remove(T item);
     }
 
+    /// <summary>
+    /// A generic application list of named generator data objects.
+    /// </summary>
+    /// <typeparam name="T">The type of the objects contained in the list.</typeparam>
     public class GenNamedApplicationList<T> : GenApplicationList<T>, IGenNamedApplicationList<T> where T : GenNamedApplicationBase, new()
     {
-        private Dictionary<string, int> _names;
+        private Dictionary<string, int> _names = new Dictionary<string, int>();
+
+        /// <summary>
+        /// Create a new Generic named application list.
+        /// </summary>
+        /// <param name="parent">The list's parent object.</param>
+        /// <param name="classId">The ClassID of the list's objects.</param>
+        /// <param name="classIdx">The index of the underlying data in the parent object's subclasses list.</param>
         public GenNamedApplicationList(GenApplicationBase parent, int classId, int classIdx)
         {
             var className = typeof(T).Name;
@@ -64,6 +84,10 @@ namespace org.xpangen.Generator.Data
             parent.Lists.Add(className, this);
         }
 
+        /// <summary>
+        /// Adds an object to the end of the <see cref="T:IGenNamedApplicationList`1"/>.
+        /// </summary>
+        /// <param name="item">The object to be added to the end of the <see cref="T:IGenNamedApplicationList`1"/>. The value can be null for reference types.</param>
         public new void Add(T item)
         {
             if (Contains(item.Name)) return;
@@ -71,19 +95,20 @@ namespace org.xpangen.Generator.Data
             item.Classes = Parent.Classes;
             item.List = this;
             base.Add(item);
-            if (_names == null)
-                PopulateNameDictionary();
-            else _names.Add(item.Name, Count - 1);
+            _names.Add(item.Name, Count - 1);
+        }
+
+        public new void Remove(T item)
+        {
+            base.Remove(item);
+            PopulateNameDictionary();
         }
 
         private void PopulateNameDictionary()
         {
-            if (Count > 5)
-            {
-                _names = new Dictionary<string, int>();
-                for (var i = 0; i < Count; i++)
-                    _names.Add(this[i].Name, i);
-            }
+            _names = new Dictionary<string, int>();
+            for (var i = 0; i < Count; i++)
+                _names.Add(this[i].Name, i);
         }
 
         private void PopulateList(GenApplicationBase parent)
@@ -129,11 +154,7 @@ namespace org.xpangen.Generator.Data
         /// <returns>The index of the named object, otherwise -1.</returns>
         public int IndexOf(string name)
         {
-            if (_names != null) return _names.ContainsKey(name) ? _names[name] : -1;
-            for (var i = 0; i < Count; i++)
-                if (this[i].Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                    return i;
-            return -1;
+            return _names.ContainsKey(name) ? _names[name] : -1;
         }
 
         public void NameChanged(GenNamedApplicationBase item)
@@ -141,7 +162,6 @@ namespace org.xpangen.Generator.Data
             Contract.Requires(item.GetType() == typeof (T),
                 "Invalid parameter type: " + item.GetType().Name + ", " + typeof (T).Name + " expected");
             Contract.Requires(IndexOf((T)item) != -1, "Item not found in list: " + item.Name);
-            if (_names == null) return;
             var index = IndexOf((T) item);
             foreach (var namePair in _names)
             {
@@ -155,7 +175,7 @@ namespace org.xpangen.Generator.Data
         public override bool Move(ListMove move, int itemIndex)
         {
             var moved = base.Move(move, itemIndex);
-            if (moved && _names != null)
+            if (moved)
                 PopulateNameDictionary();
             return moved;
         }
