@@ -3,7 +3,6 @@
 // //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 using NUnit.Framework;
-using org.xpangen.Generator.Editor.Helper;
 using org.xpangen.Generator.Parameter;
 using org.xpangen.Generator.Profile;
 using org.xpangen.Generator.Profile.Profile;

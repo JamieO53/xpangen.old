@@ -1,6 +1,8 @@
-﻿using org.xpangen.Generator.Data;
+﻿using System.IO;
+using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Editor.Helper;
 using NUnit.Framework;
+using org.xpangen.Generator.Data.Model.Settings;
 using org.xpangen.Generator.Parameter;
 
 namespace org.xpangen.Generator.Test
@@ -50,6 +52,23 @@ namespace org.xpangen.Generator.Test
             GenParameters.SaveToFile(model.GenDataBase, "TestData/Settings.dcb");
         }
 
+        [Test(Description = "Verifies that a base file is created when creating a definition")]
+        public void GeDefinitionSaveTest()
+        {
+            if (File.Exists(@"Test\NewDefinition")) File.Delete(@"Test\NewDefinition.dcb");
+            var geData = new GeData();
+            var model = PopulateGenSettings();
+            geData.Settings = new GeSettings(model);
+            var fileGroups = geData.Settings.GetFileGroups();
+            var baseFiles = geData.Settings.GetBaseFiles();
+            Assert.IsFalse(fileGroups.Contains("NewDefinition"), "Settings already contain NewDefinition");
+            Assert.IsFalse(baseFiles.Contains("NewDefinition"), "BaseFiles already contain NewDefinition");
+            var baseFile = baseFiles.Find("Definition");
+            var fileGroup = model.GenSettingsList[0].AddFileGroup("NewDefinition", "NewDefinition.dcb", "Test", "Definition");
+            geData.CreateFile(fileGroup);
+            Assert.IsTrue(fileGroups.Contains("NewDefinition"), "Settings already contain NewDefinition");
+            Assert.IsTrue(baseFiles.Contains("NewDefinition"), "BaseFiles already contain NewDefinition");
+        }
         /// <summary>
         /// Set up the Generator data definition tests
         /// </summary>
