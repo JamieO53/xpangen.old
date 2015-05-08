@@ -219,13 +219,24 @@ namespace org.xpangen.Generator.Data
             {
                 if (genObject.ClassName.Equals(className, StringComparison.InvariantCultureIgnoreCase))
                     return genObject.ParentSubClass;
-                var classId = GenDataDef.GetClassId(genObject.ClassName);
-                var idx = GenDataDef.GetClassSubClasses(classId).IndexOf(className);
+                var idx = genObject.GetSubClassIndex(className);
                 if (idx != -1) return genObject.SubClass[idx];
                 
                 genObject = genObject.Parent;
             }
             return null;
+        }
+
+        private int GetSubClassIndex(string className)
+        {
+            var idx = -1;
+            for (var i = 0; i < SubClass.Count; i++)
+            {
+                if (!SubClass[i].Definition.SubClass.ClassNameIs(className)) continue;
+                idx = i;
+                break;
+            }
+            return idx;
         }
 
         private bool ClassNameIs(string className)
