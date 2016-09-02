@@ -39,7 +39,7 @@ namespace org.xpangen.Generator.Test
             }
         }
 
-        private readonly Dictionary<char, string> _escapeChars =
+        private static readonly Dictionary<char, string> _escapeChars =
             new Dictionary<char, string>
                 {
                     {'\t', @"\t"},
@@ -48,7 +48,7 @@ namespace org.xpangen.Generator.Test
                     {'\\', @"\\"},
                     {'\f', @"\f"}
                 };
-        private readonly object[] _escapedChars = {'\t', '\n', '\r', '\\'};
+        private static readonly object[] _escapedChars = {'\t', '\n', '\r', '\\'};
 
         /// <summary>
         /// Tests that quoted strings with escape characters are scanned correctly
@@ -372,6 +372,7 @@ namespace org.xpangen.Generator.Test
         [TestFixtureSetUp]
         public void SetUp()
         {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
             GenDataLoader.Register();
         }
 

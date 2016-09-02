@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using NUnit.Framework;
 using org.xpangen.Generator.Data;
 
@@ -165,6 +166,7 @@ namespace org.xpangen.Generator.Test
         [TestFixtureSetUp]
         public void SetUp()
         {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
             GenData = SetUpData();
         }
 

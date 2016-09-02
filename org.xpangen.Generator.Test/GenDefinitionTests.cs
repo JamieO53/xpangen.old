@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.IO;
+using NUnit.Framework;
 using org.xpangen.Generator.Data;
 using org.xpangen.Generator.Data.Definition;
 using org.xpangen.Generator.Parameter;
@@ -28,6 +29,7 @@ namespace org.xpangen.Generator.Test
         [TestFixtureSetUp]
         public void SetUp()
         {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
             GenDataLoader.Register();
         }
 

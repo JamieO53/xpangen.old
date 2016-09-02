@@ -163,12 +163,12 @@ namespace org.xpangen.Generator.Test
 
         private void LoadData(string filePath)
         {
-            Data.GenDataStore.SetData(@"Data\" + filePath);
+            Data.GenDataStore.SetData(Path.Combine(TestContext.CurrentContext.TestDirectory, @"data\" + filePath));
         }
 
         private void LoadBase(string filePath)
         {
-            Data.GenDataStore.SetBase(@"Data\" + filePath);
+            Data.GenDataStore.SetBase(Path.Combine(TestContext.CurrentContext.TestDirectory, @"data\" + filePath));
         }
 
         private void VerifyGenDataLoaded()
@@ -187,6 +187,7 @@ namespace org.xpangen.Generator.Test
         [TestFixtureSetUp]
         public void SetUp()
         {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
             GenDataLoader.Register();
             Data = new GeData();
             Data.Settings = Data.GetDefaultSettings();

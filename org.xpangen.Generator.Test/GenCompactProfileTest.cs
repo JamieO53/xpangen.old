@@ -422,6 +422,7 @@ namespace org.xpangen.Generator.Test
         [TestFixtureSetUp]
         public void SetUp()
         {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
         }
 
         /// <summary>
