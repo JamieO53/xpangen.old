@@ -26,7 +26,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Set up the Generator data definition tests
         /// </summary>
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
@@ -36,7 +36,7 @@ namespace org.xpangen.Generator.Test
         /// <summary>
         /// Tear down the Generator data definition tests
         /// </summary>
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
 

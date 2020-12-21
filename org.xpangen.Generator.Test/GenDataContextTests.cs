@@ -148,13 +148,13 @@ namespace org.xpangen.Generator.Test
             var granddhildContext = GenObject.GetContext(parent, "Grandchild");
             Assert.AreSame(grandchild, granddhildContext);
         }
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             GenDataLoader.Register();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             

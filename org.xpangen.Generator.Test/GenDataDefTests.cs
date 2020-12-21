@@ -214,7 +214,7 @@ SubClass=Child[Reference='ChildDef']
         /// <summary>
         /// Set up the Generator data definition tests
         /// </summary>
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             
@@ -223,7 +223,7 @@ SubClass=Child[Reference='ChildDef']
         /// <summary>
         /// Tear down the Generator data definition tests
         /// </summary>
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "org.xpangen.Generator.Test", "org.xpangen.Generator.Test\org.xpangen.Generator.Test.csproj", "{AF444EE6-E48A-4236-8D43-20A36B85A08F}"
 EndProject
@@ -40,6 +40,45 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A9597185-AFF5-4805-ACF4-060615252DC3}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{2A0EB88D-934E-43FF-B101-A80A79E4AEE0}"
+	ProjectSection(SolutionItems) = preProject
+		Data\Basic.dcb = Data\Basic.dcb
+		Data\CodesDefinition.dcb = Data\CodesDefinition.dcb
+		Data\DatabaseDefinition.dcb = Data\DatabaseDefinition.dcb
+		Data\DbDropTableSynonyms.prf = Data\DbDropTableSynonyms.prf
+		Data\DbTableSynonyms.prf = Data\DbTableSynonyms.prf
+		Data\Definition.dcb = Data\Definition.dcb
+		Data\ExtractToData.prf = Data\ExtractToData.prf
+		Data\GeneratorDefinitionModel.dcb = Data\GeneratorDefinitionModel.dcb
+		Data\GeneratorDefinitionUserControl.dcb = Data\GeneratorDefinitionUserControl.dcb
+		Data\GeneratorEditor.dcb = Data\GeneratorEditor.dcb
+		Data\GenProfileModel.prf = Data\GenProfileModel.prf
+		Data\GenProfileUserControl.prf = Data\GenProfileUserControl.prf
+		Data\GetTableParameters.sql = Data\GetTableParameters.sql
+		Data\JamInvestDatabaseDefinition.dcb = Data\JamInvestDatabaseDefinition.dcb
+		Data\Minimal.dcb = Data\Minimal.dcb
+		Data\ProfileDefinition.dcb = Data\ProfileDefinition.dcb
+		Data\ProgramDefinition.dcb = Data\ProgramDefinition.dcb
+		Data\Settings.dcb = Data\Settings.dcb
+		Data\Standard Editor Codes.dcb = Data\Standard Editor Codes.dcb
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{3BD79994-9FE0-433B-94F9-61001B03CE95}"
+	ProjectSection(SolutionItems) = preProject
+		Data\Database\ExtractedDataLoad.prf = Data\Database\ExtractedDataLoad.prf
+		Data\Database\ExtractToData.prf = Data\Database\ExtractToData.prf
+		Data\Database\ExtractToDataDef.prf = Data\Database\ExtractToDataDef.prf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestData", "TestData", "{FB57E086-D6B4-4FAB-9335-0068FB14FE00}"
+	ProjectSection(SolutionItems) = preProject
+		TestData\ChildDef.dcb = TestData\ChildDef.dcb
+		TestData\GeneratorDefinitionModelTest.dcb = TestData\GeneratorDefinitionModelTest.dcb
+		TestData\Grandchild.dcb = TestData\Grandchild.dcb
+		TestData\GrandchildDef.dcb = TestData\GrandchildDef.dcb
+		TestData\ProgramDefinitionTest.dcb = TestData\ProgramDefinitionTest.dcb
 	EndProjectSection
 EndProject
 Global
@@ -186,7 +225,13 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2A0EB88D-934E-43FF-B101-A80A79E4AEE0} = {D1F739D0-839B-4EBD-BA3F-B0631F2A7076}
+		{3BD79994-9FE0-433B-94F9-61001B03CE95} = {2A0EB88D-934E-43FF-B101-A80A79E4AEE0}
+		{FB57E086-D6B4-4FAB-9335-0068FB14FE00} = {D1F739D0-839B-4EBD-BA3F-B0631F2A7076}
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {74FA3F48-B9AB-4E35-9352-2EDED4CDA8B9}
 		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 EndGlobal
