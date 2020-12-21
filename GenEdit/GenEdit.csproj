@@ -246,55 +246,55 @@
       <DependentUpon>GenProfileEditor.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="Data\Basic.dcb">
+    <None Include="..\Data\Basic.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\CodesDefinition.dcb">
+    <None Include="..\Data\CodesDefinition.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\DatabaseDefinition.dcb">
+    <None Include="..\Data\DatabaseDefinition.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\DbDropTableSynonyms.prf">
+    <None Include="..\Data\DbDropTableSynonyms.prf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\DbTableSynonyms.prf">
+    <None Include="..\Data\DbTableSynonyms.prf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\Definition.dcb">
+    <None Include="..\Data\Definition.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\GeneratorDefinitionModel.dcb">
+    <None Include="..\Data\GeneratorDefinitionModel.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\GeneratorDefinitionUserControl.dcb">
+    <None Include="..\Data\GeneratorDefinitionUserControl.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\GeneratorEditor.dcb">
+    <None Include="..\Data\GeneratorEditor.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\GenProfileModel.prf">
+    <None Include="..\Data\GenProfileModel.prf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\GenProfileUserControl.prf">
+    <None Include="..\Data\GenProfileUserControl.prf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\JamInvestDatabaseDefinition.dcb">
+    <None Include="..\Data\JamInvestDatabaseDefinition.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\Minimal.dcb">
+    <None Include="..\Data\Minimal.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\ProfileDefinition.dcb">
+    <None Include="..\Data\ProfileDefinition.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\ProgramDefinition.dcb">
+    <None Include="..\Data\ProgramDefinition.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\Settings.dcb">
+    <None Include="..\Data\Settings.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\Standard Editor Codes.dcb">
+    <None Include="..\Data\Standard Editor Codes.dcb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Properties\DataSources\GenEdit.ViewModel.ViewModelLocator.datasource" />
