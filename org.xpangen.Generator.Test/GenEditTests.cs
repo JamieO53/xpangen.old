@@ -163,12 +163,12 @@ namespace org.xpangen.Generator.Test
 
         private void LoadData(string filePath)
         {
-            Data.GenDataStore.SetData(Path.Combine(TestContext.CurrentContext.TestDirectory, @"data\" + filePath));
+            Data.GenDataStore.SetData(Path.Combine(TestContext.CurrentContext.TestDirectory, @"Data\" + filePath));
         }
 
         private void LoadBase(string filePath)
         {
-            Data.GenDataStore.SetBase(Path.Combine(TestContext.CurrentContext.TestDirectory, @"data\" + filePath));
+            Data.GenDataStore.SetBase(Path.Combine(TestContext.CurrentContext.TestDirectory, @"Data\" + filePath));
         }
 
         private void VerifyGenDataLoaded()

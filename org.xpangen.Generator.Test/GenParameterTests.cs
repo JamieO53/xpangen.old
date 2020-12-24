@@ -68,7 +68,7 @@ namespace org.xpangen.Generator.Test
                 {
                     {'\f', @"\f"}
                 };
-        private readonly object[] _undefinedEscapedChars = { '\f' };
+        private static object[] _undefinedEscapedChars = { '\f' };
 
         /// <summary>
         /// Tests that quoted strings with undefined escape characters are scanned correctly

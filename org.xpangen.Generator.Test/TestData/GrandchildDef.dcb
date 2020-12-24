@@ -1,0 +1,14 @@
+Definition=Minimal
+Class=Class
+Field={Name,Inheritance}
+SubClass={SubClass,Property}
+Class=SubClass
+Field={Name,Reference,Relationship}
+Class=Property
+Field=Name
+.
+Class=Grandchild[]
+SubClass=Greatgrandchild[]
+Property=Name
+Class=Greatgrandchild[]
+Property=Name
